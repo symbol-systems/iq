@@ -1,0 +1,2 @@
+find . -name "iq.log" -type f -delete
+

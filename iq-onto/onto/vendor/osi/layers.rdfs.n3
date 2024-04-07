@@ -1,0 +1,108 @@
+@prefix osi: <https://symbol.systems/v0/onto/v1/vendor/osi/layers#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix iana: <http://www.iana.org/assignments/port-numbers/#>.
+@prefix : <https://symbol.systems/v0/onto/v1/vendor/osi/layers#>.
+
+: a owl:Ontology ;
+	owl:versionInfo "0.1"@en;
+	rdfs:label 		"OSI"@en;
+	dc:title 		"OSI 7 layer"@en;
+	rdfs:comment 	"Vocabulary for describing a OSI/ISO networks."@en;
+	dc:created 		"2013-01-30"^^xsd:date ;
+	dc:modified 	"2013-01-30"^^xsd:date ;
+	dc:license		<http://www.opendatacommons.org/licenses/pddl/1.0/>;
+	owl:seeAlso		<http://en.wikipedia.org/wiki/OSI_model>;
+.
+
+# OSI Layer Classifications
+
+osi:Layer a owl:Class ;
+	rdfs:label 		"OSI Layer"@en;
+	rdfs:definedBy	:;
+.
+
+:MediaLayer rdfs:subClassOf :Layer ;
+	rdfs:label 		"Media Layer"@en;
+	rdfs:definedBy	:;
+.
+
+:HostLayer rdfs:subClassOf :Layer ;
+	rdfs:label 		"Host Layer"@en;
+	rdfs:definedBy	:;
+.
+
+# OSI Layers
+
+osi:1 a :MediaLayer ;
+	rdfs:label "Physical"@en;
+	rdfs:comment "The physical layer defines electrical and physical specifications for devices"@en;
+	rdfs:definedBy	:;
+.
+
+osi:2 a :MediaLayer ;
+	rdfs:label "Datalink"@en;
+	rdfs:comment "The data link layer provides the functional and procedural means to transfer data between network entities and to detect and possibly correct errors that may occur in the physical layer"@en;
+	rdfs:definedBy	:;
+.
+
+osi:3 a :MediaLayer ;
+	rdfs:label "Network"@en;
+	rdfs:comment "The network layer provides the functional and procedural means of transferring variable length data sequences from a source host on one network to a destination host on a different network"@en;
+	rdfs:definedBy	:;
+.
+
+osi:4 a :HostLayer ;
+	rdfs:label "Transport"@en;
+	rdfs:comment "The transport layer provides transparent transfer of data between end users, providing reliable data transfer services to the upper layers"@en;
+	rdfs:definedBy	:;
+.
+
+osi:5 a :HostLayer ;
+	rdfs:label "Session"@en;
+	rdfs:comment "The session layer controls the dialogues (connections) between computers"@en;
+	rdfs:definedBy	:;
+.
+
+osi:6 a :HostLayer;
+	rdfs:label "Presentation"@en;
+	rdfs:comment "The presentation layer establishes context between application-layer entities, in which the higher-layer entities may use different syntax and semantics if the presentation service provides a mapping between them"@en;
+	rdfs:definedBy	:;
+.
+
+osi:7 a :HostLayer;
+	rdfs:label "Application"@en;
+	rdfs:comment "The application layer is the OSI layer closest to the end user, which means that both the OSI application layer and the user interact directly with the software application."@en;
+	rdfs:definedBy	:;
+.
+
+#
+# TODO: define an interaction namedMap between layers
+#
+:Entity
+	rdfs:label	"OSI Entity";
+	rdfs:definedBy	:;
+.
+
+:Interaction
+	rdfs:label	"Interaction"@en;
+	rdfs:definedBy	:;
+.
+
+:interacts
+	rdfs:label	"interacts with"@en;
+	rdfs:domain :Interaction;
+	rdfs:range	:Entity;
+	rdfs:definedBy	:;
+.
+
+:protocol
+	rdfs:label	"using protocol"@en;
+	rdfs:domain :Interaction;
+	rdfs:range	iana:Protocol;
+	rdfs:definedBy	:;
+.
+

@@ -1,0 +1,8 @@
+SELECT DISTINCT ?this ?label ?definition ?score
+WHERE {
+    ?this <http://www.w3.org/2004/02/skos/core#prefLabel> ?label.
+    OPTIONAL {
+        ?this <http://www.w3.org/2004/02/skos/core#definition> ?definition.
+    }
+    VALUES (?this ?score) { {{{these}}} }
+}

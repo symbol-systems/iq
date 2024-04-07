@@ -1,0 +1,4 @@
+export IQ_DEV="hello"
+mvn test -pl iq-run-apis -am
+
+

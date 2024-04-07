@@ -1,0 +1,7 @@
+#@namespaces
+
+SELECT DISTINCT ?from ?label WHERE {
+	?that 	flo:from	?from.
+	?from	rdfs:label	?label.
+}
+#BINDINGS ?that { (<{{id}}>) }

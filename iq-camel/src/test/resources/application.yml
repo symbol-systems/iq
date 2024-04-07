@@ -1,0 +1,16 @@
+server:
+  port: 9080
+camel:
+  springboot:
+    name: iq-camel
+management:
+  port: 8081
+endpoints:
+  enabled: true
+  health:
+    enabled: true
+quickstart:
+  generateOrderPeriod: 10s
+  processOrderPeriod: 30s
+iq:
+  home: "iq.test"

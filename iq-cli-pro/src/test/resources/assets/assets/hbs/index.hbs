@@ -1,0 +1,15 @@
+<div>
+    <h1>{{ skos:prefLabel }}</h1>
+    <pre>{{ this.@this }}</pre>
+
+    <h3>Follow</h3>
+    {{follow this "inScheme" }}
+
+    <h3>Each inScheme</h3>
+    {{#each this "skos:inScheme" }}
+        <h2>{{ skos:prefLabel }}</h2>
+        <pre>{{ this }}</pre>
+    {{/each}}
+
+    <h3>Partials</h3>
+</div>

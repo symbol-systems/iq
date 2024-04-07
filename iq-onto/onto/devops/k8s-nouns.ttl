@@ -1,0 +1,251 @@
+@prefix : <https://symbol.systems/v0/onto/k8s#>.
+
+
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+@prefix dc:			<http://purl.org/dc/elements/1.1/> .
+@prefix eg:			<http://www.example.org/> .
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#>.
+
+# Logical Ontology Definitions (experimental, private or proprietary)
+
+@prefix raci: <https://symbol.systems/v0/onto/raci#>.
+@prefix fact: <https://symbol.systems/v0/onto/fact#>.
+@prefix frames: <https://symbol.systems/v0/onto/frames#>.
+@prefix dama: <https://symbol.systems/v0/onto/dama#>.
+@prefix fab: <https://symbol.systems/v0/onto/fab#>.
+@prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
+@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix iq-test: <https://test.symbol.systems/cases#>.
+@prefix k8s: <https://k8s.symbol.systems/v1#>.
+
+# Kubernetes Vocabulary
+
+:Ontology
+    a					owl:Ontology;
+	owl:versionInfo		"0.1.2";
+	dc:title			"Kubernetes Vocabulary";
+	rdfs:comment		"Vocabulary for describing Kubernetes.";
+	dc:created			"2017-08-01"^^xsd:date;
+	dc:modified			"2018-10-01"^^xsd:date;
+	dc:license 			<http://www.opendatacommons.org/licenses/pddl/1.0/>;
+.
+:K8S
+	skos:prefLabel		"Kubernetes";
+	skos:altLabel		"k8s";
+	skos:description	"A runtime orchestration platform for cloud-scale IT";
+    skos:hasTopConcept gg:;
+.
+
+:Kind
+	a					rdfs:Class;
+	rdfs:label			"Kind";
+	rdfs:comment 		"A Kubernetes Resource";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	skos:inScheme	    :K8S;
+.
+:Namespace
+	a					rdfs:Class;
+	rdfs:label			"Namespace";
+	rdfs:comment 		"A Namespace";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Asset
+	rdfs:label			"Asset";
+	rdfs:comment 		"A recognised file";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:CRD
+	rdfs:subClassOf		:Kind; # we're meta
+	rdfs:type			:Kind;
+	rdfs:label			"CRD";
+	rdfs:comment 		"A Custom Resource Definition";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Deployable
+	rdfs:subClassOf		:Asset;
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"Deployment";
+	rdfs:comment 		"A K8s Deployment";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Deployment
+	rdfs:type			:Deployable;
+	rdfs:label			"Deployment";
+	rdfs:comment 		"A K8s Deployment";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:ReplicaSet
+	rdfs:subClassOf		:Deployable;
+	rdfs:label			"ReplicaSet";
+	rdfs:comment 		"A K8s ReplicaSet";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:StatefulSet
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"StatefulSet";
+	rdfs:comment 		"A K8s StatefulSet";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:RuntimeResource
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"Runtime Resource";
+	rdfs:comment 		"A K8s Resource that is used by a Deployment";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Secret
+	rdfs:subClassOf		:Kind;
+	rdfs:subClassOf		:RuntimeResource;
+	rdfs:label			"Secret";
+	rdfs:comment 		"A K8s Secret";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:ConfigMap
+	rdfs:subClassOf		:Kind;
+	rdfs:subClassOf		:RuntimeResource;
+	rdfs:label			"Config Map";
+	rdfs:comment 		"A K8s Config Map";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:PersistentVolumeClaim
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"PVC";
+	rdfs:comment 		"A K8s Persistent Volume Claim";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:PersistentVolume
+	rdfs:subClassOf		:Kind;
+	rdfs:subClassOf		:RuntimeResource;
+	rdfs:label			"PV";
+	rdfs:comment 		"A K8s Persistent Volume";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:HelmRelease
+	a					:HelmChart;
+	rdfs:label			"Helm Release";
+	rdfs:comment 		"A Helm Release";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:HelmChart
+	rdfs:subClassOf		:Deployable;
+	rdfs:subClassOf		:Package;
+	rdfs:label			"Helm Chart";
+	rdfs:comment 		"A Helm Chart";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Package
+	rdfs:subClassOf		:Asset;
+	rdfs:label			"Package";
+	rdfs:comment 		"A Collection of software assets";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Orchestrator
+	rdfs:subClassOf		:Package;
+	rdfs:label			"Container Orchestrator";
+	rdfs:comment 		"A K8s Container Orchestrator Abstraction";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Runtime
+	rdfs:type			:Orchestrator;
+	rdfs:label			"Container Runtime";
+	rdfs:comment 		"A K8s Container Runtime";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:RuntimeEnvironment
+	rdfs:type			:Namespace;
+	rdfs:label			"Container Runtime";
+	rdfs:comment 		"A K8s Container Runtime";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:ContainerImage
+	rdfs:subClassOf		:Package;
+	rdfs:label			"Container Image";
+	rdfs:comment 		"A K8s Container Image";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:DockerImage
+	rdfs:subClassOf		:ContainerImage;
+	rdfs:label			"Docker Image";
+	rdfs:comment 		"A Docker Image";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Service
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"Service";
+	rdfs:comment 		"A K8s Service";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:RBAC
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"RBAC";
+	rdfs:comment 		"A K8s RBAC Abtraction";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:ServiceAccount
+	rdfs:subClassOf		:RBAC;
+	rdfs:label			"Service Account";
+	rdfs:comment 		"A K8s Service Account";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Role
+	rdfs:subClassOf		:RBAC;
+	rdfs:label			"Role";
+	rdfs:comment 		"A K8s Role";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:RoleBinding
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"Role Binding";
+	rdfs:comment 		"A K8s Role Binding";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:Ingress
+	rdfs:subClassOf		:Kind;
+	rdfs:label			"Ingress";
+	rdfs:comment 		"An K8s Ingress Controller";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:ServiceGateway
+	rdfs:subClassOf		:CRD;
+	rdfs:subClassOf		:Service;
+	rdfs:label			"An Service Gateway";
+	rdfs:comment 		"Service Gateway";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+:APIGateway
+	rdfs:subClassOf		:ServiceGateway;
+	rdfs:label			"An API Gateway";
+	rdfs:comment 		"API Gateway";
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+.
+

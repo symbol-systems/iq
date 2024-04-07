@@ -1,0 +1,59 @@
+@prefix    : <https://test.symbol.systems/cases#>.
+@prefix test: <https://test.symbol.systems/cases#>.
+
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:
+    a skos:Concept;
+    skos:prefLabel "GG: RDF4J";
+.
+
+:TestSuite
+    skos:prefLabel "Test Suite";
+    a skos:ConceptScheme;
+    skos:hasTopConcept :;
+.
+
+:TestCase
+    a skos:Concept;
+    skos:prefLabel "Test Case";
+    skos:inScheme :TestSuite;
+.
+
+<https://test.symbol.systems/>
+#    a skos:Concept;
+    owl:sameas <https://test.symbol.systems/cases#hbs/index.hbs>;
+    skos:prefLabel "Home";
+    skos:inScheme :TestSuite;
+.
+
+<https://test.symbol.systems/cases#hbs/hello.hbs>
+    a skos:Concept;
+    skos:prefLabel "hello world";
+    skos:inScheme :TestSuite;
+.
+
+<https://test.symbol.systems/cases#hbs/index.hbs>
+    a skos:Concept;
+    skos:prefLabel "Home Sweet Home";
+    skos:inScheme :TestSuite;
+.
+
+<https://test.symbol.systems/cases#queries/all.sparql>
+    a skos:Concept;
+    skos:prefLabel "all sparql";
+    skos:prefLabel "all sparql";
+    skos:inScheme :TestSuite;
+.

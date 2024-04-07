@@ -1,0 +1,19 @@
+prefix iq: <urn:systems.symbol:v0:iq:>
+prefix : <https://test.symbol.systems/cases#>
+
+CONSTRUCT {
+    ?agent iq:current ?current.
+    ?agent iq:initial ?initial.
+    ?current iq:to ?next.
+    ?next rdfs:label ?label.
+    ?current rdfs:label ?current_label.
+    ?agent rdfs:label ?agent_label.
+} WHERE {
+    ?agent a iq:Agent;
+        iq:initial ?initial;
+        iq:current ?current.
+    ?current iq:to+ ?next.
+    ?next rdfs:label ?label.
+    ?current rdfs:label ?current_label.
+    ?agent rdfs:label ?agent_label.
+}

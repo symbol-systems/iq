@@ -1,0 +1,94 @@
+package systems.symbol.rdf4j.util;
+
+import org.eclipse.rdf4j.query.algebra.StatementPattern;
+import org.eclipse.rdf4j.query.algebra.Var;
+import org.eclipse.rdf4j.query.algebra.helpers.QueryModelVisitorBase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+/**
+ * systems.symbol (c) 2010-2013
+ * @author Symbol Systems
+ * Date: 13/01/13
+ * Time: 10:21 PM
+ * <p/>
+ * Visits each RDF Statement in a SPARQL query, and collects bound Variables
+ */
+public class VariableCollector extends QueryModelVisitorBase<Exception> {
+	Map<String,Var> variables = null;
+	Map<String,List<Var>> ranges = null;
+	Map<String,List<Var>> domains = null;
+
+	public VariableCollector() {
+		this.variables = new HashMap<>();
+		this.ranges= new HashMap<>();
+		this.domains = new HashMap<>();
+	}
+
+	public Map<String,Var> getVariables() {
+		return this.variables;
+	}
+
+	public List<Var> getRanges(String varName) {
+		return (List<Var>)this.ranges.get(varName);
+	}
+
+	public List<Var> getDomains(String varName) {
+		return (List<Var>)this.domains.get(varName);
+	}
+
+	@Override
+	public void meet(StatementPattern node) {
+		String varName = null;
+		varName = collectProjection(node.getSubjectVar());
+		if (varName!=null) {
+			collectDomain(varName, node.getPredicateVar());
+		}
+		varName = collectProjection(node.getPredicateVar());
+		if (varName!=null) {
+			collectRange(varName, node.getSubjectVar());
+		}
+		varName = collectProjection(node.getObjectVar());
+		if (varName!=null) {
+			collectRange(varName, node.getPredicateVar());
+		}
+		try {
+			super.meet(node);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private List<Var> collectRange(String varName, Var var) {
+		List<Var> range = (List<Var>) this.ranges.get(varName);
+		if (range==null) {
+			range = new ArrayList<>();
+			this.ranges.put(varName, range);
+		}
+		if (var.hasValue()) {
+			range.add(var);
+		}
+		return range;
+	}
+
+	private List<Var> collectDomain(String varName, Var var) {
+		List<Var> domain = domains.computeIfAbsent(varName, k -> new ArrayList<>());
+
+		if (var.hasValue()) {
+			domain.add(var);
+		}
+
+		return domain;
+	}
+
+	private String collectProjection(Var var) {
+		if (var.getName()!=null && !var.isAnonymous()) {
+			this.variables.put(var.getName(), var);
+			return var.getName();
+		}
+		return null;
+	}
+
+}

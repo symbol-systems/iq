@@ -1,0 +1,54 @@
+package systems.symbol.render;
+
+import systems.symbol.iq.AbstractIQTest;
+import systems.symbol.rdf4j.iq.KBMS;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.HashMap;
+
+public class TripleRendererTest extends AbstractIQTest {
+
+    @BeforeMethod
+    public void setUp() throws IOException {
+        super.setUp();
+    }
+
+    @Test
+    public void testRender() throws IOException {
+        KBMS kbms = new KBMS(ctx, repository.getConnection());
+        TripleRenderer renderer = new TripleRenderer(kbms);
+        renderer.blockSyntax();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.out.println("triple.template.render.string: "+iriHBS);
+
+        renderer.render(iriHBS.stringValue(), null, out);
+        out.close();
+        String toString =new String( out.toByteArray(), StandardCharsets.UTF_8 );
+        System.out.println("triple.template.render.string.out: "+toString);
+        assert toString.indexOf("Welcome to our humble home")>0; // home page
+        assert toString.indexOf("Test Cases")>0; // partial page
+    }
+
+    @Test
+    public void testRenderFile() throws IOException {
+        KBMS kbms = new KBMS(ctx, repository.getConnection());
+        TripleRenderer renderer = new TripleRenderer(kbms);
+
+        File file = new File("test.render.triples.html");
+        file.delete();
+        OutputStream out = new FileOutputStream(file);
+        System.out.println("triple.template.render.file: "+file);
+
+        HashMap map = new HashMap();
+        map.put("data", new Date());
+        renderer.render(iriHBS.stringValue(), map, out);
+        out.close();
+        assert file.exists();
+        assert file.isFile();
+        System.out.println("triple.template.render.length: "+file.length());
+        assert file.length()>100;
+    }}

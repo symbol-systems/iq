@@ -1,0 +1,104 @@
+@prefix : <https://symbol.systems/demo/tropes#>.
+
+# Canonical Ontology Definitions (e.g. W3C standards)
+
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tropes: <https://myiq.cloud/storystream/tropes#> .
+
+:butler_did_it
+    a tropes:Story;
+    tropes:who   :Fact;
+    tropes:what  :Fact;
+    tropes:when  :Mystery;
+    tropes:where :Mystery;
+    tropes:why   :Mystery;
+    tropes:how   :Mystery;
+.
+:who_did_it
+    a tropes:Story;
+    tropes:who   :Mystery;
+    tropes:what  :Fact;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Plot;
+    tropes:how   :Plot;
+.
+:what_is_love
+    a tropes:Story;
+    tropes:who   :Plot;
+    tropes:what  :Love;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Love;
+    tropes:how   :Plot;
+.
+:lovers_secret
+    a tropes:Story;
+    tropes:who   :Fact;
+    tropes:what  :Secret;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Love;
+    tropes:how   :Plot;
+.
+:lovers_retreat
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Love;
+    tropes:when  :Plot;
+    tropes:where :Fact;
+    tropes:why   :Plot;
+    tropes:how   :Plot;
+.
+:plot_driving_secret
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Plot;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Secret;
+    tropes:how   :Plot;
+.
+:true_love
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Love;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Love;
+    tropes:how   :Love;
+.
+:good_luck
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Plot;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :GoodLuck;
+    tropes:how   :Plot;
+.
+:bad_luck
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Plot;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :BadLuck;
+    tropes:how   :Plot;
+.
+:i_wonder_why
+    a tropes:Story;
+    tropes:who   :Protagonist;
+    tropes:what  :Plot;
+    tropes:when  :Plot;
+    tropes:where :Plot;
+    tropes:why   :Mystery;
+    tropes:how   :Plot;
+.

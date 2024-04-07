@@ -1,0 +1,223 @@
+ @prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+ @prefix dc: <http://purl.org/dc/elements/1.1/> .
+ @prefix owl: <http://www.w3.org/2002/07/owl#> .
+ @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+ @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+:
+	a owl:Ontology;
+	owl:versionInfo		"01/2000";
+	rdfs:label			"RDF Schema";
+	dc:title			"RDF Schema Vocabulary";
+	rdfs:comment		"Vocabulary for describing RDF Models.";
+.
+:rdf
+	a owl:Ontology;
+	owl:versionInfo		"01/2000";
+	rdfs:label			"RDF";
+	dc:title			"RDF Vocabulary";
+	rdfs:comment		"Vocabulary for describing RDF Resources.";
+.
+
+()    a rdf:List;
+     :comment "The empty list, with no items in it. If the rest of a list is nil then the list has no more items in it.";
+     :isDefinedBy rdf:;
+     :label "nil" .
+
+rdf:type     a rdf:Property;
+     :comment "The subject is an instance of a class.";
+     :domain :Resource;
+     :isDefinedBy rdf:;
+     :label "type";
+     :range :Class .
+
+rdf:Alt     a :Class;
+     :comment "The class of containers of alternatives.";
+     :isDefinedBy rdf:;
+     :label "Alt";
+     :subClassOf :Container .
+
+rdf:Bag     a :Class;
+     :comment "The class of unordered containers.";
+     :isDefinedBy rdf:;
+     :label "Bag";
+     :subClassOf :Container .
+
+rdf:List     a :Class;
+     :comment "The class of RDF Lists.";
+     :isDefinedBy rdf:;
+     :label "List";
+     :subClassOf :Resource .
+
+rdf:Property     a :Class;
+     :comment "The class of RDF properties.";
+     :isDefinedBy rdf:;
+     :label "Property";
+     :subClassOf :Resource .
+
+rdf:Seq     a :Class;
+     :comment "The class of ordered containers.";
+     :isDefinedBy rdf:;
+     :label "Seq";
+     :subClassOf :Container .
+
+rdf:Statement     a :Class;
+     :comment "The class of RDF statements.";
+     :isDefinedBy rdf:;
+     :label "Statement";
+     :subClassOf :Resource .
+
+rdf:XMLLiteral     a :Datatype;
+     :comment "The class of XML literal values.";
+     :isDefinedBy rdf:;
+     :label "XMLLiteral";
+     :subClassOf :Literal .
+
+rdf:first     a rdf:Property;
+     :comment "The first item in the subject RDF list.";
+     :domain rdf:List;
+     :isDefinedBy rdf:;
+     :label "first";
+     :range :Resource .
+
+rdf:object     a rdf:Property;
+     :comment "The object of the subject RDF statement.";
+     :domain rdf:Statement;
+     :isDefinedBy rdf:;
+     :label "object";
+     :range :Resource .
+
+rdf:predicate     a rdf:Property;
+     :comment "The predicate of the subject RDF statement.";
+     :domain rdf:Statement;
+     :isDefinedBy rdf:;
+     :label "predicate";
+     :range :Resource .
+
+rdf:rest     a rdf:Property;
+     :comment "The rest of the subject RDF list after the first item.";
+     :domain rdf:List;
+     :isDefinedBy rdf:;
+     :label "rest";
+     :range rdf:List .
+
+rdf:subject     a rdf:Property;
+     :comment "The subject of the subject RDF statement.";
+     :domain rdf:Statement;
+     :isDefinedBy rdf:;
+     :label "subject";
+     :range :Resource .
+
+rdf:value     a rdf:Property;
+     :comment "Idiomatic property used for structured values.";
+     :domain :Resource;
+     :isDefinedBy rdf:;
+     :label "value";
+     :range :Resource .
+
+:     a owl:Ontology;
+     dc:title "The RDF Schema vocabulary (RDFS)";
+     :seeAlso <http://www.w3.org/2000/01/rdf-schema-more> .
+
+:Class     a :Class;
+     :comment "The class of classes.";
+     :isDefinedBy :;
+     :label "Class";
+     :subClassOf :Resource .
+
+:Container     a :Class;
+     :comment "The class of RDF containers.";
+     :isDefinedBy :;
+     :label "Container";
+     :subClassOf :Resource .
+
+:ContainerMembershipProperty     a :Class;
+     :comment """The class of container membership properties, rdf:_1, rdf:_2, ...,
+                all of which are sub-properties of 'member'.""";
+     :isDefinedBy :;
+     :label "ContainerMembershipProperty";
+     :subClassOf rdf:Property .
+
+:Datatype     a :Class;
+     :comment "The class of RDF datatypes.";
+     :isDefinedBy :;
+     :label "Datatype";
+     :subClassOf :Class .
+
+:Literal     a :Class;
+     :comment "The class of literal values, eg. textual strings and integers.";
+     :isDefinedBy :;
+     :label "Literal";
+     :subClassOf :Resource .
+
+:Resource     a :Class;
+     :comment "The class resource, everything.";
+     :isDefinedBy :;
+     :label "Resource" .
+
+:comment     a rdf:Property;
+     :comment "A description of the subject resource.";
+     :domain :Resource;
+     :isDefinedBy :;
+     :label "comment";
+     :range :Literal .
+
+:domain     a rdf:Property;
+     :comment "A domain of the subject property.";
+     :domain rdf:Property;
+     :isDefinedBy :;
+     :label "domain";
+     :range :Class .
+
+:isDefinedBy     a rdf:Property;
+     :comment "The defininition of the subject resource.";
+     :domain :Resource;
+     :isDefinedBy :;
+     :label "isDefinedBy";
+     :range :Resource;
+     :subPropertyOf :seeAlso .
+
+:label     a rdf:Property;
+     :comment "A human-readable name for the subject.";
+     :domain :Resource;
+     :isDefinedBy :;
+     :label "label";
+     :range :Literal .
+
+:member     a rdf:Property;
+     :comment "A member of the subject resource.";
+     :domain :Resource;
+     :isDefinedBy :;
+     :label "member";
+     :range :Resource .
+
+:range     a rdf:Property;
+     :comment "A range of the subject property.";
+     :domain rdf:Property;
+     :isDefinedBy :;
+     :label "range";
+     :range :Class .
+
+:seeAlso     a rdf:Property;
+     :comment "Further information about the subject resource.";
+     :domain :Resource;
+     :isDefinedBy :;
+     :label "seeAlso";
+     :range :Resource .
+
+:subClassOf     a rdf:Property;
+     :comment "The subject is a subclass of a class.";
+     :domain :Class;
+     :isDefinedBy :;
+     :label "subClassOf";
+     :range :Class .
+
+:subPropertyOf     a rdf:Property;
+     :comment "The subject is a subproperty of a property.";
+     :domain rdf:Property;
+     :isDefinedBy :;
+     :label "subPropertyOf";
+     :range rdf:Property .
+
+#ENDS
+

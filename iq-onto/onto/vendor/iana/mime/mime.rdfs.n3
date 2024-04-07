@@ -1,0 +1,113 @@
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	 	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+@prefix dc:		 	<http://purl.org/dc/elements/1.1/> .
+@prefix eg:		 	<http://www.eg.org/> .
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#>.
+@prefix mime:		<http://www.iana.org/assignments/media-types/>.
+@prefix : 			<http://www.iana.org/assignments/media-types/>.
+
+# ################################
+# Ontology
+# ################################
+
+: 	a owl:Ontology;
+	rdfs:label		"Media Types";
+	rdfs:comment	"A vocabularly of media-types specified by the IANA";
+	owl:versionInfo "0.1";
+.
+
+:MimeFormat
+	rdfs:label			"Mime Format";
+	rdfs:comment		"A common classification of file formats";
+.
+
+mime:type
+	a					rdfs:Property;
+	rdfs:domain			:MimeFormat;
+#	rdfs:range			xsd:string;
+.
+
+# ################################
+
+<http://www.iana.org/assignments/media-types>
+	rdfs:subClassOf		xsd:anyURI;
+	rdfs:label			"Any";
+	rdfs:comment		"Any known media-type";
+    rdfs:isDefinedBy	:;
+.
+
+<http://www.iana.org/assignments/media-types/binary>
+	rdfs:subClassOf		<http://www.iana.org/assignments/media-types>;
+	rdfs:label			"binary file";
+	rdfs:comment		"A known BINARY media-type";
+    rdfs:isDefinedBy	:;
+.
+<http://www.iana.org/assignments/media-types/#extension>
+	rdfs:subClassOf		rdfs:Property;
+	rdfs:label			"File Extension";
+	rdfs:comment		"A File Extension commonly identifies the type of file";
+    rdfs:isDefinedBy	:;
+    rdfs:domain			<http://www.iana.org/assignments/media-types/text>;
+    rdfs:range			xsd:string;
+.
+
+<http://www.iana.org/assignments/media-types/text/>
+	rdfs:subClassOf		<http://www.iana.org/assignments/media-types>;
+	rdfs:label 			"Text File";
+	rdfs:comment		"an ASCII text file";
+	rdfs:seeAlso		<http://www.iana.org/assignments/media-types/text>;
+	<http://www.iana.org/assignments/media-types/#extension>	"txt";
+	<http://www.iana.org/assignments/media-types/text>			"text/plain";
+.
+
+<http://www.iana.org/assignments/media-types/text/html>
+	rdfs:subClassOf			<http://www.iana.org/assignments/media-types/text>;
+	rdfs:label 				"HTML";
+	rdfs:comment			"an HTML web page";
+	rdfs:seeAlso			<http://www.iana.org/assignments/media-types/text/html>;
+
+	<http://www.iana.org/assignments/media-types/#extension>	"html";
+	<http://www.iana.org/assignments/media-types/#extension>	"htm";
+	<http://www.iana.org/assignments/media-types/text>			"text/html";
+.
+
+<http://www.iana.org/assignments/media-types/text/xml>
+	rdfs:subClassOf		<http://www.iana.org/assignments/media-types/text>;
+	rdfs:label 			"XML";
+	rdfs:comment		"an XML document";
+	rdfs:seeAlso		<http://www.iana.org/assignments/media-types/text/xml>;
+	<http://www.iana.org/assignments/media-types/text>			"text/xml";
+	<http://www.iana.org/assignments/media-types/#extension>			"xml";
+	<http://www.iana.org/assignments/media-types/#extension>			"xsl";
+	<http://www.iana.org/assignments/media-types/#extension>			"xslt";
+.
+
+<http://www.iana.org/assignments/media-types/text/json>
+	rdfs:subClassOf		<http://www.iana.org/assignments/media-types/text>;
+	rdfs:label 			"JSON";
+	rdfs:comment		"an JSON document";
+	<http://www.iana.org/assignments/media-types/#extension>		"json";
+	rdfs:seeAlso												<http://www.iana.org/assignments/media-types/text/json>;
+	<http://www.iana.org/assignments/media-types/text>		"text/json";
+.
+
+<http://www.iana.org/assignments/media-types/text/x-sparql-query>
+	rdfs:subClassOf			<http://www.iana.org/assignments/media-types/text>;
+	rdfs:label 				"SPARQL";
+	rdfs:comment			"a SPARQL query";
+	<http://www.iana.org/assignments/media-types/#extension>		"sparql";
+	<http://www.iana.org/assignments/media-types/text>		"application/x-sparql-query";
+.
+
+<http://www.iana.org/assignments/media-types/application> rdfs:subClassOf	<http://www.iana.org/assignments/media-types/text/BinaryType>.
+
+<http://www.iana.org/assignments/media-types/application/pdf>
+	rdfs:subClassOf		<http://www.iana.org/assignments/media-types/application>;
+	rdfs:label 			"PDF";
+	rdfs:comment		"an Adobe PDF document";
+	rdfs:seeAlso		<http://www.iana.org/assignments/media-types/application/pdf>;
+	<http://www.iana.org/assignments/media-types/#extension>	"pdf";
+	<http://www.iana.org/assignments/media-types/text>			"application/pdf";
+.
+

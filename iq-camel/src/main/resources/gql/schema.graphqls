@@ -1,0 +1,67 @@
+directive @rdf(ns: String, iri : String) repeatable on OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION
+directive @acl(role : String) on OBJECT | FIELD_DEFINITION
+schema {
+    query: Query
+}
+
+# Top-level queries
+type Query {
+    # SKOS Concepts
+    Concepts: [skos_Concept]
+    # inScheme .. ?ConceptScheme skos:inScheme ?Concept
+    inScheme (this: ID! @rdf(iri:"skos:inScheme")): [skos_Concept]
+    # Collection of SKOS concepts that have a 'hasTopConcept' of this
+    hasTopConcept (this: ID! @rdf(iri:"skos:hasTopConcept")): [skos_Concept]
+
+    # ACL Authorizations
+    Authorizations: [acl_Authorization]
+    # ACL Agents
+    Agents: [acl_Agent]
+    # ACL Resources
+    Resources: [acl_Resource]
+    # ACL Access Modes
+    AccessModes: [acl_Access]
+
+    # ACL Agent accessTo Authorizations for this Resource
+    accessTo( resource: ID @rdf(iri:"acl:accessTo"), agent: ID @rdf(iri:"acl:agent"), mode: ID @rdf(iri:"acl:mode")): [acl_Authorization]
+}
+
+# union SKOS = skos_Concept
+
+# A SKOS concept is any unit of thought: an idea, an object, an event
+type skos_Concept @rdf(iri:"skos:Concept") {
+    _id: ID!
+    label: String! @rdf(iri:"skos:prefLabel")
+}
+
+# A SKOS concept is any unit of thought: an idea, an object, an event
+
+type skos_ConceptScheme @rdf(iri:"skos:ConceptScheme") {
+    _id: ID!
+    label: String! @rdf(iri:"skos:prefLabel")
+}
+
+# union ACL = acl_Access | acl_Agent | acl_Authorization | acl_Resource
+
+# An ACL Authorization represent a set of access permissions.
+type acl_Authorization @rdf(iri:"acl:Authorization") {
+    _id: ID!
+    label: String @rdf(iri:"skos:prefLabel")
+    accessTo: acl_Resource @rdf(iri:"acl:accessTo")
+    agent: acl_Agent @rdf(iri:"acl:agent")
+    mode: acl_Access  @rdf(iri:"acl:accessTo")
+}
+
+# The Resource to which Access is being authorized
+type acl_Resource @rdf(iri:"acl:Resource") {
+    _id: ID!
+}
+# Any kind of ACL access to a Resource
+type acl_Access @rdf(iri:"acl:Access") {
+    _id: ID!
+}
+
+# The Agent to whom Access is being authorized
+type acl_Agent @rdf(iri:"acl:Agent") {
+    _id: ID!
+}

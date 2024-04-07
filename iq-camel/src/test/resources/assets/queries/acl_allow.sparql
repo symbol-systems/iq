@@ -1,0 +1,7 @@
+ASK {
+    ?authorization
+    a acl:Authorization ;
+    acl:accessTo ?this;
+    acl:agent ?agent;
+    acl:mode ?mode.
+}

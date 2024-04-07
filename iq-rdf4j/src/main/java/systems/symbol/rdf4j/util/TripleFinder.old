@@ -1,0 +1,215 @@
+package systems.symbol.rdf4j.util;
+
+import systems.symbol.ns.COMMONS;
+import systems.symbol.rdf4j.IRIs;
+import systems.symbol.rdf4j.NS;
+import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.namedMap.*;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+/**
+ *
+ * Utility to find a matching Resource(s) for common cases
+ *
+ * systems.symbol (c) 2014
+ * Module: systems.symbol.rdf4j.util
+ * @author Symbol Systems
+ * Date  : 17/06/2014
+ * Time  : 10:16 PM
+ */
+public class TripleFinder {
+    private static final Logger log = LoggerFactory.getLogger(TripleFinder.class);
+	public static String SCRIPTED_CONTENT = COMMONS.CNT + "chars";
+
+//	public static boolean isa(TripleSource triples, IRI s, IRI o, IRI c) {
+//		boolean isa = triples.getStatements(s, RDF.TYPE, o, c).hasNext();
+//		log.trace("isa: {} -> {}", s, isa);
+//		return isa;
+//	}
+
+//	public static Set<IRI> subjectsOf(TripleSource triples, IRI o, IRI c) {
+//    	Set<IRI> found = new HashSet<>();
+//		CloseableIteration<? extends Statement, QueryEvaluationException> models = triples.getStatements(null, RDF.TYPE, o, c);
+//		while(models.hasNext()) {
+//			Statement next = models.next();
+//			if (next.getSubject().isIRI()) {
+//				found.add((IRI) next.getSubject());
+//			}
+//		}
+//		log.trace("subjectsOf: {} -> {}", o, found);
+//		return found;
+//	}
+//
+//	public static Set<IRI> predicatesOf(TripleSource triples, IRI s, Value o, IRI c) {
+//		Set<IRI> found = new HashSet<>();
+//		CloseableIteration<? extends Statement, QueryEvaluationException> models = triples.getStatements(s, null, o, c);
+//		while(models.hasNext()) {
+//			Statement next = models.next();
+//			found.add(next.getPredicate());
+//		}
+//		log.trace("subjectsOf: {} -> {}", s, found);
+//		return found;
+//	}
+
+//	public static Set<IRI> typesOf(TripleSource triples, IRI s, IRI c) {
+//		return objectsOf(triples, s, RDF.TYPE, c);
+//	}
+
+//	public static Set<IRI> objectsOf(TripleSource triples, IRI s, IRI p, IRI c) {
+//		Set<IRI> found = new HashSet<>();
+//		CloseableIteration<? extends Statement, QueryEvaluationException> models = triples.getStatements(s, p, null, c);
+//		while(models.hasNext()) {
+//			Statement next = models.next();
+//			if (next.getObject().isIRI()) {
+//				found.add( (IRI)next.getObject() );
+//			}
+//		}
+//		log.trace("objectsOf: {} -> {}", s, found);
+//		return found;
+//	}
+
+
+//	public static List<Map<String, Object>> listOf(TripleSource triples, NS ns, IRI s, IRI p, IRI c) {
+//		return treeOf(triples,ns,s,p,c,null);
+//	}
+
+//	public static List<Map<String, Object>> treeOf(TripleSource triples, NS ns, IRI s, IRI p, IRI c, IRIs dedupe) {
+//		if (dedupe!=null) dedupe.add(s);
+//
+//		CloseableIteration<? extends Statement, QueryEvaluationException> models = triples.getStatements(s, p, null, c);
+//		IRIs follows = new IRIs();
+//		while(models.hasNext()) {
+//			Statement next = models.next();
+//			if (next.getObject().isIRI()) {
+//				follows.add((IRI) next.getObject());
+//			}
+//		}
+//		List<Map<String, Object>> items = new ArrayList<>();
+//		for(IRI follow : follows) {
+//			Map<String, Object> namedMap = mapOf(triples, ns, p, follow, c, dedupe);
+//			if (namedMap!=null) items.add(namedMap);
+//		}
+//		log.trace("treeOf: {} -> {}", s, items);
+//		return items;
+//	}
+	public static Map<String, Object> mapOf(TripleSource triples, NS ns, IRI s, IRI follow, IRI c) {
+		return mapOf(triples, ns, s, follow, c, null);
+	}
+
+	static Map<String, Object> mapOf(TripleSource triples, NS ns, IRI s, IRI follow, IRI c, IRIs dedupe) {
+		Map<String, Object> found = new HashMap<>();
+		found.put(NS.KEY_AT_ID, s.stringValue());
+		if (dedupe!=null) dedupe.add(s);
+
+		CloseableIteration<? extends Statement, QueryEvaluationException> namedMap = triples.getStatements(s, null, null,null, c);
+		while(namedMap.hasNext()) {
+			Statement next = namedMap.next();
+			String shortname = ns.localize(next.getPredicate().stringValue());
+			if (shortname!=null && next.getSubject().isIRI()) {
+				if (dedupe!=null) dedupe.add( (IRI)next.getSubject());
+				if (next.getObject().isLiteral()) {
+					System.out.println("mapOf.literal: " + shortname +" := " + next.getObject());
+					found.put(shortname, next.getObject().stringValue() );
+				} else if (next.getObject().isIRI() && dedupe != null ) {
+					if ( !dedupe.contains(next.getObject())) {
+						System.out.println("mapOf.follow: " + shortname +" --> " + next.getObject());
+						Map<String, Object> valueMap = mapOf(triples, ns, (IRI) next.getObject(), follow, c, dedupe);
+						set(found, shortname, valueMap );
+					}
+				}
+			}
+		}
+//		System.out.println("mapOf:" + s +"->" + found.toString());
+		return found;
+	}
+
+	private static void set(Map found, String shortname, Map valueMap) {
+		if (found.containsKey(shortname)) {
+			List items = (List) found.get(shortname);
+			items.add(valueMap);
+		} else {
+			List items = new ArrayList();
+			items.add(valueMap);
+			found.put(shortname, items );
+		}
+	}
+
+
+	public static Literal label(TripleSource triples, IRI s, IRI ctx) {
+		Literal literal = literalOf(triples, s, IRIs.forLabels(), ctx);
+		if (literal==null) return null;
+		return literal;
+	}
+
+	public static Literal literalOf(TripleSource triples, IRI s, Collection<IRI> predicates, IRI ctx) {
+		Set<Literal> literals = literalsOf(triples, s, predicates, ctx);
+//		System.out.println("literalsOf.any:"+s+"->"+literals+" @ "+ctx);
+		Optional<Literal> first = literals.stream().findFirst();
+		return first.orElse(null);
+	}
+
+	public static Set<Literal> literalsOf(TripleSource triples, IRI s, Collection<IRI> predicates, IRI ctx) {
+		Set<Literal> literals = new HashSet<>();
+		for(IRI p: predicates) {
+//			System.out.println("literalsOf.find:"+s+"->"+p+" @ "+ctx);
+			CloseableIteration<? extends Statement, QueryEvaluationException> statements = ScriptCatalog.getStatements(triples, s, p, null, ctx);
+//			System.out.println("literalsOf.next:"+p+"->"+statements.hasNext());
+			while (statements.hasNext()) {
+				Statement found = statements.next();
+//				System.out.println("literalsOf.found:"+found.getObject());
+				if (found.getObject().isLiteral()) {
+					// return our preferred label
+					literals.add ( (Literal) found.getObject() );
+				}
+			}
+		}
+		return literals;
+	}
+
+	public static Set<Literal> valuesOf(TripleSource triples, IRI s, IRI p, IRI c) {
+		Set<Literal> found = new HashSet<>();
+		CloseableIteration<? extends Statement, QueryEvaluationException> models = triples.getStatements(s, p, null, c);
+		while(models.hasNext()) {
+			Statement next = models.next();
+			if (next.getObject().isLiteral()) {
+				found.add( (Literal)next.getObject() );
+			}
+		}
+		log.trace("valuesOf: {} -> {} -> {}", s, found);
+		return found;
+	}
+
+	public static Set<IRI> follow(TripleSource triples, IRI s, Collection<IRI> predicates, IRI ctx) {
+		return follow(triples,s, predicates, ctx, new IRIs(), 10);
+	}
+
+	public static Set<IRI> follow(TripleSource triples, IRI s, Collection<IRI> predicates, IRI ctx, IRIs links, int recurse) {
+		for(IRI p: predicates) {
+//			System.out.println("linksOf.find:"+s+"->"+p+" @ "+ctx);
+			CloseableIteration<? extends Statement, QueryEvaluationException> statements = ScriptCatalog.getStatements(triples, s, p, null, ctx);
+//			System.out.println("linksOf.next:"+p+"->"+statements.hasNext());
+			while (statements.hasNext()) {
+				Statement found = statements.next();
+//				System.out.println("linksOf.found:"+found.getObject());
+				if (found.getObject().isIRI()) {
+					IRI object = (IRI) found.getObject();
+					// return our preferred links
+					if (!links.contains(object)) {
+						links.add (object);
+						if (recurse>0) {
+							follow(triples, object,predicates, ctx, links,recurse-1);
+						}
+					}
+				}
+			}
+		}
+		return links;
+	}
+
+}

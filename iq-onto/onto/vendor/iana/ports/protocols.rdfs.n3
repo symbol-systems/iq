@@ -1,0 +1,67 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ietf: <http://www.ietf.org/rfc/#>.
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix iana: <http://www.iana.org/assignments/port-numbers/#>.
+@prefix osi: <https://symbol.systems/v0/onto/v1/vendor/osi/namedMap/>.
+@prefix : <http://www.iana.org/assignments/port-numbers/#>.
+
+: a owl:Ontology ;
+	owl:versionInfo "0.1"@en;
+	rdfs:label 		"IANA Ports"@en;
+	dc:title 		"IANA Ports"@en;
+	rdfs:comment 	"Vocabulary for describing a IANA network service."@en;
+	dc:created 		"2013-01-30"^^xsd:date ;
+	dc:modified 	"2013-01-30"^^xsd:date ;
+	dc:license		<http://www.opendatacommons.org/licenses/pddl/1.0/>;
+	owl:seeAlso		<http://en.wikipedia.org/wiki/OSI_model>;
+.
+
+iana:Port
+	rdfs:subClassOf	osi:4;
+	rdfs:label 		"Port";
+	rdfs:comment 	"An TCP/UDP port";
+.
+
+iana:WellKnownPort
+	rdfs:subClassOf	iana:Port;
+	rdfs:label 		"IANA Port";
+	rdfs:comment 	"An IANA registered TCP/UDP port";
+.
+
+iana:22
+	a iana:WellKnownPort;
+	rdfs:label 		"SSH";
+	rdfs:comment 	"Secure Remote Login Protocol";
+	dc:subject 		"scp", "sftp", "ssh";
+	iana:port 		"22";
+	iana:protocol 	"tcp";
+	ietf:rfc 		"4251", "4252", "4253", "4254", "4255";
+.
+
+iana:443 
+	a iana:WellKnownPort;
+	rdfs:label		"HTTPS";
+	rdfs:comment	"Secure HTTP port used by a WebServer";
+	dc:subject		"https";
+	iana:port		"443";
+	iana:protocol	"tcp", "udp";
+.
+iana:80
+	a iana:WellKnownPort;
+	rdfs:label 		"HTTP";
+	rdfs:comment	"An HTTP port used by a WebServer";
+	dc:subject		"http";
+	iana:port		"80";
+	iana:protocol	"tcp", "udp";
+.
+iana:5222
+	a iana:WellKnownPort;
+	rdfs:label		"XMPP";
+	dc:subject		"xmpp";
+	rdfs:comment	"A port used by the Jabber Protocol";
+	iana:port		"5222";
+	iana:protocol	"tcp";
+.

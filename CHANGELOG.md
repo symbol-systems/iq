@@ -1,0 +1,13 @@
+
+- 0.62.3 - migrate namespaces
+- 0.61.0 - CloudEvents
+- 0.60.0 - GraphQL
+- 0.54.0 - RDF to GraphQL
+- 0.53.0 - Rendering
+- 0.53.0 - Scripting
+- 0.50.0 - Camel Integration
+- 0.40.0 - RDF re-integration
+- 0.30.0 - Actions / Scripts
+- 0.20.0 - Common Utilities
+- 0.10.0 - Prototype
+- 0.0.0 - Re-factor

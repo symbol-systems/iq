@@ -1,0 +1,132 @@
+@prefix : <https://symbol.systems/v0/onto/demo/oaic/privacy-principles#>.
+
+# Canonical Ontology Definitions (e.g. W3C standards)
+
+@prefix dbr:  <https://dbpedia.org/page/>.
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Logical Ontology Definitions (experimental, private or proprietary)
+
+@prefix raci: <https://symbol.systems/v0/onto/raci#>.
+@prefix fact: <https://symbol.systems/v0/onto/fact#>.
+@prefix frames: <https://symbol.systems/v0/onto/frames#>.
+@prefix dama: <https://symbol.systems/v0/onto/dama#>.
+@prefix fab: <https://symbol.systems/v0/onto/fab#>.
+@prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
+@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix iq-test: <https://test.symbol.systems/cases#>.
+
+@prefix australian-privacy-principles-guidelines: <https://www.oaic.gov.au/privacy/australian-privacy-principles-guidelines/>.
+
+# Model Definitions
+:
+    a skos:ConceptScheme;
+    a frames:Framework;
+    dct:title "Australian Privacy Principles"@en;
+    skos:hasTopConcept gg:Example;
+    rdfs:seeAlso <https://www.oaic.gov.au/privacy/australian-privacy-principles/australian-privacy-principles-quick-reference/>
+.
+:APP_1
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Open and transparent management of personal information"@en;
+    dct:description "Ensures that APP entities manage personal information in an open and transparent way. This includes having a clearly expressed and up to date APP privacy policy."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-1-app-1-open-and-transparent-management-of-personal-information;
+.
+
+:APP_2
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Anonymity and pseudonymity"@en;
+    dct:description "Requires APP entities to give individuals the option of not identifying themselves, or of using a pseudonym. Limited exceptions apply."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-2-app-2-anonymity-and-pseudonymity;
+.
+:APP_3
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Collection of solicited personal information"@en;
+    dct:description "Outlines when an APP entity can collect personal information that is solicited. It applies higher standards to the collection of sensitive information."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-3-app-3-collection-of-solicited-personal-information;
+.
+:APP_4
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Dealing with unsolicited personal information"@en;
+    dct:description "Outlines how APP entities must deal with unsolicited personal information"@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-4-app-4-dealing-with-unsolicited-personal-information
+.
+:APP_5
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Notification of the collection of personal information"@en;
+    dct:description "Outlines when and in what circumstances an APP entity that collects personal information must tell an individual about certain matters."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-5-app-5-notification-of-the-collection-of-personal-information;
+.
+:APP_6
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Use or disclosure of personal information"@en;
+    dct:description "Outlines the circumstances in which an APP entity may use or disclose personal information that it holds."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-6-app-6-use-or-disclosure-of-personal-information;
+.
+:APP_7
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Direct marketing"@en;
+    dct:description "An organisation may only use or disclose personal information for direct marketing purposes if certain conditions are met."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-7-app-7-direct-marketing;
+.
+:APP_8
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Cross-border disclosure of personal information"@en;
+    dct:description "Outlines the steps an APP entity must take to protect personal information before it is disclosed overseas."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-8-app-8-cross-border-disclosure-of-personal-information;
+.
+:APP_9
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Adoption, use or disclosure of government related identifiers"@en;
+    dct:description "Outlines the limited circumstances when an organisation may adopt a government related identifier of an individual as its own identifier, or use or disclose a government related identifier of an individual."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-9-app-9-adoption-use-or-disclosure-of-government-related-identifiers;
+.
+:APP_10
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Quality of personal information"@en;
+    dct:description "An APP entity must take reasonable steps to ensure the personal information it collects is accurate, up to date and complete. An entity must also take reasonable steps to ensure the personal information it uses or discloses is accurate, up to date, complete and relevant, having regard to the purpose of the use or disclosure."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-10-app-10-quality-of-personal-information;
+.
+:APP_11
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Security of personal information"@en;
+    dct:description "An APP entity must take reasonable steps to protect personal information it holds from misuse, interference and loss, and from unauthorised access, modification or disclosure. An entity has obligations to destroy or de-identify personal information in certain circumstances."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-11-app-11-security-of-personal-information;
+.
+:APP_12
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Access to personal information"@en;
+    dct:description "Outlines an APP entity’s obligations when an individual requests to be given access to personal information held about them by the entity. This includes a requirement to provide access unless a specific exception applies."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-12-app-12-access-to-personal-information;
+.
+:APP_13
+    a dama:Principle;
+    skos:inScheme :;
+    dct:title "Correction of personal information"@en;
+    dct:description "Outlines an APP entity’s obligations in relation to correcting the personal information it holds about individuals."@en;
+    rdfs:seeAlso australian-privacy-principles-guidelines:chapter-13-app-13-correction-of-personal-information;
+.

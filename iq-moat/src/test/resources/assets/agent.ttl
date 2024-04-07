@@ -1,0 +1,23 @@
+#  RDF/Turtle representation for a case in the context of Clever Claims.
+#  The base URI is set to 'https://test.symbol.systems/cases'.
+#  Prefixes are defined for namespaces 'urn:systems.symbol:v0:iq:', 'urn:systems.symbol:v0:iq:', and the base namespace.
+# 
+#  - The resource ':' represents a case and is of type 'iq:Agent'.
+#  - It has a property 'urn:systems.symbol:v0:iq:research-rss' with the value 'https://machinelearningmastery.com/blog/feed/'.
+#  - It is associated with a workflow 'workflow_0' identified as ':ideation'.
+
+@base <https://test.symbol.systems/cases>.
+@prefix fsm: <urn:systems.symbol:v0:iq:>.
+@prefix iq: <urn:systems.symbol:v0:iq:>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix : <https://test.symbol.systems/cases#>.
+
+:   a iq:Agent;
+    :workflow_0 :ideation;
+
+    <urn:systems.symbol:v0:iq:research-rss> <https://www.w3.org/blog/feed/>;
+    <urn:systems.symbol:v0:iq:research-page> <https://exmaple.com/>;
+.
+:workflow_0
+    a   fsm:Workflow;
+    fsm:initial :ideation.

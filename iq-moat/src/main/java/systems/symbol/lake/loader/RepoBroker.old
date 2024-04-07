@@ -1,0 +1,77 @@
+package systems.symbol.lake.loader;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import systems.symbol.rdf4j.io.RDFLoader;
+import systems.symbol.string.PrettyString;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class RepoBroker {
+    private static final Logger log = LoggerFactory.getLogger(RepoBroker.class);
+    File root = new File(".repo");
+
+    public RepoBroker() {
+    }
+
+    public static Repository newRepository() {
+        Repository repository = new SailRepository(new MemoryStore());
+        repository.init();
+        return repository;
+    }
+
+    public static Repository newRepository(File saveFile) {
+        Repository repository = new SailRepository(new MemoryStore(saveFile));
+        repository.init();
+        return repository;
+    }
+
+    public Repository getRepository(String name) {
+        String path = PrettyString.sanitize(name);
+        File file = new File(this.root, path);
+        Repository repository = newRepository(file);
+        log.info("rdf.broker.init: " + file.getAbsolutePath());
+        return repository;
+    }
+
+    public void release(Repository repo) {
+        repo.shutDown();
+    }
+
+    // public static Repository getMemoryRepository(String namespace, String path)
+    // throws RDFParseException, RepositoryException, IOException {
+    // return getMemoryRepository(namespace, null, null);
+    // }
+
+    public static Repository getMemoryRepository(String namespace, InputStream tripleStream, RDFFormat format)
+            throws RDFParseException, RepositoryException, IOException {
+        Repository repository = new SailRepository(new MemoryStore());
+        repository.init();
+        if (tripleStream == null)
+            return repository;
+
+        RepositoryConnection conn = repository.getConnection();
+        ValueFactory vf = conn.getValueFactory();
+        IRI ns = vf.createIRI(namespace);
+        RDFLoader loader = new RDFLoader(conn);
+        loader.load(ns, tripleStream, format);
+        conn.close();
+
+        return repository;
+    }
+
+}

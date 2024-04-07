@@ -1,0 +1,25 @@
+@base <https://test.symbol.systems/cases>.
+@prefix fsm: <urn:systems.symbol:v0:iq:>.
+@prefix iq: <urn:systems.symbol:v0:iq:>.
+@prefix : <https://test.symbol.systems/cases#>.
+
+:
+    a fsm:Agent;
+    fsm:workflow :workflow_0.
+
+:workflow_0
+    a   fsm:Workflow;
+    fsm:initial :ideation.
+
+:ideation fsm:to :work-in-progress.
+
+:work-in-progress fsm:to :in-review.
+
+:in-review fsm:to :revision ,
+             :complete .
+
+:revision fsm:to :ideation ,
+          :work-in-progress .
+
+[] a :work-in-progress.
+

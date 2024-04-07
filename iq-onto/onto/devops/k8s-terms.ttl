@@ -1,0 +1,102 @@
+@prefix : <https://symbol.systems/v0/onto/k8s#>.
+
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:		<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+@prefix dc:			<http://purl.org/dc/elements/1.1/> .
+@prefix eg:			<http://www.example.org/> .
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#>.
+
+# Logical Ontology Definitions (experimental, private or proprietary)
+
+@prefix raci: <https://symbol.systems/v0/onto/raci#>.
+@prefix fact: <https://symbol.systems/v0/onto/fact#>.
+@prefix frames: <https://symbol.systems/v0/onto/frames#>.
+@prefix dama: <https://symbol.systems/v0/onto/dama#>.
+@prefix fab: <https://symbol.systems/v0/onto/fab#>.
+@prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
+@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix iq-test: <https://test.symbol.systems/cases#>.
+@prefix k8s: <https://k8s.symbol.systems/v1#>.
+
+# Kubernetes Vocabulary
+
+:name
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	rdfs:label 			"name";
+	rdfs:domain			:Kind;
+	rdfs:range  		xsd:string;
+.
+:value
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"value";
+	rdfs:domain			:Kind;
+	rdfs:range  		xsd:string;
+.:version
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"version";
+	rdfs:domain			:Asset;
+	rdfs:range  		xsd:string;
+.
+:port
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"name";
+	rdfs:domain			:Service;
+	rdfs:range  		xsd:integer;
+.
+:container
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"deploys";
+	rdfs:domain			:Deployable;
+	rdfs:range  		:ContainerImage;
+.
+:manifest
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"repository";
+	rdfs:domain			:Package;
+	rdfs:range  		:Artefact;
+.
+:hasEnvironment
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"has environment";
+	rdfs:domain			:Runtime;
+	rdfs:range  		:RuntimeEnvironment;
+.
+:usesResource
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"uses";
+	rdfs:domain			:RuntimeEnvironment;
+	rdfs:range  		:RuntimeResource;
+.
+:runsDeployment
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"runs";
+	rdfs:domain			:RuntimeEnvironment;
+	rdfs:range  		:Deployment;
+.
+:hasAsset
+	a					rdf:Property;
+	rdfs:isDefinedBy	:Ontology;
+	skos:inScheme	    :K8S;
+	rdfs:label 			"catalogs";
+	rdfs:domain			:Repository;
+	rdfs:range  		:Asset;
+.
+

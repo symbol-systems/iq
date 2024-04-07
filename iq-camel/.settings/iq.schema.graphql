@@ -1,0 +1,69 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+}
+
+" Top-level queries"
+type Query {
+    " ACL Access Modes"
+    AccessModes: [acl_Access]
+    " ACL Agents"
+    Agents: [acl_Agent]
+    " ACL Authorizations"
+    Authorizations: [acl_Authorization]
+    " SKOS Concepts"
+    Concepts: [skos_Concept]
+    " ACL Resources"
+    Resources: [acl_Resource]
+    " ACL Agent accessTo Authorizations for this Resource"
+    accessTo(agent: ID, mode: ID, resource: ID): [acl_Authorization]
+    " Collection of SKOS concepts that have a 'hasTopConcept' of this"
+    hasTopConcept(this: ID!): [skos_Concept]
+    " inScheme .. ?ConceptScheme skos:inScheme ?Concept"
+    inScheme(this: ID!): [skos_Concept]
+}
+
+" Any kind of ACL access to a Resource"
+type acl_Access {
+    _id: ID!
+}
+
+" The Agent to whom Access is being authorized"
+type acl_Agent {
+    _id: ID!
+}
+
+"""
+
+union ACL = acl_Access | acl_Agent | acl_Authorization | acl_Resource
+An ACL Authorization represent a set of access permissions.
+"""
+type acl_Authorization {
+    _id: ID!
+    accessTo: acl_Resource
+    agent: acl_Agent
+    label: String
+    mode: acl_Access
+}
+
+" The Resource to which Access is being authorized"
+type acl_Resource {
+    _id: ID!
+}
+
+"""
+
+union SKOS = skos_Concept
+A SKOS concept is any unit of thought: an idea, an object, an event
+"""
+type skos_Concept {
+    _id: ID!
+    label: String!
+}
+
+" A SKOS concept is any unit of thought: an idea, an object, an event"
+type skos_ConceptScheme {
+    _id: ID!
+    label: String!
+}

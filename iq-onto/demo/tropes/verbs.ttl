@@ -1,0 +1,358 @@
+@prefix : <https://symbol.systems/demo/tropes#>.
+
+# Canonical Ontology Definitions (e.g. W3C standards)
+
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tropes: <https://myiq.cloud/storystream/tropes#> .
+
+:motivates
+    rdfs:label  "motivates";
+    rdfs:domain :Motive;
+    rdfs:range  :Event;
+    skos:inScheme :Drama;
+.
+:Conflict :motivates :plays.
+:Resolution :motivates :plays.
+:plays
+    rdfs:label  "plays";
+    rdfs:domain :Character;
+    rdfs:range  :Role;
+.
+:Fear :motivates :needs.
+:needs
+    rdfs:label  "needs";
+    rdfs:domain :Hero;
+    rdfs:range  :Sidekick;
+    skos:inScheme :Drama;
+    skos:inScheme :Heist;
+    skos:inScheme :Romance;
+.
+:Secret :motivates :fears.
+:fears
+    rdfs:label  "fears";
+    rdfs:domain :Antagonist;
+    rdfs:range  :Motive;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+.
+:Conflict :motivates :opposes.
+:opposes
+    rdfs:label  "opposes";
+    rdfs:domain :Antagonist;
+    rdfs:range  :Protagonist;
+    skos:inScheme :Drama;
+.
+:Plot :motivates :thawts.
+:thawts
+    rdfs:label  "thawts";
+    rdfs:domain :Antagonist;
+    rdfs:range  :Resolution;
+    skos:inScheme :Drama;
+    skos:inScheme :GoodLuck;
+.
+:Hero :motivates :arcs.
+:Love :motivates :arcs.
+:Fear :motivates :arcs.
+:arcs
+    rdfs:label  "arcs";
+    rdfs:domain :Conflict;
+    rdfs:range  :Resolution;
+    skos:inScheme :Drama;
+.
+:Hero :motivates :resolves.
+:resolves
+    rdfs:label  "resolves";
+    rdfs:domain :Resolution;
+    rdfs:range  :Conflict;
+    skos:inScheme :GoodLuck;
+    skos:inScheme :Drama;
+.
+:Conflict :motivates :acts.
+:Resolution :motivates :acts.
+:acts
+    rdfs:label  "acts";
+    rdfs:domain :Character;
+    rdfs:range  :Scene;
+    skos:inScheme :Drama;
+.
+:casts
+    rdfs:label  "casts";
+    rdfs:domain :Scene;
+    rdfs:range :Character;
+    skos:inScheme :Drama;
+.
+:about
+    rdfs:label  "about";
+    rdfs:domain :Story;
+    rdfs:range  :Plot;
+    skos:inScheme :Drama;
+.
+:Conflict :motivates :drives.
+:Resolution :motivates :drives.
+:drives
+    rdfs:label  "drives";
+    rdfs:domain :Plot;
+    rdfs:range  :Motive;
+.
+:knows
+    rdfs:domain :Character;
+    rdfs:range :Character;
+    rdfs:label "knows";
+.
+:Fear :motivates :steals.
+:steals
+    rdfs:label "steals";
+    rdfs:domain :Antagonist;
+    rdfs:range :Valuable;
+    skos:inScheme :Heist;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+.
+:Resolution :motivates :recovers.
+:recovers
+    rdfs:label "recovers";
+    rdfs:domain :Protagonist;
+    rdfs:range :Valuable;
+    skos:inScheme :Heist;
+    skos:inScheme :Rescue;
+    skos:inScheme :Situation;
+.
+:Love :motivates :loves.
+:loves
+    rdfs:label "loves";
+    rdfs:domain :Character;
+    rdfs:range :Valuable;
+    skos:inScheme :Drama;
+    skos:inScheme :Romance;
+.
+:Love :motivates :covets.
+:covets
+    rdfs:label "covets";
+    rdfs:domain :Antagonist;
+    rdfs:range  :Valuable;
+    skos:inScheme :Drama;
+    skos:inScheme :Mystery;
+    skos:inScheme :Heist;
+    skos:inScheme :Rescue;
+    skos:inScheme :Dark;
+    skos:inScheme :Romance;
+.
+:Hero :motivates :rescues.
+:Resolution :motivates :rescues.
+:rescues
+    rdfs:label "rescues";
+    rdfs:domain :Protagonist;
+    rdfs:range  :Character;
+    skos:inScheme :Kidnap;
+    skos:inScheme :Drama;
+    skos:inScheme :Rescue;
+.
+:Conflict :motivates :kidnaps.
+:Fear :motivates :kidnaps.
+:kidnaps
+    rdfs:subProperty :covets;
+    rdfs:label "kidnaps";
+    rdfs:domain :Antagonist;
+    rdfs:range  :Character;
+    skos:inScheme :Kidnap;
+    skos:inScheme :Drama;
+    skos:inScheme :Rescue;
+.
+:Fear :motivates :conceals.
+:Conflict :motivates :conceals.
+:conceals
+    rdfs:label "conceals";
+    rdfs:domain :Mystery;
+    rdfs:range  :Secret;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+.
+:Love :motivates :in.
+:Secret :motivates :in.
+:Valuable :motivates :in.
+:Conflict :motivates :in.
+:Resolution :motivates :in.
+:Plot :motivates :in.
+:in
+    rdfs:label "in";
+    rdfs:domain :Event;
+    rdfs:range :Place;
+    skos:inScheme :Drama;
+    skos:inScheme :Mystery;
+.
+:Fear :motivates :harms.
+:Conflict :motivates :in.
+:harms
+    rdfs:subClassOf :Event;
+    rdfs:label  "harms";
+    rdfs:domain :Danger;
+    rdfs:range :Character;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+    skos:inScheme :Rescue;
+.
+:Love :motivates :protects.
+:Conflict :motivates :protects.
+:protects
+    rdfs:label  "protects";
+    rdfs:range :Valuable;
+    skos:inScheme :Heist;
+    skos:inScheme :Rescue;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+.
+:Love :motivates :likes.
+:likes
+    rdfs:label  "likes";
+    rdfs:domain :Character;
+    rdfs:range :Character;
+.
+:Truth :motivates :believes.
+:Love :motivates :believes.
+:believes
+    rdfs:label  "believes";
+    rdfs:domain :Character;
+    rdfs:range :Fact;
+    skos:inScheme :Mystery;
+.
+:Fear :motivates :lies.
+:Love :motivates :lies.
+:Conflict :motivates :lies.
+:lies
+    rdfs:label  "lies";
+    rdfs:domain :Character;
+    rdfs:range  :Lie;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+.
+:Resolution :motivates :vouch.
+:vouch
+    rdfs:label  "vouch";
+    rdfs:domain :Witness;
+    rdfs:range  :Truth;
+    skos:inScheme :Mystery;
+.
+:Fear :motivates :dislikes.
+:dislikes
+    rdfs:label  "dislikes";
+    rdfs:domain :Character;
+    rdfs:range :Character;
+    skos:inScheme :Drama;
+    skos:inScheme :Dark;
+.
+:Secret :motivates :solves.
+:Resolution :motivates :solves.
+:solves
+    rdfs:label  "solves";
+    rdfs:domain :Clue;
+    rdfs:range  :Mystery;
+    skos:inScheme :Drama;
+.
+:Plot :motivates :witnesses.
+:Resolution :motivates :witnesses.
+:witnesses
+    rdfs:subPropertyOf :sees;
+    rdfs:label  "witnesses";
+    rdfs:domain :Character;
+    rdfs:range :Event;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+.
+:Plot :motivates :sees.
+:sees
+    rdfs:label  "sees";
+    rdfs:domain :Character;
+    rdfs:range  :Scene;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+.
+:Love :motivates :at.
+:Fear :motivates :at.
+:Conflict :motivates :at.
+:Resolution :motivates :at.
+:at
+    rdfs:label  "at";
+    rdfs:domain :Character;
+    rdfs:range :Place;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+.
+:Antagonist :motivates :features.
+:Protagonist :motivates :features.
+:Resolution :motivates :features.
+:Conflict :motivates :features.
+:features
+    rdfs:label  "features";
+    rdfs:domain :Plot;
+    rdfs:range :Scene;
+    skos:inScheme :Drama;
+.
+:Plot :motivates :causes.
+:Resolution :motivates :causes.
+:Conflict :motivates :causes.
+:causes
+    rdfs:label  "causes";
+    rdfs:domain :Motive;
+    rdfs:range  :Event;
+    skos:inScheme :Drama;
+.
+:Fear :motivates :conceals.
+:Resolution :motivates :conceals.
+:Conflict :motivates :conceals.
+:conceals
+    rdfs:label  "conceals";
+    rdfs:domain :Character;
+    rdfs:range  :Secret;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+.
+:Resolution :motivates :narrates.
+:narrates
+    rdfs:label  "narrates";
+    rdfs:domain :Character;
+    rdfs:range  :Story;
+    skos:inScheme :Drama;
+.
+:Resolution :motivates :grants.
+:Love :motivates :grants.
+:grants
+    rdfs:label  "grants";
+    rdfs:range  :GoodLuck;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+    skos:inScheme :Romance;
+    skos:inScheme :Dark;
+.
+:Fear :motivates :curses.
+:Conflict :motivates :curses.
+:curses
+    rdfs:label  "curses";
+    rdfs:domain :BadLuck;
+    rdfs:range  :Valuable;
+    skos:inScheme :Dark;
+    skos:inScheme :Mystery;
+    skos:inScheme :Drama;
+    skos:inScheme :Romance;
+.
+:Love :motivates :gifts.
+:Resolution :motivates :gifts.
+:Luck :motivates :gifts.
+:gifts
+    rdfs:label  "gifts";
+    rdfs:domain :Character;
+    rdfs:range  :Valuable;
+    skos:inScheme :Mystery;
+    skos:inScheme :Heist;
+    skos:inScheme :Reward;
+    skos:inScheme :Drama;
+    skos:inScheme :Romance;
+.

@@ -1,0 +1,15 @@
+{
+  "name": "IQ GraphQL (localhost)",
+  "schemaPath": "iq.schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Local GraphQL": {
+        "url": "http://localhost:9080/graphql",
+        "headers": {
+          "user-agent": "IQ GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

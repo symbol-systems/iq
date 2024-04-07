@@ -1,0 +1,118 @@
+package systems.symbol.agent;
+
+import systems.symbol.fsm.I_StateListener;
+import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.fsm.ModelStateMachine;
+import systems.symbol.fsm.StateException;
+import systems.symbol.intent.I_Intent;
+import systems.symbol.model.HasIdentity;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * A generic agent that can perform actions
+ * The agent state is maintained by an RDF4J Model.
+ * Skills are finite state machines which represent sets of next-best actions.
+ */
+public abstract class AbstractAgent implements I_Agent, HasIdentity, I_Intent, I_StateListener<Resource>, I_Decision {
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected I_StateMachine<Resource> fsm;
+    protected Model model;
+    protected IRI self;
+
+    /**
+     * Parameterized constructor allowing initialization with a pre-existing RDF4J model.
+     * @param model The RDF4J model to be associated with the agent.
+     */
+    public AbstractAgent(@NotNull Model model, IRI self) {
+        this.self = self;
+        setModel(model);
+    }
+
+    /**
+     * Sets the RDF4J model for the agent.
+     * @param model The RDF4J model to be set.
+     */
+    @Override
+    public void setModel(@NotNull  Model model) {
+        this.model = model;
+        learn(new ModelStateMachine(model, this.getIdentity()));
+        log.debug("state: {}", getStateMachine().getState());
+    }
+
+    /**
+     * Retrieves the state model associated with the agent.
+     * @return The RDF4J model.
+     */
+    @Override
+    public Model getModel() {
+        return model;
+    }
+
+    /**
+     * initiating a state machine associated with a given workflow resource.
+     * @return The state machine associated with the workflow (currently set to null).
+     */
+    @Override
+    public I_StateMachine<Resource> getStateMachine() {
+        return fsm;
+    }
+
+    /**
+     * build actionable workflow sets by associating a workflow with a state machine.
+     * The state machines represent the behaviour of the agent
+     *
+     * @param fsm The state machine associated with the workflow.
+     */
+    @Override
+    public void learn(@NotNull I_StateMachine<Resource> fsm) {
+        this.fsm = fsm;
+        fsm.listen((from, to) -> {
+            try {
+                return onTransition(from, to);
+            } catch(Exception e) {
+                log.error("agent.learn.failed: {}", fsm, e);
+                return false;
+            }
+        });
+    }
+
+    /**
+     * 
+     * @param from      previous state
+     * @param to        current state (unless veto-ed)
+     * @return          will veto/revert the transition if false
+     */
+    public abstract boolean onTransition(Resource from, Resource to);
+
+    /**
+     * Executes a transition in the specified workflow to reach the desired state.
+     *
+     * This method executes a workflow represented as a finite state machine.
+     * to the specified target state. If the transition is successful, the workflow
+     * is marked as done, and the set of completed workflows is returned.
+     *
+     * @param subject The IRI representing the actor/subject of the action.
+     * @param state The IRI representing the target state we've transitioned to.
+     * @return The set of IRIs of workflows AND states that have been successful.
+     * @throws StateException If there is an issue with the state transition.
+     */
+    @Override
+    public abstract Set<IRI> execute(IRI subject, Resource state) throws StateException;
+
+    public Resource decide(Resource state) throws StateException {
+        return getStateMachine().transition(state);
+    }
+
+    @Override
+    public IRI getIdentity() {
+        return self;
+    }
+}

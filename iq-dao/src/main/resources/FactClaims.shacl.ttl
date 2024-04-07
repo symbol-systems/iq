@@ -1,0 +1,273 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix ai: <http://fact.claims/#>.
+
+# Classes
+ai:DAOShape
+    a sh:NodeShape ;
+    sh:targetClass ai:DAO ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:AgentShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Agent ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:LegalEntityShape
+    a sh:NodeShape ;
+    sh:targetClass ai:LegalEntity ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:LLCShape
+    a sh:NodeShape ;
+    sh:targetClass ai:LLC ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:JurisdictionShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Jurisdiction ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+# More Shapes for other classes...
+
+# Properties
+ai:responsibleForShape
+    a sh:PropertyShape ;
+    sh:path ai:responsibleFor ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Matter) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Matter" ;
+    ] .
+
+ai:managesShape
+    a sh:PropertyShape ;
+    sh:path ai:manages ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Matter) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Matter" ;
+    ] .
+
+ai:requiresVoteShape
+    a sh:PropertyShape ;
+    sh:path ai:requiresVote ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Proposal) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Proposal" ;
+    ] .
+
+# Linking Shapes to Classes
+ai:DAOShape
+    sh:property ai:responsibleForShape ;
+    sh:property ai:managesShape ;
+    # Add more properties as needed...
+
+ai:AgentShape
+    # Define shapes for properties of Agent...
+
+ai:LegalEntityShape
+    # Define shapes for properties of LegalEntity...
+
+ai:ProposalShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Proposal ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:VoteShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Vote ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:DecisionShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Decision ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:approvalStatusShape
+    a sh:PropertyShape ;
+    sh:path ai:approvalStatus ;
+    sh:nodeKind sh:Literal ;
+    sh:minCount 1 ;
+    sh:message "Approval status is required" .
+
+ai:authorizesShape
+    a sh:PropertyShape ;
+    sh:path ai:authorizes ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Action) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Action" ;
+    ] .
+
+ai:executesShape
+    a sh:PropertyShape ;
+    sh:path ai:executes ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Action) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Action" ;
+    ] .
+
+ai:ProposalShape
+    sh:property ai:approvalStatusShape ;
+    # Add more properties as needed...
+
+ai:VoteShape
+    # Define shapes for properties of Vote...
+
+ai:DecisionShape
+    sh:property ai:authorizesShape ;
+    sh:property ai:executesShape ;
+    # Add more properties as needed...
+
+ai:ResolutionShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Resolution ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:ApprovedShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Approved ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:RejectedShape
+    a sh:NodeShape ;
+    sh:targetClass ai:Rejected ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Label is required" ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:minCount 1 ;
+        sh:message "Comment is required" ;
+    ] .
+
+ai:assignedToShape
+    a sh:PropertyShape ;
+    sh:path ai:assignedTo ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:in (ai:Trustee) ;
+        sh:minCount 1 ;
+        sh:message "Must be of type Trustee" ;
+    ] .
+
+ai:deadlineShape
+    a sh:PropertyShape ;
+    sh:path ai:deadline ;
+    sh:nodeKind sh:Literal ;
+    sh:minCount 1 ;
+    sh:message "Deadline is required" .
+
