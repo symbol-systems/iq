@@ -1,0 +1,131 @@
+@prefix : <https://symbol.systems/kb/v1#>.
+
+# Canonical Vocabularies (e.g. W3C standards)
+
+@prefix dbr:  <https://dbpedia.org/page/>.
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+
+# a conversation between a human and an AI agent.
+# uses SKOS and Schema.org vocabularies.
+
+:AI_Capability a skos:Concept;
+skos:prefLabel "AI Capability";
+.
+
+:Greetings a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Greetings";
+skos:definition "Introducing user and agent." ;
+.
+:Assistance a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Assistance";
+skos:definition "Providing generic help or support to the user." ;
+.
+:DataRetrieval a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Data Retrieval";
+skos:definition "Ability to retrieve data sets from various sources." ;
+.
+:KnowledgeBase a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Information Query";
+skos:definition "Seeking information or answers to questions from knowledge base." ;
+.
+:NaturalLanguage a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Natural Language";
+skos:definition "Ability to understand and generate human language." ;
+.
+:CreativeServices a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Creative Services";
+skos:definition "Ability to generate imagery and visual creative." ;
+.
+:TaskAutomation a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Task Automation";
+skos:definition "Capability to automate repetitive tasks." ;
+.
+:StripeFinance a skos:Concept;
+skos:related :AI_Capability;
+skos:prefLabel "Stripe Finances";
+skos:definition "Information about payments and invoices from Stripe API." ;
+.
+# Messaging
+
+:Human a foaf:Person;
+foaf:name "User" ;
+.
+:Agent a schema:ComputerProgram;
+schema:name "AI Agent" ;
+.
+:Conversation_1 a skos:Concept;
+skos:related :Conversation;
+skos:prefLabel "Conversation";
+schema:hasPart :Message_1;
+schema:hasPart :Message_2;
+.
+
+:Message_1 a schema:Question;
+schema:creator :Human;
+schema:about :Conversation_1;
+rdf:value "Hello, how can you help me today?";
+.
+
+:Message_2 a schema:Answer;
+schema:creator :Agent;
+schema:about :Conversation_1;
+rdf:value "I can assist you with various tasks";
+.
+
+:Conversation_1 a skos:Concept;
+skos:prefLabel "Conversation";
+schema:hasPart :Message_1_1;
+schema:hasPart :Message_1_2;
+skos:related :Conversation;
+.
+
+:Message_1_1 a schema:Question;
+schema:creator :Human;
+schema:about :Conversation_1;
+rdf:value "What are my sales today";
+.
+
+:Message_1_2 a schema:Answer;
+schema:creator :Agent;
+schema:about :Conversation_1;
+rdf:value "I can assist you with various tasks";
+skos:related :Assistance;
+skos:related :Greetings;
+.
+
+# Provide correct 'Message_2_2' response by only choosing :AI_Capability tool from above:
+
+:Conversation_2 a skos:Concept;
+skos:related :Conversation;
+schema:hasPart :Message_1;
+schema:hasPart :Message_2;
+.
+
+:Message_2_1 a schema:Question;
+schema:creator :Human;
+schema:about :Conversation_2;
+rdf:value "What are my stripe sales today?";
+.
+:Message_2_2 a schema:Question;
+schema:creator :Agent;
+schema:about :Conversation_2;
+.

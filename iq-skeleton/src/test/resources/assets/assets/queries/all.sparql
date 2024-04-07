@@ -1,0 +1,1 @@
+SELECT DISTINCT COUNT(?s) as ?count WHERE {?s ?p ?o }

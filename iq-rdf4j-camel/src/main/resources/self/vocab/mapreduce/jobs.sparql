@@ -1,0 +1,11 @@
+prefix mapreduce: 		<http://scorpio4.com/v1/vocab/mapreduce/>
+
+SELECT DISTINCT ?this ?map ?reduce ?from ?to ?as WHERE {
+	?this
+		mapreduce:map ?map;
+		mapreduce:reduce ?reduce;
+		mapreduce:from ?from;
+ 		mapreduce:to ?to;
+ 		mapreduce:as ?as;
+ 	.
+}

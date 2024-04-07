@@ -1,0 +1,365 @@
+
+@prefix : <https://symbol.systems/v0/onto/demo/dama/frames/dmbok#>.
+
+# Canonical Ontology Definitions (e.g. W3C standards)
+
+@prefix dbr:  <https://dbpedia.org/page/>.
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Logical Ontology Definitions (experimental, private or proprietary)
+
+@prefix raci: <https://symbol.systems/v0/onto/raci#>.
+@prefix fact: <https://symbol.systems/v0/onto/fact#>.
+@prefix frames: <https://symbol.systems/v0/onto/frames#>.
+@prefix dama: <https://symbol.systems/v0/onto/dama#>.
+@prefix fab: <https://symbol.systems/v0/onto/fab#>.
+@prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
+@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix iq-test: <https://test.symbol.systems/cases#>.
+
+@prefix : <https://symbol.systems/v0/onto/eg/>.
+
+# Model Definitions
+
+:framework_data_governance
+rdfs:subClassOf frames:Framework;
+dct:title "Data Governance Framework"@en;
+.
+:framework_data_governance_vision
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Vision and Strategy"@en;
+.
+:framework_data_governance_people
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Organisation and People"@en;
+.
+:framework_data_governance_processes
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Processes and Workflows"@en;
+.
+:framework_data_governance_measures
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Data Management and Measures"@en;
+.
+:framework_data_governance_culture
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Culture and Communications"@en;
+.
+:framework_data_governance_tools
+a :framework_journey_customer;
+a frames:Classification;
+dct:title "Tools and Technology"@en;
+.
+
+# Vision and Strategy
+
+:framework_data_governance_vision_1
+a :framework_data_governance_vision;
+a fact:Question;
+skos:inScheme dama:DataGovernance;
+skos:inScheme dama:Strategy;
+dct:title "Is there a clear understanding of the strategic goals and the need for Data Governance?"@en;
+.
+:framework_data_governance_vision_2
+a :framework_data_governance_vision;
+a fact:Question;
+skos:inScheme dama:DataUsage;
+dct:title "How does your organisation depend on data now?"@en;
+.
+:framework_data_governance_vision_3
+a :framework_data_governance_vision;
+a fact:Question;
+skos:inScheme dama:DataUsage;
+dct:title "How will your organisation depend on data in the future?"@en;
+.
+
+:framework_data_governance_vision_4
+a :framework_data_governance_vision;
+a fact:Question;
+skos:inScheme dama:DataProblems;
+dct:title "What impact area data problems having on your organisation?"@en;
+.
+
+:framework_data_governance_vision_5
+a :framework_data_governance_vision;
+a fact:Question;
+skos:inScheme dama:DataGovernancePolicy;
+dct:title "Do you have a Data Governance Policy?"@en;
+.
+
+# Organisation and People
+
+:framework_data_governance_people_1
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:InternalStakeholder;
+skos:inScheme dama:Stakeholder;
+dct:title "Who are the key stakeholders within your organisation?"@en;
+.
+:framework_data_governance_people_2
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:ExternalStakeholder;
+skos:inScheme dama:Stakeholder;
+dct:title "Who are the key stakeholders outside your organisation?"@en;
+.
+:framework_data_governance_people_3
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataProducer;
+dct:title "Who are the primary Data Producers in your organisation?"@en;
+.
+:framework_data_governance_people_4
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataConsumer;
+dct:title "Who are the primary Data Consumers in your organisation?"@en;
+.
+:framework_data_governance_people_5
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataModeller;
+dct:title "Who are the primary Data Modellers in your organisation?"@en;
+.
+:framework_data_governance_people_6
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataOwner;
+skos:inScheme dama:DataProblems;
+rdfs:seeAlso frames:People;
+rdfs:seeAlso frames:Processes;
+dct:title "Are individuals accountable for data ownership?"@en;
+.
+:framework_data_governance_people_7
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataSteward;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:People;
+rdfs:seeAlso frames:Processes;
+rdfs:seeAlso frames:Tools;
+dct:title "Are employees trained in good Data Management practices?"@en;
+.
+:framework_data_governance_people_8
+a :framework_data_governance_people;
+a fact:Question;
+skos:inScheme dama:DataSteward;
+skos:inScheme dama:DataProblem;
+skos:inScheme dama:BAU;
+rdfs:seeAlso frames:People;
+rdfs:seeAlso frames:Processes;
+dct:title "Are there channels through which data issues can be raised?"@en;
+.
+
+# Processes and Workflows
+
+:framework_data_governance_processes_1
+a :framework_data_governance_processes;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+skos:inScheme dama:BAU;
+rdfs:seeAlso frames:Processes;
+dct:title "Does the design of Business Processes and Operations take Data Management into account?"@en;
+.
+:framework_data_governance_processes_2
+a :framework_data_governance_processes;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+skos:inScheme dama:BAU;
+skos:inScheme dama:DataQuality;
+rdfs:seeAlso frames:Processes;
+dct:title "Are their specific processes for Data Management and improvement in place?"@en;
+.
+:framework_data_governance_processes_3
+a :framework_data_governance_processes;
+a fact:Question;
+rdfs:seeAlso frames:Processes;
+skos:inScheme dama:DataQuality;
+dct:title "Are their formal issue and workflow processes to address data problems?"@en;
+.
+:framework_data_governance_processes_4
+a :framework_data_governance_processes;
+a fact:Question;
+rdfs:seeAlso frames:Processes;
+skos:inScheme dama:DataManagement;
+dct:title "Has there been any analysis of how data is managed within operational business processes?"@en;
+.
+:framework_data_governance_processes_5
+a :framework_data_governance_processes;
+a fact:Question;
+rdfs:seeAlso frames:Processes;
+skos:inScheme dama:DataQuality;
+dct:title "How regularly does business and IT interact to manage data improvement?"@en;
+.
+
+# Data Management and Measures
+
+:framework_data_governance_measures_1
+a :framework_data_governance_measures;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+dct:title "Has key data been identified, defined and analysed?"@en;
+.
+:framework_data_governance_measures_2
+a :framework_data_governance_measures;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+dct:title "Have data models been built and maintained?"@en;
+rdfs:seeAlso :framework_data_governance_measures_2a;
+rdfs:seeAlso :framework_data_governance_measures_2b;
+rdfs:seeAlso :framework_data_governance_measures_2c;
+.
+
+:framework_data_governance_measures_2a
+a :framework_data_governance_measures_2;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Conceptual;
+dct:title "Have Conceptual data models been built and maintained?"@en;
+.
+:framework_data_governance_measures_2b
+a :framework_data_governance_measures_2;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Logical;
+dct:title "Have Logical data models been built and maintained?"@en;
+.
+:framework_data_governance_measures_2c
+a :framework_data_governance_measures_2c;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Physical;
+dct:title "Have Physical data models been built and maintained?"@en;
+.
+:framework_data_governance_measures_3
+a :framework_data_governance_measures;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Processes;
+dct:title "Have the relationships between business processes and data been mapped?"@en;
+.
+:framework_data_governance_measures_4
+a :framework_data_governance_measures;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Processes;
+skos:inScheme dama:DataQuality;
+dct:title "Are your data problems known, analysed and recorded?"@en;
+.
+:framework_data_governance_measures_5
+a :framework_data_governance_measures;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Processes;
+skos:inScheme dama:DataQuality;
+dct:title "Are there formal processes for how data should be managed and improved?"@en;
+.
+
+# Culture and Communications
+
+:framework_data_governance_culture_1
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Processes;
+rdfs:seeAlso frames:Communications;
+dct:title "Has the importance of data been communicated across the organisation?"@en;
+.
+:framework_data_governance_culture_1a
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Processes;
+rdfs:seeAlso frames:Communications;
+dct:title "Is there a data communications plan for the organisation?"@en;
+.
+:framework_data_governance_culture_2
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Communications;
+dct:title "Is the value of good data management championed by senior leadership?"@en;
+.
+:framework_data_governance_culture_3
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Communications;
+dct:title "Do employees received data awareness and improvement training?"@en;
+.
+:framework_data_governance_culture_3a
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Communications;
+dct:title "Do vendors and 3rd parties receive data awareness and improvement training?"@en;
+.
+:framework_data_governance_culture_4
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Communications;
+dct:title "Are there channels for communicating best practices in data management?"@en;
+.
+:framework_data_governance_culture_5
+a :framework_data_governance_culture;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Communications;
+dct:title "Are there internal success stories that can promote better data management practices across the organisation?"@en;
+.
+
+# Tools and Technology
+
+:framework_data_governance_tools_1
+a :framework_data_governance_tools;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Tools;
+dct:title "Is there a coherent data architecture in place to define and guide how data is captured, processed, stored and consumed?"@en;
+.
+:framework_data_governance_tools_2
+a :framework_data_governance_tools;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Tools;
+dct:title "What primary IT systems are used to store and process key business data?"@en;
+.
+:framework_data_governance_tools_3
+a :framework_data_governance_tools;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Tools;
+dct:title "Do design gates exist to ensure good data management is taken into account for new and modified systems?"@en;
+.
+:framework_data_governance_tools_4
+a :framework_data_governance_tools;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Tools;
+dct:title "What specialist data management tools are in use?"@en;
+.
+:framework_data_governance_tools_5
+a :framework_data_governance_tools;
+a fact:Question;
+skos:inScheme dama:DataManagement;
+rdfs:seeAlso frames:Tools;
+dct:title "What meta data is captured and stored?"@en;
+.

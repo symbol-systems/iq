@@ -1,0 +1,63 @@
+package systems.symbol.render;
+
+import com.github.jknack.handlebars.io.TemplateSource;
+import systems.symbol.iq.AbstractIQTest;
+import systems.symbol.rdf4j.iq.KBMS;
+import systems.symbol.rdf4j.util.TripleFinder;
+import org.eclipse.rdf4j.namedMap.IRI;
+import org.eclipse.rdf4j.namedMap.vocabulary.SKOS;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
+
+public class TripleTemplateLoaderTest extends AbstractIQTest {
+IRI iriTemplate;
+
+@BeforeMethod
+public void setUp() throws IOException {
+super.setUp();
+iriTemplate = vf.createIRI("https://test.symbol.systems/cases#hbs/index.hbs");
+}
+
+@Test
+public void testAssets() throws IOException {
+KBMS kbms = new KBMS(ctx, repository.getConnection());
+Set<IRI> subjects = TripleFinder.subjectsOf(kbms.getTriples(), SKOS.CONCEPT, kbms.getIdentity());
+System.out.println("triple.loader.subjects: "+subjects);
+assert subjects.size()>1;
+}
+
+@Test
+public void testSourceAt() throws IOException {
+KBMS kbms = new KBMS(ctx, repository.getConnection());
+TripleTemplateLoader loader = new TripleTemplateLoader(kbms);
+String iri = iriTemplate.stringValue();
+TemplateSource templateSource = loader.sourceAt(iri);
+System.out.println("triple.loader.templateSrc: "+templateSource+" @ "+iri);
+assert templateSource!=null;
+assert templateSource.filename()!=null;
+assert templateSource.filename().equals(iri);
+String content = templateSource.content(StandardCharsets.UTF_8);
+System.out.println("triple.loader.content: "+content);
+assert content != null;
+assert content.indexOf("h1")>=0;
+assert content.indexOf("prefLabel")>=0;
+}
+
+@Test
+public void testTemplateContent() throws IOException {
+KBMS kbms = new KBMS(ctx, repository.getConnection());
+TripleTemplateLoader loader = new TripleTemplateLoader(kbms);
+String iri = iriTemplate.stringValue();
+
+TemplateSource templateSource = loader.sourceAt(iri);
+System.out.println("triple.loader.content: "+templateSource.filename());
+assert templateSource.filename().equals(iri);
+String content = templateSource.content(StandardCharsets.UTF_8);
+assert content.indexOf("h1")>=0;
+}
+
+}

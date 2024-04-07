@@ -1,0 +1,331 @@
+package systems.symbol.rdf4j.io;
+/*
+ *  systems.symbol - see license
+ *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Licence: https://systems.symbol/about/license
+ */
+
+import systems.symbol.io.StreamCopy;
+import systems.symbol.model.HasIdentity;
+import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.rdf4j.util.SupportedScripts;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.ParserConfig;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.util.Stopwatch;
+
+import java.io.*;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLConnection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+public class BulkAssetLoader implements HasIdentity {
+private final Logger log = LoggerFactory.getLogger(getClass());
+public boolean DEBUG = true;
+	private ValueFactory vf = null;
+	private RepositoryConnection connection = null;
+	private final Extension2RDFFormat extension2format = new Extension2RDFFormat();
+private SupportedScripts supportedScripts;
+	private final IRI contentPredicate = ScriptCatalog.HAS_CONTENT;
+	private IRI context = null;
+	private long since = 0L;
+	private boolean deployRDF = true, forceDeployRDF = true, deployAssets = true;
+	private boolean fastFail = true;
+	public long total_files = 0, total_errors = 0, total_asset_files = 0, total_rdf_files = 0;
+	public int commitBuffer = 10000;
+	private final int largeFileSize = 10000000;
+
+	public BulkAssetLoader(String context, RepositoryConnection connection) throws RepositoryException {
+init(context,connection);
+}
+
+	public BulkAssetLoader(String context, RepositoryConnection connection, boolean cleanUp, boolean deployRDF, boolean deployAssets, boolean forceDeployRDF) throws RepositoryException {
+		init(context,connection);
+		if (cleanUp) clean();
+		this.deployRDF=deployRDF;
+		this.deployAssets = deployAssets;
+		this.forceDeployRDF = forceDeployRDF;
+	}
+
+	public BulkAssetLoader(IQ iq) throws RepositoryException {
+		init(iq.getIdentity(),iq.getConnection());
+	}
+
+	public void init(String context, RepositoryConnection connection) {
+		init( connection.getValueFactory().createIRI(context), connection);
+	}
+
+	public void init(IRI context, RepositoryConnection connection)  {
+	assert context!=null;
+	assert connection!=null;
+	this.context = context;
+
+	supportedScripts  = new SupportedScripts();
+		supportedScripts.supportSPARQL();
+		log.info("scripts: " + supportedScripts.getTypes());
+
+	vf = connection.getValueFactory();
+
+		setConnection(connection);
+		ParserConfig parserConfig = new ParserConfig();// new ParserConfig(false, true, false, RDFParser.DatatypeHandling.NORMALIZE)
+		connection.setParserConfig(parserConfig);
+		log.info("scripts: " + supportedScripts.getTypes());
+}
+
+	public void clean()  {
+		getConnection().clear(this.context);
+		getConnection().commit();
+		RDFPrefixer.defaultNamespaces(getConnection());
+	}
+
+	public void deploy(File fileOrFolder) throws IOException, RepositoryException {
+		long startTime = System.currentTimeMillis();
+		log.info("deploy: " + fileOrFolder.getAbsolutePath()+", exists: "+fileOrFolder.exists());
+	if (!fileOrFolder.exists()) return;
+		if (fileOrFolder.isDirectory()) {
+			findAllFiles(fileOrFolder, fileOrFolder, true);
+		} else {
+			deployFile(fileOrFolder.getParentFile(), fileOrFolder);
+		}
+		long elapsedTime = (System.currentTimeMillis()-startTime)/1000;
+		log.info("done: " + total_files+" in "+elapsedTime+"s (rdf: "+total_rdf_files+", assets: "+total_asset_files+") errors: "+total_errors);
+	}
+
+
+	protected void findAllFiles(File home, File dir, boolean recurse) throws IOException {
+		File[] files = dir.listFiles();
+		if(files==null) throw new IOException("Directory listing failed: "+dir.getAbsolutePath());
+		if (DEBUG) log.debug("deploy.scan: "+dir.getAbsolutePath() + ", files: " + files.length);
+
+		// files first
+for (File file : files) {
+if (file.isDirectory() || file.getName().startsWith(".")) {
+// ignore
+} else if (file.isFile()) {
+deployFile(home, file);
+}
+}
+		// folders second
+for (File file : files) {
+if (file.isFile() || file.getName().startsWith(".")) {
+// ignore .dot files
+} else if (file.isDirectory() && recurse) {
+findAllFiles(home, file, true);
+}
+}
+	}
+
+	public void deploy(URL url) throws IOException {
+		URLConnection urlConnection = url.openConnection();
+		if (urlConnection instanceof JarURLConnection) {
+			JarURLConnection jarURL = (JarURLConnection) urlConnection;
+			deploy(jarURL.getJarFile());
+		} else if (url.getProtocol().equals("file")) {
+			IRI iri = vf.createIRI(url.toExternalForm());
+			deploy(iri, url.openStream());
+		} else {
+			IRI iri = vf.createIRI(url.toExternalForm());
+			deploy(iri, url.openStream());
+		}
+	}
+
+	public void deploy(ZipFile zipFile) throws IOException {
+		IRI local_iri = vf.createIRI(getIdentity().stringValue(), zipFile.getName());
+if (DEBUG) log.debug("deploying.zip: "+local_iri);
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) entries.nextElement();
+			if(!entry.isDirectory()) deploy(local_iri, zipFile.getInputStream(entry));
+		}
+	}
+
+	private void deployFile(File home, File file) throws IOException {
+		if (!isChanged(file)) {
+			if (DEBUG) log.debug("not-modified: "+file.getAbsolutePath());
+			return;
+		}
+		IRI local_iri = Files.toIRI(vf, getIdentity(), home, file);
+		if (local_iri!=null) {
+			log.info("deploy.file: "+file.getAbsolutePath() + " == "+ file.length());
+			FileInputStream inStream = new FileInputStream(file);
+			deploy(local_iri, inStream);
+			label(local_iri, file.getName());
+			inStream.close();
+
+		}
+	}
+
+	public void deploy(IRI localPath, InputStream inStream) throws IOException {
+		String path = localPath.stringValue();
+		String asset_mime = supportedScripts.getMimeType(path);
+		RDFFormat format = extension2format.getFormat(path);
+		if (DEBUG) log.debug("deploy.mime: {} -> {} -> {} ({},{})", localPath, asset_mime, format, deployRDF, deployAssets);
+		if (asset_mime == null && format == null) {
+			log.warn("deploy.unknown: {}", localPath);
+			return;
+		}
+		total_files++;
+		if (deployRDF && format!=null) {
+			if (inStream.available()>largeFileSize) {
+				deployLargeRDF(localPath, inStream, format, commitBuffer);
+			} else deployRDF(localPath, inStream, format);
+			total_rdf_files++;
+		} else if (deployAssets && asset_mime!=null ) {
+			deployAsset(localPath, inStream, asset_mime);
+			total_asset_files ++;
+		}
+	}
+
+	private void deployRDF(IRI scriptIRI, InputStream inStream, @NotNull RDFFormat format) throws IOException {
+		getConnection().begin();
+		IRI type = format.getStandardURI();
+		try {
+			if (this.forceDeployRDF || !exists(scriptIRI, type)) {
+				getConnection().add(inStream, scriptIRI.stringValue(), format, context);
+				typeof(scriptIRI, type);
+				if (DEBUG) log.debug("deploy.rdf.done: "+format.getName()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
+			}
+			else {
+				if (DEBUG) log.debug("deploy.rdf.skip: <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
+			}
+		} catch(RDFParseException e) {
+			total_errors++;
+			log.error("deploy.rdf.broken: "+e.getMessage()+" @ "+scriptIRI);
+			if (fastFail) throw new IOException(e.getMessage(),e);
+		} catch(UnsupportedRDFormatException e) {
+			total_errors++;
+			log.error("deploy.rdf.invalid: "+e.getMessage()+" @ "+scriptIRI);
+			if (fastFail) throw new IOException(e.getMessage(),e);
+		}
+		getConnection().commit();
+	}
+
+	private void deployLargeRDF(IRI scriptIRI, InputStream inStream, @NotNull RDFFormat format, int commitInterval) throws IOException {
+		getConnection().begin();
+		IRI type = format.getStandardURI();
+		if (!this.forceDeployRDF && exists(scriptIRI, type)) {
+			log.debug("large.rdf.skip: <" + scriptIRI + "> a <" + type + "> <" + context + ">.");
+			return;
+		}
+
+		int linesRead = 0;
+		Stopwatch stopwatch = new Stopwatch();
+try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream))) {
+String line;
+while ((line = reader.readLine()) != null) {
+				getConnection().add(new StringReader(line), scriptIRI.stringValue(), format, context);
+if (linesRead % commitInterval == 1) {
+					log.info("large.rdf.commit: #{} -> {} @ {}s = {}ms", stopwatch.lap(), linesRead, stopwatch.getTotalTime()/1000, stopwatch.mark() );
+getConnection().commit();
+getConnection().begin();
+}
+linesRead++;
+}
+} catch (RDFParseException e) {
+total_errors++;
+log.error("large.rdf.broken: " + e.getMessage() + " @ " + scriptIRI);
+if (fastFail) throw new IOException(e.getMessage(), e);
+} catch (UnsupportedRDFormatException e) {
+total_errors++;
+log.error("large.rdf.invalid: " + e.getMessage() + " @ " + scriptIRI);
+if (fastFail) throw new IOException(e.getMessage(), e);
+} finally {
+getConnection().commit();
+}
+		log.info("large.rdf.done: {} @ {}/s", stopwatch.summary(), linesRead/(stopwatch.getTotalTime()/1000));
+	}
+	protected void deployAsset(IRI scriptIRI, InputStream inStream, String scriptType) throws IOException, RDFParseException, RepositoryException {
+		getConnection().begin();
+		String script = StreamCopy.toString(inStream);
+		IRI mimeType = vf.createIRI(scriptType);
+		Literal scriptBody = vf.createLiteral(script, mimeType);
+		content(scriptIRI, scriptBody);
+//		mimetype(scriptIRI, mimeType);
+		if (DEBUG) log.debug("deploy.asset: "+scriptIRI + " as " + scriptType);
+		// if (DEBUG) log.debug("deploy.script: "+script);
+		getConnection().commit();
+	}
+
+	public ClassLoader loadClasses(URL zipFile) {
+		return loadClasses(zipFile, getClass().getClassLoader());
+	}
+
+	public ClassLoader loadClasses(URL zipFile, ClassLoader classLoader) {
+		URL[] jars = new URL[1];
+		jars[0] = zipFile;
+		return new URLClassLoader (jars, classLoader);
+	}
+
+	public RepositoryConnection getConnection() {
+		return connection;
+	}
+
+ 	public void setConnection(RepositoryConnection connection) throws RepositoryException {
+		this.connection = connection;
+		this.vf = connection.getValueFactory();
+	}
+
+	public long getSince() {
+		return since;
+	}
+
+	public void setSince(long since) {
+		this.since = since;
+	}
+
+	public boolean isChanged(File file) {
+		return !(since>0 && file.lastModified()<=since);
+	}
+
+	public void setSince(Date since) {
+		this.since = since.getTime();
+	}
+
+	private void label(IRI iri, String label) {
+		getConnection().add(iri, RDFS.LABEL, vf.createLiteral(label), getIdentity());
+	}
+
+//	private void mimetype(IRI iri, IRI type) {
+//		getConnection().add(iri, DCTERMS.HAS_FORMAT, type, getIdentity());
+//	}
+
+	private void typeof(IRI iri, IRI type) {
+		getConnection().add(iri, RDF.TYPE, type, getIdentity());
+	}
+
+	private boolean exists(IRI iri, IRI type) {
+		return getConnection().hasStatement(iri, RDF.TYPE, type, false, getIdentity());
+	}
+	
+	private void content(IRI scriptIRI, Literal scriptBody) {
+		// idempotent
+		getConnection().remove(scriptIRI, contentPredicate, null, getIdentity());
+		getConnection().add( scriptIRI, contentPredicate, scriptBody, getIdentity());
+	}
+
+	public void close() {
+		this.connection.close();
+	}
+
+	@Override
+	public IRI getIdentity() {
+		return context;
+	}
+}

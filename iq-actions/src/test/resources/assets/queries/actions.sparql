@@ -1,0 +1,5 @@
+SELECT DISTINCT ?id ?type ?text
+WHERE {
+?d cnt:chars ?text.
+BIND (datatype(?text) AS ?type)
+}

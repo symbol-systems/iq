@@ -1,0 +1,111 @@
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	 	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+@prefix dc:		 	<http://purl.org/dc/elements/1.1/> .
+@prefix eg:		 	<http://www.eg.org/> .
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#>.
+
+@prefix : 			<http://www.w3.org/2001/XMLSchema#>.
+
+# ################################
+# Ontology
+# ################################
+
+: 	a owl:Ontology;
+	rdfs:label		"Data Types";
+	rdfs:comment	"A Vocabularly of XSD data types specified by the W3C";
+	owl:versionInfo "0.1";
+	dc:creator		"Symbol Systems";
+.
+
+# ################################
+# Scalar Classes
+# ################################
+
+xsd:simpleType a rdfs:Datatype;
+	rdfs:label "Generic";
+	rdfs:comment "A generic scalar value";
+rdfs:isDefinedBy :;
+.
+
+xsd:numeric a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "Numeric";
+	rdfs:comment "A numeric value";
+rdfs:isDefinedBy :;
+.
+
+xsd:integer a rdfs:Datatype;
+	rdfs:subClassOf	xsd:numeric;
+	rdfs:label "Integer";
+	rdfs:comment "A signed integer";
+rdfs:isDefinedBy :;
+.
+
+xsd:decimal a rdfs:Datatype;
+	rdfs:subClassOf	xsd:numeric;
+	rdfs:label "Decimal";
+	rdfs:comment "A double precision decimal number";
+rdfs:isDefinedBy :;
+.
+
+xsd:boolean a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "Boolean";
+	rdfs:comment "A boolean (true/false) value";
+rdfs:isDefinedBy :;
+.
+
+xsd:string a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "String";
+	rdfs:comment "A sequence of alphanumeric characters";
+rdfs:isDefinedBy :;
+.
+
+xsd:date a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "Date";
+	rdfs:comment "A date (D/M/Y) in Gregorian calendar";
+rdfs:isDefinedBy :;
+.
+
+xsd:time a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "Time";
+	rdfs:comment "A time (H:M:S) using 24hr notation";
+rdfs:isDefinedBy :;
+.
+
+xsd:dateTime a rdfs:Datatype;
+	rdfs:subClassOf	xsd:date;
+	rdfs:subClassOf	xsd:time;
+	rdfs:label "Date/Time";
+	rdfs:comment "A combination of date (D/M/Y) and time (H:M:S)";
+rdfs:isDefinedBy :;
+.
+xsd:anyURI a rdfs:Datatype;
+	rdfs:subClassOf	xsd:simpleType;
+	rdfs:label "URL";
+	rdfs:comment "A resource located by URL";
+rdfs:isDefinedBy :;
+.
+
+#
+# Non-standard sub-classes
+#
+
+xsd:FILE a rdfs:Datatype;
+	rdfs:subClassOf	xsd:anyURI;
+	rdfs:label "local file";
+	rdfs:comment "A local resource located by file://";
+rdfs:isDefinedBy :;
+.
+
+xsd:html
+ 	rdfs:subClassOf	xsd:string;
+	rdfs:label "html";
+	rdfs:comment "HTML";
+rdfs:isDefinedBy :;
+.
+

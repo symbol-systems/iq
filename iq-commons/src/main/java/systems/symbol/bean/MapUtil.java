@@ -1,0 +1,146 @@
+package systems.symbol.bean;
+/*
+ *  symbol.systems
+ *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Licence: https://systems.symbol/about/license
+ */
+
+import systems.symbol.util.DateXSD;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
+
+/**
+ * systems.symbol (c) 2010-2013
+ * @author Symbol Systems
+ * Date: 22/01/13
+ * Time: 7:01 PM
+ * <p/>
+ * This code does something useful
+ */
+public class MapUtil {
+
+	public MapUtil() {
+	}
+
+	public static boolean getBoolean(Map<String,Object> model, String key, boolean _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		return Boolean.parseBoolean(value.toString());
+	}
+
+	public static int getInt(Map<String,Object> model, String key, int _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		return Integer.parseInt(value.toString());
+	}
+
+	public static long getLong(Map<String,Object> model, String key, long _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		return Long.parseLong(value.toString());
+	}
+
+	public static Date getDate(Map<String,Object> model, String key, Date _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		DateXSD xsd =  new DateXSD();
+		return xsd.parse(value.toString());
+	}
+
+	public static String getString(Map<String,Object> model, String key, String _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		return value.toString();
+	}
+
+	public static String getString(Map<String,Object> model, String key) {
+		Object value = model.get(key);
+		if (value==null) return null;
+		return value.toString();
+	}
+
+	public static File getFile(Map<String,Object> model, String key, File _default) {
+		Object value = model.get(key);
+		if (value==null) return _default;
+		return new File(value.toString());
+	}
+
+	public static File setFile(Map<String,Object> model, String key, File _default) {
+		File file = getFile(model, key, null);
+		if (file!=null) return file;
+		model.put(key,_default.getAbsolutePath());
+		return _default;
+	}
+
+public static Map<String,Map<String,Object>> getMapByKey(Collection <Map<String,Object>> things) {
+return getMapByKey(things, "this");
+}
+
+public static Map<String,Map<String,Object>> getMapByKey(Collection <Map<String,Object>> things, String key) {
+Map<String,Map<String,Object>> models = new HashMap<>();
+for(Map<String,Object> thing: things) {
+if (thing.containsKey(key)) {
+models.put(thing.get(key).toString(), thing);
+}
+}
+return models;
+}
+
+	public static Map<String,Object> getConfig(Map<Object,Object> props, String prefix) {
+		Object found = props.get(prefix);
+		if (found!=null && found instanceof Map) return (Map)found;
+		HashMap<String, Object> config = new HashMap<>();
+		for(Object name: props.keySet()) {
+			if (name.toString().startsWith(prefix)) {
+				String shortName = name.toString().substring(prefix.length());
+				config.put(shortName, props.get(name));
+			}
+		}
+		return config;
+	}
+
+	public static boolean hasRequired(Map<String, Object> model, List<String> requirements) {
+		for(int i=0;i<requirements.size();i++) {
+			if (!model.containsKey(requirements.get(i))) return false;
+		}
+		return true;
+	}
+
+	public static void putDefault(Map<String,Object> config, String p, boolean b) {
+		if (config.containsKey(p)) return;
+		config.put(p,b);
+	}
+
+	public static void putDefault(Map<String,Object> config, String p, String o) {
+		if (config.containsKey(p)) return;
+		config.put(p,o);
+	}
+
+	public static void putDefault(Map<String,Object> config, String p, Number n) {
+		if (config.containsKey(p)) return;
+		config.put(p,n);
+	}
+
+	public static Map<String, Object> load(File file, String prefix) throws IOException {
+		return getConfig( load(file), prefix);
+	}
+
+	public static Properties load(File file) throws IOException {
+		Properties props = new Properties();
+		props.load(new FileInputStream(file));
+		return props;
+	}
+
+	public static Map<String, Object> mapDefaults(Map<String, Object> model, Map<String, Object> defaults) {
+		if (model==null) model = new HashMap<>();
+		for(String key: defaults.keySet()) {
+			if (!model.containsKey(key) || model.get(key) == null ) {
+				model.put(key, defaults.get(key));
+			}
+		}
+		return model;
+	}
+}

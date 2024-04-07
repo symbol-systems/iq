@@ -1,0 +1,3 @@
+# @namespaces
+
+SELECT DISTINCT ?this WHERE { ?this a asq:Query }

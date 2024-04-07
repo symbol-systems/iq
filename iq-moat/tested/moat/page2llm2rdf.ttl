@@ -1,0 +1,34 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix cnt: <http://www.w3.org/2011/content#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix : <https://test.symbol.systems/cases#> .
+@prefix fsm: <urn:systems.symbol:v0:iq:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix my: <https://:systems.symbol/v0/my#> .
+
+<https://test.symbol.systems/cases#> a <urn:systems.symbol:v0:iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
+  :workflow_0 :ideation;
+  <urn:systems.symbol:v0:iq:research-rss> <https://www.w3.org/blog/feed/>;
+  <urn:systems.symbol:v0:iq:research-page> <https://exmaple.com/>;
+  <http://www.w3.org/ns/prov#generated> <https://exmaple.com/> .
+
+:workflow_0 a <urn:systems.symbol:v0:iq:Workflow>;
+  <urn:systems.symbol:v0:iq:initial> :ideation .
+
+:agent.ttl a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "agent.ttl" .
+
+<urn:systems.symbol.research.PageToLLMToRDF> a <http://www.w3.org/ns/prov#Activity>;
+  <http://www.w3.org/ns/prov#generated> <https://exmaple.com/> .
+
+<https://exmaple.com/> a <http://www.w3.org/ns/prov#Entity>;
+  <http://www.w3.org/ns/prov#wasGeneratedBy> <https://test.symbol.systems/cases#> .
+
+<https://exmaple.com/#chunk_1> a skos:Concept;
+  skos:altLabel "Example.com";
+  skos:prefLabel "Mistaken Landing" .

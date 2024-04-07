@@ -1,0 +1,7 @@
+#@namespaces
+
+SELECT DISTINCT ?id
+WHERE {
+	?id		a		core:Runtime.
+
+}

@@ -1,0 +1,6 @@
+CONSTRUCT {
+?this ?p ?o
+} WHERE {
+?this ?p ?o
+
+}

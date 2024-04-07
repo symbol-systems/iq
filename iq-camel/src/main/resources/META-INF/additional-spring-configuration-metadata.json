@@ -1,0 +1,8 @@
+{
+  "properties": [
+{
+  "name": "iq.home",
+  "type": "java.lang.String",
+  "description": "Description for iq.home."
+  }
+] }

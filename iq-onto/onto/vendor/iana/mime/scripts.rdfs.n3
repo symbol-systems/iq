@@ -1,0 +1,33 @@
+@prefix rdf:		<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	 	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+@prefix dc:		 	<http://purl.org/dc/elements/1.1/> .
+@prefix eg:		 	<http://www.eg.org/> .
+@prefix xsd: 		<http://www.w3.org/2001/XMLSchema#>.
+@prefix mime:		<http://www.iana.org/assignments/media-types/>.
+@prefix : 			<http://www.iana.org/assignments/media-types/>.
+
+<http://www.iana.org/assignments/media-types/application/x-groovy>
+	rdfs:label 			"Groovy";
+	rdfs:comment		"a Groovy script";
+	mime:type			"application/x-groovy";
+	<http://www.iana.org/assignments/media-types/#extension>		"groovy";
+.
+
+<http://www.iana.org/assignments/media-types/application/javascript>
+	rdfs:label 			"Javascript";
+	rdfs:comment		"an Javascript function";
+	rdfs:seeAlso		<http://www.iana.org/assignments/media-types/text/javascript>;
+	mime:type			"application/javascript";
+	<http://www.iana.org/assignments/media-types/#extension>		"js";
+	<http://www.iana.org/assignments/media-types/#extension>		"jscript";
+.
+
+<http://www.iana.org/assignments/media-types/application/ecmascript>
+	rdfs:label 			"ECMAScript";
+	rdfs:comment		"an ECMAScript function";
+	mime:type			"application/ecmascript";
+	<http://www.iana.org/assignments/media-types/#extension>		"js";
+	<http://www.iana.org/assignments/media-types/#extension>		"jscript";
+.
+

@@ -1,0 +1,23 @@
+server:
+  port: 9080
+camel:
+  springboot:
+name: iq-camel
+  dataformat:
+json-jackson:
+  auto-discover-object-mapper: true
+management:
+  port: 8081
+endpoints:
+  enabled: true
+  health:
+enabled: true
+quickstart:
+  generateOrderPeriod: 10s
+  processOrderPeriod: 30s
+logging:
+  level:
+web: debug
+iq:
+  home: "iq.home"
+  context: "https://test.symbol.systems/"

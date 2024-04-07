@@ -1,0 +1,29 @@
+## Test NLP
+
+The term cognitive computing mimics the functioning of the human brain and helps to improve human decision-making.
+
+In this sense, CC is a new type of computing with the goal of more accurate models of how the human brain/mind senses, reasons, and responds to stimulus.
+
+CC applications link data analysis and adaptive page displays (AUI) to adjust content for a particular type of audience.
+
+As such, CC hardware and applications strive to be more affective and more influential by design.
+
+Some features that cognitive systems may express are:
+
+### Adaptive
+
+They may learn as information changes, and as goals and requirements evolve. They may resolve ambiguity and tolerate unpredictability. They may be engineered to feed on dynamic data in real time, or near real time.[11]
+
+### Interactive
+
+They may interact easily with users so that those users can define their needs comfortably. They may also interact with other processors, devices, and cloud services, as well as with people.
+
+### Iterative and stateful
+
+They may aid in defining a problem by asking questions or finding additional source input if a problem statement is ambiguous or incomplete. They may "remember" previous interactions in a process and return information that is suitable for the specific application at that point in time.
+
+### Contextual
+
+They may understand, identify, and extract contextual elements such as meaning, syntax, time, location, appropriate domain, regulations, user’s profile, process, task and goal. They may draw on multiple sources of information, including both structured and unstructured digital information, as well as sensory inputs (visual, gestural, auditory, or sensor-provided).
+
+

@@ -1,0 +1,6 @@
+prefix flo: 		<http://scorpio4.com/v1/vocab/flo/>
+
+SELECT DISTINCT ?from ?to WHERE {
+	?that flo:from	?from.
+	?from flo:to 	?to.
+}

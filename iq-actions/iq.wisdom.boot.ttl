@@ -1,0 +1,264 @@
+# @ Sun Feb 04 00:18:55 AEDT 2024<http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Container> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Container> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#List> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#List> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#List> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#List> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Container> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Literal> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/1999/02/22-rdf-syntax-ns#List> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#value> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> .
+<http://www.w3.org/2000/01/rdf-schema#Class> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Class> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Class> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Class> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Container> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Container> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Container> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Container> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Container> .
+<http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> .
+<http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Datatype> .
+<http://www.w3.org/2000/01/rdf-schema#Datatype> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Literal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Literal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Literal> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Literal> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Literal> .
+<http://www.w3.org/2000/01/rdf-schema#Resource> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#Resource> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#Resource> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#comment> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#comment> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#comment> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#comment> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Literal> .
+<http://www.w3.org/2000/01/rdf-schema#comment> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#comment> .
+<http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#domain> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#seeAlso> .
+<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#isDefinedBy> .
+<http://www.w3.org/2000/01/rdf-schema#label> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#label> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#label> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#label> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Literal> .
+<http://www.w3.org/2000/01/rdf-schema#label> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#label> .
+<http://www.w3.org/2000/01/rdf-schema#member> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#member> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#member> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#member> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#member> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#member> .
+<http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#range> .
+<http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#seeAlso> .
+<http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/2000/01/rdf-schema#Class> .
+<http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#subClassOf> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#domain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#range> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> .
+<https://test.symbol.systems/cases#skeleton.txt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://purl.org/dc/terms/hasFormat> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2011/content#chars> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://purl.org/dc/terms/hasFormat> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://purl.org/dc/terms/hasFormat> .
+<http://www.w3.org/2011/content#chars> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2011/content#chars> .
+<http://www.iana.org/assignments/media-types/text/plain> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#Authorization> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#Authorization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#Authorization> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#mode> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/ns/auth/acl#agent> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/ns/auth/acl#accessTo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2004/02/skos/core#prefLabel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/ns/formats/Turtle> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/ns/formats/Turtle> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/ns/formats/Turtle> .
+<http://www.w3.org/ns/auth/acl#Authorization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/ns/auth/acl#Authorization> .
+<http://www.w3.org/ns/auth/acl#Authorization> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://www.w3.org/ns/auth/acl#mode> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/ns/auth/acl#mode> .
+<http://www.w3.org/ns/auth/acl#agent> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/ns/auth/acl#agent> .
+<http://www.w3.org/ns/auth/acl#accessTo> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/ns/auth/acl#accessTo> .
+<http://www.w3.org/2004/02/skos/core#prefLabel> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2004/02/skos/core#prefLabel> .
+<https://test.symbol.systems/public/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#Read> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/auth/acl#Anonymous> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/acl.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/formats/Turtle> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/formats/Turtle> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/ns/formats/Turtle> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#bootstrapped> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://purl.org/dc/terms/description> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2004/02/skos/core#hasTopConcept> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2004/02/skos/core#inScheme> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/2004/02/skos/core#Concept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2004/02/skos/core#Concept> .
+<http://www.w3.org/2004/02/skos/core#Concept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> .
+<http://purl.org/dc/terms/description> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://purl.org/dc/terms/description> .
+<http://www.w3.org/2004/02/skos/core#hasTopConcept> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2004/02/skos/core#hasTopConcept> .
+<http://www.w3.org/2004/02/skos/core#inScheme> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <http://www.w3.org/2004/02/skos/core#inScheme> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <https://test.symbol.systems/cases#scripts/index.groovy> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://www.w3.org/2000/01/rdf-schema#subPropertyOf> <https://test.symbol.systems/cases#queries/infer-labels.sparql> .
+<https://test.symbol.systems/cases#TestSuite> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/2004/02/skos/core#Concept> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/2004/02/skos/core#Concept> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.w3.org/2004/02/skos/core#Concept> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestCase> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#bootstrap> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/all.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/index.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.iana.org/assignments/media-types/text/x-handlebars> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/actions.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.iana.org/assignments/media-types/application/x-sparql-query> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/inscheme.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/allow.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/hello.groovy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<http://www.iana.org/assignments/media-types/application/x-groovy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/world.groovy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Resource> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#skeleton.txt> <http://www.w3.org/2011/content#chars> "## Skeleton\n\nThis is a UTF-8 encoded text file\n"^^<http://www.iana.org/assignments/media-types/text/plain> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#skeleton.txt> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/text/plain> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#skeleton.txt> <http://www.w3.org/2000/01/rdf-schema#label> "skeleton.txt" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/auth/acl#Authorization> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/2004/02/skos/core#prefLabel> "Anonymous Access to /public/" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/ns/auth/acl#accessTo> <https://test.symbol.systems/public/> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/ns/auth/acl#mode> <http://www.w3.org/ns/auth/acl#Read> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#everyone_read_public> <http://www.w3.org/ns/auth/acl#agent> <http://www.w3.org/ns/auth/acl#Anonymous> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/acl.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/formats/Turtle> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/acl.ttl> <http://www.w3.org/2000/01/rdf-schema#label> "acl.ttl" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#> <http://www.w3.org/2004/02/skos/core#prefLabel> "GG: IQ" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#> <https://test.symbol.systems/cases#scripts/index.groovy> <https://test.symbol.systems/cases#bootstrapped> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestSuite> <http://www.w3.org/2004/02/skos/core#prefLabel> "Test Suite" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestSuite> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestCase> <http://www.w3.org/2004/02/skos/core#prefLabel> "Test Case" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestCase> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestCase> <http://www.w3.org/2004/02/skos/core#inScheme> <https://test.symbol.systems/cases#TestSuite> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#TestCase> <http://www.w3.org/2004/02/skos/core#hasTopConcept> <https://test.symbol.systems/cases#TestSuite> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/2004/02/skos/core#prefLabel> "hello world" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/2004/02/skos/core#inScheme> <https://test.symbol.systems/cases#TestCase> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/2004/02/skos/core#prefLabel> "Home Sweet Home" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/2004/02/skos/core#prefLabel> "Home" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://purl.org/dc/terms/description> "Welcome to our humble home" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/2004/02/skos/core#inScheme> <https://test.symbol.systems/cases#TestCase> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <https://test.symbol.systems/cases#scripts/index.groovy> <https://test.symbol.systems/cases#bootstrap> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <https://test.symbol.systems/cases#queries/infer-labels.sparql> <https://test.symbol.systems/cases#bootstrap> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/all.sparql> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2004/02/skos/core#Concept> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/all.sparql> <http://www.w3.org/2004/02/skos/core#prefLabel> "all sparql" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/all.sparql> <http://www.w3.org/2004/02/skos/core#inScheme> <https://test.symbol.systems/cases#TestCase> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/index.ttl> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/formats/Turtle> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#triples/index.ttl> <http://www.w3.org/2000/01/rdf-schema#label> "index.ttl" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/2011/content#chars> "<div>\n<a href=\"[{@this}]\"><h1>[{ skos:prefLabel }]</h1></a>\n<p>[{data}]</p>\n\n<p>[{dct:description}]</p>\n\n<p>\n<a href=\"[{@this}]\"><h1>[{ label }]</h1></a>\n</p>\n\n<h3>Test Cases</h3>\n<test-cases>\n[{#follow this \"inScheme\" }]\n<h1>Scheme:  <a href=\"[{ @this }]\">[{label}]</a></h1>\n[{>hbs/hello.hbs}]\n[{/follow}]\n</test-cases>\n\n</div>\n"^^<http://www.iana.org/assignments/media-types/text/x-handlebars> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/text/x-handlebars> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/index.hbs> <http://www.w3.org/2000/01/rdf-schema#label> "index.hbs" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/2011/content#chars> "<inScheme>\n{{#follow this \"inScheme\" }}\n<li>\n<a href=\"{{ @this }}\"><h2>{{ label }}</h2></a>\n</li>\n{{/follow}}\n</inScheme>\n"^^<http://www.iana.org/assignments/media-types/text/x-handlebars> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/text/x-handlebars> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#hbs/hello.hbs> <http://www.w3.org/2000/01/rdf-schema#label> "hello.hbs" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/actions.sparql> <http://www.w3.org/2011/content#chars> "SELECT DISTINCT ?id ?type ?text\nWHERE {\n?d cnt:chars ?text.\nBIND (datatype(?text) AS ?type)\n}"^^<http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/actions.sparql> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/actions.sparql> <http://www.w3.org/2000/01/rdf-schema#label> "actions.sparql" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://www.w3.org/2011/content#chars> "CONSTRUCT {\n?s skos:prefLabel ?o.\n}WHERE {\n?s ?p ?o.\n?s dct:title ?o.\n}"^^<http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/infer-labels.sparql> <http://www.w3.org/2000/01/rdf-schema#label> "infer-labels.sparql" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/inscheme.sparql> <http://www.w3.org/2011/content#chars> "SELECT DISTINCT ?id ?this WHERE {\n?id skos:inScheme ?this.\n}"^^<http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/inscheme.sparql> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/inscheme.sparql> <http://www.w3.org/2000/01/rdf-schema#label> "inscheme.sparql" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/allow.sparql> <http://www.w3.org/2011/content#chars> "ASK WHERE {\n  ?subject ?predicate ?object .\n}\n"^^<http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/allow.sparql> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-sparql-query> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#queries/allow.sparql> <http://www.w3.org/2000/01/rdf-schema#label> "allow.sparql" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/hello.groovy> <http://www.w3.org/2011/content#chars> "assert hello != null\n\ndef greetings = \"Hello World\";\ndef facts = [ greetings: greetings, hello: hello, now: System.currentTimeMillis() ]\n\nassert facts.hello === \"GG\"\n\nreturn [ facts: true, today: new Date() ]\n"^^<http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/hello.groovy> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/hello.groovy> <http://www.w3.org/2000/01/rdf-schema#label> "hello.groovy" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/world.groovy> <http://www.w3.org/2011/content#chars> "println \"greetings\""^^<http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/world.groovy> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/world.groovy> <http://www.w3.org/2000/01/rdf-schema#label> "world.groovy" <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://www.w3.org/2011/content#chars> "return [ booted: true, today: new Date() ]\n"^^<http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://purl.org/dc/terms/hasFormat> <http://www.iana.org/assignments/media-types/application/x-groovy> <https://test.symbol.systems/cases#> .
+<https://test.symbol.systems/cases#scripts/index.groovy> <http://www.w3.org/2000/01/rdf-schema#label> "index.groovy" <https://test.symbol.systems/cases#> .

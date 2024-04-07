@@ -1,0 +1,21 @@
+# Use Cases for Innovators  
+
+From regulatory compliance to scientific research, from financial auditing to real estate management, semantic standards provide a common framework to share facts.
+
+
+| Use Case  | Semantic Standards  |
+|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Regulatory Compliance | - [XBRL (eXtensible Business Reporting Language)](https://www.xbrl.org/) - [RDF (Resource Description Framework)](https://www.w3.org/RDF/) - [PROV-O (Provenance Ontology)](https://www.w3.org/TR/prov-o/) - [SKOS (Simple Knowledge Organization System)](https://www.w3.org/2004/02/skos/)|
+| Financial Auditing| - [XBRL (eXtensible Business Reporting Language)](https://www.xbrl.org/) - [RDF](https://www.w3.org/RDF/) - [PROV-O (Provenance Ontology)](https://www.w3.org/TR/prov-o/)   |
+| Supply Chain Management   | - [GS1 Standards](https://www.gs1.org/standards) - [RDF](https://www.w3.org/RDF/) - [PROV-O (Provenance Ontology)](https://www.w3.org/TR/prov-o/)   |
+| Healthcare Data Management| - [HL7 (Health Level Seven International)](https://www.hl7.org/) - [FHIR (Fast Healthcare Interoperability Resources)](https://www.hl7.org/fhir/) - [RDF](https://www.w3.org/RDF/)  |
+| Intellectual Property Management  | - [W3C ODRL (Open Digital Rights Language)](https://www.w3.org/TR/odrl/) - [RDF](https://www.w3.org/RDF/)   |
+| Scientific Research   | - [GO (Gene Ontology)](http://geneontology.org/) - [SO (Sequence Ontology)](http://www.sequenceontology.org/) - [CHEBI (Chemical Entities of Biological Interest)](https://www.ebi.ac.uk/chebi/) - [UBERON (Uber-anatomy Ontology)](http://uberon.github.io/) - [OBO (Open Biomedical Ontologies) Foundry](http://obofoundry.org/) - [CiTO (Citation Typing Ontology)](https://sparontologies.github.io/cito/current/cito.html) |
+| [Innovation](./Innovation.md) | - [W3C PROV-O (Provenance Ontology)](https://www.w3.org/TR/prov-o/) - [RDF](https://www.w3.org/RDF/)|
+| Environmental Sustainability  | - [OGC SOSA/SSN (Spatial Data on the Web Best Practices)](https://www.w3.org/TR/vocab-ssn/) - [RDF](https://www.w3.org/RDF/)|
+| Legal Contracts and Agreements| - [W3C ODRL (Open Digital Rights Language)](https://www.w3.org/TR/odrl/) - [RDF](https://www.w3.org/RDF/)   |
+| Identity and Access Management| - [W3C VC (Verifiable Credentials)](https://www.w3.org/TR/vc-data-namedMap/) - [DID (Decentralized Identifiers)](https://www.w3.org/TR/did-core/) - [RDF](https://www.w3.org/RDF/) |
+| Energy Trading and Grid Management| - [IEC CIM (Common Information Model for Energy Markets)](https://www.iec.ch/cim/) - [RDF](https://www.w3.org/RDF/) |
+| Education and Credential Verification | - [W3C VC (Verifiable Credentials)](https://www.w3.org/TR/vc-data-namedMap/) - [Open Badges (Open Badges Specification)](https://www.imsglobal.org/sites/default/files/Badges/OBv2p0/index.html) - [RDF](https://www.w3.org/RDF/)  |
+| Asset Tokenization and Management | - [ERC-20 (Ethereum Request for Comments 20)](https://eips.ethereum.org/EIPS/eip-20) - [ERC-721 (Ethereum Request for Comments 721)](https://eips.ethereum.org/EIPS/eip-721) - [RDF](https://www.w3.org/RDF/)   |
+| [Real Estate](./RealEstate.md)| - [GNAF Ontology](https://agldwg.github.io/gnaf-ont/gnaf.html) - [RDF](https://www.w3.org/RDF/) - [schema.org](https://schema.org/) - [GeoSPARQL Ontology](http://www.opengis.net/ont/geosparql#)   |
