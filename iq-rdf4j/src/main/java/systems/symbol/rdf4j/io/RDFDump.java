@@ -1,9 +1,6 @@
 package systems.symbol.rdf4j.io;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
 
 import com.github.jsonldjava.core.JsonLdOptions;
@@ -109,4 +106,9 @@ public class RDFDump {
         Rio.write(model, out, RDFFormat.JSONLD, writerConfig);
         return model;
     }
+
+    public static void dump(Model model) throws Exception {
+        dump(model, System.out, RDFFormat.TURTLE);
+    }
+
 }

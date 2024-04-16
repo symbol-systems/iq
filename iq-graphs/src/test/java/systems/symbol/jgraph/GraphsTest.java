@@ -1,7 +1,7 @@
 package systems.symbol.jgraph;
 
 import systems.symbol.ns.COMMONS;
-import systems.symbol.rdf4j.store.LocalAssetRepository;
+import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -24,13 +24,13 @@ import java.util.Map;
 public class GraphsTest {
     private static final Logger log = LoggerFactory.getLogger( GraphsTest.class );
 
-    LocalAssetRepository repository;
+    BootstrapRepository repository;
     IRI ctx, alice, bob, charlie, delta, knows;
 //    TripleSource triples;
 
     @BeforeTest
     void bootstrap() throws IOException {
-        repository = new LocalAssetRepository();
+        repository = new BootstrapRepository();
         ctx = repository.load(new File("src/test/resources/"), COMMONS.IQ_NS_TEST);
         assert ctx!=null;
         alice = repository.getValueFactory().createIRI("https://symbol.systems/demo/tropes#Alice");

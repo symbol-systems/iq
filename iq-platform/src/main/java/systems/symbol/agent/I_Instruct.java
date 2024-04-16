@@ -1,10 +1,7 @@
 package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.intent.I_Intent;
-import systems.symbol.model.HasIdentity;
 
 /**
  * Interface defining the contract for an instruction within a symbolic system.
@@ -13,23 +10,23 @@ import systems.symbol.model.HasIdentity;
 public interface I_Instruct {
 
     /**
-     * Retrieves the subject of the instruction.
+     * The actor of the instruction.
      *
-     * @return The subject of the instruction as a Resource.
+     * @return The subject of the instruction as an IRI.
      */
-    Resource getSubject();
+    IRI getActor();
 
     /**
-     * Retrieves the action/verb of the instruction.
+     * The action/verb of the instruction.
      *
-     * @return The IRI of the action.
+     * @return The IRI representing the action.
      */
     IRI getAction();
 
     /**
-     * Retrieves the object of the instruction.
+     * The target of the instruction.
      *
-     * @return The object of the instruction as a Resource.
+     * @return The target of the instruction as a Resource.
      */
-    Resource getObject();
+    Resource getTarget();
 }

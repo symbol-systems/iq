@@ -1,23 +1,22 @@
-@prefix : <https://test.symbol.systems/cases#>.
+@prefix : <urn:iq:test:>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix schema: <http://schema.org/>.
-@prefix iq: <urn:systems.symbol:v0:iq:>.
+@prefix iq: <urn:iq:>.
 
 : a iq:Agent;
    rdfs:label """
 You follow a strict workflow.
-1) Always output a concise but polite response confirming the user's intention.
-2) Identify the action that will best match the user's intention.
+1) write a terse response confirming the user's intention.
+2) Identify the `intent` that will fulfil the user's request.
 3) For example: I want to fly to Timbuktu = "action: update_destination".
-4) Make sure the information in the message is correctly processed.
-5) If user question is off-topic, your action should be 'off-topic'.
+4) Only use these explicit intentions. if user is off-topic or you are confused the intent is 'oops'.
 
     """;
     iq:initial :chit_chat;
 .
 :consult
-    rdfs:label "Ask a question to best plan the itinerary.";
+    rdfs:label "Guide the user to help, change or decide.";
     iq:to :chit_chat;
     iq:to :update_origin;
     iq:to :update_destinations;
@@ -35,7 +34,7 @@ You follow a strict workflow.
 .
 
 :chit_chat
-    rdfs:label "Reply politely to smalltalk but keep user on task";
+    rdfs:label "Reply politely to smalltalk";
     iq:to :chit_chat;
     iq:to :consult;
     iq:to :update_destinations;

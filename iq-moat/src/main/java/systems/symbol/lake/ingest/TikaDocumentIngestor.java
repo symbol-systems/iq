@@ -1,17 +1,14 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.ContentEntity;
-import systems.symbol.lake.crawl.Walkers;
 import io.quarkus.tika.TikaParser;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.ToXMLContentHandler;
 import org.eclipse.rdf4j.model.util.Values;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class TikaDocumentIngestor<String> extends AbstractConverter<FileObject, ContentEntity<String>> {
@@ -34,7 +31,7 @@ public class TikaDocumentIngestor<String> extends AbstractConverter<FileObject, 
         tika.parse(in, toXML);
         in.close();
         ContentEntity<String> to = new ContentEntity<>(Values.iri(file.getPublicURIString()), toXML.toString(),"");
-        log.debug("tika.to: " + to.getIdentity());
+        log.debug("tika.to: " + to.getSelf());
         return to;
     }
 }

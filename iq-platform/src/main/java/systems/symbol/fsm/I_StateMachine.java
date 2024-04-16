@@ -21,6 +21,8 @@ public interface I_StateMachine<T> {
      */
     I_StateMachine<T> setInitial(T initialState);
 
+    boolean isInitial();
+
     /**
      * Retrieves the current state of the FSM.
      *
@@ -60,4 +62,6 @@ public interface I_StateMachine<T> {
      * @return {@code true} if the transition is allowed, {@code false} otherwise.
      */
     boolean isAllowed(T targetState);
+
+    public void add(T from, T to);
 }

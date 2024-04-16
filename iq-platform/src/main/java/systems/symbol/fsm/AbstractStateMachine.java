@@ -27,7 +27,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
     @Override
     public I_StateMachine<T> setInitial(T initialState) {
         setCurrentState(this.initialState = initialState);
-        log.info("Initialized state machine with state: {} -> {}", this.initialState, this.currentState);
+        assert this.initialState == this.currentState;
         return this;
     }
 
@@ -60,19 +60,20 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      */
     @Override
     public T transition(T targetState) throws StateException {
+        if (targetState == null) return getState();
         boolean allowed = isAllowed(targetState);
-        log.info("Checking transition from state: {} to state: {} => Allowed: {}", getState(), targetState, allowed);
+        log.info("allowed: {} @ {} => {}", allowed, getState(), targetState);
         if (allowed) {
             T fromState = currentState;
             setCurrentState(targetState);
             boolean ok = notifyListeners(fromState, targetState);
             if (!ok) {
-                log.info("Vetoed transition from state: {} to state: {}", getState(), targetState);
+                log.info("veto: {} - {}", getState(), targetState);
                 setCurrentState(fromState);
             }
             return getState();
         }
-        throw new StateException("Transition from state: " + getState() + " to state: " + targetState + " denied.", targetState );
+        throw new StateException("from: " + getState() + " to: " + targetState + " denied.", targetState );
     }
 
     /**
@@ -80,7 +81,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      *
      * @param targetState The state to set as current.
      */
-    protected void setCurrentState(T targetState) {
+    public void setCurrentState(T targetState) {
         currentState = targetState;
     }
 
@@ -92,6 +93,10 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      */
     @Override
     public abstract boolean isAllowed(T targetState);
+
+    public boolean isInitial() {
+        return initialState.equals(getState());
+    }
 
     /**
      * Retrieves all possible transitions from the given state.
@@ -118,15 +123,11 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      * @param to   The state transitioned to.
      * @return True if no listener vetoes the transition, false otherwise.
      */
-    private boolean notifyListeners(T from, T to) {
+    protected boolean notifyListeners(T from, T to) throws StateException {
         boolean ok = true;
-        try {
-            for (I_StateListener<T> listener : listeners) {
+        log.info("notify: {} x {}", to, listeners.size());
+        for (I_StateListener<T> listener : listeners) {
                 ok = ok & listener.onTransition(from, to);
-            }
-        } catch (Exception e) {
-            log.error("Error notifying state transition listeners: {}", e.getMessage(), e);
-            return false;
         }
         return ok;
     }

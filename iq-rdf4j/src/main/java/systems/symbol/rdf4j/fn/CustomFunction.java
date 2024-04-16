@@ -20,7 +20,7 @@ import org.eclipse.rdf4j.query.algebra.evaluation.function.Function;
 public abstract class CustomFunction implements Function {
 
   /**
-   * return the function's URI in the 'urn:systems.symbol:fn' namespace
+   * return the function's URI in the 'urn:symbol.systems:fn' namespace
    */
   public String getURI() {
       return COMMONS.IQ_NS + getFunctionName();

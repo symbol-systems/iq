@@ -3,24 +3,35 @@ package systems.symbol.finder;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IndexHelper {
+    protected static final Logger log = LoggerFactory.getLogger(IndexHelper.class);
 
-    public static long index(I_Finder finder, TupleQueryResult result, String idField, String textField) {
+    public static long index(I_Finder finder, TupleQueryResult result) {
         long count = 0;
         while (result.hasNext()) {
             BindingSet bindingSet = result.next();
-            String id = bindingSet.getValue(idField).stringValue();
-            String text = bindingSet.getValue(textField).stringValue();
-            finder.store(id, text);
+            String id = bindingSet.getValue("this").stringValue();
+
+            StringBuilder s$ = new StringBuilder();
+            for(String k: bindingSet.getBindingNames()) {
+                if (!k.equals("this"))
+                    s$.append( bindingSet.getValue(k).stringValue()).append(" ");
+            }
+
+            log.info("indexing: {} -> {}", id, s$);
+            finder.store(id, s$.toString());
             count++;
         }
+        log.info("indexed.results: {}",count);
         return count;
     }
 
-    public static long index(I_Finder finder, TupleQuery query, String idField, String textField) {
+    public static long index(I_Finder finder, TupleQuery query) {
         try (TupleQueryResult result = query.evaluate()) {
-            return index(finder, result, idField, textField);
+            return index(finder, result);
         }
     }
 }

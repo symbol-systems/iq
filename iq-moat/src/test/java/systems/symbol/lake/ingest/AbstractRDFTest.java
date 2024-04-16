@@ -1,7 +1,7 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.ns.COMMONS;
-import systems.symbol.rdf4j.store.LocalAssetRepository;
+import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -12,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class AbstractRDFTest {
-    static protected LocalAssetRepository repository;
+    static protected BootstrapRepository repository;
     protected static ValueFactory vf = SimpleValueFactory.getInstance();
     protected static IRI self = vf.createIRI(COMMONS.IQ_NS_TEST);
 
     public AbstractRDFTest() {}
 
     public static void bootUp() throws IOException {
-        repository = new LocalAssetRepository();
+        repository = new BootstrapRepository();
         vf = repository.getValueFactory();
         assert self.equals(repository.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST));
     }

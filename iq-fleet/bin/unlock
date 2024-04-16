@@ -1,0 +1,2 @@
+rm -rf iq.api/repositories/default/lock
+rm -rf iq.api/repositories/dama/lock

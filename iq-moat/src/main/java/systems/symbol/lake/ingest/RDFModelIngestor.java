@@ -1,8 +1,6 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.ContentEntity;
-import systems.symbol.rdf4j.util.RDFHelper;
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -42,9 +40,9 @@ public class RDFModelIngestor extends AbstractIngestor<ContentEntity<String>> {
         rdfParser.setRDFHandler(new StatementCollector(model));
 
         String content = hackItToWork(rdf.getContent());
-        log.debug("rdf.model.parse: {} -> {}", rdf.getIdentity(), content);
+        log.debug("rdf.model.parse: {} -> {}", rdf.getSelf(), content);
         StringReader reader = new StringReader(content);
-        rdfParser.parse(reader, rdf.getIdentity().stringValue());
+        rdfParser.parse(reader, rdf.getSelf().stringValue());
     }
 
     // remove ```format``` from payload
@@ -60,7 +58,7 @@ public class RDFModelIngestor extends AbstractIngestor<ContentEntity<String>> {
             parse(content);
             next(content);
         } catch (IOException e) {
-            log.error("parse.failed: {} -> {}",content.getIdentity(), content.getContent(), e);
+            log.error("parse.failed: {} -> {}",content.getSelf(), content.getContent(), e);
             throw new RuntimeException(e);
         }
     }

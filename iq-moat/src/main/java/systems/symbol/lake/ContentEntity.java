@@ -1,10 +1,10 @@
 package systems.symbol.lake;
 
-import systems.symbol.model.HasIdentity;
+import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 
-public class ContentEntity<T> implements HasIdentity {
+public class ContentEntity<T> implements I_Self {
     IRI self;
     T content;
 
@@ -26,7 +26,7 @@ public class ContentEntity<T> implements HasIdentity {
         this(self, (T)new String("**"+title+"**\n"+description));
     }
 
-    public IRI getIdentity() {
+    public IRI getSelf() {
         return self;
     }
 

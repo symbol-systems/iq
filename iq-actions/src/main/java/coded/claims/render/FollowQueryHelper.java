@@ -57,7 +57,7 @@ public class FollowQueryHelper extends EachHelper {
             log.error("render.follow.exists:"+fieldName);
             return model.get(fieldName);
         }
-        IRI queryIRI = iq.toIRI("queries/"+fieldName+".sparql");
+        IRI queryIRI = iq.toIRI("queries/"+fieldName);
         System.out.println("render.follow.query: "+that+" @ "+queryIRI);
 
         Collection models = queries.models(queryIRI, model);

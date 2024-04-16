@@ -7,7 +7,7 @@ package systems.symbol.platform;
 
 import systems.symbol.finder.FactFinder;
 import systems.symbol.finder.TextFinder;
-import systems.symbol.model.HasIdentity;
+import systems.symbol.model.I_Self;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.trust.generate.JWTGen;
@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import static systems.symbol.ns.COMMONS.CODENAME;
+
 @Singleton
-public class Platform implements HasIdentity {
+public class Platform implements I_Self {
     private static final Logger log = LoggerFactory.getLogger(Platform.class);
 
     Workspace workspace;
@@ -41,7 +41,7 @@ public class Platform implements HasIdentity {
      * @throws IOException If an error occurs during workspace initialization.
      */
     public Platform() throws Exception {
-        init(new File("iq"));
+        init(new File(CODENAME.toLowerCase()));
     }
 
     /**
@@ -169,7 +169,7 @@ public class Platform implements HasIdentity {
      * @return The IRI representing the identity of the Platform.
      */
     @Override
-    public IRI getIdentity() {
+    public IRI getSelf() {
         return workspace.getIdentity();
     }
 }

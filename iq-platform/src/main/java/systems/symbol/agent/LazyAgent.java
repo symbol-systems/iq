@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
 import java.util.Set;
 
 /**
@@ -20,7 +22,7 @@ public class LazyAgent extends AbstractAgent {
      * @param model The RDF4J model associated with the agent.
      * @param self  The self identity of the agent.
      */
-    public LazyAgent(Model model, IRI self) {
+    public LazyAgent(Model model, IRI self) throws StateException {
         super(model, self);
     }
 
@@ -35,7 +37,7 @@ public class LazyAgent extends AbstractAgent {
     @Override
     public boolean onTransition(Resource from, Resource to) {
         try {
-            Set<IRI> executed = execute(getIdentity(), to);
+            Set<IRI> executed = execute(getSelf(), to, new SimpleBindings());
             return !executed.isEmpty();
         } catch (StateException e) {
             log.warn("execution.failed: {}", to, e);
@@ -47,13 +49,13 @@ public class LazyAgent extends AbstractAgent {
      * Executes the agent's behavior based on the provided subject and state.
      * For a lazy agent, this method simply returns the current state.
      *
-     * @param subject The subject of the execution.
+     * @param actor The subject of the execution.
      * @param state   The current state of the agent.
      * @return A set of IRIs representing the current state.
      * @throws StateException If an error occurs during execution.
      */
     @Override
-    public Set<IRI> execute(IRI subject, Resource state) throws StateException {
+    public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         IRIs iris = new IRIs();
         // do nothing
         if (state instanceof IRI)  iris.add((IRI) state);

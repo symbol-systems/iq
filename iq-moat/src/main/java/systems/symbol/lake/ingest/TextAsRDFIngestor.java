@@ -1,9 +1,9 @@
 package systems.symbol.lake.ingest;
 
+import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.lake.ContentEntity;
 import systems.symbol.rdf4j.io.FileFormats;
 import systems.symbol.rdf4j.io.RDFLoader;
-import systems.symbol.rdf4j.io.Remodel;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -38,10 +38,10 @@ public class TextAsRDFIngestor<T> implements Consumer<FileObject> {
     }
 
     public IRI getSupportedMime(String uri) {
-        String mime = FileFormats.toSupportedMimetype(uri);
+        String mime = FileFormats.toPlainMime(uri);
         if (mime == null)
             return null;
-        return Remodel.mimetype(mime);
+        return Values.iri("urn:"+mime);
     }
 
     @Override

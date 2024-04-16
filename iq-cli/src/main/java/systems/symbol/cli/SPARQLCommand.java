@@ -1,5 +1,6 @@
 package systems.symbol.cli;
 
+import com.github.freva.asciitable.AsciiTable;
 import systems.symbol.io.Display;
 import systems.symbol.io.StreamCopy;
 import systems.symbol.rdf4j.iq.IQ;

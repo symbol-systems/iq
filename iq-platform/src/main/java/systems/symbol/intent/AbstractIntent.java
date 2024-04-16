@@ -1,5 +1,6 @@
 package systems.symbol.intent;
 
+import systems.symbol.fsm.StateException;
 import systems.symbol.rdf4j.iq.IQ;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
@@ -12,6 +13,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.Bindings;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,10 @@ public abstract class AbstractIntent implements I_Intent {
      * @param self  The self identity of the intent.
      */
     protected AbstractIntent(Model model, IRI self) {
-        init(model, self);
+        init(self, model);
+    }
+    protected AbstractIntent(IRI self, Model model) {
+        init(self, model);
     }
 
     /**
@@ -41,9 +46,9 @@ public abstract class AbstractIntent implements I_Intent {
      * @param model The RDF4J model associated with the intent.
      * @param self  The self identity of the intent.
      */
-    public void init(Model model, IRI self) {
-        this.model = model == null ? new DynamicModelFactory().createEmptyModel() : model;
+    public void init(IRI self, Model model) {
         this.self = self;
+        this.model = model == null ? new DynamicModelFactory().createEmptyModel() : model;
     }
 
     /**
@@ -58,19 +63,19 @@ public abstract class AbstractIntent implements I_Intent {
     /**
      * Executes the intent based on the provided subject and object.
      *
-     * @param subject The subject of the execution.
-     * @param object  The object of the execution.
+     * @param actor The subject of the execution.
+     * @param state  The object of the execution.
      * @return A set of IRIs resulting from the execution.
      */
     @Override
-    abstract public Set<IRI> execute(IRI subject, Resource object);
+    abstract public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException;
 
     /**
      * Retrieves the self identity of the intent.
      *
      * @return The self identity as an IRI.
      */
-    public IRI getIdentity() {
+    public IRI getSelf() {
         return this.self;
     }
 

@@ -32,10 +32,10 @@ public class RenderCommand extends AbstractCLICommand{
         if (!context.isInitialized()) throw new CLIException("IQ not ready");
 
         SimpleValueFactory vf = SimpleValueFactory.getInstance();
-        IRI commandsIRI = vf.createIRI(context.getIdentity()+"#queries/iq-render.sparql");
+        IRI commandsIRI = vf.createIRI(context.getSelf()+"#queries/iq-render.sparql");
 
         try (RepositoryConnection connection = context.getRepository().getConnection()) {
-            IQConnection iq = new IQConnection(context.getIdentity(), connection);
+            IQConnection iq = new IQConnection(context.getSelf(), connection);
             doRender(iq, commandsIRI);
         }
 

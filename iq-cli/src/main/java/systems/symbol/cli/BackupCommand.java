@@ -19,14 +19,14 @@ public class BackupCommand extends AbstractCLICommand{
     @Override
     public Object call() throws Exception {
         if (context.isInitialized()) {
-            log.info("iq.cli.backup.ns: "+context.getIdentity());
+            log.info("iq.cli.backup.ns: "+context.getSelf());
 
             // save in today's folder
             File toFolder = FileHelper.toTodayFile(context.backups);
 
             // the actual filename is a timestamp
             File dumpFile = new File(toFolder, System.currentTimeMillis() + ".ttl");
-            export(context, dumpFile, "backup: "+context.getIdentity());
+            export(context, dumpFile, "backup: "+context.getSelf());
             return context;
         } throw new RuntimeException(("iq.cli.backup.failed"));
     }

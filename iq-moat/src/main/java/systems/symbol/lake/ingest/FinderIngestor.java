@@ -20,7 +20,7 @@ public class FinderIngestor<T> extends AbstractIngestor<ContentEntity<T>> {
 
     @Override
     public void accept(ContentEntity<T> ce) {
-        Embedding stored = finder.store(ce.getIdentity().stringValue(), ce.getContent().toString());
+        Embedding stored = finder.store(ce.getSelf().stringValue(), ce.getContent().toString());
         if (stored==null) return;
         next(ce);
     }

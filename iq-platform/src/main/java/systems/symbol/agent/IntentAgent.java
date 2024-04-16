@@ -1,21 +1,24 @@
 package systems.symbol.agent;
 
+import systems.symbol.annotation.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.RDFCollections;
 import org.jetbrains.annotations.NotNull;
+import systems.symbol.ns.COMMONS;
 
+import javax.script.Bindings;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of an agent that executes intents within a symbolic system.
+ * Implementation of an agent that executes intents when a state change occurs.
  */
 public class IntentAgent extends AbstractAgent {
     private final I_Intent intent;
-
+    Bindings bindings;
     /**
      * Constructs a new IntentAgent with the provided intent, RDF4J model, and self identity.
      *
@@ -23,11 +26,11 @@ public class IntentAgent extends AbstractAgent {
      * @param model  The RDF4J model associated with the agent.
      * @param self   The self identity of the agent.
      */
-    public IntentAgent(@NotNull I_Intent intent, @NotNull Model model, @NotNull IRI self) {
-        super(model, self);
+    public IntentAgent(@NotNull IRI self, @NotNull Model model, @NotNull I_Intent intent, @NotNull Bindings bindings) throws StateException {
+        super(self, model);
         this.intent = intent;
+        this.bindings = bindings;
     }
-
     /**
      * Handles transitions within the symbolic system.
      *
@@ -36,10 +39,10 @@ public class IntentAgent extends AbstractAgent {
      * @return true if the transition is handled successfully, false otherwise.
      */
     @Override
-    public boolean onTransition(Resource from, Resource to) {
+    public boolean onTransition(Resource from, Resource to) throws StateException {
         try {
             log.debug("onTransition: {}", to);
-            execute(getIdentity(), to);
+            execute(getSelf(), to, bindings);
             return true;
         } catch (StateException e) {
             return false;
@@ -49,22 +52,23 @@ public class IntentAgent extends AbstractAgent {
     /**
      * Executes an intent based on the provided subject and object.
      *
-     * @param subject The subject of the execution.
-     * @param object  The object of the execution.
+     * @param actor The subject of the execution (the actor).
+     * @param state  The object of the execution (the intent).
      * @return A set of IRIs resulting from the execution.
      * @throws StateException If an error occurs during execution.
      */
     @Override
-    public Set<IRI> execute(IRI subject, Resource object) throws StateException {
-        log.debug("execute: {} -> {}", subject, object);
-        if (object instanceof IRI)
-            return intent.execute(subject, object);
+    @RDF(COMMONS.IQ_NS + "agent")
+    public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
+        log.debug("execute: {} -> {}", actor, state);
+        if (state instanceof IRI)
+            return intent.execute(actor, state, bindings);
         Set<IRI> iris = new HashSet<>();
-        Collection<Statement> found = RDFCollections.getCollection(model, object, new HashSet<>());
+        Collection<Statement> found = RDFCollections.getCollection(model, state, new HashSet<>());
         for (Statement statement : found) {
             Value v = statement.getObject();
             if (v instanceof Resource) {
-                iris.addAll(execute(subject, (Resource) v));
+                iris.addAll( execute(actor, (Resource) v, bindings) );
             }
         }
         return iris;

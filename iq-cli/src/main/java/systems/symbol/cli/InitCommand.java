@@ -36,19 +36,21 @@ public class InitCommand extends AbstractCLICommand {
     }
 
     private void doInitialize() throws IOException, URISyntaxException {
-        log.info("iq.cli.home: " + home.getAbsolutePath());
-        home.mkdirs();
-
-        Workspace workspace = new Workspace(home);
-        log.info("iq.cli.init: {} -> {}", context.getIdentity(), workspace.getIdentity());
-        if (from==null) return;
-
-        // import
-        if (from.exists()) {
-            display("importing from: "+this.from.getAbsolutePath());
-            ImportExport.load(context, this.from, this.forceDelete);
-        } else {
-            display("missing file/folder: "+this.from.getAbsolutePath());
+        if (!home.mkdirs()) {
+            System.out.printf("Home folder could not be created; %s\n", home.getAbsolutePath());
+            return;
         }
+        if (from==null) {
+            System.out.println("missing --from <import-folder>");
+            return;
+        }
+        if (!from.exists()) {
+            display("empty file/folder: "+this.from.getAbsolutePath());
+            return;
+        }
+
+        System.out.printf("Initialize %s from: %s\n", CODENAME, this.from.getAbsolutePath());
+        ImportExport.load(context, this.from, this.forceDelete);
+        AboutCommand.displaySelf(context);
     }
 }

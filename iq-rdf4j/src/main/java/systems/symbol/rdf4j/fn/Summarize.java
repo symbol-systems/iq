@@ -1,7 +1,6 @@
 package systems.symbol.rdf4j.fn;
 /*
- *  systems.symbol - see license
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 import systems.symbol.string.Summary;
@@ -11,7 +10,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 
 /**
- * systems.symbol (c) 2013-2021
+ * symbol.systems (c) 2013-2021
  * Module: systems.symbol.rdf4j.fn
  * @author Symbol Systems
  * Date  : 29/10/2013

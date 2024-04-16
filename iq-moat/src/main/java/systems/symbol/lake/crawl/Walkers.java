@@ -38,13 +38,4 @@ public class Walkers {
             }
         }
     }
-
-    public static FileObject rename(FileObject _to, String new_name) {
-        try {
-            return _to.getParent().resolveFile( new_name);
-        } catch (FileSystemException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }

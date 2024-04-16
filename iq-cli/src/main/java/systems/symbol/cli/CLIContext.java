@@ -1,6 +1,7 @@
 package systems.symbol.cli;
 
-import systems.symbol.model.HasIdentity;
+import systems.symbol.model.I_Self;
+import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.iq.IQ;
 import systems.symbol.rdf4j.iq.IQConnection;
 import systems.symbol.platform.Workspace;
@@ -15,9 +16,9 @@ import java.io.IOException;
 import java.util.Date;
 
 
-public class CLIContext implements HasIdentity {
+public class CLIContext implements I_Self {
     protected static final Logger log = LoggerFactory.getLogger(CLIContext.class);
-    public static final String CODENAME = "iq";
+    public static final String CODENAME = COMMONS.CODENAME;
     Workspace workspace;
     public File home, backups, assets, www_docs; // , kbms, onto;
     final long timestamp = System.currentTimeMillis();
@@ -38,7 +39,7 @@ public class CLIContext implements HasIdentity {
         String path = PrettyString.sanitize(workspace.getStoreType());
         backups = new File(home, "backups" + File.separator + path);
         www_docs = new File(home, "public" + File.separator + path);
-            assets = new File(home, "assets" + File.separator + path);
+        assets = new File(home, "assets" + File.separator + path);
         backups.mkdirs();
         www_docs.mkdirs();
         assets.mkdirs();
@@ -65,7 +66,7 @@ public class CLIContext implements HasIdentity {
         return this.assets;
     }
     public IQ newIQBase() {
-        return new IQConnection(getIdentity(), getRepository().getConnection());
+        return new IQConnection(getSelf(), getRepository().getConnection());
     }
 
     public boolean isStale(File file) {
@@ -75,12 +76,12 @@ public class CLIContext implements HasIdentity {
     }
 
     @Override
-    public IRI getIdentity() {
+    public IRI getSelf() {
         return workspace == null ? null : workspace.getIdentity();
     }
 
     public String toString() {
-        return getIdentity() + " on " + new Date();
+        return getSelf() + " on " + new Date();
     }
 
     public Repository getRepository() {

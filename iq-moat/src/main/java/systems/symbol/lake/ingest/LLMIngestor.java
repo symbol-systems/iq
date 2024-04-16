@@ -1,6 +1,6 @@
 package systems.symbol.lake.ingest;
 
-import systems.symbol.agent.apis.APIException;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.lake.ContentEntity;
 import systems.symbol.llm.*;
 
@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LLMIngestor extends AbstractIngestor<ContentEntity<String>> {
     protected static final Logger log = LoggerFactory.getLogger(LLMIngestor.class);
@@ -26,25 +24,25 @@ public class LLMIngestor extends AbstractIngestor<ContentEntity<String>> {
 
     protected ContentEntity<String> transform (ContentEntity<?> content) throws IOException, APIException {
         ChatThread thread = new ChatThread();
-        thread.system(systemPrompt+"\n: Your base URI is:"+content.getIdentity());
+        thread.system(systemPrompt+"\n: Your base URI is:"+content.getSelf());
         thread.user(content.getContent().toString());
         I_Thread<String> answer = this.llm.generate(thread);
         I_LLMessage<?> latest = answer.latest();
         String reply = latest.getContent().toString();
         log.debug("llm.reply: {} -> {}", latest.getType(), reply);
-        return new ContentEntity<String>(content.getIdentity(), reply);
+        return new ContentEntity<String>(content.getSelf(), reply);
     }
 
     @Override
     public void accept(ContentEntity content) {
         try {
-            log.debug("accept: {} => {}", content.getIdentity(), content.getContent().toString());
+            log.debug("accept: {} => {}", content.getSelf(), content.getContent().toString());
             next(transform(content));
         } catch (IOException e) {
-            log.error("llm.io: {}", content.getIdentity(), e);
+            log.error("llm.io: {}", content.getSelf(), e);
             throw new RuntimeException(e);
         } catch (APIException e) {
-            log.error("llm.api: {}", content.getIdentity(), e);
+            log.error("llm.api: {}", content.getSelf(), e);
             throw new RuntimeException(e);
         }
     }

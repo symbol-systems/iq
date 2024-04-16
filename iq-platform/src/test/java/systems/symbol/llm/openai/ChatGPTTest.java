@@ -1,6 +1,6 @@
 package systems.symbol.llm.openai;
 
-import systems.symbol.agent.apis.APIException;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_Thread;
 import org.junit.jupiter.api.Test;

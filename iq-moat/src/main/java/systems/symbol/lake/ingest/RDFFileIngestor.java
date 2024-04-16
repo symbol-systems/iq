@@ -41,8 +41,7 @@ public class RDFFileIngestor implements Consumer<FileObject> {
             loader.load(asset, file.getContent().getInputStream(), format);
             log.info("loaded.rdf: " + format+" @ "+asset);
         } catch (IOException e) {
-            log.error("oops: " + e.getMessage()+" @ "+file.getName().getURI());
-            e.printStackTrace();
+            log.error("oops: " + e.getMessage()+" @ "+file.getName().getURI(), e);
         }
     }    
 

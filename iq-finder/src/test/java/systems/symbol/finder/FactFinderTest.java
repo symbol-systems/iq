@@ -1,11 +1,11 @@
 package systems.symbol.finder;
 
 import systems.symbol.ns.COMMONS;
-import systems.symbol.rdf4j.io.BulkAssetLoader;
+import systems.symbol.rdf4j.io.BootstrapLoader;
 import systems.symbol.rdf4j.iq.IQ;
 import systems.symbol.rdf4j.iq.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
-import systems.symbol.rdf4j.store.LocalAssetRepository;
+import systems.symbol.rdf4j.store.BootstrapRepository;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.eclipse.rdf4j.query.TupleQuery;
@@ -20,12 +20,12 @@ public class FactFinderTest {
     File ASSETS_HOME = new File("src/test/resources/assets/");
     @Test
     public void testHydrateTriple() throws IOException {
-        LocalAssetRepository repo = new LocalAssetRepository();
+        BootstrapRepository repo = new BootstrapRepository();
         try (RepositoryConnection connection = repo.getConnection()) {
             IQ iq = new IQConnection(COMMONS.IQ_NS_TEST, connection);
             ScriptCatalog library = new ScriptCatalog(iq);
 
-            BulkAssetLoader loader = new BulkAssetLoader(COMMONS.IQ_NS_TEST, connection, true, true, true, false);
+            BootstrapLoader loader = new BootstrapLoader(COMMONS.IQ_NS_TEST, connection, true, true, true, false);
             loader.deploy(ASSETS_HOME);
 
 
@@ -39,7 +39,7 @@ public class FactFinderTest {
 
             TextFinder finder = new TextFinder();
             TupleQuery tupleQuery = connection.prepareTupleQuery(sparql_index);
-            long indexed = IndexHelper.index(finder, tupleQuery, "this", "text");
+            long indexed = IndexHelper.index(finder, tupleQuery);
             System.out.println("find.indexed: "+ indexed);
             assert indexed > 2;
 

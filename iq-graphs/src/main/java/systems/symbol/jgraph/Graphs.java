@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /*
- *	systems.symbol - AGPL v3 Licensed
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *	symbol.systems - AGPL v3 Licensed
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 public class Graphs {

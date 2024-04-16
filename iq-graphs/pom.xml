@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.0</version>
+        <version>0.76.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
     <artifactId>iq-graphs</artifactId>
     <packaging>jar</packaging>
 
-    <name>systems.symbol - Graph Analytics</name>
+    <name>symbol.systems - Graph Analytics</name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -23,7 +23,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>systems.symbol - Team: IQ</name>
+            <name>symbol.systems - Team: IQ</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>
@@ -60,7 +60,7 @@
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
         <maven.compiler.plugin.source>11</maven.compiler.plugin.source>
         <maven.compiler.plugin.target>11</maven.compiler.plugin.target>
-        <spring.version>6.1.3</spring.version>
+        <spring.version>6.1.5</spring.version>
     <springboot.version>3.1.3</springboot.version>
         <slf4j.version>1.7.32</slf4j.version>
         <logback.version>1.5.3</logback.version>
@@ -73,13 +73,86 @@
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
         <jgrapht.version>1.5.1</jgrapht.version>
         <rdf-commons.version>0.5.0</rdf-commons.version>
+        <kotlin.version>1.9.23</kotlin.version>
     </properties>
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>../build.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/java</source>
+                                <source>target/generated-sources/annotations</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <compilerId>groovy-eclipse-compiler</compilerId>
                     <source>${maven.compiler.plugin.source}</source>
@@ -105,24 +178,6 @@
 
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <files>
-                                <file>../build.properties</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <repositories></repositories>
@@ -135,15 +190,25 @@
             <artifactId>iq-rdf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>systems.symbol</groupId>-->
-<!--            <artifactId>iq-actions</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
             <version>${jgrapht.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

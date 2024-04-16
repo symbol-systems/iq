@@ -1,6 +1,7 @@
 package systems.symbol.agent;
 
-import systems.symbol.agent.apis.APIException;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.llm.I_Prompt;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.ChatThread;
@@ -10,10 +11,9 @@ import systems.symbol.rdf4j.util.RDFHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.rdf4j.util.RDFPrefixer;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 /**
  * An agent that interacts with a Language Learning Model (LLM).
  */
-public class LLMAgent implements I_Agent {
+public class LLMAgent implements I_Agent, I_Prompt<String> {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final I_LLM<String> llm;
     private final I_Agent agent;
@@ -56,10 +56,15 @@ public class LLMAgent implements I_Agent {
      * @throws IOException    If an I/O error occurs.
      * @throws StateException If an error occurs during state transition.
      */
-    public I_Thread<String> say(String message) throws APIException, IOException, StateException {
-        ChatThread thread = new ChatThread();
-        Literal systemPrompt = RDFHelper.label(getModel(), getIdentity());
-        log.info("say.system: {} -> {}", getIdentity(), systemPrompt);
+    @Override
+    public I_Thread<String> prompt(String message) throws APIException, IOException, StateException {
+        return prompt(new ChatThread(), message);
+    }
+
+        @Override
+    public I_Thread<String> prompt(ChatThread thread, String prompt) throws APIException, IOException, StateException {
+        Literal systemPrompt = RDFHelper.label(getModel(), getSelf());
+        log.info("prompt.system: {} -> {}", getSelf(), systemPrompt);
         assert systemPrompt != null;
         thread.system(systemPrompt.stringValue() + "\nAlways answer in JSON: { \"response\": \"{response}\", \"action\": \"{action_uri}\" }");
 
@@ -68,7 +73,7 @@ public class LLMAgent implements I_Agent {
         Literal currentPrompt = RDFHelper.label(getModel(), current);
 
         StringBuilder options = new StringBuilder();
-        log.info("say.current: {}", currentPrompt);
+        log.info("prompt.current: {}", currentPrompt);
         if (currentPrompt != null) {
             options.append("<current_action>");
             options.append(currentPrompt);
@@ -87,11 +92,11 @@ public class LLMAgent implements I_Agent {
             });
             options.append("</action_table>");
         }
-        log.info("say.ai: {}", options);
+        log.info("prompt.ai: {}", options);
         thread.system(options.toString());
-        log.info("say.human: {}", message);
-        thread.user("<user_message>" + message + "</user_message>");
-        log.info("say.thread: {}", thread);
+        log.info("prompt.says: {}", prompt);
+        thread.user("<user_message>" + prompt + "</user_message>");
+        log.info("prompt.thread: {}", thread);
         I_Thread<String> answer = llm.generate(thread);
         Gson gson = new Gson();
         String content = answer.latest().getContent();
@@ -99,17 +104,19 @@ public class LLMAgent implements I_Agent {
             HashMap<String, Object> reply = gson.fromJson(content, new TypeToken<HashMap<String, Object>>() {
             }.getType());
             String action = (String) reply.get("action");
-            log.info("say.reply: {} --> {}", reply, action);
+            log.info("prompt.action: {} --> {} @ {}", reply, action, fsm.getState());
             if (action != null) {
-                fsm.transition(Values.iri(action));
+                IRI intent = RDFPrefixer.toIRI(getModel(), getSelf(), action);
+                if ( intent != null) fsm.transition(intent);
+                log.info("prompt.intent: {} === {}", intent, fsm.getState());
             }
-
         }
         return answer;
     }
 
+
     @Override
-    public void setModel(Model model) {
+    public void setModel(Model model) throws StateException {
         agent.setModel(model);
     }
 
@@ -129,12 +136,17 @@ public class LLMAgent implements I_Agent {
     }
 
     @Override
-    public IRI getIdentity() {
-        return agent.getIdentity();
+    public IRI getSelf() {
+        return agent.getSelf();
     }
 
     @Override
-    public Resource decide(Resource state) throws StateException {
-        return getStateMachine().transition(state);
+    public void start() throws Exception {
+        agent.start();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        agent.stop();
     }
 }

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * systems.symbol (c) 2014-2015,2020-2021
+ * symbol.systems (c) 2014-2015,2020-2021
  * Module: systems.symbol.rdf4j.store
  * @author Symbol Systems
  * Date  : 3/07/2014

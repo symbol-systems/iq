@@ -33,10 +33,10 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
     @Override
     public void accept(ContentEntity html) {
         try {
-            log.info("accept: {}", html.getIdentity());
+            log.info("accept: {}", html.getSelf());
             ingestJSONLD(html);
         } catch (IOException e) {
-            log.error("json.parse.failed: {}", html.getIdentity(), e);
+            log.error("json.parse.failed: {}", html.getSelf(), e);
             throw new RuntimeException(e);
         }
     }
@@ -44,16 +44,16 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
     IRI next(ContentEntity jsonld) {
         if (next != null) {
             next.accept(jsonld);
-            return jsonld.getIdentity();
+            return jsonld.getSelf();
         }
         return null;
     }
 
     public void ingestJSONLD(ContentEntity<String> source) throws IOException {
         String content = source.getContent();
-        ContentEntity<String> entity = new ContentEntity<>(source.getIdentity(), content);
-        log.info("json.parsed: {}: {}", entity.getIdentity(), content);
-        extractJSON(entity.getIdentity(), content);
+        ContentEntity<String> entity = new ContentEntity<>(source.getSelf(), content);
+        log.info("json.parsed: {}: {}", entity.getSelf(), content);
+        extractJSON(entity.getSelf(), content);
     }
 
     private void extractJSON(IRI page, String html) {

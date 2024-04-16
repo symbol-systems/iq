@@ -8,17 +8,23 @@ import java.util.Set;
 
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
+import systems.symbol.model.I_Self;
 import systems.symbol.ns.COMMONS;
 
-public class NOP implements I_Intent {
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
+public class NOP implements I_Intent, I_Self {
     static Set<IRI> nop = new HashSet<>();
     @Override
     @RDF(COMMONS.IQ_NS+"nop")
-    public Set<IRI> execute(IRI subject, Resource object) {
+    public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
         return nop;
     }
 
-    public IRI getIdentity() {
+    @Override
+
+    public IRI getSelf() {
         return Values.iri("urn:"+getClass().getCanonicalName());
     }
 

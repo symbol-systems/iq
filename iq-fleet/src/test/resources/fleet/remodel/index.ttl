@@ -1,0 +1,17 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+@prefix iq: <https://symbol.systems/v0/iq#>.
+@prefix : <https://symbol.systems/v0/test/remodel#>.
+
+# Remodel Process
+: a iq:Agent;
+  :sop_remodel :demo_remodel;
+.
+
+:demo_remodel iq:initial :do_agents2examples.
+
+:do_agents2examples
+    rdfs:label "Remodel Agents as Examples";
+    iq:remodel :agents2examples;
+.

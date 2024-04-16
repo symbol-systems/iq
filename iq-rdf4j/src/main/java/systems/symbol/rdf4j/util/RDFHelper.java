@@ -22,7 +22,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * systems.symbol (c) 2014
+ * symbol.systems (c) 2014
  * Module: systems.symbol.rdf4j.util
  * @author Symbol Systems
  * Date  : 17/06/2014
@@ -77,11 +77,12 @@ public class RDFHelper {
 
 	public static Literal label(Model triples, Resource s) {
 		Iterable<Statement> models = triples.getStatements(s, RDFS.LABEL, null);
+		Literal found = null;
         for (Statement next : models) {
-            if (next.getObject().isLiteral()) {
-                return (Literal) next.getObject();
+            if (found == null && next.getObject().isLiteral()) {
+                found = (Literal) next.getObject();
             }
         }
-		return null;
+		return found;
 	}
 }

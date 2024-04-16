@@ -1,5 +1,5 @@
-@prefix    : <https://test.symbol.systems/cases#>.
-@prefix test: <https://test.symbol.systems/cases#>.
+@prefix    : <urn:iq:test:>.
+@prefix test: <urn:iq:test:>.
 
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix cnt: <http://www.w3.org/2011/content#>.
@@ -32,23 +32,23 @@
 .
 
 <https://test.symbol.systems/>
-    owl:sameas <https://test.symbol.systems/cases#hbs/index.hbs>;
+    owl:sameas <urn:iq:test:hbs/index.hbs>;
     dct:title "Home";
 .
 
-<https://test.symbol.systems/cases#hbs/hello.hbs>
+<urn:iq:test:hbs/hello.hbs>
     a skos:Concept;
     dct:title "hello world";
     skos:inScheme :TestCase;
 .
 
-<https://test.symbol.systems/cases#hbs/index.hbs>
+<urn:iq:test:hbs/index.hbs>
     a skos:Concept;
     dct:title "Home Sweet Home";
     skos:inScheme :TestCase;
 .
 
-<https://test.symbol.systems/cases#queries/all.sparql>
+<urn:iq:test:queries/all.sparql>
     a skos:Concept;
     skos:prefLabel "all sparql";
     dct:title "all sparql";

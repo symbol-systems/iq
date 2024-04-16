@@ -1,6 +1,7 @@
 package systems.symbol.skill;
 
-import systems.symbol.agent.apis.APIException;
+import org.eclipse.rdf4j.model.Literal;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_Thread;
 import systems.symbol.llm.openai.ChatGPT;
@@ -53,14 +54,14 @@ public class LLMSkillBuilder<T> extends AbstractSkillBuilder {
     @Override
     public QuerySkill build() throws SkillException {
         // Lookup LLM task prompt in the platform repository
-        IQConnection iq = new IQConnection(platform.getIdentity(), connection);
+        IQConnection iq = new IQConnection(platform.getSelf(), connection);
         ScriptCatalog library = new ScriptCatalog(iq);
         IRI promptIRI = iq.toIRI(this.promptPath + ".txt");
         IRI mimeIRI = iq.toIRI(COMMONS.MIME_PLAIN);
-        String taskPrompt = library.getContent(promptIRI, mimeIRI);
+        Literal taskPrompt = library.getContent(promptIRI, mimeIRI);
 
         // check prompt exists and has placeholders
-        if (taskPrompt == null || taskPrompt.isEmpty()) {
+        if (taskPrompt == null) {
             throw new SkillException("api.llm.openai#prompt-missing", 404);
         }
 
@@ -75,6 +76,10 @@ public class LLMSkillBuilder<T> extends AbstractSkillBuilder {
 
         public QuerySkill(LLMSkillBuilder builder, String taskPrompt) {
             this.taskPrompt = taskPrompt;
+        }
+
+        public QuerySkill(LLMSkillBuilder<T> builder, Literal taskPrompt) {
+            this.taskPrompt = taskPrompt.stringValue();
         }
 
         @Override

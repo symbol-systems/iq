@@ -8,13 +8,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class AbstractMessage<T> implements I_LLMessage<T> {
     MessageType type = MessageType.OTHER;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String role, name;
+    String name;
+    RoleType role;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     T content;
 
     public AbstractMessage(String name, String role, T content) {
         this.name = name;
-        this.role = role;
+        this.role = RoleType.valueOf(role.toLowerCase());
         this.content = content;
     }
 
@@ -24,7 +25,7 @@ public class AbstractMessage<T> implements I_LLMessage<T> {
     }
 
     @Override
-    public String getRole() {
+    public RoleType getRole() {
         return role;
     }
 

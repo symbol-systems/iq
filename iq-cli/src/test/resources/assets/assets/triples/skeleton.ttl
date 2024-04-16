@@ -1,4 +1,4 @@
-@prefix    : <https://test.symbol.systems/cases/#skeleton/>.
+@prefix    : <urn:iq:test:skeleton/>.
 @prefix : <https://symbol.systems/v0/onto/demo/principles/agile#>.
 
 # Canonical Ontology Definitions (e.g. W3C standards)
@@ -27,7 +27,7 @@
 @prefix fab: <https://symbol.systems/v0/onto/fab#>.
 @prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
 @prefix gg: <https://symbol.systems/v0/onto/gg#>.
-@prefix iq-test: <https://test.symbol.systems/cases#>.
+@prefix iq-test: <urn:iq:test:>.
 
 # Model Definitions
 :

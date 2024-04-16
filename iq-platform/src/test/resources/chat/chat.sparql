@@ -1,5 +1,5 @@
-prefix iq: <urn:systems.symbol:v0:iq:>
-prefix : <https://test.symbol.systems/cases#>
+prefix iq: <urn:iq:>
+prefix : <urn:iq:test:>
 
 CONSTRUCT {
     ?agent iq:current ?current.

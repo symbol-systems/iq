@@ -14,8 +14,7 @@ import static systems.symbol.cli.CLIContext.CODENAME;
 
 
 /*
- *  systems.symbol - see license
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 @CommandLine.Command(name = "iq", description = "IQ: applied knowledge")
@@ -33,6 +32,7 @@ public class CLI implements Callable<Number>  {
 
 			cli.addSubcommand(new InitCommand(context));
 			if (context.isInitialized()) {
+				cli.addSubcommand(new AboutCommand(context));
 				cli.addSubcommand(new ListCommand(context));
 				cli.addSubcommand(new ScriptCommand(context));
 				cli.addSubcommand(new SPARQLCommand(context));
@@ -54,7 +54,7 @@ public class CLI implements Callable<Number>  {
 			cli.setInterpolateVariables(false);
 			return cli;
 		} catch (Exception e) {
-			log.error("iq.cli.error: {} -> {}", e, e.getStackTrace());
+			log.error("A problem occurred: {}", e.getMessage(),e);
 		}
 		context.close();
 		return null;

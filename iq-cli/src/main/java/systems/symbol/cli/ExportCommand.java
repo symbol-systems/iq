@@ -6,8 +6,8 @@ import picocli.CommandLine;
 import java.io.File;
 import java.io.IOException;
 
-import static systems.symbol.cli.CLIContext.CODENAME;
 import static systems.symbol.io.ImportExport.export;
+import static systems.symbol.ns.COMMONS.CODENAME;
 
 @CommandLine.Command(name = "export", description = "Export knowledge from this " + CODENAME)
 public class ExportCommand extends AbstractCLICommand {
@@ -24,12 +24,12 @@ public class ExportCommand extends AbstractCLICommand {
 
     @Override
     public Object call() throws Exception {
-        to.getParentFile().mkdirs();
-        log.info("iq.cli.export.ns: " + context.getIdentity());
-        log.info("iq.cli.export.to: " + to.getAbsolutePath());
-
-        // save in today's folder
+        if (to==null||!to.exists()) {
+            display("missing --to");
+            return 1;
+        }
         File toFolder = FileHelper.toTodayFile(to);
+        System.out.printf("export <%s> to %s", context.getSelf(), to.getAbsolutePath());
         export(context, toFolder, comment);
         return 0;
     }

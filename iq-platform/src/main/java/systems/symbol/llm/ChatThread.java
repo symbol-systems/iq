@@ -35,23 +35,21 @@ public class ChatThread implements I_Thread<String> {
     }
 
     public ChatThread add(String name, String role, String content) {
+        if (content==null) return this;
         this.messages.add(new TextMessage(name, role, content));
         return this;
     }
 
     public ChatThread system(String content) {
-        this.messages.add(new TextMessage("default", "system", content));
-        return this;
+        return add("default", "system", content);
     }
 
     public ChatThread user(String content) {
-        this.messages.add(new TextMessage("default", "user", content));
-        return this;
+        return add("default", "user", content);
     }
 
     public ChatThread ai(String content) {
-        this.messages.add(new TextMessage("default", "assistant", content));
-        return this;
+        return add("default", "assistant", content);
     }
 
     public String toString() {

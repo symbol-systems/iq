@@ -5,13 +5,9 @@ import systems.symbol.string.PrettyString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,7 +40,7 @@ public class RSSIngestor<T> extends AbstractIngestor<ContentEntity<T>> {
         try {
             parseRSS(page);
         } catch (Exception e) {
-            log.error("rss.failed: {}", page.getIdentity(), e);
+            log.error("rss.failed: {}", page.getSelf(), e);
         }
     }
 
@@ -55,7 +51,7 @@ public class RSSIngestor<T> extends AbstractIngestor<ContentEntity<T>> {
         Document doc = builder.parse(new InputSource(new StringReader(content)));
         doc.getDocumentElement().normalize();
 
-        parseRSS(page.getIdentity(), doc);
+        parseRSS(page.getSelf(), doc);
     }
 
     private void parseRSS(IRI page, Document doc) {

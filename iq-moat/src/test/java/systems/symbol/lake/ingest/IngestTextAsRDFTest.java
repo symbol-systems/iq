@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import systems.symbol.lake.crawl.VFSCrawler;
-import systems.symbol.rdf4j.io.Remodel;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.RepositoryConnection;

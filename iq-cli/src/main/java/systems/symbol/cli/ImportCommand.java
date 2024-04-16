@@ -1,7 +1,9 @@
 package systems.symbol.cli;
 
-import systems.symbol.io.ImportExport;
+import com.github.freva.asciitable.AsciiTable;
 import picocli.CommandLine;
+import systems.symbol.io.ImportExport;
+import systems.symbol.rdf4j.io.BootstrapLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,9 +28,17 @@ public class ImportCommand extends AbstractCLICommand{
             display("missing --from");
             return 1;
         }
-        log.info("iq.cli.learn.deploy: "+from.getAbsolutePath());
-        ImportExport.load(context, from, forceDelete);
-        log.info("iq.cli.learn.done");
+
+        doImport();
         return 0;
+    }
+
+    private void doImport() throws IOException {
+        System.out.printf("importing from: %s\n", from.getAbsolutePath());
+        BootstrapLoader load = ImportExport.load(context, from, forceDelete);
+
+        String[] columns = { "total", "assets", "rdf", "errors" };
+        Object[] row = { load.total_files, load.total_asset_files, load.total_rdf_files, load.total_errors };
+        System.out.println(AsciiTable.getTable(columns, new Object[][] { row }));
     }
 }

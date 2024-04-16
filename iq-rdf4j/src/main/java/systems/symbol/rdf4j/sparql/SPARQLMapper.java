@@ -98,7 +98,7 @@ public class SPARQLMapper {
         String query = queries.get(iri);
         log.debug("iq.sparql.find: {} -> {}", iri, query!=null);
         if (query != null) return query;
-        String script = ScriptCatalog.getSPARQL(iq.getConnection(), iri, iq.getIdentity());
+        String script = ScriptCatalog.getSPARQL(iq.getConnection(), iri, iq.getSelf());
         return script;
     }
 
@@ -183,7 +183,7 @@ public class SPARQLMapper {
 //            log.debug("iq.sparql.prefix: {}" , sparql_select);
         }
         if (args != null) {
-            args.put(KEY_SELF, iq.getIdentity()); // @self for self-referential
+            args.put(KEY_SELF, iq.getSelf()); // @self for self-referential
 //            log.debug("iq.sparql.args: {}" , args.keySet());
         }
 

@@ -1,16 +1,12 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.ContentEntity;
-import org.apache.commons.vfs2.FileObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.function.Consumer;
 
@@ -22,7 +18,7 @@ public class XHTMLChunkIngestor extends AbstractIngestor<ContentEntity<String>> 
     }
 
     protected void processXHTML(ContentEntity<String> page) throws IOException, URISyntaxException {
-        Document doc = Jsoup.parse(page.getContent().toString(), page.getIdentity().stringValue());
+        Document doc = Jsoup.parse(page.getContent(), page.getSelf().stringValue());
         StringBuilder sb = new StringBuilder();
 
         Elements pages = doc.select(".page");
@@ -37,7 +33,7 @@ public class XHTMLChunkIngestor extends AbstractIngestor<ContentEntity<String>> 
     }
 
     protected void processChunks(ContentEntity<String> file, StringBuilder sb, Elements sections) throws IOException {
-        log.info("xhtml.chunks: {} => {}", file.getIdentity(), sections.size());
+        log.info("xhtml.chunks: {} => {}", file.getSelf(), sections.size());
         int chunk = 0;
         for (Element element : sections) {
             processChunk(file, sb, element, chunk++);
@@ -48,7 +44,7 @@ public class XHTMLChunkIngestor extends AbstractIngestor<ContentEntity<String>> 
 
     protected void processChunk(ContentEntity<String> file, StringBuilder sb, Element element, int chunk) throws IOException {
         String content = element.text().trim();
-        log.info("xhtml.chunk: {} => {} -> {}", file.getIdentity(), chunk, content);
+        log.info("xhtml.chunk: {} => {} -> {}", file.getSelf(), chunk, content);
         if (content.isEmpty()) return;
         sb.append(content);
         if (sb.length() >= CHUNK_SIZE) {
@@ -60,13 +56,13 @@ public class XHTMLChunkIngestor extends AbstractIngestor<ContentEntity<String>> 
         log.debug("xhtml.text: {} --> {}" ,chunk, sb);
         if (sb.length()<1) return;
         String content = sb.substring(0, Math.min(CHUNK_SIZE, sb.length()));
-        ContentEntity<String> entity = new ContentEntity<>(file.getIdentity()+"#chunk_"+chunk, content);
+        ContentEntity<String> entity = new ContentEntity<>(file.getSelf()+"#chunk_"+chunk, content);
         sb.setLength(Math.max(sb.length()-CHUNK_SIZE,0));
         next(entity);
     }
 
     @Override
-    public void accept(ContentEntity page) {
+    public void accept(ContentEntity<String> page) {
         try {
             processXHTML(page);
         } catch (IOException | URISyntaxException e) {
