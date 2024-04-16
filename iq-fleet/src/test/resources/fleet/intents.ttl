@@ -1,0 +1,73 @@
+@base <urn:iq:test:>.
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix iq: <urn:iq:>.
+@prefix : <urn:iq:test:>.
+
+:   a iq:Agent;
+rdf:value "You an AI researcher. How do you feel ?.";
+iq:initial :intents.
+
+:intents
+rdf:value "You can only use the following intents.";
+iq:to :search;
+iq:to :find;
+iq:to :select;
+iq:to :remodel;
+iq:to :prompt;
+iq:to :script;
+iq:to :webpage;
+iq:to :rdf;
+iq:to :execute;
+iq:to :self;
+.
+
+iq:State a iq:.
+iq:to rdfs:domain iq:State.
+iq:to rdfs:range iq:State.
+
+iq:knows rdfs:range rdf:Statement .
+#iq:find rdfs:range rdf:JSON  .
+
+:find
+rdfs:label "You can find in your knowledge base";
+iq:find "{{my.prompt}}".
+:search
+rdfs:label "You can search the web ";
+iq:search "{{my.prompt}}".
+:serp
+rdfs:label "You can search the web";
+iq:search "{{my.prompt}}".
+:select
+rdfs:label "You can SPARQL query your own state of mind";
+iq:select "{{my.prompt}}".
+:remodel
+rdfs:label "You can transform data into knowledge";
+iq:remodel "{{my.prompt}}".
+:prompt
+rdfs:label "You can ask for executive assistance";
+iq:prompt "{{my.prompt}}".
+:script
+rdfs:label "You can run scripts using Groovy and Javascript";
+iq:script <urn:iq:test:scripts/hello>.
+:webpage
+rdfs:label "You can visit a webpage vis URL";
+iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
+:rdf
+rdfs:label "You can de-reference an RDF via URL";
+iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
+:execute
+iq:execute :self;
+iq:to :intents.
+:self
+rdfs:label "You can learn about yourself";
+rdf:value "You are healthy";
+iq:knows :Assistance;
+iq:knows :DataRetrieval;
+iq:knows :KnowledgeBase;
+iq:knows :NaturalLanguage;
+.
+

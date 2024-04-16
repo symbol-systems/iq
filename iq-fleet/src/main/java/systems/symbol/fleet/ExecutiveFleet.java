@@ -6,16 +6,18 @@ import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.tools.APIException;
-import systems.symbol.decide.ExecutiveDecision;
-import systems.symbol.decide.I_Decision;
+import systems.symbol.decide.ExecutiveDelegate;
 import systems.symbol.decide.I_Delegate;
+import systems.symbol.decide.I_Decide;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.JSR233;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_Prompt;
 import systems.symbol.llm.I_Thread;
+import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.model.I_Self;
+import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.util.Stopwatch;
 
@@ -25,24 +27,26 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public class ExecutiveFleet extends AgenticFleet implements I_Delegate<Resource>, I_Prompt<String>, I_Self {
+public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, I_Prompt<String>, I_Self {
 I_LLM<String> llm;
 String prompt;
 private final int retries;
 ChatThread thread = new ChatThread();
-IRI self;
 Map<IRI,Thread> workers = new HashMap<>();
 
+public ExecutiveFleet(IRI self, ChatGPT gpt, Model model, EnvsAsSecrets secrets) throws StateException {
+this(self, gpt, model, secrets, 0);
+}
 public ExecutiveFleet(IRI self, I_LLM<String> llm, Model fleet, I_Secrets secrets, int retries) throws StateException {
-super(fleet, secrets);
-this.self = self;
+super(self, fleet, secrets);
 this.llm = llm;
 this.retries = retries;
 }
 
+
 @Override
-public Future<I_Decision<Resource>> delegate(I_Agent agent) {
-CompletableFuture<I_Decision<Resource>> future = new CompletableFuture<>();
+public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
+CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
 Stopwatch stopwatch = new Stopwatch();
 Thread worker = new Thread(() -> {
 try {
@@ -60,9 +64,9 @@ worker.start();
 return future;
 }
 
-protected I_Decision<Resource> delegate(I_Agent agent, int attempt) throws StateException {
+protected I_Delegate<Resource> delegate(I_Agent agent, int attempt) throws StateException {
 log.info("delegate: #{}: {} @ {}", retries-attempt, agent.getStateMachine().getState(), agent.getSelf() );
-ExecutiveDecision decision = new ExecutiveDecision(llm, agent.getSelf(), agent.getModel(), agent.getStateMachine());
+ExecutiveDelegate decision = new ExecutiveDelegate(llm, agent.getSelf(), agent.getMemo(), agent.getStateMachine());
 try {
 log.info("delegate.prompt: {}", prompt);
 I_Thread<String> answer = decision.prompt(thread, prompt);
@@ -74,7 +78,7 @@ if (attempt>0) return delegate(agent, attempt-1);
 return decision;
 }
 
-public I_Agent newAgent(IRI self, Model fleet, I_Secrets secrets) throws StateException {
+public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
 return new ExecutiveAgent(fleet, self, secrets, new JSR233(self, fleet), this);
 }
 
@@ -87,10 +91,5 @@ return prompt(thread,prompt);
 public I_Thread<String> prompt(ChatThread history, String prompt) throws APIException, IOException, StateException {
 thread.user(prompt);
 return llm.generate(thread);
-}
-
-@Override
-public IRI getSelf() {
-return self;
 }
 }

@@ -6,10 +6,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.LLMAgent;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
@@ -23,7 +19,7 @@ import java.util.HashMap;
 /*
  * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
  */
-public class ExecutiveDecision extends SimpleDecision<Resource> implements I_Prompt<String>, I_Self {
+public class ExecutiveDelegate extends SimpleDelegate<Resource> implements I_Prompt<String>, I_Self {
 private final I_LLM<String> llm;
 private final IRI agent;
 private final Model model;
@@ -35,7 +31,7 @@ private final Gson gson = new Gson();
  * @param agent The agent requesting a decision.
  * @param agent The FSM associated with the decision.
  */
-public ExecutiveDecision(I_LLM<String> llm, IRI agent, Model model, I_StateMachine<Resource> fsm) {
+public ExecutiveDelegate(I_LLM<String> llm, IRI agent, Model model, I_StateMachine<Resource> fsm) {
 super(fsm);
 this.llm = llm;
 this.agent = agent;

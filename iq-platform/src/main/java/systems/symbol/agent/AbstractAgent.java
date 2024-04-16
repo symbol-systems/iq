@@ -21,31 +21,30 @@ import java.util.Set;
 public abstract class AbstractAgent implements I_Agent, I_Self, I_Intent, I_StateListener<Resource> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected I_StateMachine<Resource> fsm;
-protected Model model;
+protected Model memo;
 protected IRI self;
 
 /**
  * Parameterized constructor allowing initialization with a pre-existing RDF4J model.
- * @param model The RDF4J model to be associated with the agent.
+ * @param memo The RDF4J model to be associated with the agent.
  */
-public AbstractAgent(@NotNull Model model, IRI self) throws StateException {
+public AbstractAgent(@NotNull Model memo, IRI self) throws StateException {
 this.self = self;
-setModel(model);
+setMemo(memo);
 }
 
-public AbstractAgent(IRI self, @NotNull Model model) throws StateException {
+public AbstractAgent(IRI self, @NotNull Model memo) throws StateException {
 this.self = self;
-setModel(model);
+setMemo(memo);
 }
 
 /**
  * Sets the RDF4J model for the agent.
- * @param model The RDF4J model to be set.
+ * @param memo The RDF4J model to be set.
  */
-@Override
-public void setModel(@NotNull  Model model) throws StateException {
-this.model = model;
-learn(new ModelStateMachine(model, this.getSelf()));
+protected void setMemo(@NotNull  Model memo) throws StateException {
+this.memo = memo;
+setFSM(new ModelStateMachine(memo, this.getSelf()));
 }
 
 @Override
@@ -64,8 +63,8 @@ log.info("stopped: {} @ {}", getSelf(), getStateMachine().getState());
  * @return The RDF4J model.
  */
 @Override
-public Model getModel() {
-return model;
+public Model getMemo() {
+return memo;
 }
 
 /**
@@ -83,8 +82,7 @@ return fsm;
  *
  * @param fsm The state machine associated with the workflow.
  */
-@Override
-public void learn(@NotNull I_StateMachine<Resource> fsm) {
+protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
 this.fsm = fsm;
 fsm.listen((from, to) -> {
 log.info("agent.intent: {} @ {} <- {}", to, getSelf(), from);
@@ -95,7 +93,7 @@ log.error("agent.learn.failed: {}", fsm, e);
 return false;
 }
 });
-log.info("agent.learnt: {} @ {}", fsm.getState(), getSelf() );
+log.info("agent.listen: {} @ {}", fsm.getState(), getSelf() );
 }
 
 /**

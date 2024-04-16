@@ -1,16 +1,18 @@
 ## IQ: Governing Fleets of AI
 
-IQ functions as an operating system for fleets of AI agents, orchestrating their goals, actions, discoveries, decisions, and creations, overseeing the 'who, what, when, why, and how' of your AI ecosystem.
+IQ functions as an operating system for fleets of AI agents.
 
-As a cognitive toolkit, IQ integrates RDF-powered memory for knowledge, policies, and actions, providing agents with both system-1 and system-2 thinking capabilities.
+As a cognitive toolkit, IQ integrates RDF-powered memory for knowledge, policies, and actions.
+
+IQ upgrades your agents with both system-1 and system-2 cognitive capabilities.
 
 At its core, IQ empowers intelligent systems to comprehend, reason, act, and adapt, offering a comprehensive suite of tools and components for interpreting and responding to the world.
 
-Equipped with pluggable skills, agents specialize in diverse domains and contexts, utilizing RDF to encode their knowledge, states, and decision-making logic as semantic knowledge - their digital DNA.
+Agents develop a semantic understanding of your domain, storing their knowledge in a graph database.
 
-Agents develop a profound semantic understanding of your domain, storing this knowledge in a connected database, ensuring seamless operation and continuity.
+Equipped with pluggable skills, agents make decisions based on knowledge, follow your workflows using neural and logical decision-making.
 
-This enables self-reflection, logical reasoning, and adaptation, thereby enhancing agents' capabilities and enabling them to translate user intentions into actionable responses.
+Since IQ uses declarative knowledge, your agents are aware of themselves, their states and knowledge can be queried and can self-adapt.
 
 ### Capabilities
 

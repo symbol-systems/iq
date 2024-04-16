@@ -16,7 +16,6 @@ import systems.symbol.fsm.StateException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_Thread;
-import systems.symbol.llm.Prompts;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ import java.util.HashMap;
 /*
  * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
  */
-public class LLMDecision extends SimpleDecision<Resource> implements I_Prompt<String> {
+public class LLMDelegate extends SimpleDelegate<Resource> implements I_Prompt<String> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 private final I_LLM<String> llm;
 private final I_Agent agent;
@@ -36,7 +35,7 @@ private final Gson gson = new Gson();
  * @param llm The LLM used for decision-making.
  * @param agent The agent associated with the decision-making process.
  */
-public LLMDecision(I_LLM<String> llm, I_Agent agent) {
+public LLMDelegate(I_LLM<String> llm, I_Agent agent) {
 super(agent.getStateMachine());
 this.agent = new LLMAgent(llm, agent);
 this.llm = llm;
@@ -67,7 +66,7 @@ I_StateMachine<Resource> fsm = this.agent.getStateMachine();
 assert null != fsm;
 log.info("decide.state: " + agent.getSelf() + " -> " + fsm.getState());
 
-ChatThread prompted = Prompts.decision(history, agent.getModel(), agent.getSelf(), fsm);
+ChatThread prompted = Prompts.decision(history, agent.getMemo(), agent.getSelf(), fsm);
 prompted.user("<user_message>" + prompt + "</user_message>");
 
 I_Thread<String> answer = llm.generate(prompted);

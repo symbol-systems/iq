@@ -9,14 +9,14 @@ import java.util.Random;
 /**
  * A simple decision-maker that uses random selection to pick next state.
  */
-public class StochasticDecision<T> extends SimpleDecision<T> {
+public class StochasticDelegate<T> extends SimpleDelegate<T> {
 
 /**
  * Constructs a StochasticDecision with the provided state machine.
  *
  * @param fsm The state machine to make decisions based on.
  */
-public StochasticDecision(I_StateMachine<T> fsm) {
+public StochasticDelegate(I_StateMachine<T> fsm) {
 super(fsm);
 }
 

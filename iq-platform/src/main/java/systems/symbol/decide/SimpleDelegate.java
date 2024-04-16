@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 
-public class SimpleDecision<T> implements I_Decision<T> {
+public class SimpleDelegate<T> implements I_Delegate<T> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected final I_StateMachine<T> fsm;
 
@@ -15,11 +15,11 @@ private T decision;
  *
  * @param fsm The state machine to make decisions based on.
  */
-public SimpleDecision(I_StateMachine<T> fsm) {
+public SimpleDelegate(I_StateMachine<T> fsm) {
 this.fsm = fsm;
 }
 
-public SimpleDecision(I_StateMachine<T> fsm, T state) {
+public SimpleDelegate(I_StateMachine<T> fsm, T state) {
 this.fsm = fsm;
 choice(state);
 }
@@ -28,7 +28,7 @@ public I_StateMachine<T> getStateMachine() {
 return this.fsm;
 }
 
-public I_Decision<T> choice(T chosen) {
+public I_Delegate<T> choice(T chosen) {
 decision = chosen == null?decision:chosen;
 return ()->decision;
 }
