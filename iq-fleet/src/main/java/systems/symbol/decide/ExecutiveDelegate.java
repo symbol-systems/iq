@@ -2,21 +2,15 @@ package systems.symbol.decide;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.LLMAgent;
 import systems.symbol.agent.tools.APIException;
-import systems.symbol.llm.I_Prompt;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.llm.ChatThread;
-import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_Thread;
-import systems.symbol.llm.Prompts;
+import systems.symbol.llm.*;
+import systems.symbol.model.I_Self;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -25,21 +19,23 @@ import java.util.HashMap;
 /*
  * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
  */
-public class LLMDecision extends SimpleDecision<Resource> implements I_Prompt<String> {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+public class ExecutiveDelegate extends SimpleDelegate<Resource> implements I_Prompt<String>, I_Self {
     private final I_LLM<String> llm;
-    private final I_Agent agent;
+    private final IRI agent;
+    private final Model model;
     private final Gson gson = new Gson();
 
     /*
-     * Constructor for LLMDecider.
+     * Constructor for an ExecutiveDecision
      * @param llm The LLM used for decision-making.
-     * @param agent The agent associated with the decision-making process.
+     * @param agent The agent requesting a decision.
+     * @param agent The FSM associated with the decision.
      */
-    public LLMDecision(I_LLM<String> llm, I_Agent agent) {
-        super(agent.getStateMachine());
-        this.agent = new LLMAgent(llm, agent);
+    public ExecutiveDelegate(I_LLM<String> llm, IRI agent, Model model, I_StateMachine<Resource> fsm) {
+        super(fsm);
         this.llm = llm;
+        this.agent = agent;
+        this.model = model;
     }
 
     /*
@@ -63,22 +59,25 @@ public class LLMDecision extends SimpleDecision<Resource> implements I_Prompt<St
      * @throws StateException If an error occurs with the state machine.
      */
     public I_Thread<String> prompt(ChatThread history, String prompt) throws APIException, IOException, StateException {
-        I_StateMachine<Resource> fsm = this.agent.getStateMachine();
-        assert null != fsm;
-        log.info("decide.state: " + agent.getSelf() + " -> " + fsm.getState());
+        log.info("executive.state: " + getSelf() + " -> " + this.fsm.getState());
 
-        ChatThread prompted = Prompts.decision(history, agent.getModel(), agent.getSelf(), fsm);
-        prompted.user("<user_message>" + prompt + "</user_message>");
+        ChatThread prompted = Prompts.decision(history, model, getSelf(), fsm);
+        prompted.user(prompt);
 
         I_Thread<String> answer = llm.generate(prompted);
-        log.info("decide.answer: " + answer.latest());
+        log.info("executive.answer: " + answer.latest());
         String content = answer.latest().getContent();
         if (Validate.isMissing(content)) return null;
 
         HashMap<String, Object> reply = gson.fromJson(content, new TypeToken<HashMap<String, Object>>() {}.getType());
         String intent = (String) reply.get("intent");
-        log.info("decide.intent: {} --> {}", reply, intent);
+        log.info("executive.intent: {} --> {}", reply, intent);
         choice(Values.iri(intent));
         return answer;
+    }
+
+    @Override
+    public IRI getSelf() {
+        return agent;
     }
 }

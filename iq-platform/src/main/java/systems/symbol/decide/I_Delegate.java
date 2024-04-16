@@ -3,10 +3,9 @@ package systems.symbol.decide;
 import systems.symbol.fsm.StateException;
 
 /**
- * The <code>I_Decision</code> interface represents a decision-making process within a symbolic system.
- * Implementations of this interface are responsible for taking decisions based on the current state.
+ * Defer responsibility for taking decisions.
  */
-public interface I_Decision<T> {
+public interface I_Delegate<T> {
 
     /**
      * Makes a decision based on the provided state.

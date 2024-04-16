@@ -44,7 +44,7 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
      * @return true if the LLMAgent is online, false otherwise.
      */
     public boolean isOnline() {
-        return this.llm != null && !this.getModel().isEmpty();
+        return this.llm != null && !this.getMemo().isEmpty();
     }
 
     /**
@@ -63,14 +63,14 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
 
         @Override
     public I_Thread<String> prompt(ChatThread thread, String prompt) throws APIException, IOException, StateException {
-        Literal systemPrompt = RDFHelper.label(getModel(), getSelf());
+        Literal systemPrompt = RDFHelper.label(getMemo(), getSelf());
         log.info("prompt.system: {} -> {}", getSelf(), systemPrompt);
         assert systemPrompt != null;
         thread.system(systemPrompt.stringValue() + "\nAlways answer in JSON: { \"response\": \"{response}\", \"action\": \"{action_uri}\" }");
 
         I_StateMachine<Resource> fsm = getStateMachine();
         Resource current = fsm.getState();
-        Literal currentPrompt = RDFHelper.label(getModel(), current);
+        Literal currentPrompt = RDFHelper.label(getMemo(), current);
 
         StringBuilder options = new StringBuilder();
         log.info("prompt.current: {}", currentPrompt);
@@ -84,7 +84,7 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
         if (!transitions.isEmpty()) {
             options.append("\nOnly choose your next action from: <action_table>|allowed_action|user intention|");
             transitions.forEach(t -> {
-                Literal label = RDFHelper.label(getModel(), t);
+                Literal label = RDFHelper.label(getMemo(), t);
                 if (label != null) {
                     options.append("\n|").append(t).append(" | ");
                     options.append(label.stringValue()).append(" | ");
@@ -106,7 +106,7 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
             String action = (String) reply.get("action");
             log.info("prompt.action: {} --> {} @ {}", reply, action, fsm.getState());
             if (action != null) {
-                IRI intent = RDFPrefixer.toIRI(getModel(), getSelf(), action);
+                IRI intent = RDFPrefixer.toIRI(getMemo(), getSelf(), action);
                 if ( intent != null) fsm.transition(intent);
                 log.info("prompt.intent: {} === {}", intent, fsm.getState());
             }
@@ -116,13 +116,8 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
 
 
     @Override
-    public void setModel(Model model) throws StateException {
-        agent.setModel(model);
-    }
-
-    @Override
-    public Model getModel() {
-        return agent.getModel();
+    public Model getMemo() {
+        return agent.getMemo();
     }
 
     @Override
@@ -130,10 +125,6 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
         return agent.getStateMachine();
     }
 
-    @Override
-    public void learn(I_StateMachine<Resource> fsm) {
-        agent.learn(fsm);
-    }
 
     @Override
     public IRI getSelf() {

@@ -11,7 +11,11 @@ import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.I_StateListener;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
+import systems.symbol.intent.Executive;
+import systems.symbol.intent.I_Intent;
+import systems.symbol.intent.I_Intents;
 import systems.symbol.intent.JSR233;
+import systems.symbol.model.I_Self;
 import systems.symbol.rdf4j.iq.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
@@ -21,67 +25,144 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AgenticFleet implements I_Fleet {
+/**
+ * Represents a fleet of agents capable of executing intents within a symbolic system.
+ */
+public class AgenticFleet implements I_Fleet, I_Self {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Agent> agents = new HashMap<>();
+    IRI self;
+    Model fleet;
+    I_Intents intents;
 
-    public AgenticFleet(Model fleet, I_Secrets secrets) throws StateException {
-        deploy(fleet, secrets);
+    /**
+     * Constructs an AgenticFleet.
+     *
+     * @param self    the self IRI representing this fleet
+     * @param fleet   the RDF model representing the fleet
+     * @param secrets the secrets manager for accessing agent secrets
+     * @throws StateException if there is an issue with the state machine
+     */
+    public AgenticFleet(IRI self, Model fleet, I_Secrets secrets) throws StateException {
+        this.self = self;
+        this.fleet = fleet;
+        this.intents = new Executive(self, fleet);
+        this.intents.add( new JSR233(self, fleet) );
+        deploy(secrets);
     }
 
-    public void deploy(Model fleet, I_Secrets secrets) throws StateException {
+    /**
+     * Deploys agents from the fleet model and initializes them.
+     *
+     * @param secrets the secrets manager for accessing agent secrets
+     * @throws StateException if there is an issue with the state machine
+     */
+    public void deploy(I_Secrets secrets) throws StateException {
         Iterable<Statement> found = fleet.getStatements(null, IQ_NS.hasInitialState, null);
-        for(Statement s: found) {
+        for (Statement s : found) {
             IRI self = (IRI) s.getSubject();
             I_Agent agent = newAgent(self, fleet, secrets);
             agents.put(self, agent);
-            log.info("fleet.deploy.agent: {}", self);
+            log.info("fleet.agent: {}", self);
         }
         log.info("fleet.deployed: {}", agents.keySet());
     }
 
+    /**
+     * Creates a new agent instance.
+     *
+     * @param self    the self IRI representing the agent
+     * @param fleet   the RDF model representing the fleet
+     * @param secrets the secrets manager for accessing agent secrets
+     * @return the newly created agent
+     * @throws StateException if there is an issue with the state machine
+     */
     public I_Agent newAgent(IRI self, Model fleet, I_Secrets secrets) throws StateException {
-        return new ExecutiveAgent(fleet, self, secrets, new JSR233(self, fleet));
+        return new ExecutiveAgent(fleet, self, secrets, intents);
     }
 
-
+    /**
+     * Retrieves the agent with the given IRI.
+     *
+     * @param agent the IRI of the agent to retrieve
+     * @return the agent corresponding to the given IRI
+     */
     @Override
     public I_Agent getAgent(IRI agent) {
         return agents.get(agent);
     }
 
+    /**
+     * Retrieves all agents in the fleet.
+     *
+     * @return a collection of all agents in the fleet
+     */
     public Collection<I_Agent> getAgents() {
         return agents.values();
     }
 
+    /**
+     * Starts all agents in the fleet.
+     *
+     * @throws Exception if there is an issue starting the agents
+     */
     @Override
     public void start() throws Exception {
         Set<IRI> iris = agents.keySet();
-        for(IRI agent: iris) {
+        for (IRI agent : iris) {
             start(agent);
         }
     }
 
+    /**
+     * Stops all agents in the fleet.
+     *
+     * @throws Exception if there is an issue stopping the agents
+     */
     @Override
     public void stop() throws Exception {
-        for(IRI agent: agents.keySet()) {
+        for (IRI agent : agents.keySet()) {
             stop(agent);
         }
     }
 
+    /**
+     * Starts the agent with the given IRI.
+     *
+     * @param self the IRI of the agent to start
+     * @return the started agent
+     * @throws Exception if there is an issue starting the agent
+     */
     @Override
     public I_Agent start(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent==null) return null;
-        agent.start();;
+        if (agent == null) return null;
+        agent.start();
         return agent;
     }
 
+    /**
+     * Stops the agent with the given IRI.
+     *
+     * @param self the IRI of the agent to stop
+     * @return the state of the agent after stopping
+     * @throws Exception if there is an issue stopping the agent
+     */
     @Override
     public Resource stop(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent==null) return null;
+        if (agent == null) return null;
         agent.stop();
         return agent.getStateMachine().getState();
+    }
+
+    /**
+     * Retrieves the self IRI representing this fleet.
+     *
+     * @return the self IRI representing this fleet
+     */
+    @Override
+    public IRI getSelf() {
+        return self;
     }
 }

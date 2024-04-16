@@ -60,11 +60,11 @@ public class IntentAgent extends AbstractAgent {
     @Override
     @RDF(COMMONS.IQ_NS + "agent")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
-        log.debug("execute: {} -> {}", actor, state);
+        log.info("agent.execute: {} -> {}", actor, state);
         if (state instanceof IRI)
             return intent.execute(actor, state, bindings);
         Set<IRI> iris = new HashSet<>();
-        Collection<Statement> found = RDFCollections.getCollection(model, state, new HashSet<>());
+        Collection<Statement> found = RDFCollections.getCollection(memo, state, new HashSet<>());
         for (Statement statement : found) {
             Value v = statement.getObject();
             if (v instanceof Resource) {

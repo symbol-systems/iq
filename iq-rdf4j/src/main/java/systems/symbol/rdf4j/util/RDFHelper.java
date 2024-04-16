@@ -1,6 +1,6 @@
 package systems.symbol.rdf4j.util;
 
-import systems.symbol.ns.COMMONS;
+import org.eclipse.rdf4j.model.util.Models;
 import systems.symbol.rdf4j.NS;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.model.*;
@@ -12,9 +12,6 @@ import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,14 +72,19 @@ public class RDFHelper {
 		connection.commit();
 	}
 
-	public static Literal label(Model triples, Resource s) {
-		Iterable<Statement> models = triples.getStatements(s, RDFS.LABEL, null);
-		Literal found = null;
-        for (Statement next : models) {
-            if (found == null && next.getObject().isLiteral()) {
-                found = (Literal) next.getObject();
-            }
-        }
-		return found;
+	public static Literal label(Model model, Resource self) {
+		Set<Literal> values = Models.getPropertyLiterals(model, self, RDFS.LABEL);
+		if (values.isEmpty()) return null;
+		return values.iterator().next();
+	}
+
+	public static Literal value(Model model, Resource self) {
+		Set<Literal> values = Models.getPropertyLiterals(model, self, RDF.VALUE);
+		if (values.isEmpty()) return null;
+		return values.iterator().next();
+	}
+
+	public static Set<Literal> values(Model model, Resource self) {
+		return Models.getPropertyLiterals(model, self, RDF.VALUE);
 	}
 }

@@ -1,12 +1,10 @@
 package systems.symbol.agent;
 
 import systems.symbol.fsm.ModelStateMachine;
-import systems.symbol.fsm.StateException;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -54,7 +52,7 @@ class ScriptAgentTest {
     void testStateExecution() throws Exception {
         ScriptAgent agent = new ScriptAgent(model, self);
         ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
-        agent.learn(workflow_0);
+        agent.setFSM(workflow_0);
         assert workflow_0.equals(agent.fsm);
 
         Resource transitioned = agent.getStateMachine().transition(wip);

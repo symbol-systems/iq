@@ -29,7 +29,7 @@ class LazyAgentTest {
         ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
         assert LazyAgentTest.workflow_0.equals(workflow_0.getSelf());
 
-        agent.learn(workflow_0);
+        agent.setFSM(workflow_0);
         assert workflow_0.equals(agent.getStateMachine());
 
         Resource done = agent.getStateMachine().transition(wip);
@@ -52,7 +52,7 @@ class LazyAgentTest {
             }
         };
         ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
-        agent.learn(workflow_0);
+        agent.setFSM(workflow_0);
 
         System.out.println("agent.lazy.state: "+workflow_0.getState());
         assert ideation.equals(workflow_0.getState());

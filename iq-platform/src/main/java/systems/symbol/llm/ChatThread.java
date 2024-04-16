@@ -55,6 +55,6 @@ public class ChatThread implements I_Thread<String> {
     public String toString() {
         return messages.stream()
                 .map(I_LLMessage::toString)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining("\n"));
     }
 }

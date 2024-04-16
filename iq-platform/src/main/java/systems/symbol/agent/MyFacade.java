@@ -25,7 +25,7 @@ public class MyFacade {
     public static Bindings rebind(I_Agent agent, Map<String,Object> my) throws StateException {
         Bindings bindings = rebind(agent.getSelf(),my);
         bindings.put(STATE, agent.getStateMachine().getState());
-        bindings.put(IQ, new IQFacade(agent.getSelf(), agent.getModel()));
+        bindings.put(IQ, new IQFacade(agent.getSelf(), agent.getMemo()));
         return bindings;
     }
 

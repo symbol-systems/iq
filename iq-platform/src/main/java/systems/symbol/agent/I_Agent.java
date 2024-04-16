@@ -14,31 +14,18 @@ import systems.symbol.platform.I_StartStop;
 public interface I_Agent extends I_Self, I_StartStop {
 
     /**
-     * Sets the RDF4J model for the agent.
+     * Retrieves the working memory of the agent.
      *
-     * @param model The RDF4J model to be set.
+     * @return The RDF4J model of working memory.
      */
-    void setModel(Model model) throws StateException;
-
-    /**
-     * Retrieves the RDF4J model associated with the agent.
-     *
-     * @return The RDF4J model.
-     */
-    Model getModel();
+    Model getMemo();
 
 
     /**
-     * Retrieves the state machine associated with a given task.
+     * Retrieves the state machine associated with the agent.
      *
-     * @return The state machine associated with the task.
+     * @return The I_StateMachine representing our decision tree.
      */
     I_StateMachine<Resource> getStateMachine();
 
-    /**
-     * Learn skills by associating tasks with a corresponding state machine.
-     *
-     * @param fsm The state machine associated with the task for learning.
-     */
-    void learn(I_StateMachine<Resource> fsm);
 }

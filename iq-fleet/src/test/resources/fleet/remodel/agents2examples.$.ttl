@@ -1,9 +1,0 @@
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-
-@prefix iq: <https://symbol.systems/v0/iq#>.
-@prefix : <https://symbol.systems/v0/test/remodel#>.
-
-{{#each data}}
-<{{this}}> a iq:Example.
-{{/each}}

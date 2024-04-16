@@ -33,22 +33,23 @@ class ExecutiveFleetTest {
     @Test
     void deployFleet() throws Exception {
         if (Validate.isMissing(OPENAI_API_KEY)) {
-            System.out.println("decide.llm.skipped: ");
+            System.out.println("exec.fleet.llm.skipped: ");
             return;
         }
-        System.out.println("fleet.deploy: "+self);
+        System.out.println("exec.fleet.deploy: "+self);
         try (RepositoryConnection connection = assets.getConnection()) {
             Model model = new LiveModel(connection);
             EnvsAsSecrets secrets = new EnvsAsSecrets();
             ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
-            ExecutiveFleet fleet = new ExecutiveFleet(self, gpt, model, secrets, 0);
+            ExecutiveFleet fleet = new ExecutiveFleet(self, gpt, model, secrets);
 
             for(I_Agent agent: fleet.getAgents()) {
-                System.out.println("fleet.deployed: " + agent.getSelf() + " @ "+agent.getStateMachine().getState());
+                System.out.println("exec.fleet.deployed: " + agent.getSelf() + " @ "+agent.getStateMachine().getState());
             }
             fleet.start();
-            RDFDump.dump(model);
             fleet.stop();
+//            System.out.println("fleet.dump");
+//            RDFDump.dump(model);
         }
     }
 

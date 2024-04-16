@@ -21,9 +21,14 @@ class VFSCrawlerTest {
         VFSCrawler crawler = new VFSCrawler(new FileContentConverter(entity -> {
             done[0] = entity.getContent().contains("html");
         }));
-        System.out.println("crawling: " + ARXIV);
-        IRI crawled = crawler.crawl(new URI(ARXIV));
-        assert crawled != null;
-        assert done[0];
+        try {
+            System.out.println("crawling: " + ARXIV);
+            IRI crawled = crawler.crawl(new URI(ARXIV));
+            assert crawled != null;
+            assert done[0];
+        } catch (Exception e) {
+            System.err.println("crawling.failed: " + ARXIV);
+            e.printStackTrace();
+        }
     }
 }

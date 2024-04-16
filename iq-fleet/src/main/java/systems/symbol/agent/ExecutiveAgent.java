@@ -4,43 +4,43 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.decide.I_Decision;
 import systems.symbol.decide.I_Delegate;
-import systems.symbol.fleet.ExecutiveException;
+import systems.symbol.decide.I_Decide;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Executive;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.secrets.I_Secrets;
 
-import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class ExecutiveAgent extends IntentAgent implements I_Decision<Resource> {
+public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
     I_Secrets secrets;
-    I_Delegate<Resource> manager;
+    I_Decide<Resource> manager;
+    Set<Resource> seen = new HashSet<>();
 
     /**
-     * The ExecutiveAgent handles stateful Intentions.
-     * @param model The RDF4J model to be associated with the agent.
+     * The ExecutiveAgent gracefully handles stateful decisions.
      * @param self The identity of the agent
+     * @param memo The working memory of the agent as an RDF4J Model.
      */
 
-    public ExecutiveAgent(@NotNull Model model, IRI self) throws StateException {
-        this(model, self, null, null, null);
+    public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent) throws StateException {
+        this(memo, self, secrets, intent, null);
     }
 
-    public ExecutiveAgent(@NotNull Model model, IRI self, I_Secrets secrets, I_Intent intent) throws StateException {
-        this(model, self, secrets, intent, null);
-    }
-
-    public ExecutiveAgent(@NotNull Model model, IRI self, I_Secrets secrets, I_Intent intent, I_Delegate<Resource> manager) throws StateException {
-        super(self, model, new Executive(self, model, intent), new SimpleBindings());
+    public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent, I_Decide<Resource> manager) throws StateException {
+        super(self, memo, new Executive(self, memo, intent), new SimpleBindings());
         this.secrets = secrets;
         this.manager = manager;
+    }
+
+    public void resume() {
+        this.seen.clear();
     }
 
     /**
@@ -52,25 +52,31 @@ public class ExecutiveAgent extends IntentAgent implements I_Decision<Resource> 
      */
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
-            Set<IRI> executed = execute(getSelf(), to, bindings);
-            log.info("onTransition: {} -> {} --> {}", to, executed, bindings);
-        try {
-            Resource next = decide();
-            if (next!=null) getStateMachine().transition(next);
-        } catch (StateException e) {
-            throw new RuntimeException(e);
+        Set<IRI> executed = execute(getSelf(), to, bindings);
+        log.info("onTransition: {} -> {} --> {}", to, executed, bindings);
+        Resource next = decide();
+        if (next!=null && !seen.contains(next)) {
+            getStateMachine().transition(next);
+            seen.add(next);
         }
         return true;
     }
 
-
+    /**
+     * Determines the appropriate next-step based on the current transitions (choices) of the state machine.
+     * If a single choice exists, the decision is simply made.
+     * If multiple choices are available, we delegate the decision-making process to the manager.
+     *
+     * @return the selected resource
+     * @throws StateException if there is an issue with the state machine
+     */
     @Override
     public Resource decide() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
         if (choices.isEmpty()) return null;
         if (choices.size()==1) return choices.iterator().next();
         if (manager == null) return null;
-        Future<I_Decision<Resource>> delegated = manager.delegate(this);
+        Future<I_Delegate<Resource>> delegated = manager.delegate(this);
         try {
             return delegated.get().decide();
         } catch (InterruptedException | ExecutionException e) {

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * A simple decision-maker that uses random selection to pick next state.
  */
-public class DecisionFinder extends SimpleDecision<Resource> implements I_Prompt<String> {
+public class DelegateFinder extends SimpleDelegate<Resource> implements I_Prompt<String> {
     I_Finder finder;
     private double minScore = 0.9;
     private int maxResults = 5;
@@ -33,7 +33,7 @@ public class DecisionFinder extends SimpleDecision<Resource> implements I_Prompt
      *
      * @param fsm The state machine to make decisions based on.
      */
-    public DecisionFinder(I_StateMachine<Resource> fsm, I_Finder finder) {
+    public DelegateFinder(I_StateMachine<Resource> fsm, I_Finder finder) {
         super(fsm);
         this.finder = finder;
     }
@@ -43,7 +43,7 @@ public class DecisionFinder extends SimpleDecision<Resource> implements I_Prompt
      *
      * @param fsm The state machine to make decisions based on.
      */
-    public DecisionFinder(I_StateMachine<Resource> fsm, I_Finder finder, int maxResults, double minScore) {
+    public DelegateFinder(I_StateMachine<Resource> fsm, I_Finder finder, int maxResults, double minScore) {
         super(fsm);
         this.finder = finder;
         this.maxResults = maxResults;
