@@ -1,14 +1,16 @@
-## IQ: An Operating System for Fleets of AI Agents
+## IQ: Governing Fleets of AI
 
-IQ serves as an operating system for fleets of AI agents, governing their goals, actions, discoveries, decisions, and creations, overseeing the 'who, what, when, why, and how' of your AI ecosystem. 
+IQ functions as an operating system for fleets of AI agents, orchestrating their goals, actions, discoveries, decisions, and creations, overseeing the 'who, what, when, why, and how' of your AI ecosystem.
 
-At its core, IQ empowers intelligent systems to understand, reason, act, and adapt, providing a suite of tools and components for interpreting and responding to the world. 
+As a cognitive toolkit, IQ integrates RDF-powered memory for knowledge, policies, and actions, providing agents with both system-1 and system-2 thinking capabilities.
 
-Agents, equipped with pluggable skills, specialize in various domains and contexts, utilizing RDF to encode their knowledge, states, and decision-making logic as semantic knowledge - their digital DNA. 
+At its core, IQ empowers intelligent systems to comprehend, reason, act, and adapt, offering a comprehensive suite of tools and components for interpreting and responding to the world.
 
-Agents develop a deep semantic understanding of your domain, storing it's understanding in a knowledge base -  a connected database that ensures your agents are .
+Equipped with pluggable skills, agents specialize in diverse domains and contexts, utilizing RDF to encode their knowledge, states, and decision-making logic as semantic knowledge - their digital DNA.
 
-This enables self-reflection, logical reasoning, and adaptation to enhance their capabilities. Additionally, agents translate user intentions into actionable responses.
+Agents develop a profound semantic understanding of your domain, storing this knowledge in a connected database, ensuring seamless operation and continuity.
+
+This enables self-reflection, logical reasoning, and adaptation, thereby enhancing agents' capabilities and enabling them to translate user intentions into actionable responses.
 
 ### Capabilities
 
@@ -21,13 +23,13 @@ This enables self-reflection, logical reasoning, and adaptation to enhance their
 ### Reasoning Tasks
 
 - **State-Based Reasoning:** Utilizes Finite State Machines for structured decision-making.
-- **Semantic Inferencing:** Extracts insights from stored knowledge representations.
-- **Language Inferencing (LLM):** Employs Large Language Models for advanced pattern recognition.
+- **Semantic Inferencing:** Extracts insights from facts graphs, linked data and RDF knowledge stores.
+- **Language Inferencing:** Employs Large Language Models for natural language fluency.
 
 ### Behavioral Capabilities
 
-- **Stateful Side-Effects:** Facilitates learning through real-time feedback mechanisms.
-- **Scripting:** Enhances adaptability through predefined action sequences.
+- **Stateful Side-Effects:** Managed workflows that facilitate actions using built-in tools and APIs.
+- **Scripting:** Enhances adaptability through scripts that can be written by you or your agents.
 - **API Calling:** Integrates external APIs for dynamic information retrieval.
 - **Semantic Research and Curation:** Actively retrieves and curates information leveraging semantic understanding.
 
