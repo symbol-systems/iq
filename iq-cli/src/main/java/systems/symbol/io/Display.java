@@ -61,9 +61,6 @@ public class Display {
     }
 
     public static String normalizeQuery(String query) {
-        if (!query.contains(".")) {
-            query = query+".sparql";
-        }
         if (!query.contains("/")) {
             query = "queries/"+query;
         }

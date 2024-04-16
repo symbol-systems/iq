@@ -104,7 +104,7 @@ public class SearchFacts {
 
             // Use a query to hydrate answers
             // The query is interpolated to respect {{these}} VALUES bindings
-            String hydrateQuery = library.getSPARQL(sparql + ".sparql", bindings);
+            String hydrateQuery = library.getSPARQL(sparql, bindings);
             if (hydrateQuery == null || hydrateQuery.isEmpty()) {
                 return new OopsResponse("api.search.facts#query-missing", Response.Status.NOT_FOUND).asJSON();
             }

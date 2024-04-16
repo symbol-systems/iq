@@ -50,8 +50,10 @@ public class ScriptCatalog implements I_Contents {
      * @return The SPARQL query as a string.
      */
     public String getSPARQL(String queryPath) {
-        if (!queryPath.contains(":")) return getContent(iq.toIRI(queryPath), SPARQL_MIME).stringValue();
-        return getContent(IQ.vf.createIRI(queryPath), SPARQL_MIME).stringValue();
+        Literal content;
+        if (!queryPath.contains(":")) content= getContent(iq.toIRI(queryPath), SPARQL_MIME);
+        else content = getContent(IQ.vf.createIRI(queryPath), SPARQL_MIME);
+        return content==null?null:content.stringValue();
     }
 
     /**

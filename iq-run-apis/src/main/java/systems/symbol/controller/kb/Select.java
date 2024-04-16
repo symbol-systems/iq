@@ -65,7 +65,7 @@ public class Select extends GuardedAPI {
             // Lookup SPARQL query in the platform repository
             IQConnection iq = new IQConnection(platform.getSelf(), connection);
             ScriptCatalog library = new ScriptCatalog(iq);
-            String sparql = library.getSPARQL(query + ".sparql");
+            String sparql = library.getSPARQL(query);
 
             // Check for non-null and non-empty SPARQL query
             if (sparql == null || sparql.isEmpty()) {

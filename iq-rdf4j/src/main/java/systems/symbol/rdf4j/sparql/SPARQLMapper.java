@@ -66,21 +66,21 @@ public class SPARQLMapper {
      */
     public static Map<IRI, String> defaults(IQ iq) {
         Map<IRI, String> queries = new HashMap<>();
-        queries.put(iq.toIRI("queries/index.sparql"), UsefulSPARQL.COUNT);
-        queries.put(iq.toIRI("queries/a.sparql"), UsefulSPARQL.TYPES_OF);
-        queries.put(iq.toIRI("queries/types.sparql"), UsefulSPARQL.TYPES_OF);
-        queries.put(iq.toIRI("queries/concepts.sparql"), UsefulSPARQL.SKOS_CONCEPTS);
-        queries.put(iq.toIRI("queries/subjects.sparql"), UsefulSPARQL.SUBJECTS);
-        queries.put(iq.toIRI("queries/predicates.sparql"), UsefulSPARQL.PREDICATES);
-        queries.put(iq.toIRI("queries/objects.sparql"), UsefulSPARQL.OBJECTS);
-        queries.put(iq.toIRI("queries/contexts.sparql"), UsefulSPARQL.GRAPHS);
+        queries.put(iq.toIRI("queries/index"), UsefulSPARQL.COUNT);
+        queries.put(iq.toIRI("queries/a"), UsefulSPARQL.TYPES_OF);
+        queries.put(iq.toIRI("queries/types"), UsefulSPARQL.TYPES_OF);
+        queries.put(iq.toIRI("queries/concepts"), UsefulSPARQL.SKOS_CONCEPTS);
+        queries.put(iq.toIRI("queries/subjects"), UsefulSPARQL.SUBJECTS);
+        queries.put(iq.toIRI("queries/predicates"), UsefulSPARQL.PREDICATES);
+        queries.put(iq.toIRI("queries/objects"), UsefulSPARQL.OBJECTS);
+        queries.put(iq.toIRI("queries/contexts"), UsefulSPARQL.GRAPHS);
 
-        queries.put(iq.toIRI("queries/iq-scripts.sparql"), UsefulSPARQL.SCRIPTS); // any script
-        queries.put(iq.toIRI("queries/iq-models.sparql"), UsefulSPARQL.MODELS); // sparql mimes
-        queries.put(iq.toIRI("queries/iq-actions.sparql"), UsefulSPARQL.ACTIONS); // any executable
-        queries.put(iq.toIRI("queries/iq-meta-actions.sparql"), UsefulSPARQL.META_ACTIONS);
-        queries.put(iq.toIRI("queries/iq-render.sparql"), UsefulSPARQL.RENDER);
-        queries.put(iq.toIRI("queries/acl-authorized.sparql"), UsefulSPARQL.ACL_AUTHORIZED);
+        queries.put(iq.toIRI("queries/iq-scripts"), UsefulSPARQL.SCRIPTS); // any script
+        queries.put(iq.toIRI("queries/iq-models"), UsefulSPARQL.MODELS); // sparql mimes
+        queries.put(iq.toIRI("queries/iq-actions"), UsefulSPARQL.ACTIONS); // any executable
+        queries.put(iq.toIRI("queries/iq-meta-actions"), UsefulSPARQL.META_ACTIONS);
+        queries.put(iq.toIRI("queries/iq-render"), UsefulSPARQL.RENDER);
+        queries.put(iq.toIRI("queries/acl-authorized"), UsefulSPARQL.ACL_AUTHORIZED);
         return queries;
     }
 

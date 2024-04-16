@@ -1,3 +1,0 @@
-SELECT DISTINCT ?id ?this WHERE {
-    ?id skos:inScheme ?this.
-}
