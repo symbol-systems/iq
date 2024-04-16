@@ -9,18 +9,14 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.Test;
 import systems.symbol.agent.IntentAgent;
-import systems.symbol.annotation.RDF;
 import systems.symbol.intent.Executive;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import javax.script.SimpleBindings;
 import java.io.File;
-import java.nio.file.Files;
-
-import static org.eclipse.rdf4j.rio.RDFFormat.TURTLE;
 
 class RDFPageTest {
 DynamicModelFactory dmf = new DynamicModelFactory();

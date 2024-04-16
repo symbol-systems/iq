@@ -8,17 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.fsm.I_StateListener;
-import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Executive;
-import systems.symbol.intent.I_Intent;
 import systems.symbol.intent.I_Intents;
 import systems.symbol.intent.JSR233;
 import systems.symbol.model.I_Self;
-import systems.symbol.rdf4j.iq.IQ_NS;
+import systems.symbol.rdf4j.store.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
-import systems.symbol.secrets.SecretsException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,7 +57,7 @@ public void deploy(I_Secrets secrets) throws StateException {
 Iterable<Statement> found = fleet.getStatements(null, IQ_NS.hasInitialState, null);
 for (Statement s : found) {
 IRI self = (IRI) s.getSubject();
-I_Agent agent = newAgent(self, fleet, secrets);
+I_Agent agent = newAgent(self, secrets);
 agents.put(self, agent);
 log.info("fleet.agent: {}", self);
 }
@@ -72,12 +68,11 @@ log.info("fleet.deployed: {}", agents.keySet());
  * Creates a new agent instance.
  *
  * @param selfthe self IRI representing the agent
- * @param fleet   the RDF model representing the fleet
  * @param secrets the secrets manager for accessing agent secrets
  * @return the newly created agent
  * @throws StateException if there is an issue with the state machine
  */
-public I_Agent newAgent(IRI self, Model fleet, I_Secrets secrets) throws StateException {
+public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
 return new ExecutiveAgent(fleet, self, secrets, intents);
 }
 

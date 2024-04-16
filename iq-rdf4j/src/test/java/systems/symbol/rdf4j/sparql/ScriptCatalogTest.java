@@ -2,8 +2,8 @@ package systems.symbol.rdf4j.sparql;
 
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.iq.IQConnection;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.AbstractTripleTest;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.repository.RepositoryConnection;

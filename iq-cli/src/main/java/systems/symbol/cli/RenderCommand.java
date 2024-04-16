@@ -1,6 +1,6 @@
 package systems.symbol.cli;
 
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;

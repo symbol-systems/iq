@@ -7,7 +7,7 @@ import systems.symbol.llm.I_Thread;
 import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.platform.Platform;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.render.HBSRenderer;
 

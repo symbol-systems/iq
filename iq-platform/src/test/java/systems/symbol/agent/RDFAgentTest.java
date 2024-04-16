@@ -6,7 +6,7 @@ import systems.symbol.fsm.StateException;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.script.Bindings;
-import javax.script.SimpleBindings;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;

@@ -62,6 +62,7 @@ iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 :execute
 iq:execute :self;
 iq:to :intents.
+
 :self
 rdfs:label "You can learn about yourself";
 rdf:value "You are healthy";

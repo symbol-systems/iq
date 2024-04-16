@@ -18,7 +18,7 @@ import java.util.*;
 
 public class Knows extends AbstractIntent {
 
-protected final static IRI KNOWS = Values.iri(COMMONS.IQ_NS, "knows");
+public final static IRI KNOWS = Values.iri(COMMONS.IQ_NS, "knows");
 public Knows(IRI self, Model model) {
 super(model, self);
 }
@@ -33,10 +33,9 @@ super(model, self);
 public Set<IRI> knows(IRI actor, Resource state, Bindings _unused) throws IOException {
 Set<IRI> done = new HashSet<>();
 
-Iterable<Statement> statements = model.getStatements(state, KNOWS, null);
-for(Statement s: statements) {
-model.add(actor, KNOWS, s.getObject(), getSelf());
-}
+log.info("knows: {} -> {}", actor, state);
+model.add(actor, KNOWS, state, getSelf());
+if (state instanceof IRI) done.add((IRI)state);
 return done;
 }
 

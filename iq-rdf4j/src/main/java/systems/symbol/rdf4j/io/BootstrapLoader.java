@@ -7,7 +7,7 @@ package systems.symbol.rdf4j.io;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.io.StreamCopy;
 import systems.symbol.model.I_Self;
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.rdf4j.util.SupportedScripts;

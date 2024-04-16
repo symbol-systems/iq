@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.ns.COMMONS;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.secrets.EnvsAsSecrets;
 

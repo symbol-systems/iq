@@ -43,12 +43,13 @@ memorize();
 public Executive(IRI self, Model model, I_Intent intent) {
 super(self, model);
 add(intent);
+memorize();
 }
 
 public void memorize() {
 add(new Knows(self, model));
 add(new Forget(self, model));
-log.debug("memorize: {} -> {}", self, intents.keySet());
+log.info("memorize: {} -> {}", self, intents.keySet());
 }
 
 /**
@@ -97,7 +98,7 @@ return execute((IRI) s.getSubject(), s.getPredicate(), (IRI) s.getObject(), bind
 protected Set<IRI> execute(IRI s, IRI p, IRI o, Bindings bindings) throws StateException {
 I_Intent intent = this.intents.get(p);
 if (intent == null) return new IRIs();
-log.info("execute: {} @ {}", p, intent);
+log.info("execute.intent: {} @ {}", p, intent);
 return intent.execute(s, o, bindings);
 }
 
@@ -114,7 +115,7 @@ if (s.isIRI() && o.isIRI() && p.isResource()) {
 Set<IRI> performed = execute(subject, p, (IRI) o, bindings);
 if (!performed.isEmpty()) done.addAll(performed);
 } else {
-log.debug("execute.skip: {} -> {} --> {}", s, p, o);
+log.info("execute.skip: {} -> {} --> {}", s, p, o);
 }
 }
 log.info("execute.done: {}", done);
@@ -128,9 +129,5 @@ Iterable<Statement> statements = model.getStatements(state, null, null);
 log.info("execute.intents: {} -> {}", state, statements.iterator().hasNext());
 execute(actor, statements, done, bindings);
 return done;
-}
-
-public IRI getSelf() {
-return self;
 }
 }

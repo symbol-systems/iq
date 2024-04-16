@@ -1,7 +1,7 @@
 package systems.symbol.io;
 
 import systems.symbol.rdf4j.NS;
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import org.eclipse.rdf4j.model.IRI;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 
