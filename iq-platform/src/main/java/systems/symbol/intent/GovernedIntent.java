@@ -5,8 +5,10 @@ import systems.symbol.fsm.StateException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import systems.symbol.model.I_Self;
 import systems.symbol.ns.COMMONS;
 
+import javax.script.Bindings;
 import java.util.Set;
 
 import static systems.symbol.platform.Provenance.generated;
@@ -15,13 +17,8 @@ import static systems.symbol.platform.Provenance.generated;
  * The GovernedIntent class represents an intent that is governed by a set of rules or policies.
  * It implements the I_Intent interface and introduces governance by adding provenance information
  * using the Provenance class for each executed intent.
- *
- * It is part of the systems.symbol.intent package and relies on the Eclipse RDF4J framework.
- *
- * @author [Your Name]
- * @version 1.0
  */
-public class GovernedIntent implements I_Intent {
+public class GovernedIntent implements I_Intent, I_Self {
 
 private final IRI self;
 private final Model model;
@@ -43,18 +40,18 @@ this.intent = intent;
 /**
  * Executes the governed intent and adds provenance information for each executed intent result.
  *
- * @param entity   The IRI representing the entity involved in the intent execution.
- * @param activity The IRI representing the activity associated with the intent execution.
+ * @param actor   The IRI representing the entity involved in the intent execution.
+ * @param state The IRI representing the activity associated with the intent execution.
  * @return A set of IRIs representing the results of the executed intent.
  */
 @Override
 @RDF(COMMONS.IQ_NS+"govern")
-public Set<IRI> execute(IRI entity, Resource activity) throws StateException {
-Set<IRI> done = intent.execute(entity, activity);
+public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
+Set<IRI> done = intent.execute(actor, state, bindings);
 
 // Add provenance information for each intent result
 done.forEach(result -> {
-generated(model, entity, activity, result, getIdentity());
+generated(model, actor, state, result, getSelf());
 });
 
 return done;
@@ -66,7 +63,7 @@ return done;
  * @return The IRI representing the identity of this GovernedIntent instance.
  */
 @Override
-public IRI getIdentity() {
+public IRI getSelf() {
 return self;
 }
 }

@@ -269,7 +269,10 @@ return new_repository;
 public Repository getRepository(String id) {
 Repository repository = repositories.get(id);
 if (repository!=null) {
-log.info("workspace.repo.cached: {}", id);
+log.info("workspace.repo.cached: {} -> {}", id, repository.isInitialized());
+if (!repository.isInitialized()) {
+repository.init();
+}
 return repository;
 }
 try {
@@ -306,6 +309,7 @@ save();
 
 public void shutdown() {
 for(String key: repositories.keySet()) {
+log.info("shutdown.repo: {}", key);
 repositories.get(key).shutDown();
 }
 }

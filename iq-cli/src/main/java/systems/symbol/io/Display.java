@@ -42,6 +42,7 @@ out.println();
 
 // Print rows
 for (Map<String, Object> model : models) {
+Object[] row = {};
 for (String field : fields) {
 Object value = model.get(field);
 out.printf(format, value != null ? value : "");

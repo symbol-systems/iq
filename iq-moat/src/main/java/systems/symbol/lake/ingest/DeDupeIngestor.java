@@ -1,10 +1,8 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.ContentEntity;
-import org.apache.commons.vfs2.FileObject;
 import org.eclipse.rdf4j.model.IRI;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -18,7 +16,7 @@ super(consumer);
 
 @Override
 public void accept(ContentEntity<T> file) {
-IRI uri = file.getIdentity();
+IRI uri = file.getSelf();
 if (!seen.contains(uri)) {
 next(file);
 seen.add(uri);

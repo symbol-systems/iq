@@ -1,6 +1,9 @@
 package systems.symbol.secrets;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
 import org.testng.annotations.Test;
+import systems.symbol.ns.COMMONS;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -11,15 +14,15 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class SecretsTest {
+IRI self = Values.iri(COMMONS.IQ_NS_TEST);
 
 @Test
 public void testSecretsHelper() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, IOException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ClassNotFoundException, SecretsException {
 // Create a sample I_Secrets object for testing
-I_Secrets sampleSecrets = new EnvsAsSecrets();
+EnvsAsSecrets sampleSecrets = new EnvsAsSecrets();
 sampleSecrets.setSecret("hello", "world");
-sampleSecrets.grant("hello", "jo");
 // Test encryption and decryption
-String secret = sampleSecrets.getSecret("hello", "jo");
+String secret = sampleSecrets.getSecret("hello");
 assert "world".equals(secret);
 }
 

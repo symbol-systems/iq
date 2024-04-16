@@ -1,5 +1,7 @@
 package systems.symbol.rdf4j.io;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +17,9 @@ private static final Logger log = LoggerFactory.getLogger(FileFormats.class);
 static Map<String, RDFFormat> rdfFormats = new HashMap<>();
 static Map<String, Object> txtFormats = new HashMap<>();
 static Map<String, Object> scriptFormats = new HashMap<>();
+
 static {
-// Populate the map with mappings for common RDF file extensions
+// common RDF file extensions
 rdfFormats.put("rdf", RDFFormat.RDFXML);
 rdfFormats.put("owl", RDFFormat.RDFXML);
 rdfFormats.put("ttl", RDFFormat.TURTLE);
@@ -26,12 +29,23 @@ rdfFormats.put("jsonld", RDFFormat.JSONLD);
 rdfFormats.put("trig", RDFFormat.TRIG);
 rdfFormats.put("json", RDFFormat.JSONLD);
 
+// common 'text' file extensions
 txtFormats.put("rq", "application/sparql-query");
 txtFormats.put("txt", "text/plain");
 txtFormats.put("md", "text/markdown");
-txtFormats.put("hbs", "text/x-handlebars-template");
+txtFormats.put("hbs", "text/x-handlebars");
+txtFormats.put("asq",	"application/x-asq");
+txtFormats.put("sparql", "application/x-sparql-query");
+txtFormats.put("graphql", "text/graphql");
+txtFormats.put("graphqls", "text/graphql");
+txtFormats.put("html", "text/html");
+txtFormats.put("xhtml", "application/xhtml+xml");
+txtFormats.put("json", "application/json");
+txtFormats.put("yaml", "application/yaml");
+txtFormats.put("css", "plain/css");
+txtFormats.put("xml", "application/xml");
 
-// extract support scripts and create a map of supported formats
+// identify supported scripts
 ScriptEngineManager sem = new ScriptEngineManager();
 for (ScriptEngineFactory factory : sem.getEngineFactories()) {
 log.info("script.support: " + factory.getLanguageName() + " v" + factory.getLanguageVersion());
@@ -55,7 +69,7 @@ log.info("script.default: "+ext+" -> "+mime);
 }
 }
 
-public static String toMime(Map<String, Object> formats, String filename) {
+protected static String findMatchingMime(Map<String, Object> formats, String filename) {
 // Extract the file extension from the filename
 int lastDotIndex = filename.lastIndexOf(".");
 if (lastDotIndex >= 0) {
@@ -69,20 +83,16 @@ return formats.getOrDefault(fileExtension, "").toString();
 return null;
 }
 
-public static String toSupportedMimetype(String filename) {
-String format = toMime(scriptFormats, filename);
-if (format != null)
-return format;
-format = toMime(txtFormats, filename);
-return format;
+public static String toPlainMime(String filename) {
+String format = findMatchingMime(scriptFormats, filename);
+if (format != null) return format;
+return findMatchingMime(txtFormats, filename);
 }
 
-public static String toScriptMimetype(String filename) {
-return toMime(scriptFormats, filename);
-}
-
-public static String toPlainTextMimetype(String filename) {
-return toMime(txtFormats, filename);
+public static IRI toMime(String path) {
+String supportedMimetype = toPlainMime(path);
+if (supportedMimetype == null) return null;
+return Values.iri("urn:"+supportedMimetype);
 }
 
 public static RDFFormat toRDFFormat(String filename) {

@@ -1,0 +1,42 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix iq: <urn:iq:> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix cnt: <http://www.w3.org/2011/content#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix my: <urn:my:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix : <urn:iq:test:> .
+
+<urn:iq:test:> a <urn:iq:Agent>, <urn:iq:Workflow>;
+  <urn:iq:initial> <urn:iq:test:intents>;
+  <urn:iq:state> <urn:iq:test:rdf> .
+
+<urn:iq:test:intents> <urn:iq:to> <urn:iq:test:search>, <urn:iq:test:find>, <urn:iq:test:select>,
+<urn:iq:test:remodel>, <urn:iq:test:prompt>, <urn:iq:test:script>, <urn:iq:test:webpage>,
+<urn:iq:test:rdf> .
+
+<urn:iq:test:find> <urn:iq:find> "{{my.prompt}}" .
+
+<urn:iq:test:search> <urn:iq:search> "{{my.prompt}}" .
+
+<urn:iq:test:select> <urn:iq:select> "{{my.prompt}}" .
+
+<urn:iq:test:remodel> <urn:iq:remodel> "{{my.prompt}}" .
+
+<urn:iq:test:prompt> <urn:iq:prompt> "{{my.prompt}}" .
+
+<urn:iq:test:script> <urn:iq:script> <urn:iq:test:scripts/hello> .
+
+<urn:iq:test:webpage> <urn:iq:webpage> <https://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+<urn:iq:test:rdf> <urn:iq:rdf> <https://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+<urn:iq:test:agent> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "agent.ttl" .

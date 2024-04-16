@@ -17,7 +17,7 @@ import java.util.*;
  *
  * Utility to find a matching Resource(s) for common cases
  *
- * systems.symbol (c) 2014
+ * symbol.systems (c) 2014
  * Module: systems.symbol.rdf4j.util
  * @author Symbol Systems
  * Date  : 17/06/2014

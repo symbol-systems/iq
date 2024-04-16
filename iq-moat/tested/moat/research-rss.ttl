@@ -1,22 +1,22 @@
-@prefix iq: <urn:systems.symbol:v0:iq:> .
+@prefix iq: <urn:iq:> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix : <https://test.symbol.systems/cases#> .
+@prefix : <urn:iq:test:> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix fsm: <urn:systems.symbol:v0:iq:> .
+@prefix iq: <urn:iq:> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://test.symbol.systems/cases#> a <urn:systems.symbol:v0:iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
+<urn:iq:test:> a <urn:iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
   :workflow_0 :ideation;
-  <urn:systems.symbol:v0:iq:research-rss> <https://www.w3.org/blog/feed/>;
-  <urn:systems.symbol:v0:iq:research-page> <https://www.w3.org/>;
+  <urn:iq:research-rss> <https://www.w3.org/blog/feed/>;
+  <urn:iq:research-page> <https://www.w3.org/>;
   <http://www.w3.org/ns/prov#generated> <https://www.w3.org/blog/feed> .
 
-:workflow_0 a <urn:systems.symbol:v0:iq:Workflow>;
-  <urn:systems.symbol:v0:iq:initial> :ideation .
+:workflow_0 a <urn:iq:Workflow>;
+  <urn:iq:initial> :ideation .
 
 :agent.ttl a <http://www.w3.org/ns/formats/Turtle>;
   rdfs:label "agent.ttl" .
@@ -27,7 +27,7 @@
   dc:created "" .
 
 <https://www.w3.org/blog/2024/from-a-humble-beginning-35-years-ago-the-web-is-now-central-to-the-daily-lives-of-billions/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "From a humble beginning 35 years ago, the Web is now central to the daily lives of billions";
   dc:description "In this blog post, W3C CEO Seth Dobbs depicts how from a humble beginning 35 years ago, the Web is now central to the daily lives of billions of people.";
@@ -42,13 +42,13 @@
   skos:inScheme <https://www.w3.org/blog/#> .
 
 <https://www.w3.org/blog/2024/needs-of-a-member-driven-but-public-interest-global-organization/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "Needs of a member-driven but public-interest global organization";
   dc:description "In this blog post, W3C CEO Seth Dobbs considers participation at W3C as he explores which changes to adopt to ensure continued value and impact on humanity.";
   dc:link "https://www.w3.org/blog/2024/needs-of-a-member-driven-but-public-interest-global-organization/" .
 
 <https://www.w3.org/blog/2024/internationalization-i18n-leadership-change-and-goals-for-the-future/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Internationalization>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Internationalization>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "Internationalization (I18N) leadership change and goals for the future";
   dc:description "This post is about transitions within the Internationalization Team at W3C, and goals for the future in Internationalization of the Web.";
@@ -59,37 +59,37 @@
   skos:inScheme <https://www.w3.org/blog/#> .
 
 <https://www.w3.org/blog/2024/w3c-publishes-report-for-the-secure-the-web-forward-workshop/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
   dc:title "W3C Publishes Report for the Secure the Web Forward Workshop";
   dc:description "This report contains a brief summary, collects highlights from the live sessions, links to the presentation videos, and details next steps.";
   dc:link "https://www.w3.org/blog/2024/w3c-publishes-report-for-the-secure-the-web-forward-workshop/" .
 
 <https://www.w3.org/blog/2024/webevolve-solid-technologies-standards-and-ecosystem-event-recap/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
   dc:title "WebEvolve — Solid: Technologies, Standards and Ecosystem Event Recap";
   dc:description "W3C China held an online discussion on the topic of Solid Technologies, Standards and Ecosystem on 11 January 2024. This is a summary report of the event.";
   dc:link "https://www.w3.org/blog/2024/webevolve-solid-technologies-standards-and-ecosystem-event-recap/" .
 
-<https://www.w3.org/blog/2024/mapping-key-themes-for-the-year/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2024/mapping-key-themes-for-the-year/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Corporate>;
   dc:title "Mapping key themes for the year";
   dc:description "In this blog post, W3C CEO Seth Dobbs looks back at the strengths of the Web and forward at its opportunities.";
   dc:link "https://www.w3.org/blog/2024/mapping-key-themes-for-the-year/" .
 
 <https://www.w3.org/blog/2023/happy-holidays-from-the-world-wide-web-consortium/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "Happy holidays from the World Wide Web Consortium!";
   dc:description "Our bespoke End of Year card with good wishes for the new year to our community";
   dc:link "https://www.w3.org/blog/2023/happy-holidays-from-the-world-wide-web-consortium/" .
 
-<https://www.w3.org/blog/2023/seeking-w3c-community-input-for-tag-appointees/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/seeking-w3c-community-input-for-tag-appointees/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Corporate>;
   dc:title "Seeking W3C community input for TAG appointees";
   dc:description "W3C is seeking input for appointment to the W3C Technical Architecture Group (TAG) as part of new rules set by the Process Document.";
   dc:link "https://www.w3.org/blog/2023/seeking-w3c-community-input-for-tag-appointees/" .
 
 <https://www.w3.org/blog/2023/digital-accessibility-updates-on-international-day-of-persons-with-disabilities-idpd-2024/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Accessibility>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Accessibility>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "Digital accessibility updates on International Day of Persons with Disabilities (IDPD) 2024";
   dc:description "Read about free online accessibility resources, translations, the international W3C WAI team, and how to get WAI updates";
@@ -100,7 +100,7 @@
   skos:inScheme <https://www.w3.org/blog/#> .
 
 <https://www.w3.org/blog/2023/public-health-foundation-adds-to-its-learning-network-w3cs-online-course-introduction-to-web-accessibility/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Training>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Training>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "Public Health Foundation adds to its learning network W3C's online course Introduction to Web Accessibility";
   dc:description "W3C believes that enabling greater web accessibility in healthcare is important and is in service to the public good.";
@@ -110,25 +110,25 @@
   skos:prefLabel "training";
   skos:inScheme <https://www.w3.org/blog/#> .
 
-<https://www.w3.org/blog/2023/introduction-and-ceo-goals-and-aspirations/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/introduction-and-ceo-goals-and-aspirations/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Corporate>;
   dc:title "Introduction and CEO goals and aspirations";
   dc:description "In this introductory blog post by newly appointed W3C President and CEO, Seth Dobbs shares background information and his ambition to ensure the durability and viability of W3C.";
   dc:link "https://www.w3.org/blog/2023/introduction-and-ceo-goals-and-aspirations/" .
 
 <https://www.w3.org/blog/2023/award-winning-work-for-the-w3c-website-redesign/> a
-<urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+<urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "Award-winning work for the W3C website redesign";
   dc:description "Studio 24, the partner who worked on our website redesign and continue to support and develop the site with us, have been recognized by a number of pretigious awards, most notably celebrating outstanding web accessibility work.";
   dc:link "https://www.w3.org/blog/2023/award-winning-work-for-the-w3c-website-redesign/" .
 
 <https://www.w3.org/blog/2023/w3c-virtual-workshop-on-secure-the-web-forward-26-28-september-2023/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Blogs>;
   dc:title "W3C Virtual Workshop on Secure the Web Forward - 26-28 September 2023";
   dc:description "The workshop aims to develop a comprehensive picture and roadmap to address the challenges Web developers face in ensuring their applications are secure.";
   dc:link "https://www.w3.org/blog/2023/w3c-virtual-workshop-on-secure-the-web-forward-26-28-september-2023/" .
 
-<https://www.w3.org/blog/2023/introducing-web-sustainability-guidelines/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/introducing-web-sustainability-guidelines/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Sustainability>, <https://www.w3.org/blog/#Blogs>;
   dc:title "Introducing Web Sustainability Guidelines";
   dc:description "The Sustainable Web Design Community Group announced draft guidelines on Sustainable Web Design, that explain how to design and implement digital products and services that put people and the planet first.";
@@ -139,7 +139,7 @@
   skos:inScheme <https://www.w3.org/blog/#> .
 
 <https://www.w3.org/blog/2023/infinite-intelligence-and-secure-connection-w3c-chinas-web-technology-forum-report/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Events>, <https://www.w3.org/blog/#Blogs>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Events>, <https://www.w3.org/blog/#Blogs>;
   dc:title "Infinite Intelligence and Secure Connection: W3C China's Web Technology Forum Report";
   dc:description "This post summarizes the conversation during the Web Technology Forum in June 2023, organized by W3C China as a hybrid event with the main in-person hub in Beijing.";
   dc:link "https://www.w3.org/blog/2023/infinite-intelligence-and-secure-connection-w3c-chinas-web-technology-forum-report/" .
@@ -149,13 +149,13 @@
   skos:inScheme <https://www.w3.org/blog/#> .
 
 <https://www.w3.org/blog/2023/web-environment-integrity-has-no-standing-at-w3c/> a
-<urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+<urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "Web Environment Integrity has no standing at W3C; understanding new W3C work";
   dc:description "This article addresses that Web Environment Integrity is not being worked on at W3C, and proceeds to explaining how work is brought to W3C and the processes that foster the development of Web standards and guidelines that ensure the long-term growth of the Web.";
   dc:link "https://www.w3.org/blog/2023/web-environment-integrity-has-no-standing-at-w3c/" .
 
 <https://www.w3.org/blog/2023/securing-the-web-forward-addressing-developer-concerns-in-web-security/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#PrivacyAndSecurity>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#PrivacyAndSecurity>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "Securing the Web forward: Addressing developer concerns in web security";
   dc:description "A recent survey affirms the need to drive developer awareness and adoption of Web security standards & practices.";
@@ -165,14 +165,14 @@
   skos:prefLabel "privacy-and-security";
   skos:inScheme <https://www.w3.org/blog/#> .
 
-<https://www.w3.org/blog/2023/new-w3c-website-deployed/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/new-w3c-website-deployed/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Corporate>;
   dc:title "New W3C website deployed";
   dc:description "The redesign provides a more modern, inclusive, usable website.";
   dc:link "https://www.w3.org/blog/2023/new-w3c-website-deployed/" .
 
 <https://www.w3.org/blog/2023/web-technologies-for-applications-workshop-and-coding-contest-in-paris-13-june-2023/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Developers>,
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Developers>,
 <https://www.w3.org/blog/#Blogs>;
   dc:title "Web technologies for applications: workshop and coding contest in Paris, 13 June 2023";
   dc:description "Web technologies for applications: workshop and coding contest in Paris, 13 June 2023";
@@ -182,44 +182,44 @@
   skos:prefLabel "developers";
   skos:inScheme <https://www.w3.org/blog/#> .
 
-<https://www.w3.org/blog/2023/w3c-wai-updates-for-gaad-2023/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/w3c-wai-updates-for-gaad-2023/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Accessibility>;
   dc:title "W3C WAI Updates for GAAD 2023";
   dc:description "Relevant resources from the W3C Web Accessibility Initiative (WAI) for Global Accessibility Awareness Day (GAAD).";
   dc:link "https://www.w3.org/blog/2023/w3c-wai-updates-for-gaad-2023/" .
 
 <https://www.w3.org/blog/2023/30th-anniversary-of-licensing-the-web-for-general-use-and-at-no-cost/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "30th anniversary of licensing the Web for general use and at no cost";
   dc:description "The post illustrates why selected W3C standards made the Web the premier information commons it is today; and features a graphical timeline that puts W3C standards in perspective with Internet adoption figures, and important websites or services launched.";
   dc:link "https://www.w3.org/blog/2023/30th-anniversary-of-licensing-the-web-for-general-use-and-at-no-cost/" .
 
-<https://www.w3.org/blog/2023/answering-what-aria-can-i-use/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/answering-what-aria-can-i-use/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Accessibility>;
   dc:title "Answering “What ARIA can I use?”";
   dc:description "Announcing the launch of “Assistive Technology Support” tables in the ARIA Authoring Practices Guide (APG).";
   dc:link "https://www.w3.org/blog/2023/answering-what-aria-can-i-use/" .
 
-<https://www.w3.org/blog/2023/privacy-principles-for-the-web/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/privacy-principles-for-the-web/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#PrivacyAndSecurity>;
   dc:title "Privacy Principles for the Web";
   dc:description "The W3C Technical Architecture Group (TAG) is seeking public comments by the end of April on a set of privacy principles for the web.";
   dc:link "https://www.w3.org/blog/2023/privacy-principles-for-the-web/" .
 
-<https://www.w3.org/blog/2023/w3c-launches-beta-of-its-new-website/> a <urn:systems.symbol.lake.ingest.RSSIngestor>,
+<https://www.w3.org/blog/2023/w3c-launches-beta-of-its-new-website/> a <urn:symbol.systems.lake.ingest.RSSIngestor>,
 <https://www.w3.org/blog/#Corporate>;
   dc:title "W3C launches beta of its new website";
   dc:description "W3C welcomes feedback on the beta of its new website.";
   dc:link "https://www.w3.org/blog/2023/w3c-launches-beta-of-its-new-website/" .
 
 <https://www.w3.org/blog/2023/farewell-karen-myers-w3c-business-development-leader-extraordinaire/>
-  a <urn:systems.symbol.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
+  a <urn:symbol.systems.lake.ingest.RSSIngestor>, <https://www.w3.org/blog/#Corporate>;
   dc:title "Farewell Karen Myers, W3C Business Development Leader Extraordinaire";
   dc:description "Farewell Karen Myers, W3C Business Development Leader Extraordinaire";
   dc:link "https://www.w3.org/blog/2023/farewell-karen-myers-w3c-business-development-leader-extraordinaire/" .
 
-<urn:systems.symbol.research.ResearchRSS> a <http://www.w3.org/ns/prov#Activity>;
+<urn:symbol.systems.research.ResearchRSS> a <http://www.w3.org/ns/prov#Activity>;
   <http://www.w3.org/ns/prov#generated> <https://www.w3.org/blog/feed> .
 
 <https://www.w3.org/blog/feed> a <http://www.w3.org/ns/prov#Entity>;
-  <http://www.w3.org/ns/prov#wasGeneratedBy> <https://test.symbol.systems/cases#> .
+  <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:iq:test:> .

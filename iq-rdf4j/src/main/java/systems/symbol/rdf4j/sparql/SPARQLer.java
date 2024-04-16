@@ -30,13 +30,6 @@ public class SPARQLer {
 private static final Logger log = LoggerFactory.getLogger(SPARQLer.class);
 static Handlebars hbs = new Handlebars();
 
-//public static GraphQueryResult getSystemQueryGraphResults(RepositoryConnection conn, String sparqlQuery,
-//Map<String, Object> ctx) throws IOException {
-//String sparqlQuery = Resources.load(path, ctx);
-//log.info("rdf.query.syste,:" + sparqlQuery + " @ " + path);
-//return getGraphQueryResult(conn, sparqlQuery, ctx);
-//}
-
 public static GraphQueryResult getGraphQueryResult(RepositoryConnection conn, String sparqlQuery,
 Map<String, Object> ctx) throws IOException {
 // merge context
@@ -46,8 +39,7 @@ hbs.compileInline(sparqlQuery).apply(ctx, final_query);
 // Execute the SPARQL query
 log.debug("query.eval: " + final_query.toString());
 GraphQuery query = conn.prepareGraphQuery(QueryLanguage.SPARQL, ensurePrefixes(conn, final_query.toString()));
-GraphQueryResult queryResult = query.evaluate();
-return queryResult;
+return query.evaluate();
 }
 
 public static String getGraphResult(RepositoryConnection conn, String sparqlQuery, Map<String, Object> ctx,
@@ -106,7 +98,7 @@ return table.toString();
 }
 
 public static String ensurePrefixes(RepositoryConnection connection, String query) {
-if (query.toUpperCase().indexOf("PREFIX ") < 0) {
+if (!query.toUpperCase().contains("PREFIX ")) {
 return getPrefixes(connection).append(query).toString();
 }
 return query;

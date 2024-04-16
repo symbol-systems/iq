@@ -6,8 +6,12 @@ enum MessageType {
 TEXT, IMAGE, JSON, AUDIO, VIDEO, FUNCTION, URL, DATA ,OTHER
 }
 
+enum RoleType {
+system, assistant, user
+}
+
 MessageType getType();
-String getRole();
+RoleType getRole();
 String getName();
 T getContent();
 }

@@ -1,14 +1,16 @@
 package systems.symbol.fsm;
 
-import systems.symbol.model.HasIdentity;
+import org.eclipse.rdf4j.model.util.Values;
+import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
+
+import static systems.symbol.ns.COMMONS.IQ_NS;
 
 /**
  * State machine (FSM) uses RDF4J Model for state representation.
@@ -18,19 +20,13 @@ import java.util.stream.Collectors;
  * checks if transitions are allowed based on defined guard rules.
  *
  */
-public class ModelStateMachine extends AbstractStateMachine<Resource> implements HasIdentity {
-// RDF4J ValueFactory for creating IRIs and other RDF values
-static private final ValueFactory vf = SimpleValueFactory.getInstance();
-private final Model model; // RDF4J Model for storing state machine information
-public static final String ns = "urn:systems.symbol:v0:iq:"; // Namespace for RDF predicates
-
-// IRIs representing different predicates used in the state machine
-public static final IRI A_WORKFLOW = vf.createIRI(ns, "Workflow");
-public static final IRI hasInitialState = vf.createIRI(ns, "initial");
-//public static final IRI hasWorkflow = vf.createIRI(ns, "workflow");
-public static final IRI hasTransition = vf.createIRI(ns, "to");
-public static final IRI hasGuard = vf.createIRI(ns, "guard");
-public static final IRI hasCurrentState = vf.createIRI(ns, "state");
+public class ModelStateMachine extends AbstractStateMachine<Resource> implements I_Self {
+private final Model model;
+public static final IRI A_WORKFLOW = Values.iri(IQ_NS, "Workflow");
+public static final IRI hasInitialState = Values.iri(IQ_NS, "initial");
+public static final IRI hasTransition = Values.iri(IQ_NS, "to");
+public static final IRI hasGuard = Values.iri(IQ_NS, "guard");
+public static final IRI hasCurrentState = Values.iri(IQ_NS, "state");
 
 protected IRI self;
 
@@ -55,23 +51,21 @@ this.initialize();
  */
 public void initialize() {
 Iterator<Resource> found_initial = find(self, hasInitialState).iterator();
-//log.info("found_initial: {} ==> {}", self, found_initial.hasNext());
 if (found_initial.hasNext()) {
 setInitial(found_initial.next());
 }
 Iterator<Resource> found_current = find(self, hasCurrentState).iterator();
-//log.info("found_current: {}", found_current.hasNext());
 if (found_current.hasNext()) {
 setCurrentState(found_current.next());
 }
-log.info("initialized: {} -> {}", initialState, currentState);
+log.info("initialized: {} -> {} @ {}", initialState, getState(), self);
 }
 
 @Override
 public I_StateMachine<Resource> setInitial(Resource initialState) {
-model.remove(getIdentity(), hasInitialState, null);
-model.add(getIdentity(), hasInitialState, initialState);
-model.add(getIdentity(), RDF.TYPE, A_WORKFLOW);
+model.remove(getSelf(), hasInitialState, null);
+model.add(getSelf(), hasInitialState, initialState);
+model.add(getSelf(), RDF.TYPE, A_WORKFLOW);
 return super.setInitial(initialState);
 }
 
@@ -79,6 +73,7 @@ return super.setInitial(initialState);
 public boolean isAllowed(Resource target) {
 if (this.currentState != null && this.currentState.equals(target)) return true;
 Iterable<Statement> transitions = model.getStatements(getState(), hasTransition, target);
+
 boolean hasTransitions = transitions.iterator().hasNext();
 log.debug("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
 if (!hasTransitions) return false; // No transitions
@@ -133,7 +128,7 @@ return true; // All rules must have matched
  * @param target Resource
  */
 @Override
-protected void setCurrentState(Resource target) {
+public void setCurrentState(Resource target) {
 this.currentState = target;
 model.remove(self, hasCurrentState, null);
 model.add(self, hasCurrentState, target);
@@ -177,7 +172,7 @@ model.add(from, hasTransition, to);
  */
 public void add(Resource from, Resource to, IRI predicate, Value object) {
 add(from, to);
-BNode guard = vf.createBNode();
+BNode guard = Values.bnode();
 model.add(to, hasGuard, guard);
 model.add(guard, predicate, object);
 }
@@ -213,7 +208,7 @@ return transitions;
 }
 
 @Override
-public IRI getIdentity() {
+public IRI getSelf() {
 return self;
 }
 }

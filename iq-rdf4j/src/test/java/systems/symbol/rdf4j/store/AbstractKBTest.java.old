@@ -23,8 +23,8 @@ System.out.println("test.kbms.setup: "+ctx);
 
 assert kbms.getNS()!=null;
 
-scriptIRI = kbms.toIRI("https://test.symbol.systems/cases#scripts/hello.groovy");
-templateIRI = kbms.toIRI("https://test.symbol.systems/cases#hbs/hello.hbs");
+scriptIRI = kbms.toIRI("urn:iq:test:scripts/hello.groovy");
+templateIRI = kbms.toIRI("urn:iq:test:hbs/hello.hbs");
 System.out.println("test.kbms.setup.script: "+scriptIRI);
 }
 

@@ -1,21 +1,16 @@
-@base <https://test.symbol.systems/cases>.
-@prefix fsm: <urn:systems.symbol:v0:iq:>.
-@prefix iq: <urn:systems.symbol:v0:iq:>.
-@prefix : <https://test.symbol.systems/cases#>.
+@base <urn:iq:test:>.
 
-:
-a fsm:Agent;
-fsm:initial :ideation.
+@prefix iq: <urn:iq:>.
+@prefix : <urn:iq:test:>.
 
-:ideation fsm:to :work-in-progress.
 
-:work-in-progress fsm:to :in-review.
+:ideation iq:to :work-in-progress.
 
-:in-review fsm:to :revision ,
+:work-in-progress iq:to :in-review.
+
+:in-review iq:to :revision ,
  :complete .
 
-:revision fsm:to :ideation ,
+:revision iq:to :ideation ,
   :work-in-progress .
-
-[] a :work-in-progress.
 

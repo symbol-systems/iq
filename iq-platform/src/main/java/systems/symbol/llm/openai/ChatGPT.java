@@ -1,8 +1,10 @@
 package systems.symbol.llm.openai;
 
-import systems.symbol.agent.apis.APIException;
-import systems.symbol.agent.apis.RestAPI;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.agent.tools.RestAPI;
 import systems.symbol.llm.*;
+import systems.symbol.secrets.EnvsAsSecrets;
+import systems.symbol.secrets.I_Secrets;
 import systems.symbol.string.Validate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
@@ -26,6 +28,11 @@ public ChatGPT(String token, I_LLMConfig config) {
 this.token = token;
 this.config = config;
 }
+
+//public ChatGPT(I_Secrets secrets, I_LLMConfig config) {
+//this.token = secrets.getSecret(OPENAI_COMPLETIONS);
+//this.config = config;
+//}
 
 public ChatGPT(String token, int tokens) {
 this.token = token;

@@ -1,7 +1,6 @@
 package systems.symbol.string;
 /*
- *  systems.symbol - see license
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 
@@ -10,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * systems.symbol (c) 2010-2013
+ * symbol.systems (c) 2010-2013
  * @author Symbol Systems
  * Date: 12/02/13
  * Time: 10:57 PM

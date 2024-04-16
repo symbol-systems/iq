@@ -1,34 +1,34 @@
-@prefix iq: <urn:systems.symbol:v0:iq:> .
+@prefix iq: <urn:iq:> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix : <https://test.symbol.systems/cases#> .
+@prefix : <urn:iq:test:> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix fsm: <urn:systems.symbol:v0:iq:> .
+@prefix iq: <urn:iq:> .
 @prefix my: <http://:systems.symbol/v0/my#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://test.symbol.systems/cases#> a <urn:systems.symbol:v0:iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
-  <urn:systems.symbol:v0:iq:research-rss> <https://machinelearningmastery.com/blog/feed/>;
-  <urn:systems.symbol:v0:iq:research-page> <https://machinelearningmastery.com/>;
+<urn:iq:test:> a <urn:iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
+  <urn:iq:research-rss> <https://machinelearningmastery.com/blog/feed/>;
+  <urn:iq:research-page> <https://machinelearningmastery.com/>;
   :workflow_0 :ideation;
   <http://www.w3.org/ns/prov#generated> <https://machinelearningmastery.com/> .
 
-:workflow_0 a <urn:systems.symbol:v0:iq:Workflow>;
-  <urn:systems.symbol:v0:iq:initial> :ideation .
+:workflow_0 a <urn:iq:Workflow>;
+  <urn:iq:initial> :ideation .
 
 :agent.ttl a <http://www.w3.org/ns/formats/Turtle>;
   rdfs:label "agent.ttl" .
 
-<https://machinelearningmastery.com/> a <http://www.w3.org/ns/prov#Entity>, <urn:systems.symbol.intent.Performer>;
+<https://machinelearningmastery.com/> a <http://www.w3.org/ns/prov#Entity>, <urn:symbol.systems.intent.Performer>;
   dc:description "Making developers awesome at machine learning. Machine learning is taught by academics, for academics. Developers need to know what works and how to use it. Discover how to get better results, faster.";
   dc:title "Machine Learning Mastery";
   skos:narrower <my:Attention>, <my:DeepLearning>, <my:ComputerVision>, <my:NLP>, <my:TimeSeries>,
 <my:LSTMs>, <my:XGBoost>, <my:Statistics>, <my:PythonML>;
   skos:prefLabel "Machine Learning Mastery";
-  <http://www.w3.org/ns/prov#wasGeneratedBy> <https://test.symbol.systems/cases#> .
+  <http://www.w3.org/ns/prov#wasGeneratedBy> <urn:iq:test:> .
 
 <my:Attention> skos:prefLabel "Attention" .
 
@@ -48,5 +48,5 @@
 
 <my:PythonML> skos:prefLabel "Python for Machine Learning" .
 
-<urn:systems.symbol.research.PageToLLMToRDF> a <http://www.w3.org/ns/prov#Activity>;
+<urn:symbol.systems.research.PageToLLMToRDF> a <http://www.w3.org/ns/prov#Activity>;
   <http://www.w3.org/ns/prov#generated> <https://machinelearningmastery.com/> .

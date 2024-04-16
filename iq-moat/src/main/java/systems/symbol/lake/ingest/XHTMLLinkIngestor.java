@@ -132,7 +132,7 @@ if (!isSeen(page.getURI())) {
 ContentEntity entity = new ContentEntity(page.getURI().toString(), link.text());
 processor.accept(entity);
 seen(page.getURI());
-log.info("link.seen: {} -> {}", entity.getIdentity(), isSeen(page.getURI()));
+log.info("link.seen: {} -> {}", entity.getSelf(), isSeen(page.getURI()));
 }
 }
 return href;

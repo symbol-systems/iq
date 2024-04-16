@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.script.Bindings;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -95,10 +96,10 @@ return vf.createIRI(page.getPublicURIString());
 
 @Override
 @RDF(COMMONS.IQ_NS+"research-sitemap")
-public Set<IRI> execute(IRI actor, Resource siteURL) {
+public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
 Set<IRI> done = new HashSet<>();
 try {
-FileObject site = vfs.resolveFile(siteURL.stringValue());
+FileObject site = vfs.resolveFile(state.stringValue());
 log.info("sitemap.site: {}", site.getURI());
 parseSite(site, done);
 } catch (ParserConfigurationException | IOException | SAXException | URISyntaxException e) {

@@ -1,22 +1,24 @@
 package systems.symbol.agent;
 
 import systems.symbol.fsm.I_StateMachine;
-import systems.symbol.model.HasIdentity;
+import systems.symbol.fsm.StateException;
+import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import systems.symbol.platform.I_StartStop;
 
 /**
- * Interface defining the contract for agents with pluggable skills.
+ * Interface for state-full agents.
  * An agent is capable of making decisions and executing tasks using pluggable state machines.
  */
-public interface I_Agent extends HasIdentity, I_Decision {
+public interface I_Agent extends I_Self, I_StartStop {
 
 /**
  * Sets the RDF4J model for the agent.
  *
  * @param model The RDF4J model to be set.
  */
-void setModel(Model model);
+void setModel(Model model) throws StateException;
 
 /**
  * Retrieves the RDF4J model associated with the agent.

@@ -1,6 +1,6 @@
 package systems.symbol.platform;
 
-import systems.symbol.rdf4j.io.BulkAssetLoader;
+import systems.symbol.rdf4j.io.BootstrapLoader;
 import systems.symbol.rdf4j.iq.IQ;
 import systems.symbol.rdf4j.iq.IQConnection;
 import org.eclipse.rdf4j.repository.Repository;
@@ -83,8 +83,8 @@ return;
 }
 try (RepositoryConnection connection = repository.getConnection()) {
 IQ iq = new IQConnection(workspace.getIdentity(), connection);
-BulkAssetLoader loader = new BulkAssetLoader(iq);
-log.info("workspace.deploy.from: {} -> {} @ {}", name, from.getAbsolutePath(), iq.getIdentity());
+BootstrapLoader loader = new BootstrapLoader(iq);
+log.info("workspace.deploy.from: {} -> {} @ {}", name, from.getAbsolutePath(), iq.getSelf());
 loader.deploy(from);
 } catch (IOException e) {
 throw new RuntimeException(e);

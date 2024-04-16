@@ -1,7 +1,6 @@
 package systems.symbol.rdf4j.util;
 /*
- *  systems.symbol - see license
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 import org.eclipse.rdf4j.model.BNode;
@@ -14,7 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.net.URL;
 
 /**
- * systems.symbol (c) 2010-2013
+ * symbol.systems (c) 2010-2013
  * @author Symbol Systems
  * Date: 24/01/13
  * Time: 9:21 AM

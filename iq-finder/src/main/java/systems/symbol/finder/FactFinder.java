@@ -4,19 +4,27 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import groovy.lang.Script;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.rdf4j.IRIs;
+import systems.symbol.rdf4j.sparql.ScriptCatalog;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The {@code FactFinder} class extends {@link TextFinder} and provides additional methods
@@ -105,9 +113,9 @@ if (found.isEmpty()) return model;
 
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
 String id = textSegmentEmbeddingMatch.embeddingId();
-IRI iri = vf.createIRI(id);
+log.info("search.match: {}", id);
+IRI iri = Values.iri(id);
 query.setBinding("this", iri);
-log.info("search.found: {}", iri);
 try (GraphQueryResult result = query.evaluate()){
 while(result.hasNext()) {
 model.add(result.next());
@@ -118,4 +126,32 @@ log.info("model.size: {}", model.size());
 return model;
 }
 
+/**
+ * Searches for facts based on the provided text then use SPARQL query to populate the model.
+ *
+ * @param model The model to query
+ * @param text   The input text for embedding and searching.
+ * @param connection The RepositoryConnection for graph lookup.
+ * @param maxResults The maximum number of results to retrieve.
+ * @param minScore   The minimum score for a result to be considered relevant.
+ * @return A RDF {@link Model} containing the found facts.
+ */
+public Model search(Model model, String text, RepositoryConnection connection, int maxResults, double minScore) {
+List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
+if (found.isEmpty()) return model;
+Set<String> dupes = new HashSet<>();
+for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
+String id = textSegmentEmbeddingMatch.embeddingId();
+if (!dupes.contains(id)) {
+GraphQueryResult describe = ScriptCatalog.describe(connection, id);
+log.info("search.describe: {}", id);
+for (Statement s : describe) {
+model.add(s);
+}
+dupes.add(id);
+}
+}
+log.info("search.found: {} -> {}", found.size(), model.size());
+return model;
+}
 }

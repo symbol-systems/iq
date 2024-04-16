@@ -1,7 +1,7 @@
 package systems.symbol.bean;
 /*
  *  symbol.systems
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 
@@ -16,26 +16,25 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * systems.symbol (c) 2013-2021
+ * symbol.systems (c) 2013-2021
  * Module: systems.symbol.iq.bean
  * @author Symbol Systems
  * Date  : 31/12/2013
  * Time  : 9:24 PM
  */
 public class XSD2POJOConverter {
+public final static String MIME_TYPE = "http://www.iana.org/assignments/media-types/";
+
 public final static String NULL = "null";
 
-public static boolean isBasicType(Class type) {
-return
-(type != null && (
-type == String.class || type.isPrimitive() ||
+public static boolean isBasicType(Class<?> type) {
 //type == JSONObject.class || type == JSONArray.class ||
-type == URI.class ||
-(Number.class.isInstance(type)) ||
-type == Date.class));
+return
+type != null && (
+type == String.class || type.isPrimitive() || type == URI.class || type == Date.class);
 }
 
-public boolean isTypeSupported(Class type) {
+public boolean isTypeSupported(Class<?> type) {
 return isBasicType(type);
 }
 
@@ -50,7 +49,7 @@ return isBasicType(type);
  * For Strings, "null" returns null
  *
  * **/
-public Object convertToType(String value, Class type) throws ClassCastException {
+public Object convertToType(String value, Class<?> type) throws ClassCastException {
 	try {
 		return _convertToType(value, type);
 	} catch (Exception e) {
@@ -58,7 +57,7 @@ public Object convertToType(String value, Class type) throws ClassCastException 
 	}
 }
 
-private Object _convertToType(String value, Class type) throws Exception {
+private Object _convertToType(String value, Class<?> type) throws Exception {
 if (value==null) return null;
 if (type == null || String.class == type ) {
 return NULL.equals(value) ? null : value;
@@ -101,22 +100,22 @@ public Object convertToType(String value, String xsdType) throws ClassCastExcept
 return convertToType(value, convertXSDToClass(xsdType));
 }
 
-public static Class convertXSDToClass(String xsdType) {
+public static Class<?> convertXSDToClass(String xsdType) {
 	if (xsdType==null) return String.class;
 switch(xsdType) {
 // xsd
-case COMMONS.XSD+"string": return String.class;
-case COMMONS.XSD+"integer": return Integer.class;
-case COMMONS.XSD+"int": return Integer.class;
-case COMMONS.XSD+"float": return Float.class;
-case COMMONS.XSD+"double": return Double.class;
-case COMMONS.XSD+"decimal": return Double.class;
-case COMMONS.XSD+"boolean": return Boolean.class;
-case COMMONS.XSD+"long": return Long.class;
-case COMMONS.XSD+"date": return Date.class;
-case COMMONS.XSD+"dateTime": return Date.class;
-case COMMONS.XSD+"anyURI": return URI.class;
-	case COMMONS.XSD+"null": return null;
+case MIME_TYPE+"string": return String.class;
+case MIME_TYPE+"integer": return Integer.class;
+case MIME_TYPE+"int": return Integer.class;
+case MIME_TYPE+"float": return Float.class;
+case MIME_TYPE+"double": return Double.class;
+case MIME_TYPE+"decimal": return Double.class;
+case MIME_TYPE+"boolean": return Boolean.class;
+case MIME_TYPE+"long": return Long.class;
+case MIME_TYPE+"date": return Date.class;
+case MIME_TYPE+"dateTime": return Date.class;
+case MIME_TYPE+"anyURI": return URI.class;
+	case MIME_TYPE+"null": return null;
 // simple
 case "string": return String.class;
 case "integer": return Integer.class;
@@ -131,27 +130,27 @@ case "dateTime": return Date.class;
 case "anyURI": return URI.class;
 	case "null": return null;
 }
-	if (xsdType.startsWith(COMMONS.MIME_TYPE)) {
+	if (xsdType.startsWith(MIME_TYPE)) {
 		return InputStream.class;
 	}
 return Object.class;
 }
 
 public static String convertToXSD(Object type) {
-if (type==null) return COMMONS.XSD+"string";
+if (type==null) return MIME_TYPE+"string";
 return convertClassToXSD(type.getClass());
 }
 
-public static String convertClassToXSD(Class type) {
-	if (type==null) return COMMONS.XSD+"null";
-if (String.class.isInstance(type)) return COMMONS.XSD+"string";
-if (Integer.class.isInstance(type)) return COMMONS.XSD+"integer";
-if (Float.class.isInstance(type)) return COMMONS.XSD+"float";
-if (Double.class.isInstance(type)) return COMMONS.XSD+"double";
-if (Number.class.isInstance(type)) return COMMONS.XSD+"decimal";
-if (Date.class.isInstance(type)) return COMMONS.XSD+"dateTime";
-if (URI.class.isInstance(type)) return COMMONS.XSD+"anyURI";
-if (URL.class.isInstance(type)) return COMMONS.XSD+"anyURI";
-return COMMONS.XSD+"string";
+public static String convertClassToXSD(Class<?> type) {
+	if (type==null) return MIME_TYPE+"null";
+if (String.class.isInstance(type)) return MIME_TYPE+"string";
+if (Integer.class.isInstance(type)) return MIME_TYPE+"integer";
+if (Float.class.isInstance(type)) return MIME_TYPE+"float";
+if (Double.class.isInstance(type)) return MIME_TYPE+"double";
+if (Number.class.isInstance(type)) return MIME_TYPE+"decimal";
+if (Date.class.isInstance(type)) return MIME_TYPE+"dateTime";
+if (URI.class.isInstance(type)) return MIME_TYPE+"anyURI";
+if (URL.class.isInstance(type)) return MIME_TYPE+"anyURI";
+return MIME_TYPE+"string";
 }
 }

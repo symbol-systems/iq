@@ -1,6 +1,5 @@
 package systems.symbol.lake.ingest;
 
-import systems.symbol.lake.ContentEntity;
 import systems.symbol.lake.crawl.VFSCrawler;
 import systems.symbol.llm.openai.ChatGPT;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
 
 class LLMIngestorTest {
 
@@ -24,7 +22,7 @@ ChatGPT ai = new ChatGPT(openaiApiKey, 1000);
 boolean done[] = {false};
 LLMIngestor ingestor = new LLMIngestor(ai, llmPrompt, content -> {
 done[0] = true;
-System.out.println("test.ingest.LLM: " + content.getIdentity() + " ==> " + content.getContent());
+System.out.println("test.ingest.LLM: " + content.getSelf() + " ==> " + content.getContent());
 });
 VFSCrawler crawler = new VFSCrawler(new FileContentConverter(new XHTMLChunkIngestor(new ThrottleIngestor<>(1, ingestor))));
 crawler.crawl(from.toURI());

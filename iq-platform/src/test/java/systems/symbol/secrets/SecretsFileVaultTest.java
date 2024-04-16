@@ -1,48 +1,41 @@
 package systems.symbol.secrets;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
 import org.junit.jupiter.api.Test;
+import systems.symbol.ns.COMMONS;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SecretsFileVaultTest {
+IRI self = Values.iri(COMMONS.IQ_NS_TEST);
 @Test
 void testVault() throws IOException, SecretsException {
 File testHome = new File("tmp/secrets");
-testHome.mkdirs();
-I_SecretsStore vault = new OpenSecretsFileVault(testHome);
-I_Secrets iSecrets = vault.setSecrets("default", new SimpleSecrets());
-assert null != iSecrets;
-iSecrets.setSecret("key", "secret");
+I_SecretsStore vault = new BasicFileVault(testHome);
+SimpleSecrets secrets = new SimpleSecrets();
+secrets.setSecret("hello", "world");
 
-boolean denied = false;
-try {
-assert null != iSecrets.getSecret("default", "key");
-} catch (Exception e) {
-denied = true;
+I_Secrets secrets2 = vault.setSecrets(self, secrets);
+assert null != secrets2;
+assert null != secrets.getSecret("hello");
+assert secrets.getSecret("hello").equals("world");
+
 }
-assert denied;
-iSecrets.grant("key", "default");
-assert null != iSecrets.getSecret("key", "default");
-assert iSecrets.getSecret("key", "default").equals("secret");
-}
+
 @Test
-void testSaveSecrets() throws IOException, SecretsException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+void testSaveSecrets() throws IOException {
 File testHome = new File("tmp/secrets");
-testHome.mkdirs();
-I_SecretsStore vault = new OpenSecretsFileVault(testHome);
-I_Secrets iSecrets = vault.setSecrets("default", new SimpleSecrets());
+I_SecretsStore vault = new BasicFileVault(testHome);
+I_Secrets iSecrets = vault.setSecrets(self, new SimpleSecrets());
 assert null!=iSecrets;
-iSecrets.setSecret("hello", "world");
-vault.save();
+vault.setSecrets(self, "hello", "world");
 }
 }

@@ -48,8 +48,7 @@ byte[] key = password.getBytes(StandardCharsets.UTF_8);
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 SecretKey secretKey = new SecretKeySpec(key, ALGORITHM);
 cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-byte[] encryptedData = cipher.doFinal(Serialize(data));
-return encryptedData;
+return cipher.doFinal(Serialize(data));
 }
 
 public static I_Secrets decrypt(byte[] encryptedData, String password) throws NoSuchPaddingException, NoSuchAlgorithmException,

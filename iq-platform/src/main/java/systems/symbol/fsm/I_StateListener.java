@@ -13,5 +13,5 @@ public interface I_StateListener<T> {
  * @param to   The state transitioning to.
  * @return True if the transition is allowed, false if the transition should be vetoed.
  */
-boolean onTransition(T from, T to);
+boolean onTransition(T from, T to) throws StateException;
 }

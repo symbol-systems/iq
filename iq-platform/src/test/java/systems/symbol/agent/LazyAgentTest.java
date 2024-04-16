@@ -12,6 +12,8 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
 
 import static systems.symbol.fsm.ModelStateMachineTest.*;
+import static systems.symbol.fsm.SimpleStateMachineTest.ideation;
+import static systems.symbol.fsm.SimpleStateMachineTest.wip;
 
 class LazyAgentTest {
 DynamicModelFactory dmf = new DynamicModelFactory();
@@ -25,16 +27,16 @@ Model model = dmf.createEmptyModel();
 AbstractAgent agent = new LazyAgent(model, self);
 
 ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
-assert LazyAgentTest.workflow_0.equals(workflow_0.getIdentity());
+assert LazyAgentTest.workflow_0.equals(workflow_0.getSelf());
 
 agent.learn(workflow_0);
 assert workflow_0.equals(agent.getStateMachine());
 
 Resource done = agent.getStateMachine().transition(wip);
-System.out.println("agent.fsm: "+done);
+System.out.println("agent.iq: "+done);
 assert agent.getStateMachine().getState().equals(wip);
 assert done != null;
-System.out.println("agent.fsm.done: "+agent.getIdentity()+ " -> "+agent.getStateMachine());
+System.out.println("agent.fsm.done: "+agent.getSelf()+ " -> "+agent.getStateMachine());
 }
 
 

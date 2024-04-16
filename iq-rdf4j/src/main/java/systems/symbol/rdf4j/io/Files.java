@@ -11,13 +11,13 @@ import static java.util.***REMOVED***.Pattern.compile;
 
 public class Files {
 
-public static  File toFile(File home, IRI _ns, IRI _iri) {
-String iri = _iri.stringValue();
-String ns = _ns.stringValue();
-if (!iri.startsWith(ns)) return null;
-String local = iri.substring(ns.length());
-return new File(home,local);
-}
+//public static  File toFile(File home, IRI _ns, IRI _iri) {
+//String iri = _iri.stringValue();
+//String ns = _ns.stringValue();
+//if (!iri.startsWith(ns)) return null;
+//String local = iri.substring(ns.length());
+//return new File(home,local);
+//}
 
 static Pattern any_slash = compile("(?<![:/])[/\\\\]+");
 
@@ -25,7 +25,9 @@ public static IRI toIRI(ValueFactory vf, IRI baseIRI, File parentFile, File file
 if (!file.toString().startsWith(parentFile.toString())) return null;
 String path = file.getAbsolutePath().substring((parentFile.getAbsolutePath().length()+1));
 String iri = (baseIRI + path.toLowerCase(Locale.ROOT)).replaceAll(any_slash.pattern(),"/");
-return vf.createIRI(iri);
+int ix = iri.lastIndexOf(".");
+if (ix<0) return vf.createIRI(iri);
+return vf.createIRI(iri.substring(0,ix));
 }
 
 }

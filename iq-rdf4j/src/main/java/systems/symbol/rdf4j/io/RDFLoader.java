@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
+import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
@@ -41,7 +42,6 @@ connect(conn);
 void connect(RepositoryConnection conn) {
 this.conn = conn;
 	this.vf = conn.getValueFactory();
-mimeType = vf.createIRI(COMMONS.MIME_TYPE);
 		contentPredicate = ScriptCatalog.HAS_CONTENT;
 }
 
@@ -58,9 +58,7 @@ mimeType = vf.createIRI(COMMONS.MIME_TYPE);
 	}
 
 	public Literal content(IRI assetIRI, String content, IRI mimeType) throws IOException, RDFParseException, RepositoryException {
-		if (mimeType==null) {
-			mimeType = Remodel.mimetype("text/plain");
-		}
+		if (mimeType==null) mimeType = Values.iri("text/plain");
 		Literal contentBody = vf.createLiteral(content, mimeType);
 		log.debug("content: "+assetIRI + " as " + mimeType.stringValue());
 		return content(assetIRI, contentBody);
@@ -89,8 +87,7 @@ public void load(IRI baseIRI, InputStream inStream, RDFFormat format) throws IOE
 	inStream.close();
 			log.info("loaded: "+baseIRI + " as " + format);
 		} catch (RDFParseException | RepositoryException | IOException e) {
-			log.error("oops: " + e.getMessage()+" @ "+baseIRI);
-			e.printStackTrace();
+			log.error("oops: " + e.getMessage()+" @ "+baseIRI, e);
 			conn.rollback();
 			throw e;
 		}
@@ -104,8 +101,7 @@ public void load(IRI baseIRI, InputStream inStream, RDFFormat format) throws IOE
 			conn.commit();
 			log.info("loaded: "+baseIRI + " as " + format);
 		} catch (RDFParseException | RepositoryException | IOException e) {
-			log.error("oops: " + e.getMessage()+" @ "+baseIRI);
-			e.printStackTrace();
+			log.error("oops: {} @ {}", e.getMessage(), baseIRI, e);
 			conn.rollback();
 			throw e;
 		}

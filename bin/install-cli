@@ -1,0 +1,4 @@
+mvn package install -Dmaven.test.skip=true -amd -pl iq-cli-pro
+cp `pwd`/iq-cli-pro/target/iq-cli-pro.jar ~/bin/
+echo "alias iq='java -jar ~/bin/iq-cli-pro.jar"
+

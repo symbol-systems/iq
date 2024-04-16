@@ -1,6 +1,6 @@
 package systems.symbol.llm;
 
-import systems.symbol.agent.apis.APIException;
+import systems.symbol.agent.tools.APIException;
 
 import java.io.IOException;
 

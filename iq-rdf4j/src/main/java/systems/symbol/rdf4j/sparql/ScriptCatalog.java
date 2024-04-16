@@ -5,8 +5,11 @@
  */
 package systems.symbol.rdf4j.sparql;
 
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.iq.IQConnection;
 import systems.symbol.rdf4j.iq.I_Contents;
 import systems.symbol.render.HBSRenderer;
 import org.eclipse.rdf4j.model.*;
@@ -25,7 +28,7 @@ import java.util.Map;
 public class ScriptCatalog implements I_Contents {
 private static final Logger log = LoggerFactory.getLogger(ScriptCatalog.class);
 public static IRI HAS_CONTENT = RDF.VALUE;
-public static IRI SPARQL_MIME = IQ.vf.createIRI(COMMONS.MIME_SPARQL);
+public static IRI SPARQL_MIME = IQ.vf.createIRI("urn:"+COMMONS.MIME_SPARQL);
 IQ iq;
 
 /**
@@ -37,6 +40,9 @@ public ScriptCatalog(IQ iq) {
 this.iq = iq;
 }
 
+public ScriptCatalog(IRI self, RepositoryConnection connection) {
+this.iq = new IQConnection(self, connection);
+}
 /**
  * Retrieves a SPARQL query based on the provided query path and MIME type.
  *
@@ -44,8 +50,8 @@ this.iq = iq;
  * @return The SPARQL query as a string.
  */
 public String getSPARQL(String queryPath) {
-if (!queryPath.contains(":")) return getContent(iq.toIRI(queryPath), SPARQL_MIME);
-return getContent(IQ.vf.createIRI(queryPath), SPARQL_MIME);
+if (!queryPath.contains(":")) return getContent(iq.toIRI(queryPath), SPARQL_MIME).stringValue();
+return getContent(IQ.vf.createIRI(queryPath), SPARQL_MIME).stringValue();
 }
 
 /**
@@ -68,7 +74,7 @@ return query==null||bindings==null?query:HBSRenderer.template(query, bindings);
  * @return The SPARQL query as a string.
  */
 public String getSPARQL(IRI query) {
-return getContent(query, SPARQL_MIME);
+return getContent(query, SPARQL_MIME).stringValue();
 }
 
 /**
@@ -79,9 +85,9 @@ return getContent(query, SPARQL_MIME);
  * @return The SPARQL query as a string.
  */
 @Override
-public String getContent(Resource query, IRI mimetype) {
-Literal script = findScript(iq.getConnection(), query, mimetype, iq.getIdentity());
-return script!=null?script.stringValue():null;
+public Literal getContent(Resource query, IRI mimetype) {
+return findScript(iq.getConnection(), query, mimetype, iq.getSelf());
+//return script!=null?script:null;
 }
 
 /**
@@ -107,39 +113,28 @@ return script!=null?script.stringValue():null;
  * @return The SPARQL script as a string.
  */
 public static Literal findScript(RepositoryConnection connection, Resource script, IRI mimetype, IRI context) {
-log.debug("library.script: {} -> {} -> {}", script, mimetype, context);
+log.debug("findScript.conn: {} -> {} -> {}", script, mimetype, context);
 
 try (RepositoryResult<Statement> result = connection.getStatements(script, HAS_CONTENT, null, context)) {
 return findScript(result.iterator(), script, mimetype);
-//while (result.hasNext()) {
-//Statement s = result.next();
-////log.debug("library.script.result: {}", s.getObject());
-//if (s.getObject() instanceof Literal) {
-//if (mimetype==null) return s.getObject().stringValue();
-//else if (((Literal) s.getObject()).getDatatype().equals(mimetype)) {
-////log.info("library.script.found: {} -> {}", s.getSubject(), s.getObject());
-//return s.getObject().stringValue();
-//}
-//}
-//}
 }
-//return null;
 }
 
 public static Literal findScript(Iterator<Statement> statements, Resource script, IRI mimetype) {
-log.debug("library.script: {} -> {}", script, mimetype);
+log.info("findScript.seek: {} -> {} ==> {}", script, mimetype, statements.hasNext());
 
 while (statements.hasNext()) {
 Statement s = statements.next();
-log.debug("library.script.result: {}", s.getObject());
 if (s.getObject() instanceof Literal) {
+log.info("findScript.result: {}", s.getObject());
 if (mimetype==null) return (Literal)s.getObject();
-else if (mimetype.equals( ((Literal) s.getObject()).getDatatype())) {
-log.info("library.script.found: {} -> {}", s.getSubject(), s.getObject());
+if (mimetype.equals( ((Literal) s.getObject()).getDatatype())) {
+log.info("findScript.found: {} -> {}", s.getSubject(), null!=s.getObject());
 return (Literal)s.getObject();
 }
 }
 }
+log.info("findScript.missing: {}", script);
 return null;
 }
 
@@ -152,10 +147,15 @@ return null;
  * @param contextThe IRI representing the context in which the script should be executed. NUll matches any.
  * @return The script as a string.
  */
-public static Literal findScript(@NotNull  Model model, @NotNull Resource script, IRI mimetype, IRI context) {
+public static Literal findScript(@NotNull Model model, @NotNull Resource script, IRI mimetype, IRI context) {
 Iterable<Statement> statements = context==null?model.getStatements(script, HAS_CONTENT, null):model.getStatements(script, HAS_CONTENT, null, context);
 Iterator<Statement> statementIterator = statements.iterator();
-log.info("library.script: {} -> {} -> {}", script, mimetype, statementIterator.hasNext());
+log.info("findScript.model: {} -> {} @ {} -> {}", script, mimetype, context, statementIterator.hasNext());
 return findScript(statementIterator, script, mimetype);
+}
+
+public static GraphQueryResult describe(RepositoryConnection connection, String self) {
+GraphQuery graphQuery = connection.prepareGraphQuery("DESCRIBE <" + self + ">");
+return graphQuery.evaluate();
 }
 }

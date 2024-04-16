@@ -1,4 +1,4 @@
-@prefix : <https://symbol.systems/kb/v1#>.
+@prefix : <urn:iq:test:>.
 
 # Canonical Vocabularies (e.g. W3C standards)
 

@@ -1,7 +1,7 @@
 package systems.symbol.apis;
 
-import systems.symbol.agent.apis.APIException;
-import systems.symbol.agent.apis.RestAPI;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.agent.tools.RestAPI;
 import okhttp3.Response;
 import org.junit.jupiter.api.Test;
 

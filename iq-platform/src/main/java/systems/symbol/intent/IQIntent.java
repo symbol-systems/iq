@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.Bindings;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +44,9 @@ return models.models(query);
 }
 
 @Override
-abstract public Set<IRI> execute(IRI subject, Resource object);
+abstract public Set<IRI> execute(IRI actor, Resource state, Bindings bindings);
 
-public IRI getIdentity() {
+public IRI getSelf() {
 return this.self;
 }
 

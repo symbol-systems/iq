@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * systems.symbol (c) 2014
+ * symbol.systems (c) 2014
  * Module: systems.symbol.rdf4j.util
  * @author Symbol Systems
  * Date  : 27/05/2014

@@ -1,7 +1,7 @@
 package systems.symbol.io;
 /*
  *  symbol.systems
- *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * systems.symbol (c) 2013-2021
+ * symbol.systems (c) 2013-2021
  * Module: systems.symbol.file
  * @author Symbol Systems
  * Date  : 24/10/2013

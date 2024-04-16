@@ -13,28 +13,6 @@ class FilesTest {
 
 private static final ValueFactory vf = SimpleValueFactory.getInstance();
 private static final IRI baseIRI = vf.createIRI("http://example.org/ns/");
-private static final File home = new File("/path/to/home");
-
-@Test
-void toFile_ValidIRI_ReturnsFile() {
-IRI ns = vf.createIRI("http://example.org/ns/");
-IRI iri = vf.createIRI("http://example.org/ns/resource");
-
-File result = Files.toFile(home, ns, iri);
-
-assert ( null != result);
-assertEquals(new File(home, "resource"), result);
-}
-
-@Test
-void toFile_InvalidIRI_ReturnsNull() {
-IRI ns = vf.createIRI("http://example.org/ns/");
-IRI iri = vf.createIRI("http://other.org/ns/resource");
-
-File result = Files.toFile(home, ns, iri);
-
-assertNull(result);
-}
 
 @Test
 void toIRI_ValidFile_ReturnsIRI() {
@@ -42,8 +20,9 @@ File parentFile = new File("/path/to/home");
 File file = new File("/path/to/home/resource/file.txt");
 
 IRI result = Files.toIRI(vf, baseIRI, parentFile, file);
+assert result != null;
 
-assertEquals("http://example.org/ns/resource/file.txt", result.stringValue());
+assertEquals("http://example.org/ns/resource/file", result.stringValue());
 }
 
 @Test

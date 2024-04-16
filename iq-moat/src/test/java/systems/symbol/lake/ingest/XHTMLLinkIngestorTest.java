@@ -20,7 +20,7 @@ boolean done[] = {false};
 Model model = new LinkedHashModel();
 XHTMLLinkIngestor ingestHTML = new XHTMLLinkIngestor(model, new URI(site), t -> {
 //System.out.println("links.found: " + t.getIdentity());
-done[0] = t.getIdentity().stringValue().startsWith(site);
+done[0] = t.getSelf().stringValue().startsWith(site);
 });
 VFSCrawler crawler = new VFSCrawler(ingestHTML);
 System.out.println("links.crawl: " + from);
