@@ -24,8 +24,8 @@ ctx = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
 vf = assets.getValueFactory();
 //triples = assets.getTripleSource(true);
 iriTestCase = vf.createIRI(COMMONS.IQ_NS_TEST +"TestCase");
-iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all.sparql");
-iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index.hbs");
+iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all");
+iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index");
 try (RepositoryConnection connection = assets.getConnection()) {
 long count = connection.getStatements(null,null,null,ctx).stream().count();
 System.out.println("test.assets.loaded: "+count);

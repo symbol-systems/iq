@@ -74,7 +74,8 @@ return query==null||bindings==null?query:HBSRenderer.template(query, bindings);
  * @return The SPARQL query as a string.
  */
 public String getSPARQL(IRI query) {
-return getContent(query, SPARQL_MIME).stringValue();
+Literal content = getContent(query, SPARQL_MIME);
+return content==null?null:content.stringValue();
 }
 
 /**
@@ -87,7 +88,6 @@ return getContent(query, SPARQL_MIME).stringValue();
 @Override
 public Literal getContent(Resource query, IRI mimetype) {
 return findScript(iq.getConnection(), query, mimetype, iq.getSelf());
-//return script!=null?script:null;
 }
 
 /**
