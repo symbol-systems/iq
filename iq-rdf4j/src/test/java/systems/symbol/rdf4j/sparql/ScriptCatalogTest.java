@@ -19,7 +19,7 @@ public class ScriptCatalogTest extends AbstractTripleTest {
             ScriptCatalog library = new ScriptCatalog(new IQConnection(COMMONS.IQ_NS_TEST, connection));
             String sparql = library.getSPARQL(iriSparqlQuery);
             assert sparql !=null && !sparql.isEmpty();
-            assert sparql.contains("SELECT");
+            assert sparql.contains("SELECT ");
         }
     }
 
@@ -30,7 +30,7 @@ public class ScriptCatalogTest extends AbstractTripleTest {
             RDFDump.dump(liveModel, System.out, RDFFormat.TURTLE);
             Literal sparql = ScriptCatalog.findScript(liveModel, iriSparqlQuery, vf.createIRI("urn:"+COMMONS.MIME_SPARQL), null);
             assert sparql !=null && !sparql.stringValue().isEmpty();
-            assert sparql.stringValue().contains("SELECT");
+            assert sparql.stringValue().contains("SELECT ");
         }
     }
 }
