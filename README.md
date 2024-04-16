@@ -1,45 +1,77 @@
-## IQ: Intelligent Agent Ecosystem
+## IQ: An Operating System for Fleets of AI Agents
 
-IQ manages fleets of intelligent agents alongside their goals, actions, discoveries, decisions and creations. 
+IQ serves as an operating system for fleets of AI agents, governing their goals, actions, discoveries, decisions, and creations, overseeing the 'who, what, when, why, and how' of your AI ecosystem. 
 
-At its core, IQ looks after the `who, what, when, why, and how` of your AI ecosystem.
+At its core, IQ empowers intelligent systems to understand, reason, act, and adapt, providing a suite of tools and components for interpreting and responding to the world. 
 
-Use IQ to build intelligent systems, enabling them to understand, reason, act and adapt.
+Agents, equipped with pluggable skills, specialize in various domains and contexts, utilizing RDF to encode their knowledge, states, and decision-making logic as semantic knowledge - their digital DNA. 
 
-IQ provides a suite of tools and components for intelligent systems capable of understanding, interpreting, and responding to the world, planning and taking actions accordingly.
+Agents develop a deep semantic understanding of your domain, storing it's understanding in a knowledge base -  a connected database that ensures your agents are .
 
-At the core of the framework are agents, entities equipped with pluggable skills that enable them to adapt and specialize in various domains and operational contexts.
+This enables self-reflection, logical reasoning, and adaptation to enhance their capabilities. Additionally, agents translate user intentions into actionable responses.
 
-The utilization of RDF facilitates the encoding of an agent's knowledge, states, and decision-making logic as semantic knowledge - an agent's digital DNA.
+### Capabilities
 
-This enables agents to engage in self-reflection, anchor decisions in 'facts', engage in logical reasoning, synthesize new information, then adapt their "digital DNA" to become more capable.
+- **Contextual Memory:** Facilitates dynamic adaptation to varying contexts.
+- **Working Memory:** Enables transient storage and manipulation of information.
+- **Semantic Memory:** Stores factual knowledge crucial for decision-making.
+- **Episodic Memory:** Recalls past events for informed decision-making.
+- **Perceptual Memory:** Stores and retrieves sensory information.
 
-Taking actions is a key aspect of agent functionality, allowing agents to translate user intentions into corresponding actions that can be executed.
+### Reasoning Tasks
 
-### Project Aspirations
+- **State-Based Reasoning:** Utilizes Finite State Machines for structured decision-making.
+- **Semantic Inferencing:** Extracts insights from stored knowledge representations.
+- **Language Inferencing (LLM):** Employs Large Language Models for advanced pattern recognition.
 
-- **Operational Efficiency:** Streamline workflows, optimize decision-making, and save resources through intelligent agent behaviors and dynamic scripting.
-- **Augmented Awareness:** Unlock insights and relationships for more informed decision-making.
-- **Federated Collaboration:** Foster collaboration and knowledge sharing through federated knowledge integration, benefiting diverse user communities.
-- **Transparency and Trust:** Implement transparent blockchain governance for secure and trustworthy processes.
-- **Auditable Decisions:** Track the provenance of data, decisions and insights.
-- **User-Friendly:** Improve user interaction with natural language and generative technologies.
+### Behavioral Capabilities
 
+- **Stateful Side-Effects:** Facilitates learning through real-time feedback mechanisms.
+- **Scripting:** Enhances adaptability through predefined action sequences.
+- **API Calling:** Integrates external APIs for dynamic information retrieval.
+- **Semantic Research and Curation:** Actively retrieves and curates information leveraging semantic understanding.
+
+### Generation Augmentation
+
+- **Retrieval-Augmented Generation (RAG):** Dynamically retrieves information to enhance responsiveness.
+- **Fact-Augmented Generation (FAG):** Integrates relevant knowledge for contextually accurate responses.
+- **Semantic Synthesis:** Links together knowledge from diverse sources and unstructured documents..
+
+### Knowledge Curation
+
+- **Trees of Thought:** Organizes information flow for efficient decision-making.
+- **Forests of Knowledge:** Enriches understanding through interconnected concepts.
+- **Research and Discovery:** Actively seeks out, retrieves and curates information from allowed sources.
+
+### Agentic Autonomy
+
+- **Self-Reflection:** Fosters self-awareness and iterative improvements.
+- **Self-Adaption:** Empowers autonomous adjustment and optimization.
+- **Self-Awareness:** Enables autonomous decision-making aligned with objectives.
+
+## Project Aspirations
+
+- **Operational Efficiency:** Streamline workflows and optimize decision-making.
+- **Augmented Awareness:** Unlock insights for informed decisions.
+- **Federated Collaboration:** Foster knowledge sharing and collaboration.
+- **Transparency and Trust:** Implement transparent governance for trustworthiness.
+- **Auditable Decisions:** Track the provenance of data and insights.
+- **User-Friendly:** Improve user interaction with natural language technologies.
+- 
 ### Project Features
 
 Our features were built to support intelligent agent orchestration and knowledge management use cases such as:
 
 | Capability| Value Propositions  |
 |-----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Knowledge Discovery  | Extract valuable insights, saving time and resources and curate an up-to-date knowledge base.   |
+| Knowledge Discovery   | Extract valuable insights, saving time and resources and curate an up-to-date knowledge base.   |
 | Research and Curation | Actively retrieve information to stay informed about events, trends, and situations.|
 | Federated Knowledge Integration   | Connect and share knowledge with external sources to enhance overall intelligence, fostering collaboration and enriching understanding. |
 | Dynamic Agent Behavior| Simulate and optimize complex workflows and decision-making processes for more efficient and intelligent agent behaviors.   |
 | Dynamic Scripting | You and your agents can create and execute scripts based on workflows to build standard operating procedures.   |
 | Semantic Data Storage and Retrieval   | Enable sophisticated knowledge exploration, uncovering meaningful insights and relationships within the knowledge base. |
 | Natural Language Processing (NLP) Integration | Improve language understanding, enhancing user interaction and making the platform more accessible and user-friendly.   |
-| Blockchain Governance | Implement transparent and secure governance, establishing trust in the platform's processes and decision-making.|
-| Graph-based Relationship Management   | Explore relationships between entities for predictive analysis, supporting better-informed decision-making and strategic planning.  |
+| Graph-based Knowledge Management  | Explore relationships between entities for predictive analysis, supporting better-informed decision-making and strategic planning.  |
 | API-first EcoSystem   | Grow by building APIs, consuming external APIs, integrating with services and leveraging additional functionalities.|
 
 ### Usage Scenarios
