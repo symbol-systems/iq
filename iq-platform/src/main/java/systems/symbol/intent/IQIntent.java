@@ -1,6 +1,6 @@
 package systems.symbol.intent;
 
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;

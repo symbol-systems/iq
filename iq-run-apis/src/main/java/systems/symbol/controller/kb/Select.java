@@ -1,7 +1,7 @@
 package systems.symbol.controller.kb;
 
 import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;

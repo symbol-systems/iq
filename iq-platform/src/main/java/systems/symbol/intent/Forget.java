@@ -31,11 +31,8 @@ public class Forget extends AbstractIntent {
      */
     public Set<IRI> forget(IRI actor, Resource state, Bindings _unused) throws IOException {
         Set<IRI> done = new HashSet<>();
-
-        Iterable<Statement> statements = model.getStatements(state, FORGETS, null);
-        for(Statement s: statements) {
-            model.remove(actor, KNOWS, s.getObject());
-        }
+        model.remove(actor, KNOWS, state);
+        if (state instanceof IRI) done.add((IRI)state);
         return done;
     }
 

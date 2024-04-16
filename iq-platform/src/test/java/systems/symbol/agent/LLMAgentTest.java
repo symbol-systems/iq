@@ -5,7 +5,7 @@ import systems.symbol.llm.I_Thread;
 import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;

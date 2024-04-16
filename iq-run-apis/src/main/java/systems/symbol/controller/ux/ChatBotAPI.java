@@ -8,7 +8,7 @@ import systems.symbol.aspects.AgentAspects;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_Thread;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.secrets.SecretsException;

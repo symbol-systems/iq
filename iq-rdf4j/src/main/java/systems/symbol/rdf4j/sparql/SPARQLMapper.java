@@ -1,7 +1,7 @@
 package systems.symbol.rdf4j.sparql;
 
 import systems.symbol.rdf4j.NS;
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.rdf4j.util.UsefulSPARQL;
 import systems.symbol.rdf4j.util.ValueTypeConverter;

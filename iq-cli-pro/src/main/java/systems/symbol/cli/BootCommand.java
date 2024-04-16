@@ -1,6 +1,6 @@
 package systems.symbol.cli;
 
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import picocli.CommandLine;
 
 import java.io.IOException;

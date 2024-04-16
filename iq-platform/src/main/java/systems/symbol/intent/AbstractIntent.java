@@ -1,22 +1,14 @@
 package systems.symbol.intent;
 
 import systems.symbol.fsm.StateException;
-import systems.symbol.rdf4j.iq.IQ;
-import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.Bindings;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**

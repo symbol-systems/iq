@@ -77,9 +77,17 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
         }
         return decision;
     }
-
+    /**
+     * Creates a new agent instance and assigns self as the manager.
+     *
+     * @param self    the self IRI representing the agent
+     * @param secrets the secrets manager for accessing agent secrets
+     * @return the newly created agent
+     * @throws StateException if there is an issue with the state machine
+     */
     public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
-        return new ExecutiveAgent(fleet, self, secrets, new JSR233(self, fleet), this);
+        ExecutiveAgent agent = new ExecutiveAgent(fleet, self, secrets, intents, this);
+        return agent;
     }
 
     @Override

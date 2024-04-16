@@ -2,7 +2,7 @@ package systems.symbol.controller.search;
 
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.finder.FactFinder;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;

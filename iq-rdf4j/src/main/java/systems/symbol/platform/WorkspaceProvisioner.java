@@ -1,8 +1,8 @@
 package systems.symbol.platform;
 
 import systems.symbol.rdf4j.io.BootstrapLoader;
-import systems.symbol.rdf4j.iq.IQ;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQConnection;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;

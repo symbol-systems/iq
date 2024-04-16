@@ -62,6 +62,7 @@ iq:knows rdfs:range rdf:Statement .
 :execute
     iq:execute :self;
     iq:to :intents.
+
 :self
     rdfs:label "You can learn about yourself";
     rdf:value "You are healthy";

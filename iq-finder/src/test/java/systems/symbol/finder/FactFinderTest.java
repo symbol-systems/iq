@@ -2,8 +2,8 @@ package systems.symbol.finder;
 
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.io.BootstrapLoader;
-import systems.symbol.rdf4j.iq.IQ;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import dev.langchain4j.data.segment.TextSegment;

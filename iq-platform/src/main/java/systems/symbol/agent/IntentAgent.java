@@ -17,8 +17,8 @@ import java.util.Set;
  * Implementation of an agent that executes intents when a state change occurs.
  */
 public class IntentAgent extends AbstractAgent {
-    private final I_Intent intent;
-    Bindings bindings;
+    protected final I_Intent intent;
+    protected Bindings bindings;
     /**
      * Constructs a new IntentAgent with the provided intent, RDF4J model, and self identity.
      *

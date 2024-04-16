@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.RDFResponse;
-import systems.symbol.rdf4j.iq.IQConnection;
+import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.string.Validate;
 

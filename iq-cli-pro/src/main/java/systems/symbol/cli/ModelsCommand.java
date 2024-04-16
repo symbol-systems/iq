@@ -2,7 +2,7 @@ package systems.symbol.cli;
 
 import systems.symbol.io.Display;
 import systems.symbol.rdf4j.NS;
-import systems.symbol.rdf4j.iq.IQ;
+import systems.symbol.rdf4j.store.IQ;
 import picocli.CommandLine;
 
 import java.io.IOException;

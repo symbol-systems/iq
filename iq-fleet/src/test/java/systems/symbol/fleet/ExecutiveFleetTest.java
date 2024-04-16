@@ -2,14 +2,15 @@ package systems.symbol.fleet;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import systems.symbol.agent.I_Agent;
+import systems.symbol.intent.Knows;
 import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.ns.COMMONS;
-import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.iq.LiveModel;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.string.Validate;
@@ -33,23 +34,24 @@ class ExecutiveFleetTest {
     @Test
     void deployFleet() throws Exception {
         if (Validate.isMissing(OPENAI_API_KEY)) {
-            System.out.println("exec.fleet.llm.skipped: ");
+            System.err.println("exec.fleet.llm.skipped: ");
             return;
         }
+        EnvsAsSecrets secrets = new EnvsAsSecrets();
+        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
         System.out.println("exec.fleet.deploy: "+self);
+
         try (RepositoryConnection connection = assets.getConnection()) {
             Model model = new LiveModel(connection);
-            EnvsAsSecrets secrets = new EnvsAsSecrets();
-            ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
             ExecutiveFleet fleet = new ExecutiveFleet(self, gpt, model, secrets);
-
-            for(I_Agent agent: fleet.getAgents()) {
-                System.out.println("exec.fleet.deployed: " + agent.getSelf() + " @ "+agent.getStateMachine().getState());
-            }
             fleet.start();
             fleet.stop();
-//            System.out.println("fleet.dump");
+            Iterable<Statement> statements = model.getStatements(self, Knows.KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "NaturalLanguage"));
+            boolean hasNext = statements.iterator().hasNext();
+            System.out.println("fleet.done: "+hasNext);
+            assert hasNext;
 //            RDFDump.dump(model);
+
         }
     }
 

@@ -24,13 +24,13 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     Set<Resource> seen = new HashSet<>();
 
     /**
-     * The ExecutiveAgent gracefully handles stateful decisions.
+     * The ExecutiveAgent makes and delegates stateful decisions.
      * @param self The identity of the agent
      * @param memo The working memory of the agent as an RDF4J Model.
      */
 
     public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent) throws StateException {
-        this(memo, self, secrets, intent, null);
+        this(memo, self, secrets, new Executive(self, memo, intent), null);
     }
 
     public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent, I_Decide<Resource> manager) throws StateException {
@@ -43,6 +43,10 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         this.seen.clear();
     }
 
+    public Executive getExecutive() {
+        return (Executive) this.intent;
+    }
+
     /**
      * Handles transitions within the symbolic system.
      *
@@ -52,9 +56,10 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      */
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
+        log.info("onTransition: {} -> {} --> {}", self, to, bindings);
         Set<IRI> executed = execute(getSelf(), to, bindings);
-        log.info("onTransition: {} -> {} --> {}", to, executed, bindings);
         Resource next = decide();
+        log.info("onDecision: {} -> {} -> {}", executed, next, seen);
         if (next!=null && !seen.contains(next)) {
             getStateMachine().transition(next);
             seen.add(next);
@@ -73,6 +78,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public Resource decide() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
+        log.info("onDecision: {} -> {}", choices, manager==null?"solo":manager);
         if (choices.isEmpty()) return null;
         if (choices.size()==1) return choices.iterator().next();
         if (manager == null) return null;
