@@ -29,11 +29,11 @@ BootstrapLoader loader = new BootstrapLoader(COMMONS.IQ_NS_TEST, connection, tru
 loader.deploy(ASSETS_HOME);
 
 
-String sparql_index = library.getSPARQL("queries/indexing.sparql");
+String sparql_index = library.getSPARQL("queries/indexing");
 System.out.println("find.sparql_index: "+ sparql_index);
 assert sparql_index != null && !sparql_index.isEmpty();
 
-String  sparql_hydrate = library.getSPARQL("queries/hydrating.sparql");
+String  sparql_hydrate = library.getSPARQL("queries/hydrating");
 System.out.println("find.sparql_hydrate: "+ sparql_hydrate);
 assert sparql_hydrate != null && !sparql_hydrate.isEmpty();
 

@@ -1,6 +1,0 @@
-CONSTRUCT {
-?s skos:prefLabel ?o.
-}WHERE {
-?s ?p ?o.
-?s dct:title ?o.
-}
