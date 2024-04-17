@@ -27,7 +27,7 @@ addProvider("s3", new S3FileProvider());
 addProvider("file", new DefaultLocalFileProvider());
 
 super.init();
-setBaseFile(new File(""));
+setBaseFile(new File("."));
 
 }
 

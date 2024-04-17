@@ -1,6 +1,10 @@
 package systems.symbol.lake.ingest;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.impl.StandardFileSystemManager;
 import systems.symbol.lake.ContentEntity;
+import systems.symbol.lake.crawl.VFS;
 import systems.symbol.lake.crawl.VFSCrawler;
 import systems.symbol.rdf4j.io.RDFDump;
 import org.eclipse.rdf4j.model.IRI;
@@ -14,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 class JsonLdLinkExtractorTest {
@@ -43,17 +48,21 @@ assert model.size()> 10;
 RDFDump.dump(model, Files.newOutputStream(new File(moat, "links.ttl").toPath()), RDFFormat.TURTLE);
 }
 
-Model testParse(File from) throws IOException, URISyntaxException {
+Model testParse(File from) throws Exception {
 Model model = new LinkedHashModel();
 RDFModelIngestor rdfModelIngestor = new RDFModelIngestor(model, RDFFormat.JSONLD);
-FileContentConverter ingestor = new FileContentConverter(new JsonLdLinkExtractor(rdfModelIngestor));
-VFSCrawler crawler = new VFSCrawler(ingestor);
-System.out.println("json-ld.crawl: "+from);
+System.out.println("json-ld.crawl: "+model.size()+" @ "+from);
 
-assert model.isEmpty();
-IRI crawled = crawler.crawl(from.toURI());
-assert null != crawled;
-System.out.println("json-ld.crawled: "+crawled+" -> "+model.size());
+try (FileSystemManager vfs = new VFS()) {
+System.out.println("vfs.schemes: "+ Arrays.toString(vfs.getSchemes()));
+FileContentConverter ingest = new FileContentConverter(new JsonLdLinkExtractor(vfs, rdfModelIngestor));
+FileObject fileObject = vfs.toFileObject(from);
+ingest.accept(fileObject);
+System.out.println("json-ld.crawled: "+model.size()+" @ "+fileObject);
+
+//RDFDump.dump(model);
+assert model.size()>20;
 return model;
+}
 }
 }

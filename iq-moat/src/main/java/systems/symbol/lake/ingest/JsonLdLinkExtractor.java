@@ -25,13 +25,13 @@ private final FileSystemManager vfs;
 private final Consumer<ContentEntity<String>> next;
 Set<IRI> seen = new HashSet<>();
 
-public JsonLdLinkExtractor(Consumer<ContentEntity<String>> next) throws FileSystemException {
+public JsonLdLinkExtractor(FileSystemManager vfs, Consumer<ContentEntity<String>> next) throws FileSystemException {
 this.next = next;
-this.vfs = VFS.getManager();
+this.vfs = vfs;
 }
 
 @Override
-public void accept(ContentEntity html) {
+public void accept(ContentEntity<String> html) {
 try {
 log.info("accept: {}", html.getSelf());
 ingestJSONLD(html);
@@ -41,7 +41,7 @@ throw new RuntimeException(e);
 }
 }
 
-IRI next(ContentEntity jsonld) {
+IRI next(ContentEntity<String> jsonld) {
 if (next != null) {
 next.accept(jsonld);
 return jsonld.getSelf();
@@ -63,7 +63,7 @@ Document document = Jsoup.parse(html);
 seen.add(page);
 // Strategy 1: Extract JSON-LD from script.tags with type 'application/ld+json'
 Elements jsonLdScripts = document.select("[type=application/ld+json]");
-log.debug("json.scripts.found: {}", jsonLdScripts);
+log.info("json.scripts.found: {}", jsonLdScripts);
 jsonLdScripts.forEach(script -> {
 String src = script.attr("src");
 if (!src.isEmpty()) {

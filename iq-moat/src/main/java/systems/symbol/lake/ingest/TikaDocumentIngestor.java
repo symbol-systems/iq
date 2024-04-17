@@ -13,9 +13,10 @@ import java.util.function.Consumer;
 
 public class TikaDocumentIngestor<String> extends AbstractConverter<FileObject, ContentEntity<String>> {
 Parser nativeParser = new AutoDetectParser();
-private TikaParser tika;
+private final TikaParser tika;
 
 public TikaDocumentIngestor() {
+this.tika = new TikaParser(nativeParser, true);
 }
 
 public TikaDocumentIngestor(Consumer<ContentEntity<String>> next) {
