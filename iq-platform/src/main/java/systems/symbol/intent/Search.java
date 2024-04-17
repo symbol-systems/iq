@@ -21,9 +21,10 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * An intent
+ * An intent implementation that executes scripts using SPARQL (Java Scripting API).
+ * Extends the AbstractIntent class.
  */
-public class Find implements I_Intent, I_Self {
+public class Search implements I_Intent, I_Self {
     private final IRI self;
     private final I_FactFinder finder;
     private final Model model;
@@ -34,7 +35,7 @@ public class Find implements I_Intent, I_Self {
      *
      * @param self  The self identity of the agent.
      */
-    public Find(IRI self, Model model, I_FactFinder finder) {
+    public Search(IRI self, Model model, I_FactFinder finder) {
         this.self = self;
         this.finder = finder;
         this.model = model;
@@ -51,10 +52,10 @@ public class Find implements I_Intent, I_Self {
      * @return A set of IRIs indicating the completion of execution.
      */
     @Override
-    @RDF(COMMONS.IQ_NS + "find")
+    @RDF(COMMONS.IQ_NS + "search")
     public Set<IRI> execute(IRI actor, Resource state, Bindings ctx) throws StateException {
         Literal prompt = ScriptCatalog.findScript(model, state, null, null);
-        if (prompt==null||prompt.stringValue().isEmpty()) return new IRIs();
+        if (prompt==null || prompt.stringValue().isEmpty()) return new IRIs();
         try {
             Bindings bindings = MyFacade.rebind(actor, ctx);
             String query = HBSRenderer.template(prompt.stringValue(), bindings);

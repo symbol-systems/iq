@@ -40,7 +40,7 @@ iq:knows rdfs:range rdf:Statement .
     iq:search "{{my.prompt}}".
 :serp
     rdfs:label "You can search the web";
-    iq:search "{{my.prompt}}".
+    iq:search :.
 :select
     rdfs:label "You can SPARQL query your own state of mind";
     iq:select "{{my.prompt}}".

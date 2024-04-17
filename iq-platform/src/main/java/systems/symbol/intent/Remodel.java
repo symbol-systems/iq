@@ -87,7 +87,7 @@ public class Remodel extends AbstractIntent {
         try {
             return remodel(actor, state, bindings);
         } catch (IOException e) {
-            throw new StateException(e.getMessage(), state);
+            throw new StateException(e.getMessage(), state, e);
         }
     }
 }

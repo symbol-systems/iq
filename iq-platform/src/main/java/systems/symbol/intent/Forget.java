@@ -43,7 +43,7 @@ public class Forget extends AbstractIntent {
         try {
             return forget(actor, state, bindings);
         } catch (IOException e) {
-            throw new StateException(e.getMessage(), state);
+            throw new StateException(e.getMessage(), state, e);
         }
     }
 

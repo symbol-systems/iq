@@ -48,10 +48,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>jakarta.ws.rs</groupId>

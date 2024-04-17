@@ -7,4 +7,9 @@ public class StateException extends Exception {
         super(s);
         this.state = state;
     }
+
+    public StateException(String s, Object state, Exception e) {
+        super(s ,e);
+        this.state = state;
+    }
 }

@@ -34,15 +34,14 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
     ChatThread thread = new ChatThread();
     Map<IRI,Thread> workers = new HashMap<>();
 
-    public ExecutiveFleet(IRI self, ChatGPT gpt, Model model, EnvsAsSecrets secrets) throws StateException {
-        this(self, gpt, model, secrets, 0);
+    public ExecutiveFleet(IRI self, I_LLM<String> llm, Model model, EnvsAsSecrets secrets) throws StateException {
+        this(self, llm, model, secrets, 0);
     }
     public ExecutiveFleet(IRI self, I_LLM<String> llm, Model fleet, I_Secrets secrets, int retries) throws StateException {
         super(self, fleet, secrets);
         this.llm = llm;
         this.retries = retries;
     }
-
 
     @Override
     public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
@@ -86,8 +85,7 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
      * @throws StateException if there is an issue with the state machine
      */
     public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
-        ExecutiveAgent agent = new ExecutiveAgent(fleet, self, secrets, intents, this);
-        return agent;
+        return new ExecutiveAgent(fleet, self, secrets, intents, this);
     }
 
     @Override

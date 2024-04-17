@@ -18,11 +18,11 @@ public class CamelCase  {
 	 */
 
 	public static String toTitleCase( String str ) {
-		if( str == null || str.length() == 0 ) {
+		if( str == null || str.isEmpty()) {
 			return str;
 		}
  
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
  
 		/*
 		 * Pretend space before first character
