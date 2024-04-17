@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class PollyDemoTest {
+String AWS_KEY = System.getenv("AWS_ACCESS_KEY_ID");
 
 //@Test
 void saySample() throws IOException, JavaLayerException, InterruptedException {
@@ -30,6 +31,7 @@ System.out.println("audio.tested");
 
 @Test
 void sayHello() throws IOException, JavaLayerException {
+if (AWS_KEY==null) return;
 String speak = IOCopier.load(new File("src/test/resources/fleet/script/talk.md"));
 PollyClient polly = PollyClient.builder()
 //.region(Region.AP_SOUTHEAST_2)
