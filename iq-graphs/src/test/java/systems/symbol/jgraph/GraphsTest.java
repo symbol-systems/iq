@@ -101,7 +101,7 @@ Graph<Resource, Resource> graph = Graphs.toGraph(statements.stream());
 Map<Object, Double> found = Graphs.findKatzCentrality(graph);
 log.info("iq.graph.katz.scores: " + found);
 assert found!=null;
-assert found.size()>0;
+assert !found.isEmpty();
 assert 1.0 == found.get(alice);
 }
 }

@@ -64,7 +64,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <repository>
   <id>github</id>
   <name>GitHub Packages</name>
-  <url>https://maven.pkg.github.com/clever-claims/systems.symbol/</url>
+  <url>https://maven.pkg.github.com/symbol-systems/iq</url>
 </repository>
   </distributionManagement>
   <properties>
@@ -79,10 +79,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <!--<quarkus.platform.version>2.16.9.Final</quarkus.platform.version>-->
 <!--<quarkus.group-id>io.quarkus</quarkus.group-id>-->
 <quarkus.version>3.7.1</quarkus.version>
-
-
 <jakarta.activation.version>2.1.1</jakarta.activation.version>
-
 <spring.version>6.0.11</spring.version>
 <springboot.version>3.1.2</springboot.version>
 <slf4j.version>1.7.32</slf4j.version>
