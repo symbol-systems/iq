@@ -46,7 +46,7 @@ public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws Sta
 try {
 return knows(actor, state, bindings);
 } catch (IOException e) {
-throw new StateException(e.getMessage(), state);
+throw new StateException(e.getMessage(), state, e);
 }
 }
 

@@ -1,11 +1,9 @@
 package systems.symbol.string;
 /*
- *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
- */
+ * Author: Chas Emerick
+*/
 public class LevenshteinDistance	{
 
-// Author: Chas Emerick  
 
 // LC
 	public static boolean alike(String s, String t) {

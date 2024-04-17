@@ -1,53 +1,58 @@
-## IQ: Governing Fleets of AI
+## IQ: AI Governance - Cognitive Command & Control
 
-IQ functions as an operating system for fleets of AI agents.
+`IQ` is an operating system for your AI fleet. 
 
-As a cognitive toolkit, IQ integrates RDF-powered memory for knowledge, policies, and actions.
+At the heart of `IQ` are your playbooks - a declarative model of your augmented enterprise.
 
-IQ upgrades your agents with both system-1 and system-2 cognitive capabilities.
+As a cognitive toolkit, `IQ` is fed on knowledge - these are your facts and data, your policies and actions.
 
-At its core, IQ empowers intelligent systems to comprehend, reason, act, and adapt, offering a comprehensive suite of tools and components for interpreting and responding to the world.
+`IQ` empowers your agents with cognitive capabilities - intuitive, automatic responses (system-1) and more deliberate, analytical thinking (system-2).
 
-Agents develop a semantic understanding of your domain, storing their knowledge in a graph database.
+At its core, `IQ` empowers intelligent systems to comprehend, reason, act, and adapt, offering a comprehensive suite of tools and components for interpreting and responding to the world.
 
-Equipped with pluggable skills, agents make decisions based on knowledge, follow your workflows using neural and logical decision-making.
+Agents acquire a semantic understanding of their domain, storing knowledge in a graph database that can be queried, analysed and exported.
 
-Since IQ uses declarative knowledge, your agents are aware of themselves, their states and knowledge can be queried and can self-adapt.
+Equipped with pluggable skills, agents can make decisions based on that knowledge.
 
-### Capabilities
+They follow your playbook, using both neural and logical decision-making. They can even develop and adapt their own workflows.
 
-- **Contextual Memory:** Facilitates dynamic adaptation to varying contexts.
-- **Working Memory:** Enables transient storage and manipulation of information.
-- **Semantic Memory:** Stores factual knowledge crucial for decision-making.
-- **Episodic Memory:** Recalls past events for informed decision-making.
-- **Perceptual Memory:** Stores and retrieves sensory information.
+Their explicit knowledge confers a sense of themselves , they can query and update their own state of mind.
 
-### Reasoning Tasks
+### Memory
 
-- **State-Based Reasoning:** Utilizes Finite State Machines for structured decision-making.
-- **Semantic Inferencing:** Extracts insights from facts graphs, linked data and RDF knowledge stores.
-- **Language Inferencing:** Employs Large Language Models for natural language fluency.
+- **Contextual:** Facilitates dynamic adaptation to varying contexts.
+- **Working:** Enables transient storage and manipulation of information.
+- **Semantic:** Stores factual knowledge crucial for decision-making.
+- **Episodic:** Recalls past events for informed decision-making.
+- **Perceptual:** Stores and retrieves sensory information.
+- **Persistent:** Stores and retrieves binary and other bulky documents.
 
-### Behavioral Capabilities
+### Reasoning
+
+- **State-Based:** Utilizes Finite State Machines for structured decision-making.
+- **Semantic:** Extracts insights from facts graphs, linked data and RDF knowledge stores.
+- **Language:** Employs Large Language Models for natural language fluency.
+
+### Behavioral
 
 - **Stateful Side-Effects:** Managed workflows that facilitate actions using built-in tools and APIs.
 - **Scripting:** Enhances adaptability through scripts that can be written by you or your agents.
 - **API Calling:** Integrates external APIs for dynamic information retrieval.
 - **Semantic Research and Curation:** Actively retrieves and curates information leveraging semantic understanding.
 
-### Generation Augmentation
+### Knowledge
 
 - **Retrieval-Augmented Generation (RAG):** Dynamically retrieves information to enhance responsiveness.
 - **Fact-Augmented Generation (FAG):** Integrates relevant knowledge for contextually accurate responses.
 - **Semantic Synthesis:** Links together knowledge from diverse sources and unstructured documents..
 
-### Knowledge Curation
+### Curation
 
 - **Trees of Thought:** Organizes information flow for efficient decision-making.
 - **Forests of Knowledge:** Enriches understanding through interconnected concepts.
 - **Research and Discovery:** Actively seeks out, retrieves and curates information from allowed sources.
 
-### Agentic Autonomy
+### Autonomy
 
 - **Self-Reflection:** Fosters self-awareness and iterative improvements.
 - **Self-Adaption:** Empowers autonomous adjustment and optimization.
@@ -103,9 +108,9 @@ Our features were built to support intelligent agent orchestration and knowledge
 
 ### Technology Stack
 
-IQ follows a Java mono-repository structure managed through Maven.
+`IQ` follows a Java mono-repository structure managed through Maven.
 
-The IQ platform is built using Java, with the Quarkus framework serving as its primary foundation.
+The `IQ` platform is built using Java, with the Quarkus framework serving as its primary foundation.
 
 Our project incorporates the amazing work of so many, including but not limited to:
 
@@ -121,7 +126,7 @@ Our project incorporates the amazing work of so many, including but not limited 
 
 ### Maven Modules 
 
-IQ comprises a set of integrated modules handling data, communication and interaction among humans and AI. 
+`IQ` comprises a set of integrated modules handling data, communication and interaction among humans and AI. 
 
 The Maven modules include:
 
@@ -137,7 +142,7 @@ The Maven modules include:
 - **iq-rdf4j-camel:** RDF4j and Apache Camel for semantic integration.
 - **iq-rdf4j-graphql:** GraphQL integration for flexible query capabilities.
 - **iq-rdf4j-nlp:** Integration for language understanding.
-- **iq-run-apis:** Module for executing external APIs within the IQ ecosystem.
+- **iq-run-apis:** Module for executing external APIs within the `IQ` ecosystem.
 - **iq-strings:** String manipulation utilities for handling textual data.
-- **iq-commons:** Shared functionalities and utilities across the IQ ecosystem.
+- **iq-commons:** Shared functionalities and utilities across the `IQ` ecosystem.
 

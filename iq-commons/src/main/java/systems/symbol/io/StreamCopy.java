@@ -11,14 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-/**
- * symbol.systems (c) 2010-2013
- * @author Symbol Systems
- * Date: 12/02/13
- * Time: 6:27 PM
- * <p/>
- * This code does something useful
- */
 public class StreamCopy {
 	private static final Logger log = LoggerFactory.getLogger(StreamCopy.class);
 

@@ -13,6 +13,8 @@ import javax.script.Bindings;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static systems.symbol.platform.Provenance.generated;
+
 /**
  * The Executive executes operations based on the I_Intents it is equipped with.
  * When the Executive transitions to a new state, it will automatically execute that state's intents.
@@ -128,6 +130,9 @@ IRIs done = new IRIs();
 Iterable<Statement> statements = model.getStatements(state, null, null);
 log.info("execute.intents: {} -> {}", state, statements.iterator().hasNext());
 execute(actor, statements, done, bindings);
+done.forEach(result -> {
+generated(model, actor, state, result, getSelf());
+});
 return done;
 }
 }

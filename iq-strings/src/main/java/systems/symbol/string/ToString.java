@@ -8,14 +8,6 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * symbol.systems (c) 2010-2013
- * @author Symbol Systems
- * Date: 12/02/13
- * Time: 10:57 PM
- * <p/>
- * This code does something useful
- */
 public class ToString {
 
 	public static String toString(File file) throws IOException {
@@ -23,7 +15,7 @@ public class ToString {
 	}
 
 	public static String toString(Reader reader) throws IOException {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		char[] chars = new char[1024];
 		int len = 0;
 		while( (len = reader.read(chars))>0) {
@@ -33,7 +25,7 @@ public class ToString {
 	}
 
 	public static String toString(InputStream stream) throws IOException {
-		if (stream==null) throw new IOException("toString() missing stream");
+		if (stream==null) return  null;
 		DataInputStream io = new DataInputStream(stream);
 		String data = io.readUTF();
 		io.close();
