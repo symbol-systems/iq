@@ -27,7 +27,7 @@ public class VFS extends DefaultFileSystemManager  {
         addProvider("file", new DefaultLocalFileProvider());
 
         super.init();
-        setBaseFile(new File(""));
+        setBaseFile(new File("."));
 
     }
 

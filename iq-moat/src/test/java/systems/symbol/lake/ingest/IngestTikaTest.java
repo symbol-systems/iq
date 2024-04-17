@@ -1,5 +1,8 @@
 package systems.symbol.lake.ingest;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
 import systems.symbol.lake.crawl.VFSCrawler;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -18,13 +21,13 @@ public class IngestTikaTest {
 
     @Test
     void testIngest() throws RepositoryException, IOException {
-        boolean done[] = {false};
-        TikaDocumentIngestor<Object> tika = new TikaDocumentIngestor<>(entity -> {
-            done[0] = entity.getContent().toString().indexOf("dc:title") > 0;
-        });
-        VFSCrawler crawler = new VFSCrawler(tika);
-        IRI crawled = crawler.crawl(from.toURI());
-        assert crawled!=null;
-        assert done[0];
+        boolean[] done = {false};
+        try (FileSystemManager vfs = VFS.getManager()) {
+            FileObject fileObject = vfs.resolveFile(new File(from, "Example.pdf").toURI());
+            TikaDocumentIngestor<Object> tika = new TikaDocumentIngestor<>();
+            Object content = tika.convert(fileObject).getContent();
+            assert content != null;
+            assert content.toString().contains("Simple");
+        }
     }
 }

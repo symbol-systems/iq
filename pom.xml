@@ -80,7 +80,7 @@
 <!--    <quarkus.group-id>io.quarkus</quarkus.group-id>-->
     <quarkus.version>3.7.1</quarkus.version>
 
-    <acme4j.version>2.16</acme4j.version>
+
     <jakarta.activation.version>2.1.1</jakarta.activation.version>
 
     <spring.version>6.0.11</spring.version>
@@ -179,11 +179,11 @@
         <version>${quarkus.version}</version>
       </dependency>
       <!-- https://mvnrepository.com/artifact/org.shredzone.acme4j/ -->
-      <dependency>
-        <groupId>org.shredzone.acme4j</groupId>
-        <artifactId>acme4j</artifactId>
-        <version>${acme4j.version}</version>
-      </dependency>
+<!--      <dependency>-->
+<!--        <groupId>org.shredzone.acme4j</groupId>-->
+<!--        <artifactId>acme4j</artifactId>-->
+<!--        <version>${acme4j.version}</version>-->
+<!--      </dependency>-->
       <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
       <dependency>
         <groupId>org.jetbrains</groupId>
