@@ -70,7 +70,7 @@ public class Remodel extends AbstractIntent {
         return null;
     }
 
-    protected Set<IRI> remodel(IRI actor, Resource state, Literal hbs, Map<String,Object> my, Model model) throws IOException {
+    protected Set<IRI> remodel(IRI actor, Resource state, Literal hbs, Bindings my, Model model) throws IOException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
         log.info("remodel.bindings: {} -> {}", hbs.getDatatype(), bindings.keySet());
         String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);

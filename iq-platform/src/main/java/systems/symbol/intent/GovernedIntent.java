@@ -31,7 +31,7 @@ public class GovernedIntent implements I_Intent, I_Self {
      * @param self   The IRI representing the identity of this GovernedIntent instance.
      * @param intent The underlying intent that is being governed.
      */
-    public GovernedIntent(Model model, IRI self, I_Intent intent) {
+    public GovernedIntent(IRI self, Model model, I_Intent intent) {
         this.model = model;
         this.self = self;
         this.intent = intent;

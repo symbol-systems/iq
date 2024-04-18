@@ -3,8 +3,6 @@ package systems.symbol.intent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.annotation.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.ns.COMMONS;
@@ -14,25 +12,25 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static systems.symbol.intent.Knows.KNOWS;
+import static systems.symbol.intent.Learn.KNOWS;
 
 public class Forget extends AbstractIntent {
-    static final IRI FORGETS = Values.iri(COMMONS.IQ_NS, "forget");
+//    static final IRI FORGETS = Values.iri(COMMONS.IQ_NS, "forget");
     public Forget(IRI self, Model model) {
         super(model, self);
     }
 
     /**
-     * Bind SPARQL results as data and render a single state into a new Literal
+     * A `forget` a fact and removes the `knows` from the actor.
      *
-     * @param actor       actor source of models
-     * @param state      state for each model
-     * @return Set of one IRI for the new triple
+     * @param actor     The actor/agent who is forgetting
+     * @param fact      The fact that the actor should  'forget'
+     * @return The set of forgotten facts (1 or 0)
      */
-    public Set<IRI> forget(IRI actor, Resource state, Bindings _unused) throws IOException {
+    public Set<IRI> forget(IRI actor, Resource fact, Bindings _unused) throws IOException {
         Set<IRI> done = new HashSet<>();
-        model.remove(actor, KNOWS, state);
-        if (state instanceof IRI) done.add((IRI)state);
+        model.remove(actor, KNOWS, fact);
+        if (fact instanceof IRI) done.add((IRI)fact);
         return done;
     }
 

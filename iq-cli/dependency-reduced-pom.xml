@@ -3,7 +3,7 @@
   <parent>
     <artifactId>iq-parent</artifactId>
     <groupId>systems.symbol</groupId>
-    <version>0.76.2</version>
+    <version>0.76.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
@@ -12,7 +12,7 @@
   <developers>
     <developer>
       <id>symbol.systems</id>
-      <name>symbol.systems - Team: IQ</name>
+      <name>symbol.systems</name>
       <email>JO@symbol.systems</email>
       <organization>symbol.systems</organization>
       <roles>
@@ -30,8 +30,8 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:https://github.com/my-iq/iq-todo.git</connection>
-    <url>github.com/my-iq/iq-todo.git</url>
+    <connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
+    <url>github.com/symbol-systems/iq-todo.git</url>
   </scm>
   <organization>
     <name>symbol.systems</name>

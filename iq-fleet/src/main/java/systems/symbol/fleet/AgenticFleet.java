@@ -30,6 +30,7 @@ public class AgenticFleet implements I_Fleet, I_Self {
     IRI self;
     Model fleet;
     I_Intents intents;
+    I_Secrets secrets;
 
     /**
      * Constructs an AgenticFleet.
@@ -42,22 +43,21 @@ public class AgenticFleet implements I_Fleet, I_Self {
     public AgenticFleet(IRI self, Model fleet, I_Secrets secrets) throws StateException {
         this.self = self;
         this.fleet = fleet;
+        this.secrets = secrets;
         this.intents = new Executive(self, fleet);
-        this.intents.add( new JSR233(self, fleet) );
-        deploy(secrets);
+        this.intents.add( new JSR233(self, fleet, secrets) );
     }
 
     /**
      * Deploys agents from the fleet model and initializes them.
      *
-     * @param secrets the secrets manager for accessing agent secrets
      * @throws StateException if there is an issue with the state machine
      */
-    public void deploy(I_Secrets secrets) throws StateException {
+    public void deploy() throws StateException {
         Iterable<Statement> found = fleet.getStatements(null, IQ_NS.hasInitialState, null);
         for (Statement s : found) {
             IRI self = (IRI) s.getSubject();
-            I_Agent agent = newAgent(self, secrets);
+            I_Agent agent = newAgent(self);
             agents.put(self, agent);
             log.info("fleet.agent: {}", self);
         }
@@ -68,12 +68,11 @@ public class AgenticFleet implements I_Fleet, I_Self {
      * Creates a new agent instance.
      *
      * @param self    the self IRI representing the agent
-     * @param secrets the secrets manager for accessing agent secrets
      * @return the newly created agent
      * @throws StateException if there is an issue with the state machine
      */
-    public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
-        return new ExecutiveAgent(fleet, self, secrets, intents);
+    public I_Agent newAgent(IRI self) throws StateException {
+        return new ExecutiveAgent(self, fleet, intents);
     }
 
     /**
@@ -103,6 +102,7 @@ public class AgenticFleet implements I_Fleet, I_Self {
      */
     @Override
     public void start() throws Exception {
+        if (agents.isEmpty()) deploy();
         Set<IRI> iris = agents.keySet();
         for (IRI agent : iris) {
             start(agent);

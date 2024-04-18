@@ -12,7 +12,7 @@
     <artifactId>iq-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>systems.symbol - Cloud APIs </name>
+    <name>symbol.systems - Cloud APIs </name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -23,7 +23,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>systems.symbol - Team: IQ</name>
+            <name>symbol.systems</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>
@@ -42,7 +42,7 @@
     </licenses>
 
     <scm>
-        <url>github.com/my-iq/iq-api.git</url>
+        <url>github.com/symbol-systems/iq-api.git</url>
         <connection>scm:git:https://github.com/g-iq/iq-Events.git</connection>
     </scm>
 

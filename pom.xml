@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
-  <version>0.76.2</version>
+  <version>0.76.3</version>
   <packaging>pom</packaging>
   <name>symbol.systems - BoM</name>
   <url>https://symbol.systems</url>
@@ -39,7 +39,7 @@
     </developer>
   </developers>
   <modules>
-    <module>iq-strings</module>
+    <module>iq-utils</module>
     <module>iq-commons</module>
     <module>iq-rdf4j</module>
     <!-- <module>iq-actions</module> -->
@@ -54,6 +54,7 @@
     <module>iq-finder</module>
     <module>iq-fleet</module>
     <module>iq-run-apis</module>
+    <module>iq-persona</module>
     <module>iq-graphs</module>
 <!--    <module>iq-dao</module>-->
   </modules>

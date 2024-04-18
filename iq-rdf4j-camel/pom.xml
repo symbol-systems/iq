@@ -11,7 +11,7 @@
     <artifactId>iq-camel-rdf4j</artifactId>
     <packaging>jar</packaging>
 
-    <name>systems.symbol - Camel / RDF4J</name>
+    <name>symbol.systems - Camel / RDF4J</name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -22,7 +22,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>systems.symbol - Team: IQ</name>
+            <name>symbol.systems</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>

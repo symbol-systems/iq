@@ -88,6 +88,18 @@ public class RestAPI implements I_API<Response> {
     /**
      * Makes a GET request to the API with optional query parameters.
      *
+     * @return The response body.
+     * @throws IOException   If an I/O error occurs.
+     * @throws APIException  If the API response is not successful.
+     */
+    @Override
+    public Response get() throws IOException, APIException {
+        return get(null);
+    }
+
+    /**
+     * Makes a GET request to the API with optional query parameters.
+     *
      * @param queryParams The query parameters.
      * @return The response body.
      * @throws IOException   If an I/O error occurs.
@@ -98,7 +110,7 @@ public class RestAPI implements I_API<Response> {
         HttpUrl httpUrl = HttpUrl.parse(getURL());
         if (httpUrl==null) return null;
         HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
-        buildUrlWithQueryParameters(urlBuilder, queryParams);
+        if (queryParams!=null) buildUrlWithQueryParameters(urlBuilder, queryParams);
 
         Request request = createRequestBuilder().url(urlBuilder.build()).get().build();
         return executeRequest(request);

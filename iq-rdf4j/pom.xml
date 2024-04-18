@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.2</version>
+        <version>0.76.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -23,7 +23,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>symbol.systems - Team: IQ</name>
+            <name>symbol.systems</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>
@@ -41,8 +41,8 @@
     </license></licenses>
 
     <scm>
-        <url>github.com/my-iq/iq-rdf4j.git</url>
-        <connection>scm:git:https://github.com/my-iq/iq-rdf4j.git</connection>
+        <url>github.com/symbol-systems/iq-rdf4j.git</url>
+        <connection>scm:git:https://github.com/symbol-systems/iq-rdf4j.git</connection>
   </scm>
 
     <properties>
@@ -174,7 +174,7 @@
     <dependencies>
        <dependency>
             <groupId>systems.symbol</groupId>
-            <artifactId>iq-strings</artifactId>
+            <artifactId>iq-utils</artifactId>
             <version>${project.version}</version>
         </dependency>
 

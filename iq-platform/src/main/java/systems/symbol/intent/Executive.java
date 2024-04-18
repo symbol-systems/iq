@@ -49,7 +49,7 @@ public class Executive extends AbstractIntent implements I_Intents {
     }
 
     public void memorize() {
-        add(new Knows(self, model));
+        add(new Learn(self, model));
         add(new Forget(self, model));
         log.info("memorize: {} -> {}", self, intents.keySet());
     }

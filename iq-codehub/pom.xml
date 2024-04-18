@@ -12,7 +12,7 @@
     <artifactId>iq-codehub</artifactId>
     <packaging>jar</packaging>
 
-    <name>systems.symbol - CodeHub</name>
+    <name>symbol.systems - CodeHub</name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -23,7 +23,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>systems.symbol - Team: IQ</name>
+            <name>symbol.systems</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>
@@ -42,7 +42,7 @@
     </licenses>
 
     <scm>
-        <url>github.com/my-iq/iq-skeleton.git</url>
+        <url>github.com/symbol-systems/iq-skeleton.git</url>
         <connection>scm:git:https://github.com/g-iq/iq-skeleton.git</connection>
     </scm>
 

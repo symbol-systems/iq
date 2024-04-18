@@ -13,7 +13,7 @@
     <version>0.76.0</version>
     <packaging>jar</packaging>
 
-    <name>systems.symbol - DAO / Ethereum</name>
+    <name>symbol.systems - DAO / Ethereum</name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -24,7 +24,7 @@
     <developers>
         <developer>
             <id>symbol.systems</id>
-            <name>systems.symbol - Team: IQ</name>
+            <name>symbol.systems</name>
             <email>JO@symbol.systems</email>
             <organization>symbol.systems</organization>
             <roles>

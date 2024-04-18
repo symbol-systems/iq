@@ -1,13 +1,17 @@
 package systems.symbol.agent;
 
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import systems.symbol.fsm.StateException;
-import systems.symbol.rdf4j.util.RDFPrefixer;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.Values;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
+import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
 
-import javax.script.Bindings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,7 @@ import java.util.List;
 public class IQFacade {
     private final Model model;
     private final IRI self;
+    I_Secrets secrets;
 
     /**
      * Constructs a new ScriptFacade with the provided RDF4J model and self identity,
@@ -25,9 +30,15 @@ public class IQFacade {
      * @param model The RDF4J model associated with the facade.
      * @param self  The self identity of the facade.
      */
-    public IQFacade(@NotNull IRI self, @NotNull Model model) throws StateException {
-        this.model = model;
+
+    public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) {
         this.self = self;
+        this.model = model;
+        this.secrets = secrets;
+    }
+
+    public RestAPI api(String url) throws SecretsException {
+        return secrets==null?new RestAPI(url):new RestAPI(url, secrets.getSecret(url));
     }
 
     /**
@@ -86,12 +97,5 @@ public class IQFacade {
             }
         }
         return literals;
-    }
-
-
-    public static Bindings rebind(IRI self, Model model, Bindings my) throws StateException {
-        Bindings bindings = MyFacade.rebind(self, my);
-        bindings.put(MyFacade.IQ, new IQFacade(self, model));
-        return bindings;
     }
 }
