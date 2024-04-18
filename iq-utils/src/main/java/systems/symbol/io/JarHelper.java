@@ -50,17 +50,15 @@ private static final Logger log = LoggerFactory.getLogger(JarHelper.class);
 	}
 
 	public static List<File> extract(File file, File dir) throws IOException {
-		File destDir = new File(file.getParentFile(), stripExtension(file.getName()) );
-		destDir.mkdirs();
-		return extract(new JarFile(file), destDir);
+		return extract(new JarFile(file), dir);
 	}
 
-	public static List<File> extract(JarFile jarFile, File destDir) throws IOException {
+	public static List<File> extract(JarFile jarFile, File targetFolder) throws IOException {
 		Enumeration<JarEntry> entries = jarFile.entries();
-		List<File> copied = new ArrayList();
+		List<File> copied = new ArrayList<>();
 		while (entries.hasMoreElements()) {
 			JarEntry entry = entries.nextElement();
-			File file = new File(destDir, entry.getName());
+			File file = new File(targetFolder, entry.getName());
 
 			if (entry.getName().startsWith("META-INF")) {
 				// do nothing

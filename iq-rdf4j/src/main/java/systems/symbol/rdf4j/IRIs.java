@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class IRIs extends HashSet<IRI> {
+private static final long serialVersionUID = 12312381388131L;
 
 public IRIs() {
 }

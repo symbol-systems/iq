@@ -71,6 +71,7 @@ public class Persona implements I_Persona {
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
 		if (!AudioSystem.isLineSupported(info)) {
+			recognizer.close();
 			System.out.println("Microphone not supported!");
 			return;
 		}

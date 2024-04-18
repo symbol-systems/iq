@@ -1,22 +1,9 @@
 package systems.symbol.rdf4j.sparql;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
+import com.github.jknack.handlebars.Handlebars;
 import org.eclipse.rdf4j.model.Namespace;
-import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.GraphQueryResult;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -24,7 +11,11 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jknack.handlebars.Handlebars;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
 
 public class SPARQLer {
 private static final Logger log = LoggerFactory.getLogger(SPARQLer.class);

@@ -294,7 +294,6 @@ return null;
 
 public Repository getCurrentRepository() {
 String id = properties.getProperty(ACTIVE_REPO_PROP, "default");
-Repository repository = null;
 try {
 return alwaysGetRepository(id);
 } catch (IOException e) {

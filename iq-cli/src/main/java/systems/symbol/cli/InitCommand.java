@@ -1,9 +1,7 @@
 package systems.symbol.cli;
 
-import systems.symbol.io.ImportExport;
-
-import systems.symbol.platform.Workspace;
 import picocli.CommandLine;
+import systems.symbol.io.ImportExport;
 
 import java.io.File;
 import java.io.IOException;

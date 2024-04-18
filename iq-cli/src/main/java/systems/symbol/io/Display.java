@@ -1,16 +1,15 @@
 package systems.symbol.io;
 
-import systems.symbol.rdf4j.NS;
-import systems.symbol.rdf4j.store.IQ;
 import org.eclipse.rdf4j.model.IRI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
+import systems.symbol.rdf4j.store.IQ;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Display {
 protected static final Logger log = LoggerFactory.getLogger(Display.class);
@@ -42,7 +41,6 @@ out.println();
 
 // Print rows
 for (Map<String, Object> model : models) {
-Object[] row = {};
 for (String field : fields) {
 Object value = model.get(field);
 out.printf(format, value != null ? value : "");

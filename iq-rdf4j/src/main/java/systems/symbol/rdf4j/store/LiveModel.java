@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class LiveModel extends AbstractModel {
+private static final long serialVersionUID = 82828188177746631L;
 RepositoryConnection connection;
 
 public LiveModel(RepositoryConnection connection) {

@@ -34,6 +34,7 @@ TripleSource tripleSource = memoryRDFSRepository.getTripleSource(true);
 assert loader.getSelf().toString().equals(COMMONS.IQ_NS_TEST);
 assert loader.getSince() == 0; // ignore last-modified
 
+@SuppressWarnings("deprecation")
 CloseableIteration<? extends Statement, QueryEvaluationException> statements = tripleSource.getStatements(null, RDF.TYPE, null);
 long count = statements.stream().count();
 assert count > 0;

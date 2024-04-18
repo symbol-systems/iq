@@ -1,11 +1,10 @@
 package systems.symbol.rdf4j.store;
 
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import systems.symbol.COMMONS;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,18 +21,15 @@ public void setUp() throws IOException {
 assets = new BootstrapRepository();
 ctx = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
 vf = assets.getValueFactory();
-//triples = assets.getTripleSource(true);
+
 iriTestCase = vf.createIRI(COMMONS.IQ_NS_TEST +"TestCase");
 iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all");
 iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index");
-try (RepositoryConnection connection = assets.getConnection()) {
-long count = connection.getStatements(null,null,null,ctx).stream().count();
-System.out.println("test.assets.loaded: "+count);
-}
 }
 
 @AfterMethod
 public void tearDown() {
+assets.shutDown();
 }
 
 }
