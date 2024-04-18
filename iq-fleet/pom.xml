@@ -25,7 +25,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <cloudevents.version>2.4.0</cloudevents.version>
-        <aws.sdk.version>2.25.32</aws.sdk.version>
 
 
         <skipITs>true</skipITs>
@@ -47,31 +46,6 @@
             <groupId>systems.symbol</groupId>
             <artifactId>iq-platform</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>bom</artifactId>
-            <version>${aws.sdk.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>polly</artifactId>
-            <version>${aws.sdk.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.umjammer</groupId>
-            <artifactId>jlayer</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alphacephei</groupId>
-            <artifactId>vosk</artifactId>
-            <version>0.3.45</version>
         </dependency>
 
 <!--        <dependency>-->
