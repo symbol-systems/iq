@@ -151,4 +151,5 @@ public class FactFinder extends TextFinder {
         log.info("search.found: {} -> {}", found.size(), model.size());
         return model;
     }
+
 }
