@@ -1,19 +1,8 @@
 package systems.symbol.ns;
-/*
- *  symbol.systems
- *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
- */
-
-import systems.symbol.util.Env;
-
 /**
  * symbol.systems (c) 2010-2013
- *
  * Define common namespaces for internal vocabularies
- *
- * 1st May 2014- Symbol Systems 
- *
+ * 1st May 2014- Symbol Systems
  */
 public interface COMMONS {
 

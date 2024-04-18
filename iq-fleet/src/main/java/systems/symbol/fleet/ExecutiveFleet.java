@@ -3,19 +3,16 @@ package systems.symbol.fleet;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.decide.ExecutiveDelegate;
-import systems.symbol.decide.I_Delegate;
 import systems.symbol.decide.I_Decide;
+import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.JSR233;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_Prompt;
 import systems.symbol.llm.I_Thread;
-import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.model.I_Self;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
@@ -75,17 +72,6 @@ log.info("retry: {} left", attempt );
 if (attempt>0) return delegate(agent, attempt-1);
 }
 return decision;
-}
-/**
- * Creates a new agent instance and assigns self as the manager.
- *
- * @param selfthe self IRI representing the agent
- * @param secrets the secrets manager for accessing agent secrets
- * @return the newly created agent
- * @throws StateException if there is an issue with the state machine
- */
-public I_Agent newAgent(IRI self, I_Secrets secrets) throws StateException {
-return new ExecutiveAgent(fleet, self, secrets, intents, this);
 }
 
 @Override

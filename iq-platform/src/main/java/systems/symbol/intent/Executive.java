@@ -49,7 +49,7 @@ memorize();
 }
 
 public void memorize() {
-add(new Knows(self, model));
+add(new Learn(self, model));
 add(new Forget(self, model));
 log.info("memorize: {} -> {}", self, intents.keySet());
 }

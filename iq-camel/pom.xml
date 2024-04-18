@@ -12,7 +12,7 @@
 <artifactId>iq-camel</artifactId>
 <packaging>jar</packaging>
 
-<name>systems.symbol - Camel</name>
+<name>symbol.systems - Camel</name>
 <url>https://symbol.systems</url>
 
 <organization>
@@ -23,7 +23,7 @@
 <developers>
 <developer>
 <id>symbol.systems</id>
-<name>systems.symbol - Team: IQ</name>
+<name>symbol.systems</name>
 <email>JO@symbol.systems</email>
 <organization>symbol.systems</organization>
 <roles>
@@ -42,8 +42,8 @@
 </licenses>
 
 <scm>
-<url>github.com/my-iq/iq-camel.git</url>
-<connection>scm:git:https://github.com/my-iq/iq-camel.git</connection>
+<url>github.com/symbol-systems/iq-camel.git</url>
+<connection>scm:git:https://github.com/symbol-systems/iq-camel.git</connection>
 </scm>
 
 <properties>

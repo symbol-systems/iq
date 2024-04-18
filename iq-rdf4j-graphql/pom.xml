@@ -12,7 +12,7 @@
 <artifactId>iq-rdf4j-graphql</artifactId>
 <packaging>jar</packaging>
 
-<name>systems.symbol - GraphQL</name>
+<name>symbol.systems - GraphQL</name>
 <url>https://symbol.systems</url>
 
 <organization>
@@ -23,7 +23,7 @@
 <developers>
 <developer>
 <id>symbol.systems</id>
-<name>systems.symbol - Team: IQ</name>
+<name>symbol.systems</name>
 <email>JO@symbol.systems</email>
 <organization>symbol.systems</organization>
 <roles>
@@ -42,8 +42,8 @@
 </licenses>
 
 <scm>
-<url>github.com/my-iq/iq-rdf4j-graphql.git</url>
-<connection>scm:git:https://github.com/my-iq/iq-rdf4j-graphql.git</connection>
+<url>github.com/symbol-systems/iq-rdf4j-graphql.git</url>
+<connection>scm:git:https://github.com/symbol-systems/iq-rdf4j-graphql.git</connection>
 </scm>
 
 <properties>

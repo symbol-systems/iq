@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 
 /*
- *  systems.symbol - Proprietary License2
+ *  symbol.systems2
  *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */

@@ -4,6 +4,7 @@ import okhttp3.*;
 import systems.symbol.secrets.APISecrets;
 import systems.symbol.secrets.SecretsException;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class MockAPI implements I_API<Response> {
@@ -61,6 +62,11 @@ return build(url, secret, 200, body).build();
 @Override
 public Response head(Map<String, String> queryParams) {
 return build(url, secret, 200, "").build();
+}
+
+@Override
+public Response get() throws IOException, APIException {
+return get(null);
 }
 
 @Override

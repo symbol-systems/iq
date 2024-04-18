@@ -20,7 +20,7 @@ var self: IRI = Values.iri(COMMONS.IQ_NS_TEST)
 @Throws(SecretsException::class, APIException::class, IOException::class)
 fun mockAPI() {
 val secrets = SimpleSecrets();
-val apis: APISecrets = object : APISecrets(self, secrets) {
+val apis: APISecrets = object : APISecrets(secrets) {
 @Throws(SecretsException::class)
 override fun getAPI(url: String): I_API<Response> {
 val secret = getSecret(url)

@@ -1,29 +1,25 @@
 package systems.symbol.secrets;
 
 import okhttp3.Response;
-import org.eclipse.rdf4j.model.IRI;
-import systems.symbol.agent.tools.I_API;
-import systems.symbol.agent.tools.RestAPI;
-import systems.symbol.secrets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.tools.I_API;
+import systems.symbol.agent.tools.RestAPI;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class APISecrets implements I_Secrets {
 private final Logger log = LoggerFactory.getLogger(getClass());
-IRI agent;
+//IRI agent;
 I_Secrets secrets;
 Map<String, String> grants = new HashMap<>(); // maps URL prefix to secrets
 
-public APISecrets(IRI agent) {
-this.agent = agent;
+public APISecrets() {
 this.secrets = new SimpleSecrets();
 }
 
-public APISecrets(IRI agent, I_Secrets secrets) {
-this.agent = agent;
+public APISecrets(I_Secrets secrets) {
 this.secrets = secrets;
 }
 

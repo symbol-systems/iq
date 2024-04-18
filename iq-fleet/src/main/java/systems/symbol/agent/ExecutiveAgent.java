@@ -4,12 +4,12 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.decide.I_Delegate;
 import systems.symbol.decide.I_Decide;
+import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Executive;
+import systems.symbol.intent.GovernedIntent;
 import systems.symbol.intent.I_Intent;
-import systems.symbol.secrets.I_Secrets;
 
 import javax.script.SimpleBindings;
 import java.util.Collection;
@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
-I_Secrets secrets;
+//I_Secrets secrets;
 I_Decide<Resource> manager;
 Set<Resource> seen = new HashSet<>();
 
@@ -29,13 +29,13 @@ Set<Resource> seen = new HashSet<>();
  * @param memo The working memory of the agent as an RDF4J Model.
  */
 
-public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent) throws StateException {
-this(memo, self, secrets, new Executive(self, memo, intent), null);
+public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent) throws StateException {
+this(self,memo, intent, null);
 }
 
-public ExecutiveAgent(@NotNull Model memo, IRI self, I_Secrets secrets, I_Intent intent, I_Decide<Resource> manager) throws StateException {
+public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager) throws StateException {
 super(self, memo, new Executive(self, memo, intent), new SimpleBindings());
-this.secrets = secrets;
+//this.secrets = secrets;
 this.manager = manager;
 }
 

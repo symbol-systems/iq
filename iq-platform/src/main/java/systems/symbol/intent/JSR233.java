@@ -1,16 +1,16 @@
 package systems.symbol.intent;
 
-import systems.symbol.agent.IQFacade;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.annotation.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.rdf4j.util.SupportedScripts;
+import systems.symbol.secrets.I_Secrets;
 
 import javax.script.*;
 import java.util.HashSet;
@@ -23,6 +23,7 @@ import java.util.Set;
 public class JSR233 extends AbstractIntent {
 
 ScriptEngineManager engineManager = new ScriptEngineManager();
+I_Secrets secrets;
 
 /**
  * Constructs a new JSR233 intent with the provided RDF4J model and self identity.
@@ -34,6 +35,16 @@ public JSR233(IRI self, Model model) {
 super(model, self);
 }
 
+/**
+ * Constructs a new JSR233 intent with the provided RDF4J model and self identity.
+ *
+ * @param model The RDF4J model associated with the intent.
+ * @param self  The self identity of the intent.
+ */
+public JSR233(IRI self, Model model, I_Secrets secrets) {
+super(model, self);
+this.secrets = secrets;
+}
 /**
  * Executes the JSR-233 script based on the provided actor and resource.
  *
@@ -73,7 +84,7 @@ ScriptEngine engine = engineManager.getEngineByMimeType(mime);
 if (engine == null) {
 return null;
 }
-engine.setBindings( IQFacade.rebind(actor, getModel(), my), ScriptContext.ENGINE_SCOPE);
+engine.setBindings( MyFacade.rebind(actor, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
 return engine.eval(script.stringValue());
 }
 }

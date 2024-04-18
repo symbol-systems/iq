@@ -65,10 +65,11 @@ iq:to :intents.
 
 :self
 rdfs:label "You can learn about yourself";
-rdf:value "You are healthy";
-iq:knows :Assistance;
-iq:knows :DataRetrieval;
-iq:knows :KnowledgeBase;
-iq:knows :NaturalLanguage;
+rdf:value "You are OK";
+iq:script <urn:iq:test:script/search>;
+iq:learn :Assistance;
+iq:learn :DataRetrieval;
+iq:learn :KnowledgeBase;
+iq:learn :NaturalLanguage;
 .
 
