@@ -2,6 +2,24 @@
 
 IQ is a platform designed for the development and deployment of intelligent agents with natural language processing (NLP) abilities. 
 
+### Technology Stack
+
+`IQ` follows a Java mono-repository structure managed through Maven.
+
+The `IQ` platform is built using Java, with the Quarkus framework serving as its primary foundation.
+
+Our project incorporates the amazing work of so many, including but not limited to:
+
+- **Java**: widespread, enterprise libraries, portability and integration.
+
+- **RDF4j**: A semantic data management for storing and querying RDF-based knowledge.
+
+- **Apache Camel**: A semantic data management for storing and querying RDF-based knowledge.
+
+- **LangChain4J**: Library to manage embeddings and vector search for multiple vendors.
+
+- **Quarkus**: Efficient and resource optimized runtime.
+
 ## Behavior and functionality of agents.
 
 #### `I_Agent` Interface
