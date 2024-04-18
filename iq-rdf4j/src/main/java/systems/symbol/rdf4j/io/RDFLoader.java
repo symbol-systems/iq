@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.ns.COMMONS;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;

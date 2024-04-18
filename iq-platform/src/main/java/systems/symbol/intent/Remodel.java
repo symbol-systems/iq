@@ -7,9 +7,9 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.agent.MyFacade;
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;
 import systems.symbol.render.HBSRenderer;
 

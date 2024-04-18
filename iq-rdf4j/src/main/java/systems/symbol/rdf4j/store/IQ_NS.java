@@ -2,7 +2,7 @@ package systems.symbol.rdf4j.store;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 
 public interface IQ_NS {

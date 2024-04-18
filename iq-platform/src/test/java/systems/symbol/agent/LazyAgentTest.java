@@ -2,7 +2,7 @@ package systems.symbol.agent;
 
 import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;

@@ -1,6 +1,6 @@
 package systems.symbol.lake.ingest;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;

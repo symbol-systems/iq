@@ -1,4 +1,4 @@
-package systems.symbol.annotation;
+package systems.symbol;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

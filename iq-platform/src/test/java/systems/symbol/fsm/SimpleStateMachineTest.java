@@ -4,9 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.junit.jupiter.api.Test;
-import systems.symbol.ns.COMMONS;
-
-import static org.junit.jupiter.api.Assertions.*;
+import systems.symbol.COMMONS;
 
 public class SimpleStateMachineTest {
 public static IRI ideation = Values.iri(COMMONS.IQ_NS_TEST,"ideation");

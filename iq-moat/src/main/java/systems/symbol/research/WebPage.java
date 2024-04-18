@@ -1,11 +1,11 @@
 package systems.symbol.research;
 
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.intent.AbstractIntent;
 import systems.symbol.lake.ContentEntity;
 import systems.symbol.lake.ingest.*;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;

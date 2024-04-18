@@ -3,9 +3,9 @@ package systems.symbol.intent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
 import java.io.IOException;

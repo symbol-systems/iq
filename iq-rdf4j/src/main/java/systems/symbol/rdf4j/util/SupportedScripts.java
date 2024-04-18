@@ -1,7 +1,7 @@
 package systems.symbol.rdf4j.util;
 
 import com.google.common.io.Files;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.io.AssetMimeTypes;
 import org.eclipse.rdf4j.model.IRI;
 

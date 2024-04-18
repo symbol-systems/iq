@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static systems.symbol.io.ImportExport.export;
-import static systems.symbol.ns.COMMONS.CODENAME;
+import static systems.symbol.COMMONS.CODENAME;
 
 @CommandLine.Command(name = "export", description = "Export knowledge from this " + CODENAME)
 public class ExportCommand extends AbstractCLICommand {

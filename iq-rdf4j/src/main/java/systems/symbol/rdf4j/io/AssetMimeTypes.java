@@ -1,7 +1,6 @@
 package systems.symbol.rdf4j.io;
 
-import systems.symbol.ns.COMMONS;
-import org.eclipse.rdf4j.model.IRI;
+import systems.symbol.COMMONS;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
 package systems.symbol.cli;
 
 import systems.symbol.model.I_Self;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.platform.Workspace;

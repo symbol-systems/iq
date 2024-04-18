@@ -8,9 +8,9 @@ import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Executive;
-import systems.symbol.intent.GovernedIntent;
 import systems.symbol.intent.I_Intent;
 
+import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,11 +30,11 @@ Set<Resource> seen = new HashSet<>();
  */
 
 public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent) throws StateException {
-this(self,memo, intent, null);
+this(self,memo, intent, null, new SimpleBindings());
 }
 
-public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager) throws StateException {
-super(self, memo, new Executive(self, memo, intent), new SimpleBindings());
+public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
+super(self, memo, new Executive(self, memo, intent), bindings);
 //this.secrets = secrets;
 this.manager = manager;
 }

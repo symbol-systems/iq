@@ -1,12 +1,12 @@
 package systems.symbol.agent;
 
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.RDFCollections;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
 import java.util.Collection;

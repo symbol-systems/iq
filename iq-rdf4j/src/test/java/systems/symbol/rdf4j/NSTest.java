@@ -1,6 +1,6 @@
 package systems.symbol.rdf4j;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.testng.annotations.Test;
 

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.util.Date;
 
-import static systems.symbol.ns.COMMONS.CODENAME;
+import static systems.symbol.COMMONS.CODENAME;
 
 @Singleton
 public class Platform implements I_Self {

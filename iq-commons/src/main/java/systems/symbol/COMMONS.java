@@ -1,6 +1,6 @@
-package systems.symbol.ns;
+package systems.symbol;
 /**
- * symbol.systems (c) 2010-2013
+ * symbol.systems (c) 2014-2024
  * Define common namespaces for internal vocabularies
  * 1st May 2014- Symbol Systems
  */

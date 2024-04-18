@@ -1,6 +1,6 @@
 package systems.symbol.intent;
 
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import org.eclipse.rdf4j.model.IRI;
 
 import java.util.HashSet;
@@ -9,10 +9,9 @@ import java.util.Set;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.model.I_Self;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
-import javax.script.SimpleBindings;
 
 public class NOP implements I_Intent, I_Self {
 static Set<IRI> nop = new HashSet<>();
