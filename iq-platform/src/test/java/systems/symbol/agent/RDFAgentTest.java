@@ -3,7 +3,7 @@ package systems.symbol.agent;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.IQConnection;

@@ -3,7 +3,7 @@ package systems.symbol.secrets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 import org.testng.annotations.Test;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-import static systems.symbol.ns.COMMONS.IQ_NS;
+import static systems.symbol.COMMONS.IQ_NS;
 
 /**
  * State machine (FSM) uses RDF4J Model for state representation.

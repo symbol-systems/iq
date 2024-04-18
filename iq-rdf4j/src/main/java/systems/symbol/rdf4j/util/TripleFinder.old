@@ -1,6 +1,6 @@
 package systems.symbol.rdf4j.util;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;

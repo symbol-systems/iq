@@ -5,7 +5,7 @@ import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_Thread;
 import systems.symbol.llm.openai.ChatGPT;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.platform.Platform;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.ScriptCatalog;

@@ -1,7 +1,7 @@
 package systems.symbol.agent;
 
 import systems.symbol.fsm.ModelStateMachine;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;

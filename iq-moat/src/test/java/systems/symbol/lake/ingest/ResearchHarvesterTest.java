@@ -1,22 +1,11 @@
 package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.crawl.VFS;
-import systems.symbol.lake.crawl.VFSCrawler;
-import systems.symbol.ns.COMMONS;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ResearchHarvesterTest {
 

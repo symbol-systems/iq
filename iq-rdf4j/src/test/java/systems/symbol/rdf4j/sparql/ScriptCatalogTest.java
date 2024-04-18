@@ -1,6 +1,6 @@
 package systems.symbol.rdf4j.sparql;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.store.LiveModel;

@@ -1,6 +1,6 @@
 package systems.symbol.rdf4j.io;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.store.MemoryRDFSRepository;
 import systems.symbol.string.PrettyString;
 import org.eclipse.rdf4j.common.iteration.CloseableIteration;

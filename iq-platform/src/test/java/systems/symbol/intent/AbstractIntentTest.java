@@ -1,6 +1,6 @@
 package systems.symbol.intent;
 
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import systems.symbol.rdf4j.store.BootstrapRepository;

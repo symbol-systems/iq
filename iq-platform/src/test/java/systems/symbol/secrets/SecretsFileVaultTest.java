@@ -3,16 +3,10 @@ package systems.symbol.secrets;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 import org.junit.jupiter.api.Test;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 class SecretsFileVaultTest {
     IRI self = Values.iri(COMMONS.IQ_NS_TEST);

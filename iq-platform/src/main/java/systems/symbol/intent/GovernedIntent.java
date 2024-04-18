@@ -1,12 +1,12 @@
 package systems.symbol.intent;
 
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.model.I_Self;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
 import java.util.Set;

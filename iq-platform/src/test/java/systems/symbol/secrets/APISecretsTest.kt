@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import systems.symbol.agent.tools.APIException
 import systems.symbol.agent.tools.I_API
 import systems.symbol.agent.tools.MockAPI
-import systems.symbol.ns.COMMONS
+import systems.symbol.COMMONS
 import java.io.IOException
 
 internal class APISecretsTest {

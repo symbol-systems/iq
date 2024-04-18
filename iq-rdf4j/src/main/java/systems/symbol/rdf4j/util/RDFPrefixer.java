@@ -1,7 +1,6 @@
 package systems.symbol.rdf4j.util;
 
-import org.jetbrains.annotations.NotNull;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Namespace;
@@ -12,7 +11,6 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Set;
 
 /**

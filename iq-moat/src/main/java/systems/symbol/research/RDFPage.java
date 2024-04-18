@@ -4,11 +4,11 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import systems.symbol.annotation.RDF;
+import systems.symbol.RDF;
 import systems.symbol.intent.AbstractIntent;
 import systems.symbol.lake.ContentEntity;
 import systems.symbol.lake.ingest.*;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
 import java.util.HashSet;

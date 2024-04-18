@@ -7,7 +7,7 @@ package systems.symbol.rdf4j.sparql;
 
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
-import systems.symbol.ns.COMMONS;
+import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.store.I_Contents;
