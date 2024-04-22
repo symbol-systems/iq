@@ -12,8 +12,8 @@ import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.io.FileFormats;
-import systems.symbol.rdf4j.store.I_Contents;
 import systems.symbol.render.HBSRenderer;
 
 import javax.script.Bindings;
@@ -27,16 +27,16 @@ import static systems.symbol.agent.MyFacade.INTENT;
 public class Remodel extends AbstractIntent {
 
     IRI templateMime;
-    I_Contents contents;
+    I_Self.I_Contents contents;
 
-    public Remodel(IRI self, Model model, I_Contents contents) {
-        super(model, self);
+    public Remodel(IRI self, Model model, I_Self.I_Contents contents) {
+        super(self, model);
         this.templateMime = null;
         this.contents = contents;
     }
 
-    protected Remodel(IRI self, Model model, IRI templateMime, I_Contents contents) {
-        super(model, self);
+    protected Remodel(IRI self, Model model, IRI templateMime, I_Self.I_Contents contents) {
+        super(self, model);
         this.templateMime = templateMime;
         this.contents = contents;
     }

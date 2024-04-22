@@ -1,5 +1,6 @@
 package systems.symbol.intent;
 
+import org.jetbrains.annotations.NotNull;
 import systems.symbol.fsm.StateException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -7,6 +8,7 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.platform.I_Bootstrap;
 
 import javax.script.Bindings;
 import java.util.Set;
@@ -14,7 +16,7 @@ import java.util.Set;
 /**
  * Abstract base class for intents.
  */
-public abstract class AbstractIntent implements I_Intent {
+public abstract class AbstractIntent implements I_Intent, I_Bootstrap {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected Model model;
     protected IRI self;
@@ -26,10 +28,10 @@ public abstract class AbstractIntent implements I_Intent {
      * @param self  The self identity of the intent.
      */
     protected AbstractIntent(Model model, IRI self) {
-        init(self, model);
+        boot(self, model);
     }
     protected AbstractIntent(IRI self, Model model) {
-        init(self, model);
+        boot(self, model);
     }
 
     /**
@@ -38,7 +40,7 @@ public abstract class AbstractIntent implements I_Intent {
      * @param model The RDF4J model associated with the intent.
      * @param self  The self identity of the intent.
      */
-    public void init(IRI self, Model model) {
+    public void boot(@NotNull IRI self, Model model) {
         this.self = self;
         this.model = model == null ? new DynamicModelFactory().createEmptyModel() : model;
     }

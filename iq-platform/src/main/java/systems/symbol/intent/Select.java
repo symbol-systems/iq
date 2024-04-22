@@ -33,8 +33,9 @@ public class Select implements I_Intent, I_Self {
      * Constructs a new SPARQL intent with the provided Connection and self identity.
      *
      * @param self  The self identity of the agent.
+     * @param conn  The RepositoryConnection of the agent.
      */
-    public Select(RepositoryConnection conn, IRI self) {
+    public Select(IRI self, RepositoryConnection conn) {
         this.iq = new IQConnection(self, conn);
         this.catalog = new IQScriptCatalog(iq);
 

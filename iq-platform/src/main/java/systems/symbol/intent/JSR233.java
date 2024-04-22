@@ -63,7 +63,7 @@ public class JSR233 extends AbstractIntent {
             done.add(actor);
 //            log.info("script.result: {} -> {}", state, result);
         } catch (ScriptException e) {
-            throw new RuntimeException(e);
+            throw new StateException(e.getMessage(), state, e);
         }
         return done;
     }

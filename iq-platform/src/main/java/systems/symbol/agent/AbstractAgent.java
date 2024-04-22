@@ -11,6 +11,7 @@ import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
+import systems.symbol.platform.I_Bootstrap;
 import systems.symbol.platform.I_Self;
 
 import javax.script.Bindings;
@@ -21,7 +22,7 @@ import java.util.Set;
  * The agent state is maintained by an RDF4J Model.
  * Skills are finite state machines which represent sets of next-best actions.
  */
-public abstract class AbstractAgent implements I_Agent, I_Self, I_Intent, I_StateListener<Resource> {
+public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_Intent, I_StateListener<Resource> {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected I_StateMachine<Resource> fsm;
     protected Model memo;
@@ -31,14 +32,14 @@ public abstract class AbstractAgent implements I_Agent, I_Self, I_Intent, I_Stat
      * Parameterized constructor allowing initialization with a pre-existing RDF4J model.
      * @param memo The RDF4J model to be associated with the agent.
      */
-    public AbstractAgent(@NotNull Model memo, IRI self) throws StateException {
-        this.self = self;
-        setMemo(memo);
+    public AbstractAgent(IRI self, @NotNull Model memo) throws StateException {
+        boot(self, memo);
     }
 
-    public AbstractAgent(IRI self, @NotNull Model memo) throws StateException {
+    @Override
+    public void boot(IRI self, Model model) throws StateException {
         this.self = self;
-        setMemo(memo);
+        setMemo(model);
     }
 
     /**
@@ -92,7 +93,7 @@ public abstract class AbstractAgent implements I_Agent, I_Self, I_Intent, I_Stat
             try {
                 return onTransition(from, to);
             } catch(Exception e) {
-                log.error("agent.learn.failed: {}", fsm, e);
+                log.error("agent.intent.failed: {}", fsm, e);
                 return false;
             }
         });

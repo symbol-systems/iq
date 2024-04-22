@@ -24,7 +24,7 @@ class LazyAgentTest {
     @Test
     void testFSM() throws StateException {
         Model model = dmf.createEmptyModel();
-        AbstractAgent agent = new LazyAgent(model, self);
+        AbstractAgent agent = new LazyAgent(self, model);
 
         ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
         assert LazyAgentTest.workflow_0.equals(workflow_0.getSelf());

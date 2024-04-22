@@ -1,4 +1,4 @@
-package systems.symbol.rdf4j.store;
+package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
@@ -15,4 +15,7 @@ public static final IRI hasCurrentState = Values.iri(COMMONS.IQ_NS, "state");
 
     public static final IRI doStart = Values.iri(COMMONS.IQ_NS, "start");
     public static final IRI doStop = Values.iri(COMMONS.IQ_NS, "stop");
+
+    public final static IRI KNOWS = Values.iri(COMMONS.IQ_NS, "knows");
+
 }

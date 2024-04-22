@@ -69,6 +69,5 @@ iq:knows rdfs:range rdf:Statement .
 :self
     rdfs:label "You can answer questions about yourself";
     iq:learn :Self;
-    iq:execute :search;
     iq:script <urn:iq:test:script/self>.
 
