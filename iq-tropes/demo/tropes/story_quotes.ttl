@@ -1,4 +1,4 @@
-@prefix : <https://symbol.systems/demo/tropes#story_quotes>.
+@prefix : <urn:iq:test:story_quotes>.
 
 # Canonical Ontology Definitions (e.g. W3C standards)
 

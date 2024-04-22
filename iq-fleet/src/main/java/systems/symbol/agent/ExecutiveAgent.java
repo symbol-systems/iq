@@ -51,11 +51,11 @@ public boolean onTransition(Resource from, Resource to) throws StateException {
 log.info("onTransition: {} -> {} --> {}", self, to, bindings);
 Set<IRI> executed = execute(getSelf(), to, bindings);
 Resource next = decide();
-log.info("onDecision: {} -> {} -> {}", executed, next, seen);
-if (next==null) return true;
-if (seen.contains(next)) return false;
-getStateMachine().transition(next);
+log.info("decided: {} <-> {} --> {}", next, seen, executed);
+if (next==null) return true; // don't veto, we can try again
+if (seen.contains(next)) return false; // veto
 seen.add(next);
+getStateMachine().transition(next);
 return true;
 }
 

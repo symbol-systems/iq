@@ -48,6 +48,7 @@ iq:to :remodel_search;
 .
 :remodel_search
 iq:remodel <urn:iq:test:remodel/brave_search>;
+iq:to :intents;
 .
 :select
 rdfs:label "You can SPARQL query your historic memory";

@@ -174,8 +174,8 @@ findAllFiles(home, file, true);
 		try {
 			if (this.forceDeployRDF || !exists(scriptIRI, type)) {
 				getConnection().add(inStream, scriptIRI.stringValue(), format, context);
-				typeof(scriptIRI, type);
-				if (VERBOSE) log.debug("deploy.rdf.done: "+format.getName()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
+				if (type!=null) getConnection().add(scriptIRI, RDF.TYPE, type, getSelf());
+				if (VERBOSE) log.debug("deploy.rdf.done: "+format.getStandardURI()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
 			}
 			else {
 				if (VERBOSE) log.debug("deploy.rdf.skip: <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
@@ -273,9 +273,6 @@ getConnection().commit();
 //		getConnection().add(iri, DCTERMS.HAS_FORMAT, type, getIdentity());
 //	}
 
-	private void typeof(IRI iri, IRI type) {
-		getConnection().add(iri, RDF.TYPE, type, getSelf());
-	}
 
 	private boolean exists(IRI iri, IRI type) {
 		return getConnection().hasStatement(iri, RDF.TYPE, type, false, getSelf());
