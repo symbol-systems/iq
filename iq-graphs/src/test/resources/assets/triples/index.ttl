@@ -16,7 +16,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :
-    dct:title "GG: Graphs";
+    dct:title "IQ:  Graphs";
 .
 
 :TestSuite

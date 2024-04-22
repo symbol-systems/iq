@@ -1,7 +1,6 @@
 package systems.symbol.intent;
 
 import systems.symbol.fsm.StateException;
-import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 
@@ -9,7 +8,7 @@ import javax.script.Bindings;
 import java.util.Set;
 
 /**
- * Interface for an intent within a symbolic system.
+ * Interface for an intent.
  * An intent is a contextual request to execute an action that may have side effects.
  */
 public interface I_Intent {

@@ -11,7 +11,7 @@ import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
-public class AgentAspects {
+public class LLMAgents {
     static String ENV_OPENAI_API_KEY = "OPENAI_API_KEY";
     static String ENV_GROQ_API_KEY = "GROQ_API_KEY";
 

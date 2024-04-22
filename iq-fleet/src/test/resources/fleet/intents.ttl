@@ -8,12 +8,14 @@
 @prefix : <urn:iq:test:>.
 
 :   a iq:Agent;
-    rdf:value "You an AI researcher. How do you feel ?.";
+    rdf:value "You an AI researcher. ";
     iq:initial :intents.
 
 :intents
     rdf:value "You can only use the following intents.";
+    iq:prompt "{{my.prompt}}";
     iq:to :search;
+    iq:to :ask;
     iq:to :find;
     iq:to :select;
     iq:to :remodel;
@@ -21,7 +23,6 @@
     iq:to :script;
     iq:to :webpage;
     iq:to :rdf;
-    iq:to :execute;
     iq:to :self;
 .
 
@@ -32,17 +33,22 @@ iq:to rdfs:range iq:State.
 iq:knows rdfs:range rdf:Statement .
 #iq:find rdfs:range rdf:JSON  .
 
+:ask
+    rdfs:label "You can ask the user for more information";
+.
 :find
     rdfs:label "You can find in your knowledge base";
-    iq:find "{{my.prompt}}".
+.
 :search
     rdfs:label "You can search the web ";
-    iq:search "{{my.prompt}}".
-:serp
-    rdfs:label "You can search the web";
-    iq:search :.
+    iq:script <urn:iq:test:script/brave_search>;
+    iq:to :remodel_search;
+.
+:remodel_search
+    iq:remodel <urn:iq:test:remodel/brave_search>;
+.
 :select
-    rdfs:label "You can SPARQL query your own state of mind";
+    rdfs:label "You can SPARQL query your historic memory";
     iq:select "{{my.prompt}}".
 :remodel
     rdfs:label "You can transform data into knowledge";
@@ -52,24 +58,17 @@ iq:knows rdfs:range rdf:Statement .
     iq:prompt "{{my.prompt}}".
 :script
     rdfs:label "You can run scripts using Groovy and Javascript";
-    iq:script <urn:iq:test:scripts/hello>.
+    iq:script <urn:iq:test:script/hello>.
 :webpage
     rdfs:label "You can visit a webpage vis URL";
     iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 :rdf
     rdfs:label "You can de-reference an RDF via URL";
     iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
-:execute
-    iq:execute :self;
-    iq:to :intents.
 
 :self
-    rdfs:label "You can learn about yourself";
-    rdf:value "You are OK";
-    iq:script <urn:iq:test:script/search>;
-    iq:learn :Assistance;
-    iq:learn :DataRetrieval;
-    iq:learn :KnowledgeBase;
-    iq:learn :NaturalLanguage;
-.
+    rdfs:label "You can answer questions about yourself";
+    iq:learn :Self;
+    iq:execute :search;
+    iq:script <urn:iq:test:script/self>.
 

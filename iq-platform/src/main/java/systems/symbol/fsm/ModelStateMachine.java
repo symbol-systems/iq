@@ -1,9 +1,9 @@
 package systems.symbol.fsm;
 
-import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import systems.symbol.platform.I_Self;
 
 import java.util.Collection;
 import java.util.HashSet;

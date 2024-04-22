@@ -1,13 +1,17 @@
 package systems.symbol.rdf4j;
 
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.*;
+import systems.symbol.COMMONS;
+import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.util.URLHelper;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import systems.symbol.util.URLHelper;
 
 public class NS implements COMMONS {
     public static String KEY_AT_ID = "@id", KEY_AT_THIS = "@this";
@@ -112,5 +116,34 @@ public class NS implements COMMONS {
 
     public String getBaseNS() {
         return baseNS;
+    }
+
+    public static IRI toIRI(Model model, IRI self, String k) {
+        int ix = k.indexOf(":");
+        // local name ?
+        if (ix < 0) {
+            return hashedIRI(self, k);
+        }
+        // de-ref qname
+        Namespace p = model.getNamespace(k.substring(0, ix)).orElse(null);
+        if (p != null) {
+            return Values.iri(p.getName() + k.substring(ix + 1));
+        }
+        // allow descendants
+        if (k.startsWith(self.stringValue())) return Values.iri(k);
+        // ignore other IRIs
+        return null;
+    }
+
+    private static IRI hashedIRI(IRI self, String k) {
+        if (self == null || k == null) return null;
+        String s = self.stringValue();
+        char charAt = s.charAt(s.length() - 1);
+        if (charAt == '#' || charAt == ':' || charAt == '/') return Values.iri(s + k);
+        return Values.iri(s + "#" + k);
+    }
+
+    public static IRI toIRI(Model model, String k) {
+        return toIRI(model, null, k);
     }
 }

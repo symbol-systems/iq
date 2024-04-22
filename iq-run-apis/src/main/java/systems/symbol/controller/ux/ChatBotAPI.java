@@ -4,7 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.agent.LLMAgent;
 import systems.symbol.agent.tools.APIException;
-import systems.symbol.aspects.AgentAspects;
+import systems.symbol.aspects.LLMAgents;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_Thread;
@@ -38,7 +38,7 @@ public class ChatBotAPI extends GuardedAPI {
 
         try (RepositoryConnection connection = platform.getWorkspace().getCurrentRepository().getConnection()) {
             Model model = new LiveModel(connection);
-            LLMAgent bot = AgentAspects.openai(Values.iri(jwt.getSubject()), model, platform.getSecrets(), 1000);
+            LLMAgent bot = LLMAgents.openai(Values.iri(jwt.getSubject()), model, platform.getSecrets(), 1000);
             if (!bot.isOnline()) {
                 return new OopsResponse("api.chat.#bot-offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
             }

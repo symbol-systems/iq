@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -21,7 +21,7 @@ public class RDFLoader {
 	private static final Logger log = LoggerFactory.getLogger(RDFLoader.class);
     RepositoryConnection conn;
     ValueFactory vf;
-    public IRI self, mimeType, contentPredicate;
+    public IRI self, contentPredicate;
 
     public RDFLoader(RepositoryConnection conn) {
         connect(conn);
@@ -41,7 +41,7 @@ public class RDFLoader {
     void connect(RepositoryConnection conn) {
         this.conn = conn;
     	this.vf = conn.getValueFactory();
-		contentPredicate = ScriptCatalog.HAS_CONTENT;
+		contentPredicate = IQScriptCatalog.HAS_CONTENT;
     }
 
 	public IRI createIRI(String s) {

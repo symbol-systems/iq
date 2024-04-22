@@ -2,17 +2,13 @@ package systems.symbol.fleet;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.Executive;
 import systems.symbol.intent.I_Intents;
-import systems.symbol.intent.JSR233;
-import systems.symbol.model.I_Self;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.store.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
 
@@ -22,9 +18,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents a fleet of agents capable of executing intents within a symbolic system.
+ * Represents a fleet of agents capable of executing intents.
  */
-public class AgenticFleet implements I_Fleet, I_Self {
+public abstract class AgenticFleet implements I_Fleet, I_Self {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Agent> agents = new HashMap<>();
     IRI self;
@@ -38,14 +34,12 @@ public class AgenticFleet implements I_Fleet, I_Self {
      * @param self    the self IRI representing this fleet
      * @param fleet   the RDF model representing the fleet
      * @param secrets the secrets manager for accessing agent secrets
-     * @throws StateException if there is an issue with the state machine
      */
-    public AgenticFleet(IRI self, Model fleet, I_Secrets secrets) throws StateException {
+    public AgenticFleet(IRI self, Model fleet, I_Intents intents, I_Secrets secrets) {
         this.self = self;
         this.fleet = fleet;
         this.secrets = secrets;
-        this.intents = new Executive(self, fleet);
-        this.intents.add( new JSR233(self, fleet, secrets) );
+        this.intents = intents;
     }
 
     /**
@@ -71,9 +65,7 @@ public class AgenticFleet implements I_Fleet, I_Self {
      * @return the newly created agent
      * @throws StateException if there is an issue with the state machine
      */
-    public I_Agent newAgent(IRI self) throws StateException {
-        return new ExecutiveAgent(self, fleet, intents);
-    }
+    public abstract I_Agent newAgent(IRI self) throws StateException;
 
     /**
      * Retrieves the agent with the given IRI.
@@ -104,6 +96,7 @@ public class AgenticFleet implements I_Fleet, I_Self {
     public void start() throws Exception {
         if (agents.isEmpty()) deploy();
         Set<IRI> iris = agents.keySet();
+        log.info("fleet.start: {}", iris);
         for (IRI agent : iris) {
             start(agent);
         }
@@ -125,30 +118,26 @@ public class AgenticFleet implements I_Fleet, I_Self {
      * Starts the agent with the given IRI.
      *
      * @param self the IRI of the agent to start
-     * @return the started agent
      * @throws Exception if there is an issue starting the agent
      */
     @Override
-    public I_Agent start(IRI self) throws Exception {
+    public void start(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent == null) return null;
+        if (agent == null) return;
         agent.start();
-        return agent;
     }
 
     /**
      * Stops the agent with the given IRI.
      *
      * @param self the IRI of the agent to stop
-     * @return the state of the agent after stopping
      * @throws Exception if there is an issue stopping the agent
      */
     @Override
-    public Resource stop(IRI self) throws Exception {
+    public void stop(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent == null) return null;
+        if (agent == null) return ;
         agent.stop();
-        return agent.getStateMachine().getState();
     }
 
     /**

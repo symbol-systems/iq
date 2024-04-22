@@ -1,8 +1,8 @@
 package systems.symbol.lake;
 
-import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
+import systems.symbol.platform.I_Self;
 
 public class ContentEntity<T> implements I_Self {
     IRI self;

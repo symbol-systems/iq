@@ -8,7 +8,7 @@ import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.COMMONS;
 import systems.symbol.platform.Platform;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.render.HBSRenderer;
 
 import jakarta.ws.rs.core.Response;
@@ -55,7 +55,7 @@ public class LLMSkillBuilder<T> extends AbstractSkillBuilder {
     public QuerySkill build() throws SkillException {
         // Lookup LLM task prompt in the platform repository
         IQConnection iq = new IQConnection(platform.getSelf(), connection);
-        ScriptCatalog library = new ScriptCatalog(iq);
+        IQScriptCatalog library = new IQScriptCatalog(iq);
         IRI promptIRI = iq.toIRI(this.promptPath + ".txt");
         IRI mimeIRI = iq.toIRI(COMMONS.MIME_PLAIN);
         Literal taskPrompt = library.getContent(promptIRI, mimeIRI);

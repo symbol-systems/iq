@@ -11,12 +11,12 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.testng.annotations.Test;
 
 
-public class ScriptCatalogTest extends AbstractTripleTest {
+public class IQScriptCatalogTest extends AbstractTripleTest {
 
     @Test
     public void testGetSPARQLWithIRIFromConnection() {
         try (RepositoryConnection connection = assets.getConnection()) {
-            ScriptCatalog library = new ScriptCatalog(new IQConnection(COMMONS.IQ_NS_TEST, connection));
+            IQScriptCatalog library = new IQScriptCatalog(new IQConnection(COMMONS.IQ_NS_TEST, connection));
             String sparql = library.getSPARQL(iriSparqlQuery);
             assert sparql !=null && !sparql.isEmpty();
             assert sparql.contains("SELECT ");
@@ -28,7 +28,7 @@ public class ScriptCatalogTest extends AbstractTripleTest {
         try (RepositoryConnection connection = assets.getConnection()) {
             LiveModel liveModel = new LiveModel(connection);
             RDFDump.dump(liveModel, System.out, RDFFormat.TURTLE);
-            Literal sparql = ScriptCatalog.findScript(liveModel, iriSparqlQuery, vf.createIRI("urn:"+COMMONS.MIME_SPARQL), null);
+            Literal sparql = IQScripts.findScript(liveModel, iriSparqlQuery, vf.createIRI("urn:"+COMMONS.MIME_SPARQL), null);
             assert sparql !=null && !sparql.stringValue().isEmpty();
             assert sparql.stringValue().contains("SELECT ");
         }

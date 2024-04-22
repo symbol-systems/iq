@@ -1,9 +1,5 @@
 package systems.symbol.secrets;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +10,7 @@ import java.util.Map;
  */
 public class SimpleSecrets implements I_Secrets, Serializable {
     private static final long serialVersionUID = 2462762779494608930L;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+//    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Map<String, String> secretStore = new HashMap<>();
 

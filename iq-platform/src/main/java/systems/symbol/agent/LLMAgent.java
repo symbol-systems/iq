@@ -1,19 +1,22 @@
 package systems.symbol.agent;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
-import systems.symbol.llm.I_Prompt;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
+import systems.symbol.llm.I_Prompt;
 import systems.symbol.llm.I_Thread;
+import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.util.RDFHelper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.eclipse.rdf4j.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import systems.symbol.rdf4j.util.RDFPrefixer;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -61,8 +64,8 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
         return prompt(new ChatThread(), message);
     }
 
-        @Override
-    public I_Thread<String> prompt(ChatThread thread, String prompt) throws APIException, IOException, StateException {
+    @Override
+    public I_Thread<String> prompt(I_Thread<String> thread, String prompt) throws APIException, IOException, StateException {
         Literal systemPrompt = RDFHelper.label(getMemo(), getSelf());
         log.info("prompt.system: {} -> {}", getSelf(), systemPrompt);
         assert systemPrompt != null;
@@ -106,7 +109,7 @@ public class LLMAgent implements I_Agent, I_Prompt<String> {
             String action = (String) reply.get("action");
             log.info("prompt.action: {} --> {} @ {}", reply, action, fsm.getState());
             if (action != null) {
-                IRI intent = RDFPrefixer.toIRI(getMemo(), getSelf(), action);
+                IRI intent = NS.toIRI(getMemo(), getSelf(), action);
                 if ( intent != null) fsm.transition(intent);
                 log.info("prompt.intent: {} === {}", intent, fsm.getState());
             }

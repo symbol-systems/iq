@@ -12,6 +12,5 @@ public interface I_LLMessage<T> {
 
     MessageType getType();
     RoleType getRole();
-    String getName();
     T getContent();
 }

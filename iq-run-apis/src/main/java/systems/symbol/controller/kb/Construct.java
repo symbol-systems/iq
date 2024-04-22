@@ -10,7 +10,7 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.string.Validate;
 
 import java.net.URISyntaxException;
@@ -56,7 +56,7 @@ public class Construct extends GuardedAPI {
         try (RepositoryConnection connection = repository.getConnection()) {
 
             IQConnection iq = new IQConnection(platform.getSelf(), connection);
-            ScriptCatalog catalog = new ScriptCatalog(iq);
+            IQScriptCatalog catalog = new IQScriptCatalog(iq);
             String sparql = catalog.getSPARQL(query);
 
             log.info("construct: {} -> {} --> {}", repo, query, sparql);

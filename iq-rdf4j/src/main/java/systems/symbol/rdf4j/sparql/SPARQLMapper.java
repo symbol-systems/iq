@@ -98,8 +98,7 @@ public class SPARQLMapper {
         String query = queries.get(iri);
         log.debug("iq.sparql.find: {} -> {}", iri, query!=null);
         if (query != null) return query;
-        String script = ScriptCatalog.getSPARQL(iq.getConnection(), iri, iq.getSelf());
-        return script;
+        return IQScripts.getSPARQL(iq.getConnection(), iri, iq.getSelf());
     }
 
     public List<Map<String,Object>> models(IRI queryIRI) {

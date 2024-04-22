@@ -15,8 +15,8 @@ public class ChatThread implements I_Thread<String> {
 
     public ChatThread() {}
 
-    public ChatThread(I_LLMessage<String> msg) {
-        add(msg);
+    public ChatThread(I_Thread<String> thread) {
+        messages.addAll(thread.messages());
     }
 
     public ChatThread add(I_LLMessage<String> msg) {
@@ -34,22 +34,22 @@ public class ChatThread implements I_Thread<String> {
         return messages.isEmpty()?null:messages.get(messages.size()-1);
     }
 
-    public ChatThread add(String name, String role, String content) {
+    public I_Thread<String> add(String role, String content) {
         if (content==null) return this;
-        this.messages.add(new TextMessage(name, role, content));
+        this.messages.add(new TextMessage(role, content));
         return this;
     }
 
-    public ChatThread system(String content) {
-        return add("default", "system", content);
+    public void system(String content) {
+        add("system", content);
     }
 
-    public ChatThread user(String content) {
-        return add("default", "user", content);
+    public void user(String content) {
+        add("user", content);
     }
 
-    public ChatThread ai(String content) {
-        return add("default", "assistant", content);
+    public void assistant(String content) {
+        add("assistant", content);
     }
 
     public String toString() {

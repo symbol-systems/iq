@@ -4,27 +4,24 @@ package systems.symbol.rdf4j.io;
  *  Licence: https://systems.symbol/about/license
  */
 
-import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.io.StreamCopy;
-import systems.symbol.model.I_Self;
-import systems.symbol.rdf4j.store.IQ;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
-import systems.symbol.rdf4j.util.RDFPrefixer;
-import systems.symbol.rdf4j.util.SupportedScripts;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.rio.ParserConfig;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.eclipse.rdf4j.rio.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.io.StreamCopy;
+import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.util.Stopwatch;
 
 import java.io.*;
@@ -34,12 +31,9 @@ import java.util.Date;
 import java.util.Map;
 public class BootstrapLoader implements I_Self {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    public boolean DEBUG = true;
+    public boolean VERBOSE = false;
 	private ValueFactory vf = null;
 	private RepositoryConnection connection = null;
-	private final Extension2RDFFormat extension2format = new Extension2RDFFormat();
-    private SupportedScripts supportedScripts;
-//	private final IRI contentPredicate = ScriptCatalog.HAS_CONTENT;
 	private IRI context = null;
 	private long since = 0L;
 	private boolean deployRDF = true, forceDeployRDF = true, deployAssets = true;
@@ -73,16 +67,16 @@ public class BootstrapLoader implements I_Self {
     	assert connection!=null;
     	this.context = context;
 
-    	supportedScripts  = new SupportedScripts();
-		supportedScripts.supportSPARQL();
-		log.info("scripts: " + supportedScripts.getTypes());
+//    	supportedScripts  = new SupportedScripts();
+//		supportedScripts.supportSPARQL();
+//		log.info("scripts: " + supportedScripts.getTypes());
 
     	vf = connection.getValueFactory();
 
 		setConnection(connection);
 		ParserConfig parserConfig = new ParserConfig();// new ParserConfig(false, true, false, RDFParser.DatatypeHandling.NORMALIZE)
 		connection.setParserConfig(parserConfig);
-		log.info("scripts: " + supportedScripts.getTypes());
+//		log.info("scripts: " + supportedScripts.getTypes());
     }
 
 	public void clean()  {
@@ -108,7 +102,7 @@ public class BootstrapLoader implements I_Self {
 	protected void findAllFiles(File home, File dir, boolean recurse) throws IOException {
 		File[] files = dir.listFiles();
 		if(files==null) throw new IOException("Directory listing failed: "+dir.getAbsolutePath());
-		if (DEBUG) log.debug("deploy.scan: "+dir.getAbsolutePath() + ", files: " + files.length);
+		if (VERBOSE) log.debug("deploy.scan: "+dir.getAbsolutePath() + ", files: " + files.length);
 
 		// files first
         for (File file : files) {
@@ -130,13 +124,13 @@ public class BootstrapLoader implements I_Self {
 
 	private void deployFile(File home, File file) throws IOException {
 		if (!isChanged(file)) {
-			if (DEBUG) log.debug("not-modified: "+file.getAbsolutePath());
+			if (VERBOSE) log.debug("not-modified: "+file.getAbsolutePath());
 			return;
 		}
 		String name = file.getName();
-		RDFFormat format = extension2format.getFormat(name);
-		IRI mimeType = FileFormats.toMime(name);
-		if (mimeType==null && format == null) {
+		RDFFormat format = Rio.getWriterFormatForFileName(name).orElse(null);
+		IRI mediatype = FileFormats.toMime(name);
+		if ( mediatype==null && format == null) {
 			log.warn("deploy.skipped: {}", file.getAbsoluteFile());
 			return;
 		}
@@ -145,21 +139,21 @@ public class BootstrapLoader implements I_Self {
 		if (iri==null) return;
 
 		if (name.contains(".$.")) {
-			mimeType = mimeType==null? Values.iri("urn:"+format.getDefaultMIMEType()) : mimeType;
+			mediatype = mediatype==null? Values.iri("urn:"+format.getDefaultMIMEType()) : mediatype;
 			iri = Values.iri( iri.stringValue().substring(0, iri.stringValue().length()-2));
 			format = null;
 		}
 
-		log.info("deploy.file: {} @ {} -> {} ", mimeType==null?format:mimeType, iri, file.length());
+		log.info("deploy.file: {} @ {} -> {} ", mediatype==null?format:mediatype, iri, file.length());
 
 		FileInputStream inStream = new FileInputStream(file);
-		deploy(iri, inStream, mimeType, format);
+		deploy(iri, inStream, mediatype, format);
 		label(iri, name);
 		inStream.close();
 	}
 
 	public void deploy(IRI localPath, InputStream inStream, IRI mime, RDFFormat format) throws IOException {
-		if (DEBUG) log.debug("deploy.mime: {} ->  {} ({},{})", localPath, format==null?mime:format, deployRDF, deployAssets);
+		if (VERBOSE) log.debug("deploy.mime: {} ->  {} ({},{})", localPath, format==null?mime:format, deployRDF, deployAssets);
 
 		total_files++;
 		if (deployRDF && format!=null) {
@@ -181,10 +175,10 @@ public class BootstrapLoader implements I_Self {
 			if (this.forceDeployRDF || !exists(scriptIRI, type)) {
 				getConnection().add(inStream, scriptIRI.stringValue(), format, context);
 				typeof(scriptIRI, type);
-				if (DEBUG) log.debug("deploy.rdf.done: "+format.getName()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
+				if (VERBOSE) log.debug("deploy.rdf.done: "+format.getName()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
 			}
 			else {
-				if (DEBUG) log.debug("deploy.rdf.skip: <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
+				if (VERBOSE) log.debug("deploy.rdf.skip: <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
 			}
 		} catch(RDFParseException e) {
 			total_errors++;
@@ -289,8 +283,8 @@ public class BootstrapLoader implements I_Self {
 	
 	private void content(IRI scriptIRI, Literal scriptBody) {
 		// idempotent
-		getConnection().remove(scriptIRI, ScriptCatalog.HAS_CONTENT, null, getSelf());
-		getConnection().add( scriptIRI, ScriptCatalog.HAS_CONTENT, scriptBody, getSelf());
+		getConnection().remove(scriptIRI, IQScriptCatalog.HAS_CONTENT, null, getSelf());
+		getConnection().add( scriptIRI, IQScriptCatalog.HAS_CONTENT, scriptBody, getSelf());
 	}
 
 	public void close() {

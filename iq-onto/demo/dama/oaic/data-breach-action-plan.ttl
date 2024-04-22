@@ -25,7 +25,7 @@
 @prefix dama: <https://symbol.systems/v0/onto/dama#>.
 @prefix fab: <https://symbol.systems/v0/onto/fab#>.
 @prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
-@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix IQ:  <https://symbol.systems/v0/onto/gg#>.
 @prefix iq-test: <https://test.symbol.systems/cases#>.
 
 # Model Definitions
@@ -33,14 +33,14 @@
     a skos:ConceptScheme;
     a frames:ActionPlan;
     dct:title "Data Breach Action Plan"@en;
-    skos:hasTopConcept gg:Example;
+    skos:hasTopConcept IQ: Example;
     rdfs:seeAlso <https://www.oaic.gov.au/privacy/guidance-and-advice/data-breach-action-plan-for-health-service-providers/>
 .
 :ACTIONS
     a skos:ConceptScheme;
     a frames:ActionPlan;
     dct:title "Data Breach Action Plan"@en;
-    skos:hasTopConcept gg:Example;
+    skos:hasTopConcept IQ: Example;
 .
 
 :ACTION_1
@@ -81,7 +81,7 @@
     a skos:ConceptScheme;
     a frames:ActionPlan;
     dct:title "Data Breach Action Plan"@en;
-    skos:hasTopConcept gg:Example;
+    skos:hasTopConcept IQ: Example;
 .
 
 :STEP_1

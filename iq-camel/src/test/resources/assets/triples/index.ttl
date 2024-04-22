@@ -16,7 +16,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :
-    skos:prefLabel "GG: RDF4J";
+    skos:prefLabel "IQ:  RDF4J";
 .
 
 :TestSuite

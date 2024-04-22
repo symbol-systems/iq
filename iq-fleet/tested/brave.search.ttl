@@ -1,0 +1,271 @@
+
+<urn:iq:test:> <urn:iq:knows> <urn:iq:test:#76348b9d-7517-4e65-9b52-fcfbad202b11> .
+
+<urn:iq:test:#76348b9d-7517-4e65-9b52-fcfbad202b11> <http://schema.org/hasPart> <https://en.wikipedia.org/wiki/OpenAI>,
+    <https://www.reddit.com/t/openai>, <https://www.facebook.com/openai.research>, <https://www.youtube.com/@OpenAI>,
+    <https://twitter.com/OpenAI>, <https://www.linkedin.com/company/openai/>, <https://play.google.com/store/apps/developer?id&#x3D;OpenAI>,
+    <https://github.com/openai>, <https://www.quora.com/topic/OpenAI>, <https://apps.apple.com/developer/id1684349733>,
+    <https://www.youtube.com/watch?v&#x3D;N8ndanLAFhQ>, <https://www.youtube.com/watch?v&#x3D;amHuMKryXho>,
+    <https://www.youtube.com/watch?v&#x3D;eyaipaOEdsA>, <https://www.youtube.com/watch?v&#x3D;4gfqo-hQIlk>,
+    <https://www.youtube.com/watch?v&#x3D;jsMHY-29wDw>, <https://www.youtube.com/watch?v&#x3D;DgVZK3FGqW0>,
+    <https://openai.com/about/>, <https://www.tealhq.com/company/openai>, <https://news.ycombinator.com/item?id&#x3D;34370925>,
+    <https://www.techtarget.com/searchenterpriseai/definition/OpenAI>, <https://blog.gregbrockman.com/the-openai-mission>,
+    <https://openai.smapply.org/>, <https://www.nasdaq.com/articles/what-is-openais-q:-a-revolutionary-ai-tool-or-global-menace>,
+    <https://www.jobsage.com/companies/about/openai>, <https://openai.com/blog/introducing-openai>,
+    <https://www.youtube.com/@OpenAI/about>, <https://www.wired.com/story/openai-boardroom-drama-sam-altman-could-mess-up-your-future/>,
+    <https://openai.com/blog/openai-elon-musk>, <https://twitter.com/search?q&#x3D;openai+mission>,
+    <https://openai.com/our-structure>, <https://www.theverge.com/2024/3/1/24087473/elon-musk-openai-lawsuit-nonprofit-mission>,
+    <https://digiday.com/media/ai-briefing-elon-musk-and-sam-altman-battle-over-openais-mission/>,
+    <https://www.reuters.com/legal/elon-musk-sues-openai-ceo-sam-altman-breach-contract-2024-03-01/>,
+    <https://openai.com/blog/openai-announces-leadership-transition> .
+
+<https://en.wikipedia.org/wiki/OpenAI> a <http://schema.org/WebPage>, <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://openai.com/>, <https://en.wikipedia.org/wiki/OpenAI>;
+  <http://schema.org/name> "OpenAI - American artificial intelligence research organization",
+    "OpenAI", "OpenAI - Wikipedia";
+  <http://schema.org/description> "OpenAI is a U.S.-based artificial intelligence (AI) research organization founded in December 2015, researching artificial intelligence with the goal of developing &quot;safe and beneficial&quot; artificial general intelligence, which it defines as &quot;highly autonomous systems that outperform humans at ...",
+    "OpenAI [en.wikipedia.org]", "[According to an investigation led by TechCrunch, Musk was its largest donor while YC Research did not contribute anything at all. The organization stated it would &quot;freely collaborate&quot; with other institutions and researchers by making its patents and research open to the public. OpenAI is headquartered at the Pioneer Building in Mission District, San Francisco., OpenAI is headquartered at the Pioneer Building in Mission District, San Francisco. According to Wired, Brockman met with Yoshua Bengio, one of the &quot;founding fathers&quot; of deep learning, and drew up a list of the &quot;best researchers in the field&quot;. Brockman was able to hire nine of them as the first employees in December 2015. In 2016, OpenAI paid corporate-level (rather than nonprofit-level) salaries, but did not pay AI researchers salaries comparable to those of Facebook or Google., It is currently available for red teams for managing critical harms and risks. On February 29, 2024, OpenAI and CEO Sam Altman were sued by Elon Musk, who accused them of prioritizing profits over public good, contrary to OpenAI&#x27;s original mission of developing AI for humanity&#x27;s benefit., OpenAI&#x27;s potential and mission drew these researchers to the firm; a Google employee said he was willing to leave Google for OpenAI &quot;partly because of the very strong group of people and, to a very large extent, because of its mission.&quot; Brockman stated that &quot;the best thing that I could imagine doing was moving humanity closer to building real AI in a safe way.&quot; OpenAI co-founder Wojciech Zaremba stated that he turned down &quot;borderline crazy&quot; offers of two to three times his market value to join OpenAI instead., On February 29, 2024, OpenAI and CEO Sam Altman were sued by Elon Musk, who accused them of prioritizing profits over public good, contrary to OpenAI&#x27;s original mission of developing AI for humanity&#x27;s benefit. The lawsuit cited OpenAI&#x27;s policy shift after partnering with Microsoft, questioning its open-source commitment and stirring the AI ethics-vs.-profit debate.]";
+  <http://schema.org/datePublished> "", "2024-04-18T23:41:34";
+  <http://schema.org/thumbnailUrl> "", "https://upload.wikimedia.org/wikipedia/commons/3/33/Pioneer_Building%2C_San_Francisco_%282019%29_-1.jpg";
+  <urn:iq:score> "0.7189302"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://www.reddit.com/t/openai> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://www.reddit.com/t/openai>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [reddit.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "";
+  <urn:iq:score> "0.61173004"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://www.facebook.com/openai.research> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://www.facebook.com/openai.research>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [facebook.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/@OpenAI> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://www.youtube.com/@OpenAI>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [youtube.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://twitter.com/OpenAI> a <http://schema.org/ProfilePage>, <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://twitter.com/OpenAI>;
+  <http://schema.org/name> "OpenAI", "OpenAI (@OpenAI) · X";
+  <http://schema.org/description> "OpenAI [twitter.com]", "";
+  <http://schema.org/datePublished> "", "2023-07-23T14:00:05";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.linkedin.com/company/openai/> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://www.linkedin.com/company/openai/>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [linkedin.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://play.google.com/store/apps/developer?id&#x3D;OpenAI> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://play.google.com/store/apps/developer?id&#x3D;OpenAI>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [play.google.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://github.com/openai> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://github.com/openai>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [github.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.quora.com/topic/OpenAI> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://www.quora.com/topic/OpenAI>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [quora.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://apps.apple.com/developer/id1684349733> a <http://schema.org/ProfilePage>;
+  <http://schema.org/url> <https://apps.apple.com/developer/id1684349733>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/description> "OpenAI [apps.apple.com]";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;N8ndanLAFhQ> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;N8ndanLAFhQ>;
+  <http://schema.org/name> "Musk Sues OpenAI, Altman for Breaching Founding Mission - YouTube";
+  <http://schema.org/datePublished> "2024-03-01T19:13:28";
+  <http://schema.org/description> "Elon Musk sued OpenAI and its CEO Sam Altman, alleging they violated the artificial intelligence startup’s founding mission by putting profit ahead of benefi...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;amHuMKryXho> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;amHuMKryXho>;
+  <http://schema.org/name> "Musk: OpenAI has abandoned its mission of AI for humanity | World ...";
+  <http://schema.org/datePublished> "2024-03-02T06:51:00";
+  <http://schema.org/description> "Billionaire entrepreneur Elon Musk has sued ChatGPT-maker OpenAI and its CEO, Sam Altman. Musk argues that the company has abandoned its original mission to ...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;eyaipaOEdsA> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;eyaipaOEdsA>;
+  <http://schema.org/name> "Elon Musk sues OpenAI, saying it abandoned its mission to serve ...";
+  <http://schema.org/datePublished> "2024-03-01T20:44:41";
+  <http://schema.org/description> "Elon Musk has sued ChatGPT-maker OpenAI and its CEO, Sam Altman, saying they abandoned the startup&#x27;s original mission to develop artificial intelligence for ...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;4gfqo-hQIlk> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;4gfqo-hQIlk>;
+  <http://schema.org/name> "Elon Musk&#x27;s &quot;Hilariously Bad&quot; Lawsuit against OpenAI - YouTube";
+  <http://schema.org/datePublished> "2024-03-18T17:00:03";
+  <http://schema.org/description> "Elon Musk and OpenAI are battling it out. Now on the one side of this issue, you have Elon Musk who is claiming that OpenAI has violated the core tenants of ...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;jsMHY-29wDw> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;jsMHY-29wDw>;
+  <http://schema.org/name> "Elon Sues OpenAI: Truth About Nonprofit Mission Allegations - YouTube";
+  <http://schema.org/datePublished> "2024-03-06T13:30:30";
+  <http://schema.org/description> "Nonprofitnewsfeed.com The Clash Over Nonprofit Promises and Silicon Valley Profits (Musk vs. OpenAI)Elon Musk is suing OpenAI, alleging it has strayed from i...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.youtube.com/watch?v&#x3D;DgVZK3FGqW0> a <http://schema.org/VideoObject>;
+  <http://schema.org/url> <https://www.youtube.com/watch?v&#x3D;DgVZK3FGqW0>;
+  <http://schema.org/name> "Microsoft + Sam: 2025&#x27;s AGI Speculation - YouTube";
+  <http://schema.org/datePublished> "2023-11-20T16:48:27";
+  <http://schema.org/description> "🚀 Dive into our speculative exploration of Microsoft&#x27;s ambitious journey to achieve Artificial General Intelligence (AGI) by 2025. Join us as we analyze the...";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://openai.com/about/> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.com/about/>;
+  <http://schema.org/name> "About";
+  <http://schema.org/datePublished> "2023-06-28T00:00:00";
+  <http://schema.org/description> "[OpenAI is an AI research and deployment company. Our mission is to ensure that artificial general intelligence benefits all of humanity. Our mission is to ensure that artificial general intelligence—AI systems that are generally smarter than humans—benefits all of humanity., Our mission is to ensure that artificial general intelligence—AI systems that are generally smarter than humans—benefits all of humanity. ... We are building safe and beneficial AGI, but will also consider our mission fulfilled if our work aids others to achieve this outcome.]";
+  <http://schema.org/thumbnailUrl> "https://images.openai.com/blob/1a9c00bc-8f3a-4601-b901-1f1e0c3c0984/stangel-2022-0527.jpg?trim&#x3D;522%2C0%2C201%2C0&amp;width&#x3D;1000&amp;quality&#x3D;80";
+  <urn:iq:score> "0.73757076"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://www.tealhq.com/company/openai> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.tealhq.com/company/openai>;
+  <http://schema.org/name> "OpenAI Mission, Values, Culture &amp; Jobs";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "[OpenAI&#x27;s core mission is centered around advancing artificial general intelligence (AGI) in a manner that benefits all of humanity. The organization is dedicated to ensuring that AGI&#x27;s deployment aligns with the best interests of society, while avoiding uses that could harm humanity or concentrate power. By fostering a cooperative global community, OpenAI aims to create a positive impact on a wide range of AI applications, ultimately driving research and innovation that contributes to the greater good., The research organization is dedicated to advancing artificial intelligence in a safe and beneficial manner. OpenAI&#x27;s core mission is centered around advancing artificial general intelligence (AGI) in a manner that benefits all of humanity. The organization is dedicated to ensuring that AGI&#x27;s deployment aligns with the best interests of society, while avoiding uses that could harm humanity or concentrate power., Learn about OpenAI&#x27;s company culture, core values, latest hiring news, and evaluate if it&#x27;s a potential fit for your next workplace., OpenAI is an AI research and deployment company that conducts research and implements machine learning. ... OpenAI is an AI research and deployment company that conducts research and implements machine learning. The research organization is dedicated to advancing artificial intelligence in a safe and beneficial manner.]";
+  <http://schema.org/thumbnailUrl> "";
+  <urn:iq:score> "0.6743473"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://news.ycombinator.com/item?id&#x3D;34370925> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://news.ycombinator.com/item?id&#x3D;34370925>;
+  <http://schema.org/name> "Remember OpenAI&#x27;s original mission statement? &gt; OpenAI is a non-profit artificia... | Hacker News";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.techtarget.com/searchenterpriseai/definition/OpenAI> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.techtarget.com/searchenterpriseai/definition/OpenAI>;
+  <http://schema.org/name> "What is OpenAI? Definition and History from TechTarget";
+  <http://schema.org/datePublished> "2023-03-21T19:00:04";
+  <http://schema.org/description> "[OpenAI has also faced criticism surrounding lack of diversity on its board of directors. Critics noted the board’s lack of representation isn&#x27;t in line with the company’s mission to “benefit all of humanity.” Following the firing and rehiring of Sam Altman in November 2023, OpenAI ousted its only two female board members and reinstated a board made up exclusively white men., Critics noted the board’s lack of representation isn&#x27;t in line with the company’s mission to “benefit all of humanity.” Following the firing and rehiring of Sam Altman in November 2023, OpenAI ousted its only two female board members and reinstated a board made up exclusively white men. Lawmakers in Washington also recommended that OpenAI diversify its board following the restructuring. OpenAI has not provided extensive public commentary on future plans, but based on recent investments, democratization of AI is a clear goal of the Microsoft-OpenAI partnership, as nontechnical professionals should soon have more AI tools at their disposal that do not require AI expertise., Learn about the history of OpenAI and how its product releases over time, from GPT-3 to ChatGPT, seek to revolutionize the field of AI., OpenAI is a private research laboratory that aims to develop and direct artificial intelligence (AI) in ways that benefit humanity as a whole. The company was founded by Elon Musk, Sam Altman and others in 2015 and is headquartered in San Francisco.]";
+  <http://schema.org/thumbnailUrl> "https://cdn.ttgtmedia.com/rms/amp/AMPdefaultImage.jpg" .
+
+<https://blog.gregbrockman.com/the-openai-mission> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://blog.gregbrockman.com/the-openai-mission>;
+  <http://schema.org/name> "The OpenAI Mission • Greg Brockman";
+  <http://schema.org/datePublished> "2019-11-03T00:00:00";
+  <http://schema.org/description> "[We’ve been working on OpenAI for the past three years. Our mission is to ensure that artificial general intelligence (AGI) — which we define as automated systems that outperform humans at most economically valuable work — benefits all of humanity. Today we announced a new legal structure for OpenAI, called OpenAI LP, to better pursue this mission — in particular to raise more capital as we attempt to build safe AGI and distribute its benefits., This post is co-written by Greg Brockman (left) and Ilya Sutskever (right). We’ve been working on OpenAI for the past three years. Our mission is to ensure that artificial general intelligence (AGI) — which we define as automated systems that outperform humans at most economically valuable work — benefits all of humanity., And because it’s hard to change powerful systems — just think about how hard it’s been to add security to the Internet — once they’ve been deployed, we think it’s important to address AGI’s safety and policy risks before it is created. OpenAI’s mission is to figure out how to get the benefits of AGI and mitigate the risks — and make sure those benefits accrue to all of humanity., Today we announced a new legal structure for OpenAI, called OpenAI LP, to better pursue this mission — in particular to raise more capital as we attempt to build safe AGI and distribute its benefits. In this post, we’d like to help others understand how we think about this mission.]";
+  <http://schema.org/thumbnailUrl> "https://svbtleusercontent.com/frkic5ULHq9GogeZiZnVAP0xspap.jpg" .
+
+<https://openai.smapply.org/> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.smapply.org/>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/datePublished> "2023-05-25T18:45:04";
+  <http://schema.org/description> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://www.nasdaq.com/articles/what-is-openais-q:-a-revolutionary-ai-tool-or-global-menace>
+  a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.nasdaq.com/articles/what-is-openais-q:-a-revolutionary-ai-tool-or-global-menace>;
+  <http://schema.org/name> "What Is OpenAI&#x27;s Q*: A Revolutionary AI Tool Or Global Menace? | Nasdaq";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "[Building safe and beneficial AGI is our mission.” · AGI’s critics were less concerned about existential threats to humankind, but more worried about the solving of “human-level problems,” and what impact that might have on issues such as jobs, privacy and cybersecurity. Writing in Forbes, Nisha Talagala, entrepreneur and technologist in AI and AI literacy, said: “If nothing else, this week&#x27;s drama at OpenAI shows how little we know about the technology development that is so fundamental to humanity&#x27;s future — and how unstructured our global conversation on the topic is.”, Before his sacking as CEO of OpenAI last week — and reinstatement this week — could Sam Altman have been working on an artificial intelligence system so powerful it might threaten the safety of humankind?It sounds like a horror story worthy of Skynet ..., Our team is working diligently to resolve the issue. Thank you for your patience and understanding. ... Before his sacking as CEO of OpenAI last week — and reinstatement this week — could Sam Altman have been working on an artificial intelligence system so powerful it might threaten the safety of humankind?, This was refuted last week by several of OpenAI’s board members, and Emmett Shear — interim CEO during Altman’s brief removal — wrote this week the board “did not remove Sam over any specific disagreement on safety.” · Nevertheless — for many — where there’s smoke there’s fire. So what is Q*, and what triggered the speculation behind these safety issues?]";
+  <http://schema.org/thumbnailUrl> "https://www.nasdaq.com/sites/acquia.prod/files/2019-05/0902-Q19%20Total%20Markets%20photos%20and%20gif_CC8.jpg" .
+
+<https://www.jobsage.com/companies/about/openai> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.jobsage.com/companies/about/openai>;
+  <http://schema.org/name> "About OpenAI - Benefits, Mission Statement, &amp; Photos | JobSage";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "[Our mission is to ensure that artificial general intelligence benefits all of humanity. OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. AI is an extremely powerful tool that must be created with safety and human needs at its core., OpenAI is dedicated to putting that alignment of interests first — ahead of profit. To achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. Our investment in diversity, equity, and inclusion is ongoing, executed through a wide range of initiatives, and championed and supported by leadership., To achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum of humanity. Our investment in diversity, equity, and inclusion is ongoing, executed through a wide range of initiatives, and championed and supported by leadership. At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared., All about working at OpenAI - read the OpenAI mission statement, learn about their values, see employee benefits, office photos, and more.]";
+  <http://schema.org/thumbnailUrl> "https://dxtww98cr0lum.cloudfront.net/uploads/8479/images/openai-thumb-645f5fb520c66.jfif";
+  <urn:iq:score> "0.6443266"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://openai.com/blog/introducing-openai> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.com/blog/introducing-openai>;
+  <http://schema.org/name> "Introducing OpenAI";
+  <http://schema.org/datePublished> "2015-12-11T00:00:00";
+  <http://schema.org/description> "[OpenAI is a non-profit artificial intelligence research company. Our goal is to advance digital intelligence in the way that is most likely to benefit humanity as a whole, unconstrained by a need to generate financial return. Since our research is free from financial obligations, we can better focus on a positive human impact., We’re hoping to grow OpenAI into such an institution. As a non-profit, our aim is to build value for everyone rather than shareholders. Researchers will be strongly encouraged to publish their work, whether as papers, blog posts, or code, and our patents (if any) will be shared with the world., OpenAI’s research director is Ilya Sutskever, one of the world experts in machine learning. Our CTO is Greg Brockman, formerly the CTO of Stripe. The group’s other founding members are world-class research engineers and scientists: Trevor Blackwell, Vicki Cheung, Andrej Karpathy, Durk Kingma, John Schulman, Pamela Vagata, and Wojciech Zaremba., Our CTO is Greg Brockman, formerly the CTO of Stripe. The group’s other founding members are world-class research engineers and scientists: Trevor Blackwell, Vicki Cheung, Andrej Karpathy, Durk Kingma, John Schulman, Pamela Vagata, and Wojciech Zaremba. Pieter Abbeel, Yoshua Bengio, Alan Kay, Sergey Levine, and Vishal Sikka are advisors to the group. OpenAI’s co-chairs are Sam Altman and Elon Musk.]";
+  <http://schema.org/thumbnailUrl> "https://images.openai.com/blob/f50c5b2c-8838-4905-9f7a-e4bd269e007b/introducing-openai.png?trim&#x3D;448%2C0%2C448%2C0&amp;width&#x3D;1000&amp;quality&#x3D;80" .
+
+<https://www.youtube.com/@OpenAI/about> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.youtube.com/@OpenAI/about>;
+  <http://schema.org/name> "OpenAI";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "[OpenAI’s mission is to ensure that artificial general intelligence benefits all of humanity.Learn more: https://openai.com]";
+  <http://schema.org/thumbnailUrl> "https://yt3.googleusercontent.com/UqT_vCkJIn1P2fH1pchr6lbe3xeEekY61h4bUpJkVuityqKOEtUYcNy3pLiJ5OKdj4uKA81FWE8&#x3D;s900-c-k-c0x00ffffff-no-rj";
+  <urn:iq:score> "0.7433846"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<https://www.wired.com/story/openai-boardroom-drama-sam-altman-could-mess-up-your-future/>
+  a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.wired.com/story/openai-boardroom-drama-sam-altman-could-mess-up-your-future/>;
+  <http://schema.org/name> "OpenAI’s Boardroom Drama Could Mess Up Your Future | WIRED";
+  <http://schema.org/datePublished> "2023-11-26T01:40:02";
+  <http://schema.org/description> "[The profit delivered to investors was to be capped—for the first backers at 100 times what they put in—after which OpenAI would revert to a pure nonprofit. The whole shebang was governed by the original nonprofit’s board, which answered only to the goals of the original mission and maybe God. This is an edition of Steven Levy&#x27;s Plaintext newsletter., Elon Musk’s Transparency Isn’t ... For a tense day, the board called the bluff of the massed employees, virtually daring OpenAI’s workforce to stream out the door and join Altman at Microsoft. According to the letter, the directors told OpenAI leaders that allowing the company to be destroyed “would be consistent with the mission.” (The New York Times later attributed those words to Helen Toner.), OpenAI’s board ejected Sam Altman in an apparent attempt to preserve the company mission of keeping AI development safe. The ensuing drama, even after Altman’s return, did not inspire confidence. ... In June I had a conversation with chief scientist Ilya Sutskever at OpenAI’s headquarters, as I reported WIRED’s October cover story., Among the topics we discussed was the unusual structure of the company. OpenAI began as a nonprofit research lab whose mission was to develop artificial intelligence on par or beyond human level—termed artificial general intelligence or AGI—in a safe way.]";
+  <http://schema.org/thumbnailUrl> "https://media.wired.com/photos/655d5d8eefcaa0e7dd4ba28d/16:9/w_2400,h_1350,c_limit/Sam-Altman-Firing-OpenAI-Chaos-Plaintext-Business-1258549750.jpg" .
+
+<https://openai.com/blog/openai-elon-musk> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.com/blog/openai-elon-musk>;
+  <http://schema.org/name> "OpenAI and Elon Musk";
+  <http://schema.org/datePublished> "2024-03-05T00:00:00";
+  <http://schema.org/description> "[The mission of OpenAI is to ensure AGI benefits all of humanity, which means both building safe and beneficial AGI and helping create broadly distributed benefits. We are now sharing what we&#x27;ve learned about achieving our mission, and some facts about our relationship with Elon. Update March 27, 2024: We have filed papers seeking dismissal of all of Elon&#x27;s claims. Elon said we should announce an initial $1B funding commitment to OpenAI., We couldn’t agree to terms on a for-profit with Elon because we felt it was against the mission for any individual to have absolute control over OpenAI. He then suggested instead merging OpenAI into Tesla. In early February 2018, Elon forwarded us an email suggesting that OpenAI should “attach to Tesla as its cash cow”, commenting that it was “exactly right… Tesla is the only path that could even hope to hold a candle to Google., For example, Albania is using OpenAI’s tools to accelerate its EU accession by as much as 5.5 years; Digital Green is helping boost farmer income in Kenya and India by dropping the cost of agricultural extension services 100x by building on OpenAI; Lifespan, the largest healthcare provider in Rhode Island, uses GPT-4 to simplify its surgical consent forms from a college reading level to a 6th grade one; Iceland is using GPT-4 to preserve the Icelandic language. Elon understood the mission did not imply open-sourcing AGI. As Ilya told Elon: “As we get closer to building AI, it will make sense to start being less open. The Open in openAI means that everyone should benefit from the fruits of AI after its built, but it&#x27;s totally OK to not share the science...”, to which Elon replied: “Yup”. [4], We are dedicated to the OpenAI mission and have pursued it every step of the way.]";
+  <http://schema.org/thumbnailUrl> "https://images.openai.com/blob/d1a9e364-550d-42d7-b228-28e4612e20e9/facebook.png?trim&#x3D;0%2C0%2C0%2C0&amp;width&#x3D;1000&amp;quality&#x3D;80" .
+
+<https://twitter.com/search?q&#x3D;openai+mission> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://twitter.com/search?q&#x3D;openai+mission>;
+  <http://schema.org/name> "openai mission on X";
+  <http://schema.org/datePublished> "";
+  <http://schema.org/description> "";
+  <http://schema.org/thumbnailUrl> "" .
+
+<https://openai.com/our-structure> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.com/our-structure>;
+  <http://schema.org/name> "Our structure";
+  <http://schema.org/datePublished> "2023-06-28T00:00:00";
+  <http://schema.org/description> "[We designed OpenAI’s structure—a partnership between our original Nonprofit and a new capped profit arm—as a chassis for OpenAI’s mission: to build artificial general intelligence (AGI) that is safe and benefits all of humanity. ... We announced our “capped profit” structure in 2019, about three years after founding the original OpenAI Nonprofit., In that way, the Nonprofit would remain central to our structure and control the development of AGI, and the for-profit would be tasked with marshaling the resources to achieve this while remaining duty-bound to pursue OpenAI’s core mission. The primacy of the mission above all is encoded in the operating agreement of the for-profit, which every investor and employee is subject to:, So we devised a structure to preserve our Nonprofit’s core mission, governance, and oversight while enabling us to raise the capital for our mission: The OpenAI Nonprofit would remain intact, with its board continuing as the overall governing body for all OpenAI activities. A new for-profit subsidiary would be formed, capable of issuing equity to raise capital and hire world class talent, but still at the direction of the Nonprofit., The OpenAI Nonprofit would remain intact, with its board continuing as the overall governing body for all OpenAI activities. A new for-profit subsidiary would be formed, capable of issuing equity to raise capital and hire world class talent, but still at the direction of the Nonprofit. Employees working on for-profit initiatives were transitioned over to the new subsidiary. The for-profit would be legally bound to pursue the Nonprofit’s mission, and carry out that mission by engaging in research, development, commercialization and other core operations.]";
+  <http://schema.org/thumbnailUrl> "https://images.openai.com/blob/bcf7d895-033c-42c9-8d82-44f9183fca18/our-structure.png?trim&#x3D;0%2C0%2C0%2C0&amp;width&#x3D;1000&amp;quality&#x3D;80" .
+
+<https://www.theverge.com/2024/3/1/24087473/elon-musk-openai-lawsuit-nonprofit-mission>
+  a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.theverge.com/2024/3/1/24087473/elon-musk-openai-lawsuit-nonprofit-mission>;
+  <http://schema.org/name> "Elon Musk sues OpenAI for abandoning its mission to benefit humanity - The Verge";
+  <http://schema.org/datePublished> "2024-03-01T14:44:11";
+  <http://schema.org/description> "[Elon Musk is suing OpenAI and its CEO, Sam Altman, over claims that the pursuit of profit has led the company to abandon its founding mission to develop artificial intelligence technology that will benefit humanity. In a lawsuit filed with a San Francisco court on Thursday, Musk alleges that OpenAI’s partnership with Microsoft has transformed the organization “into a closed-source de facto subsidiary” of Microsoft that’s focused on maximizing profits., These violations include keeping the design of OpenAI’s GPT-4 model a “complete secret,” with the suit claiming this decision was “primarily driven by commercial considerations, not safety” and that the GPT-4 model is now “a de facto Microsoft proprietary algorithm.” OpenAI declined to comment on the suit. Elon Musk and top AI researchers call for pause on ‘giant AI experiments’ ... The lawsuit seeks to force OpenAI to adhere to its founding agreement and “return to its mission to develop AGI for the benefit of humanity,” rather than benefiting Altman, Brockman, and Microsoft — “the largest technology company in the world.”, The lawsuit seeks to force OpenAI to adhere to its founding agreement and “return to its mission to develop AGI for the benefit of humanity,” rather than benefiting Altman, Brockman, and Microsoft — “the largest technology company in the world.” · Musk has been critical of the risks that AI advancement could have on society prior to co-founding OpenAI, calling for safeguards to be put in place to prevent such systems from being used to replace humans., Elon Musk is suing OpenAI over claims the company is using its AI products, including GPT-4, for profit rather than for the “benefit of humanity.”]";
+  <http://schema.org/thumbnailUrl> "https://cdn.vox-cdn.com/thumbor/X7egakzg0I3A6Xw_JSXOicrdGLE&#x3D;/0x0:2040x1360/1400x788/filters:focal(1020x680:1021x681)/cdn.vox-cdn.com/uploads/chorus_asset/file/24090221/STK171_VRG_Illo_11_Normand_ElonMusk_11.jpg" .
+
+<https://digiday.com/media/ai-briefing-elon-musk-and-sam-altman-battle-over-openais-mission/>
+  a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://digiday.com/media/ai-briefing-elon-musk-and-sam-altman-battle-over-openais-mission/>;
+  <http://schema.org/name> "AI Briefing: Elon Musk and Sam Altman battle over OpenAI&#x27;s mission - Digiday";
+  <http://schema.org/datePublished> "2024-03-04T05:45:04";
+  <http://schema.org/description> "[A day later, OpenAI and Altman were named in a lawsuit filed by Elon Musk, who alleges Altman and co-founder Greg Brockman violated the contract they made with Musk when the three co-founded the nonprofit nearly a decade ago. According to the complaint, OpenAI has abandoned its nonprofit mission by pursuing business deals that might betray researching AI for the public good., Legal pressure on AI companies illustrates the myriad challenges for companies that want to use or build generative AI tools., Regulators also continued putting pressure on OpenAI and other generative AI firms. For example, the FTC recently launched a new inquiry into the relations between tech giants and the AI startups they’ve invested in. The deals are also under scrutiny in Europe including a new investment by the European Union, which is looking into Microsoft’s recent investment in Mistral AI., The deals are also under scrutiny in Europe including a new investment by the European Union, which is looking into Microsoft’s recent investment in Mistral AI. Meanwhile, the UK’s Competition Markets Authority announced in December that the watchdog was looking into whether Microsoft’s investment in OpenAI impacts competition.]";
+  <http://schema.org/thumbnailUrl> "https://digiday.com/wp-content/uploads/sites/3/2017/05/iStock-520166808.jpg" .
+
+<https://www.reuters.com/legal/elon-musk-sues-openai-ceo-sam-altman-breach-contract-2024-03-01/>
+  a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://www.reuters.com/legal/elon-musk-sues-openai-ceo-sam-altman-breach-contract-2024-03-01/>;
+  <http://schema.org/name> "Elon Musk sues OpenAI for abandoning original mission for profit | Reuters";
+  <http://schema.org/datePublished> "2024-03-06T01:45:02";
+  <http://schema.org/description> "[March 1 (Reuters) - Billionaire entrepreneur Elon Musk has sued ChatGPT-maker OpenAI and its CEO, Sam Altman, saying they abandoned the startup&#x27;s original mission to develop artificial intelligence for the benefit of humanity and not for profit. The lawsuit filed late on Thursday in California Superior Court in San Francisco is a culmination of Musk&#x27;s long-simmering opposition to the startup he co-founded. OpenAI has since become the face of generative AI, partly due to billions of dollars in funding from Microsoft (MSFT.O), opens new tab., OpenAI&#x27;s tie-up with Microsoft is under antitrust scrutiny in the U.S. and Britain following a boardroom battle last year that resulted in the sudden ouster and return of Altman and creation of a new temporary board., OpenAI has since become the face of generative AI, partly due to billions of dollars in funding from Microsoft (MSFT.O), opens new tab. Musk went on to found his own artificial intelligence startup, xAI, launched last July. Musk&#x27;s lawsuit alleges a breach of contract, saying Altman and co-founder Greg Brockman originally approached him to make an open source, non-profit company, but the startup established in 2015 is now focused on making money., Musk&#x27;s lawsuit alleges a breach of contract, saying Altman and co-founder Greg Brockman originally approached him to make an open source, non-profit company, but the startup established in 2015 is now focused on making money. Musk said OpenAI&#x27;s three founders originally agreed to work on artificial general intelligence (AGI), a concept that machines could handle tasks like a human, but in a way that would &quot;benefit humanity,&quot; according to the lawsuit.]";
+  <http://schema.org/thumbnailUrl> "https://www.reuters.com/resizer/v2/QOOEM7KDEJO27F7B3KEE7FAYQU.jpg?auth&#x3D;3ad021b3132c6d221dc633fb7c72abf87bc04234ab85b25109f29b502d38e3be&amp;height&#x3D;1005&amp;width&#x3D;1920&amp;quality&#x3D;80&amp;smart&#x3D;true" .
+
+<https://openai.com/blog/openai-announces-leadership-transition> a <http://schema.org/WebPage>;
+  <http://schema.org/url> <https://openai.com/blog/openai-announces-leadership-transition>;
+  <http://schema.org/name> "OpenAI announces leadership transition";
+  <http://schema.org/datePublished> "2023-11-17T00:00:00";
+  <http://schema.org/description> "[The board remains fully committed to serving this mission. We are grateful for Sam’s many contributions to the founding and growth of OpenAI. At the same time, we believe new leadership is necessary as we move forward. As the leader of the company’s research, product, and safety functions, Mira is exceptionally qualified to step into the role of interim CEO., In 2019, OpenAI restructured to ensure that the company could raise capital in pursuit of this mission, while preserving the nonprofit&#x27;s mission, governance, and oversight. The majority of the board is independent, and the independent directors do not hold equity in OpenAI., The majority of the board is independent, and the independent directors do not hold equity in OpenAI. While the company has experienced dramatic growth, it remains the fundamental governance responsibility of the board to advance OpenAI’s mission and preserve the principles of its Charter., Chief technology officer Mira Murati appointed interim CEO to lead OpenAI; Sam Altman departs the company. Search process underway to identify permanent successor.]";
+  <http://schema.org/thumbnailUrl> "https://images.openai.com/blob/9eb94b23-a383-4771-884f-cc1d88e296bd/brand-guidelines.png?trim&#x3D;0%2C0%2C0%2C0&amp;width&#x3D;1000&amp;quality&#x3D;80" .

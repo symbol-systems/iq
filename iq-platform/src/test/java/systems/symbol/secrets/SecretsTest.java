@@ -19,7 +19,7 @@ public class SecretsTest {
     @Test
     public void testSecretsHelper() throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, IOException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, ClassNotFoundException, SecretsException {
         // Create a sample I_Secrets object for testing
-        EnvsAsSecrets sampleSecrets = new EnvsAsSecrets();
+        SimpleSecrets sampleSecrets = new SimpleSecrets();
         sampleSecrets.setSecret("hello", "world");
         // Test encryption and decryption
         String secret = sampleSecrets.getSecret("hello");

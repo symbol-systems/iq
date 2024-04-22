@@ -1,17 +1,18 @@
 package systems.symbol.finder;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.List;
 import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class TextFinder implements I_Finder {
 	private final Logger log = LoggerFactory.getLogger(getClass());
@@ -115,7 +116,7 @@ public class TextFinder implements I_Finder {
 		storeHome.getParentFile().mkdirs();
 		if (store instanceof InMemoryEmbeddingStore) {
 			InMemoryEmbeddingStore<TextSegment> saveStore = (InMemoryEmbeddingStore<TextSegment>)store;
-			log.info("finder.text.save: {} -> {}", storeHome);
+			log.info("finder.text.save: {}", storeHome);
 			saveStore.serializeToFile(Paths.get(storeHome.toURI()));
 		}
 	}

@@ -4,7 +4,7 @@ import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.io.BootstrapLoader;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -23,7 +23,7 @@ public class FactFinderTest {
         BootstrapRepository repo = new BootstrapRepository();
         try (RepositoryConnection connection = repo.getConnection()) {
             IQ iq = new IQConnection(COMMONS.IQ_NS_TEST, connection);
-            ScriptCatalog library = new ScriptCatalog(iq);
+            IQScriptCatalog library = new IQScriptCatalog(iq);
 
             BootstrapLoader loader = new BootstrapLoader(COMMONS.IQ_NS_TEST, connection, true, true, true, false);
             loader.deploy(ASSETS_HOME);

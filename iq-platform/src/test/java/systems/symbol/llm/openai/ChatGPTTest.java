@@ -16,7 +16,7 @@ class ChatGPTTest {
             try {
                 ChatGPT ai = new ChatGPT(openaiApiKey, 100);
                 ChatThread chat = new ChatThread();
-                chat.add("me", "user", "hello");
+                chat.add("user", "hello");
                 System.out.println("agent.llm.openai.messages: "+chat.messages());
                 I_Thread<String> generated = ai.generate(chat);
                 assert null != generated;

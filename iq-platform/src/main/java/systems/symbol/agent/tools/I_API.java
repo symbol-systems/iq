@@ -6,7 +6,6 @@ import java.util.Map;
 public interface I_API<T> {
 
     String getURL();
-    String getAuthToken(); //
     T head(Map<String, String> queryParams) throws IOException, APIException;
     T get() throws IOException, APIException;
     T get(Map<String, String> queryParams) throws IOException, APIException;

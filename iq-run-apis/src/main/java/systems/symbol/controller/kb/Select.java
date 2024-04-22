@@ -2,7 +2,7 @@ package systems.symbol.controller.kb;
 
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
@@ -64,7 +64,7 @@ public class Select extends GuardedAPI {
         try (RepositoryConnection connection = repository.getConnection()) {
             // Lookup SPARQL query in the platform repository
             IQConnection iq = new IQConnection(platform.getSelf(), connection);
-            ScriptCatalog library = new ScriptCatalog(iq);
+            IQScriptCatalog library = new IQScriptCatalog(iq);
             String sparql = library.getSPARQL(query);
 
             // Check for non-null and non-empty SPARQL query

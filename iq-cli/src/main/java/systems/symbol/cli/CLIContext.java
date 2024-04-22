@@ -1,15 +1,15 @@
 package systems.symbol.cli;
 
-import systems.symbol.model.I_Self;
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.store.IQ;
-import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.platform.Workspace;
-import systems.symbol.string.PrettyString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.COMMONS;
+import systems.symbol.platform.I_Self;
+import systems.symbol.platform.Workspace;
+import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.string.PrettyString;
 
 import java.io.File;
 import java.io.IOException;

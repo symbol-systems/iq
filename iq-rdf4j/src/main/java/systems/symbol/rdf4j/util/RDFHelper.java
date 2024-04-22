@@ -74,14 +74,14 @@ public class RDFHelper {
 
 	public static Literal label(Model model, Resource self) {
 		Set<Literal> values = Models.getPropertyLiterals(model, self, RDFS.LABEL);
-		if (values.isEmpty()) return null;
-		return values.iterator().next();
+		if (!values.isEmpty())  return values.iterator().next();
+		return null;
 	}
 
 	public static Literal value(Model model, Resource self) {
-		Set<Literal> values = Models.getPropertyLiterals(model, self, RDF.VALUE);
-		if (values.isEmpty()) return null;
-		return values.iterator().next();
+		Set<Literal> values = values(model, self);
+		if (!values.isEmpty())  return values.iterator().next();
+		return null;
 	}
 
 	public static Set<Literal> values(Model model, Resource self) {

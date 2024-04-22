@@ -7,7 +7,6 @@ package systems.symbol.platform;
 
 import systems.symbol.finder.FactFinder;
 import systems.symbol.finder.TextFinder;
-import systems.symbol.model.I_Self;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.trust.generate.JWTGen;

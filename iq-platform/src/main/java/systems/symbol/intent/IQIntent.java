@@ -2,7 +2,7 @@ package systems.symbol.intent;
 
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -20,7 +20,7 @@ import java.util.Set;
 public abstract class IQIntent implements I_Intent {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected IQ iq;
-    protected ScriptCatalog library;
+    protected IQScriptCatalog library;
     protected Model model;
     static protected SimpleValueFactory vf = SimpleValueFactory.getInstance();
     protected IRI self;
@@ -29,7 +29,7 @@ public abstract class IQIntent implements I_Intent {
 
     public void init(IQ iq, Model model, IRI self) throws IOException {
         this.iq = iq;
-        library = new ScriptCatalog(iq);
+        library = new IQScriptCatalog(iq);
         this.model = model == null ? new DynamicModelFactory().createEmptyModel(): model;
         this.self = self;
     }

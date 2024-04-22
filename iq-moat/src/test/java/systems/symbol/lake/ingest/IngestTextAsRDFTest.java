@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import systems.symbol.lake.crawl.VFSCrawler;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -52,10 +52,10 @@ public class IngestTextAsRDFTest extends AbstractRDFTest {
 
         try (RepositoryConnection conn = repository.getConnection()) {
             assertFalse(conn.isEmpty());
-            RepositoryResult<Statement> statements = conn.getStatements(null, ScriptCatalog.HAS_CONTENT, null, true);
+            RepositoryResult<Statement> statements = conn.getStatements(null, IQScriptCatalog.HAS_CONTENT, null, true);
             assertTrue(statements.hasNext());
             for (Statement statement : statements) {
-                assertEquals(ScriptCatalog.HAS_CONTENT, statement.getPredicate());
+                assertEquals(IQScriptCatalog.HAS_CONTENT, statement.getPredicate());
             }
         }
     }

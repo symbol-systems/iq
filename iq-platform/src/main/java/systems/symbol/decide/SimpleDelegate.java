@@ -11,7 +11,7 @@ public class SimpleDelegate<T> implements I_Delegate<T> {
 
     private T decision;
     /**
-     * Constructs a SimpleDecider with the provided state machine.
+     * Constructs a SimpleDelegate with the provided state machine.
      *
      * @param fsm The state machine to make decisions based on.
      */

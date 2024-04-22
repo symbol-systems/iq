@@ -1,10 +1,9 @@
 package systems.symbol.agent;
 
-import systems.symbol.fsm.I_StateMachine;
-import systems.symbol.fsm.StateException;
-import systems.symbol.model.I_Self;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.platform.I_Self;
 import systems.symbol.platform.I_StartStop;
 
 /**

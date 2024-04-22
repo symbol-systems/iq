@@ -16,8 +16,10 @@ import systems.symbol.fsm.StateException;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_Thread;
+import systems.symbol.render.HBSRenderer;
 import systems.symbol.string.Validate;
 
+import javax.script.Bindings;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -29,16 +31,18 @@ public class LLMDelegate extends SimpleDelegate<Resource> implements I_Prompt<St
     private final I_LLM<String> llm;
     private final I_Agent agent;
     private final Gson gson = new Gson();
+    private final Bindings my;
 
     /*
      * Constructor for LLMDecider.
      * @param llm The LLM used for decision-making.
      * @param agent The agent associated with the decision-making process.
      */
-    public LLMDelegate(I_LLM<String> llm, I_Agent agent) {
+    public LLMDelegate(I_LLM<String> llm, I_Agent agent, Bindings my) {
         super(agent.getStateMachine());
         this.agent = new LLMAgent(llm, agent);
         this.llm = llm;
+        this.my = my;
     }
 
     /*
@@ -61,13 +65,13 @@ public class LLMDelegate extends SimpleDelegate<Resource> implements I_Prompt<St
      * @throws IOException If an IO-related error occurs.
      * @throws StateException If an error occurs with the state machine.
      */
-    public I_Thread<String> prompt(ChatThread history, String prompt) throws APIException, IOException, StateException {
+    public I_Thread<String> prompt(I_Thread<String> history, String prompt) throws APIException, IOException {
         I_StateMachine<Resource> fsm = this.agent.getStateMachine();
         assert null != fsm;
         log.info("decide.state: " + agent.getSelf() + " -> " + fsm.getState());
 
-        ChatThread prompted = Prompts.decision(history, agent.getMemo(), agent.getSelf(), fsm);
-        prompted.user("<user_message>" + prompt + "</user_message>");
+        I_Thread<String> prompted = Prompts.decision(history, agent.getMemo(), agent.getSelf(), fsm, my);
+        prompted.user(HBSRenderer.template(prompt, my));
 
         I_Thread<String> answer = llm.generate(prompted);
         log.info("decide.answer: " + answer.latest());

@@ -1,14 +1,17 @@
 package systems.symbol.agent;
 
-import systems.symbol.fsm.*;
-import systems.symbol.intent.I_Intent;
-import systems.symbol.model.I_Self;
-import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.fsm.I_StateListener;
+import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.fsm.ModelStateMachine;
+import systems.symbol.fsm.StateException;
+import systems.symbol.intent.I_Intent;
+import systems.symbol.platform.I_Self;
 
 import javax.script.Bindings;
 import java.util.Set;
