@@ -45,7 +45,7 @@ class LazyAgentTest {
     void testTransition() throws StateException {
         Model model = dmf.createEmptyModel();
         boolean[] acted = {false};
-        LazyAgent agent = new LazyAgent(model, self) {
+        LazyAgent agent = new LazyAgent(self, model) {
             @Override
             public boolean onTransition(Resource from, Resource to) {
                 return acted[0] = super.onTransition(from, to);

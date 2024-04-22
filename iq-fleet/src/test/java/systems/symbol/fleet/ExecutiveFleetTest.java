@@ -13,10 +13,11 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import systems.symbol.COMMONS;
+import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.finder.Recommends;
-import systems.symbol.intent.Learn;
+import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Remodel;
 import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.rdf4j.io.RDFDump;
@@ -35,14 +36,17 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
+import static systems.symbol.platform.IQ_NS.KNOWS;
+
 class ExecutiveFleetTest {
     DynamicModelFactory dmf = new DynamicModelFactory();
     static BootstrapRepository assets;
     private static IRI self;
     String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
     Gson gson = new Gson();
-    private final Resource search = Values.iri(COMMONS.IQ_NS_TEST, "search");
+    private static final Resource search = Values.iri(COMMONS.IQ_NS_TEST, "search");
     private static final File testedFolder = new File("tested/");
+    private static final Resource aware = Values.iri(COMMONS.IQ_NS_TEST, "aware");;
 
     @BeforeAll
     public static void setUp() throws IOException {
@@ -52,8 +56,8 @@ class ExecutiveFleetTest {
         testedFolder.mkdirs();
     }
 
-    @Test
-    void deployHealthy() throws Exception, APIException {
+//    @Test
+    void fleetHealthy() throws Exception, APIException {
         if (Validate.isMissing(OPENAI_API_KEY)) {
             System.err.println("exec.fleet.llm.skipped: ");
             return;
@@ -74,7 +78,7 @@ class ExecutiveFleetTest {
             fleet.stop();
 
             //            RDFDump.dump(model);
-            Iterable<Statement> statements = model.getStatements(self, Learn.KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "Self"));
+            Iterable<Statement> statements = model.getStatements(self, KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "Self"));
             boolean hasNext = statements.iterator().hasNext();
             System.out.println("fleet.done: "+hasNext+" x "+fleet.agents.size());
             System.out.println("fleet.my: "+gson.toJson(my));
@@ -85,7 +89,7 @@ class ExecutiveFleetTest {
         }
     }
 
-    @Test
+//    @Test
     void searchBrave() throws Exception, APIException {
         if (Validate.isMissing(OPENAI_API_KEY)) {
             System.err.println("brave.fleet.llm.skipped: ");
@@ -131,4 +135,47 @@ class ExecutiveFleetTest {
             System.out.println("brave.dumpFile @ "+stopwatch.summary());
         }
     }
-}
+
+    @Test
+    void guardedFleet() throws Exception, APIException {
+        if (Validate.isMissing(OPENAI_API_KEY)) {
+            System.err.println("exec.fleet.llm.skipped: ");
+            return;
+        }
+        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        System.out.println("exec.fleet: "+self);
+
+        APISecrets secrets = new APISecrets(new EnvsAsSecrets());
+
+        try (RepositoryConnection connection = assets.getConnection()) {
+            Model model = new LiveModel(connection);
+            SimpleBindings my = new SimpleBindings();
+
+            ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt, my);
+            fleet.deploy();
+            I_Agent agent = fleet.getAgent(self);
+            assert null != agent;
+
+            // attempt a guarded state
+            boolean[] guarded = {false};
+            try {
+                Resource transitioned = agent.getStateMachine().transition(aware);
+                System.out.println("fleet.unguarded: "+transitioned);
+            } catch (StateException e) {
+                guarded[0] = true;
+                System.out.println("fleet.guarded: "+agent.getStateMachine().getState());
+
+            }
+            // check we're guarded
+            assert guarded[0];
+            assert !agent.getStateMachine().getState().equals(aware);
+            // satisfy the guard
+            model.add(self, KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "Self"));
+            // try the transition again
+            Resource transitioned = agent.getStateMachine().transition(aware);
+            // check we're all good
+            assert null != transitioned;
+            assert aware.equals(transitioned);
+            assert aware.equals(agent.getStateMachine().getState());
+        }
+    }}

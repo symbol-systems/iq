@@ -26,7 +26,7 @@ public class RDFPage extends AbstractIntent {
     }
 
     public RDFPage(IRI self, Model model, RDFFormat format) {
-        super(self, model);
+        boot(self, model);
         ingestRDF = new RDFModelIngestor(model, format);
         processor = new URLIngestor(ingestRDF);
         log.info("init: {} --> {}", self, format);

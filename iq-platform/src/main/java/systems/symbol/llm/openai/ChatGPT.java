@@ -47,7 +47,7 @@ public class ChatGPT implements I_LLM<String> {
         RestAPI api = new RestAPI(config.getURL(), token);
 
         Map<String, Object> json = toPayload(null, chats.messages()); // "json_object"
-        log.info("api.gpt.post: {}", json);
+//        log.info("api.gpt.post: {}", json);
 
         String body;
         try (okhttp3.Response response = api.post(json)) {

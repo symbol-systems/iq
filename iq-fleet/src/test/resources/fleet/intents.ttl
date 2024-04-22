@@ -9,8 +9,8 @@
 
 :   a iq:Agent;
     rdf:value "You an AI researcher. ";
-    iq:initial :intents.
-
+    iq:initial :intents;
+.
 :intents
     rdf:value "You can only use the following intents.";
     iq:prompt "{{my.prompt}}";
@@ -24,6 +24,7 @@
     iq:to :webpage;
     iq:to :rdf;
     iq:to :self;
+    iq:to :aware;
 .
 
 iq:State a iq:.
@@ -56,6 +57,9 @@ iq:knows rdfs:range rdf:Statement .
 :prompt
     rdfs:label "You can ask for executive assistance";
     iq:prompt "{{my.prompt}}".
+:think
+    rdfs:label "You can ask for executive assistance";
+    iq:think "{{my.prompt}}".
 :script
     rdfs:label "You can run scripts using Groovy and Javascript";
     iq:script <urn:iq:test:script/hello>.
@@ -71,3 +75,9 @@ iq:knows rdfs:range rdf:Statement .
     iq:learn :Self;
     iq:script <urn:iq:test:script/self>.
 
+:aware
+    iq:guard [
+            iq:knows :Self;
+    ];
+    iq:execute :think;
+.

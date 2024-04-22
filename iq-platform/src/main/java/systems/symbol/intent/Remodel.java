@@ -30,13 +30,13 @@ public class Remodel extends AbstractIntent {
     I_Self.I_Contents contents;
 
     public Remodel(IRI self, Model model, I_Self.I_Contents contents) {
-        super(self, model);
+        boot(self, model);
         this.templateMime = null;
         this.contents = contents;
     }
 
     protected Remodel(IRI self, Model model, IRI templateMime, I_Self.I_Contents contents) {
-        super(self, model);
+        boot(self, model);
         this.templateMime = templateMime;
         this.contents = contents;
     }

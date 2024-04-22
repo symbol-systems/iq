@@ -1,18 +1,18 @@
 package systems.symbol.intent;
 
-import org.jetbrains.annotations.NotNull;
-import systems.symbol.RDF;
-import systems.symbol.fsm.StateException;
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.IRIs;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Values;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
+import systems.symbol.COMMONS;
+import systems.symbol.RDF;
+import systems.symbol.fsm.StateException;
+import systems.symbol.rdf4j.IRIs;
 
 import javax.script.Bindings;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static systems.symbol.platform.Provenance.generated;
 
@@ -24,7 +24,7 @@ import static systems.symbol.platform.Provenance.generated;
  * @author Symbol Systems
  */
 public class Executive extends AbstractIntent implements I_Intents {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+//    private final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Intent> intents = new HashMap<>();
 
     /**
@@ -34,7 +34,7 @@ public class Executive extends AbstractIntent implements I_Intents {
      * @param self The IRI identifier for the Executive itself.
      */
     public Executive(IRI self, Model model) {
-        super(self, model);
+        boot(self, model);
         log.info("booted: {} -> {}", self, intents.keySet());
     }
 
@@ -45,7 +45,7 @@ public class Executive extends AbstractIntent implements I_Intents {
      * @param intent The I_Intent to perform we undergo a state transitions
      */
     public Executive(IRI self, Model model, I_Intent intent) {
-        super(self, model);
+        boot(self, model);
         add(intent);
         log.info("booted: {} -> {}", self, intents.keySet());
     }
@@ -67,15 +67,16 @@ public class Executive extends AbstractIntent implements I_Intents {
     public IRI add(I_Intent intent) {
         if (intent == null) return null;
         Method[] methods = intent.getClass().getDeclaredMethods();
+        log.info("discover.intents: {}", this.intents);
         // Add annotated methods
         for (Method method : methods) {
-            log.debug("method.add: {} -> {}", method.getName(), method.isAnnotationPresent(RDF.class));
+            log.debug("discover.method: {} -> {}", method.getName(), method.isAnnotationPresent(RDF.class));
             if (method.isAnnotationPresent(RDF.class)) {
                 RDF methodRdfAnnotation = method.getAnnotation(RDF.class);
                 IRI methodIRI = Values.iri(methodRdfAnnotation.value());
-                log.info("method.rdf: {} -> {}", method.getName(), methodIRI);
-                if (intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
-                intents.put(methodIRI, intent);
+                log.info("discover.method.rdf: {} -> {}", method.getName(), methodIRI);
+                if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
+                this.intents.put(methodIRI, intent);
                 return methodIRI;
             }
         }

@@ -75,6 +75,9 @@ public class IQScripts {
      * @return The script as a string.
      */
     public static Literal findScript(@NotNull Model model, @NotNull Resource script, IRI mimetype, IRI context) {
+        if (script instanceof Literal) {
+            return (Literal) script;
+        }
         Iterable<Statement> statements = context==null?model.getStatements(script, HAS_CONTENT, null):model.getStatements(script, HAS_CONTENT, null, context);
         Iterator<Statement> statementIterator = statements.iterator();
         log.info("findScript.model: {} -> {} @ {} -> {}", script, mimetype, context, statementIterator.hasNext());

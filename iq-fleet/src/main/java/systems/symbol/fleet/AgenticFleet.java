@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intents;
+import systems.symbol.platform.I_Bootstrap;
 import systems.symbol.platform.I_Self;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * Represents a fleet of agents capable of executing intents.
  */
-public abstract class AgenticFleet implements I_Fleet, I_Self {
+public abstract class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Agent> agents = new HashMap<>();
     IRI self;
@@ -35,20 +36,23 @@ public abstract class AgenticFleet implements I_Fleet, I_Self {
      * @param fleet   the RDF model representing the fleet
      * @param secrets the secrets manager for accessing agent secrets
      */
-    public AgenticFleet(IRI self, Model fleet, I_Intents intents, I_Secrets secrets) {
-        this.self = self;
-        this.fleet = fleet;
+    public AgenticFleet(IRI self, Model fleet, I_Intents intents, I_Secrets secrets) throws StateException {
+        boot(self, fleet);
         this.secrets = secrets;
         this.intents = intents;
     }
 
+    public void boot(IRI self, Model model) throws StateException {
+        this.self = self;
+        this.fleet = model;
+    }
     /**
      * Deploys agents from the fleet model and initializes them.
      *
      * @throws StateException if there is an issue with the state machine
      */
     public void deploy() throws StateException {
-        Iterable<Statement> found = fleet.getStatements(null, IQ_NS.hasInitialState, null);
+        Iterable<Statement> found = fleet.getStatements(null, IQ_NS.initialStep, null);
         for (Statement s : found) {
             IRI self = (IRI) s.getSubject();
             I_Agent agent = newAgent(self);
