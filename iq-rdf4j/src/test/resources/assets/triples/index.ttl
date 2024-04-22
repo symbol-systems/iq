@@ -12,7 +12,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :
-dct:title "GG: RDF4J";
+dct:title "IQ:  RDF4J";
 .
 
 :TestSuite

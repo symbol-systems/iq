@@ -1,8 +1,8 @@
 package systems.symbol.lake.ingest;
 
-import systems.symbol.lake.ContentEntity;
-import systems.symbol.finder.I_Finder;
 import dev.langchain4j.data.embedding.Embedding;
+import systems.symbol.finder.I_Finder;
+import systems.symbol.lake.ContentEntity;
 
 import java.util.function.Consumer;
 

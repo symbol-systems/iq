@@ -11,7 +11,7 @@ import javax.script.SimpleBindings;
 import java.util.Set;
 
 /**
- * Implementation of a lazy agent within a symbolic system.
+ * Implementation of a lazy agent.
  * This agent performs no action upon transition and simply returns the current state.
  */
 public class LazyAgent extends AbstractAgent {

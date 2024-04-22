@@ -4,11 +4,11 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.RDF;
-import systems.symbol.fsm.StateException;
 import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.RDF;
+import systems.symbol.agent.MyFacade;
+import systems.symbol.fsm.StateException;
+import systems.symbol.rdf4j.sparql.IQScripts;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
 
@@ -56,12 +56,12 @@ this.secrets = secrets;
 @RDF(COMMONS.IQ_NS + "script")
 public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
 Set<IRI> done = new HashSet<>();
-Literal script = ScriptCatalog.findScript(model, state, null, null);
+Literal script = IQScripts.findScript(model, state, null, null);
 if (script == null) return done;
 try {
-Object result = executeScript(script, actor, my );
-if (result == null) return done;
+Object result = executeScript(script, actor, state, my );
 done.add(actor);
+//log.info("script.result: {} -> {}", state, result);
 } catch (ScriptException e) {
 throw new RuntimeException(e);
 }
@@ -71,20 +71,21 @@ return done;
 /**
  * Executes the script using the provided script engine and bindings.
  *
- * @param scriptThe script to execute.
- * @param my  The bindings for the script execution.
+ * @param script The script to execute.
+ * @param state The state that trigger the intent
+ * @param my The bindings for script runtime.
  * @return The result of the script execution.
  * @throws ScriptException If an error occurs during script execution.
  */
-Object executeScript(Literal script, IRI actor, Bindings my) throws ScriptException, StateException {
+Object executeScript(Literal script, IRI actor, Resource state, Bindings my) throws ScriptException {
 String mime = SupportedScripts.toMimeType(script.getDatatype());
-log.info("script.execute: {} -> {}", script, mime);
+//log.info("script.execute: {} -> {}", script, mime);
 if (mime == null) return null;
 ScriptEngine engine = engineManager.getEngineByMimeType(mime);
 if (engine == null) {
 return null;
 }
-engine.setBindings( MyFacade.rebind(actor, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+engine.setBindings( MyFacade.rebind(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
 return engine.eval(script.stringValue());
 }
 }

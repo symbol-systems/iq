@@ -23,27 +23,6 @@ import java.io.*;
 public class IOCopier {
 	private static final Logger log = LoggerFactory.getLogger(IOCopier.class);
 
-	public IOCopier(InputStream input, OutputStream output) throws IOException {
-		log.debug("Copying binary stream ...");
-		copy(input, output);
-		input.close();
-	}
-
-	public IOCopier(InputStream input, File output) throws IOException {
-		log.debug("binary to: ${output.absolutePath}");
-		FileOutputStream fos = new FileOutputStream(output);
-		copy(input, fos);
-		fos.close();
-		input.close();
-	}
-
-	public IOCopier(File input, OutputStream output) throws IOException {
-		log.debug("file to: ${input.absolutePath}");
-		InputStream inStream = new FileInputStream(input);
-		if (input.exists()) copy(inStream, output);
-		inStream.close();
-	}
-
 	public static void copy(InputStream input, Writer output) throws IOException {
 		IOUtils.copy(input, output, "UTF-8");
 		output.flush();

@@ -25,7 +25,7 @@
 @prefix dama: <https://symbol.systems/v0/onto/dama#>.
 @prefix fab: <https://symbol.systems/v0/onto/fab#>.
 @prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
-@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix IQ:  <https://symbol.systems/v0/onto/gg#>.
 @prefix iq-test: <https://test.symbol.systems/cases#>.
 
 # Model Definitions
@@ -41,7 +41,7 @@ a skos:Concept;
 :CRUD
 skos:prefLabel   "C/R/U/D"@en;
 skos:description   "Create, Read, Update, Delete"@en;
-skos:hasTopConcept gg:;
+skos:hasTopConcept IQ: ;
 .
 
 :Create

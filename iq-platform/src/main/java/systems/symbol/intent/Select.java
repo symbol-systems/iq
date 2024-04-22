@@ -4,17 +4,17 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.RDF;
-import systems.symbol.fsm.StateException;
-import systems.symbol.model.I_Self;
 import systems.symbol.COMMONS;
+import systems.symbol.RDF;
+import systems.symbol.agent.MyFacade;
+import systems.symbol.fsm.StateException;
+import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
 
-import javax.script.*;
+import javax.script.Bindings;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Set;
  * Extends the AbstractIntent class.
  */
 public class Select implements I_Intent, I_Self {
-private final ScriptCatalog catalog;
+private final IQScriptCatalog catalog;
 private final IQ iq;
 
 /**
@@ -36,7 +36,7 @@ private final IQ iq;
  */
 public Select(RepositoryConnection conn, IRI self) {
 this.iq = new IQConnection(self, conn);
-this.catalog = new ScriptCatalog(iq);
+this.catalog = new IQScriptCatalog(iq);
 
 }
 

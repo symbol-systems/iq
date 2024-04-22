@@ -1,16 +1,19 @@
 package systems.symbol.intent;
 
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.model.util.Values;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.RDF;
-import systems.symbol.fsm.StateException;
 import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.RDF;
+import systems.symbol.agent.MyFacade;
+import systems.symbol.fsm.StateException;
+import systems.symbol.rdf4j.io.FileFormats;
+import systems.symbol.rdf4j.store.I_Contents;
 import systems.symbol.render.HBSRenderer;
 
 import javax.script.Bindings;
@@ -18,26 +21,24 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 
+import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
+import static systems.symbol.agent.MyFacade.INTENT;
+
 public class Remodel extends AbstractIntent {
 
-private ScriptCatalog catalog;
 IRI templateMime;
-RepositoryConnection connection;
-public static final IRI sparqlMime = Values.iri("urn:" + COMMONS.MIME_SPARQL);
-public static final IRI hbsMime = Values.iri("urn:" + COMMONS.MIME_HBS);
-public static final IRI ttlMime = Values.iri("urn:" + RDFFormat.TURTLE.getName());
+I_Contents contents;
 
-protected Remodel(RepositoryConnection connection, Model model, IRI self) {
+public Remodel(IRI self, Model model, I_Contents contents) {
 super(model, self);
-this.connection = connection;
 this.templateMime = null;
-this.catalog = new ScriptCatalog(self, connection);
+this.contents = contents;
 }
 
-protected Remodel(RepositoryConnection connection, Model model, IRI self, IRI templateMime) {
+protected Remodel(IRI self, Model model, IRI templateMime, I_Contents contents) {
 super(model, self);
-this.connection = connection;
 this.templateMime = templateMime;
+this.contents = contents;
 }
 
 /**
@@ -49,8 +50,7 @@ this.templateMime = templateMime;
  */
 public Set<IRI> remodel(IRI actor, Resource state, Bindings bindings) throws IOException {
 Set<IRI> done = new HashSet<>();
-
-Literal hbs = catalog.getContent(state, templateMime);
+Literal hbs = contents.getContent(state, templateMime);
 log.info("remodel: {} -> {} - {}", actor, state, hbs!=null);
 if (hbs == null) return done;
 done.addAll( remodel(actor, state, hbs, bindings, model) );
@@ -72,11 +72,18 @@ return null;
 
 protected Set<IRI> remodel(IRI actor, Resource state, Literal hbs, Bindings my, Model model) throws IOException {
 Bindings bindings = MyFacade.rebind(actor, state, my);
-log.info("remodel.bindings: {} -> {}", hbs.getDatatype(), bindings.keySet());
+log.info("remodel.bindings: {} -> {} -> {}", hbs.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
 String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);
-log.info("remodelled: {} ->\n{}", actor, remodelled);
-//RDFFormat format = RDFFormat.
-Model parsed = Rio.parse(new StringReader(remodelled), actor.stringValue(), RDFFormat.TURTLE);
+
+String mime = FileFormats.toMime(templateMime);
+RDFFormat format = Rio.getWriterFormatForMIMEType(mime).orElseGet(() -> RDFFormat.TURTLE);
+log.info("remodel.format: {} --> {}", actor, format);
+
+ParserConfig config = new ParserConfig();
+config.set(FAIL_ON_INVALID_LINES, false);
+
+String intent = my.containsKey(INTENT)?my.get(INTENT).toString():actor.stringValue();
+Model parsed = Rio.parse(new StringReader(remodelled), intent, format);
 model.addAll(parsed);
 return Models.subjectIRIs(parsed);
 }

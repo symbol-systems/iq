@@ -25,61 +25,61 @@
 @prefix dama: <https://symbol.systems/v0/onto/dama#>.
 @prefix fab: <https://symbol.systems/v0/onto/fab#>.
 @prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
-@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix IQ:  <https://symbol.systems/v0/onto/gg#>.
 @prefix iq-test: <https://test.symbol.systems/cases#>.
 
 # Model Definitions
 
 # Data Accountability
 
-gg:Story_DAMADataGovernanceFramework
+IQ: Story_DAMADataGovernanceFramework
 a pmo:Story;
 skos:inScheme dama:DataAccountability;
 dct:title "Create a Data Governance Framework"@en;
 .
 
-gg:Story_DAMARolesResponsibilities
+IQ: Story_DAMARolesResponsibilities
 a pmo:Story;
 skos:inScheme dama:DataAccountability;
 dct:title "Define clear Roles and Responsibilities"@en;
 .
 
-gg:Story_DAMACorporateDataPolicy
+IQ: Story_DAMACorporateDataPolicy
 a pmo:Story;
 skos:inScheme dama:DataAccountability;
 dct:title "Publish a corporate Data Policy"@en;
 .
 
-gg:Story_DAMADocumentDataStandards
+IQ: Story_DAMADocumentDataStandards
 a pmo:Story;
 skos:inScheme dama:DataAccountability;
 dct:title "Document Data Standards"@en;
 .
 
-gg:Story_DAMATrainDataAccountability
+IQ: Story_DAMATrainDataAccountability
 a pmo:Story;
 skos:inScheme dama:DataAccountability;
 dct:title "Train staff in Data Accountability"@en;
 .
 
 # Data Quality
-gg:Story_DAMADefineKPI
+IQ: Story_DAMADefineKPI
 a pmo:Story;
 skos:inScheme dama:DataQuality;
 dct:title "Define KPIs and other measurements for key data items"@en;
 .
 
-gg:Story_DAMAMonitorQualityImprovements
+IQ: Story_DAMAMonitorQualityImprovements
 a pmo:Story;
 skos:inScheme dama:DataQuality;
 dct:title "Report and monitor data quality improvements"@en;
 .
-gg:Story_DAMADevelopQualityImprovements
+IQ: Story_DAMADevelopQualityImprovements
 a pmo:Story;
 skos:inScheme dama:DataQuality;
 dct:title "Develop repeatable processes for data quality improvements"@en;
 .
-gg:Story_DAMAImplementQualityImprovements
+IQ: Story_DAMAImplementQualityImprovements
 a pmo:Story;
 skos:inScheme dama:DataQuality;
 dct:title "Implement data quality checks as BAU activities"@en;
@@ -87,7 +87,7 @@ dct:title "Implement data quality checks as BAU activities"@en;
 
 # Data Culture
 
-gg:Story_DAMACultureRole
+IQ: Story_DAMACultureRole
 a pmo:Story;
 skos:inScheme dama:DataCulture;
 skos:inScheme dama:DataSteward;
@@ -95,20 +95,20 @@ skos:inScheme dama:DataQuality;
 dct:title "Ensure data stewards understand their contribution to data quality"@en;
 .
 
-gg:Story_DAMACultureBenefit
+IQ: Story_DAMACultureBenefit
 a pmo:Story;
 skos:inScheme dama:DataCulture;
 skos:inScheme dama:DataQuality;
 dct:title "Promote benefits of better data quality"@en;
 .
 
-gg:Story_DAMACultureEngage
+IQ: Story_DAMACultureEngage
 a pmo:Story;
 skos:inScheme dama:DataCulture;
 dct:title "Engage in innovative ways to leverage data for strategic advantage"@en;
 .
 
-gg:Story_DAMACultureCommunity
+IQ: Story_DAMACultureCommunity
 a pmo:Story;
 skos:inScheme dama:DataCulture;
 skos:inScheme dama:DataManagement;

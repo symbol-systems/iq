@@ -1,15 +1,13 @@
 package systems.symbol.llm.openai;
 
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.agent.tools.RestAPI;
-import systems.symbol.llm.*;
-import systems.symbol.secrets.EnvsAsSecrets;
-import systems.symbol.secrets.I_Secrets;
-import systems.symbol.string.Validate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.llm.*;
+import systems.symbol.string.Validate;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +26,6 @@ public ChatGPT(String token, I_LLMConfig config) {
 this.token = token;
 this.config = config;
 }
-
-//public ChatGPT(I_Secrets secrets, I_LLMConfig config) {
-//this.token = secrets.getSecret(OPENAI_COMPLETIONS);
-//this.config = config;
-//}
 
 public ChatGPT(String token, int tokens) {
 this.token = token;
@@ -54,22 +47,22 @@ public I_Thread<String> generate(I_Thread<String> chats) throws APIException, IO
 RestAPI api = new RestAPI(config.getURL(), token);
 
 Map<String, Object> json = toPayload(null, chats.messages()); // "json_object"
-log.info("api.openai.post: {}", json);
+log.info("api.gpt.post: {}", json);
 
 String body;
 try (okhttp3.Response response = api.post(json)) {
-log.info("api.openai.response: {} -> {}", response.code(), response.message());
+log.info("api.gpt.response: {} -> {}", response.code(), response.message());
 
 // to BODY into `JSON`
 ResponseBody responseBody = response.body();
-log.info("api.openai.body: {}", responseBody);
+log.info("api.gpt.body: {}", responseBody);
 if (responseBody != null) {
 body = responseBody.string();
 ChatGPTResponse completion = objectMapper.readValue(body, ChatGPTResponse.class);
 if (completion!=null) {
 ChatGPTResponse.Message message = completion.choices.get(0).message;
-log.info("api.openai.completion: {} -> {}", completion.choices, message);
-chats.add(new TextMessage("assistant", message.role, message.content));
+log.info("api.gpt.completion: {} -> {}", completion.choices, message);
+chats.add(new TextMessage(message.role, message.content));
 }
 } else throw new IOException();
 }

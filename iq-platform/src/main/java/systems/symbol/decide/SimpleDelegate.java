@@ -11,7 +11,7 @@ protected final I_StateMachine<T> fsm;
 
 private T decision;
 /**
- * Constructs a SimpleDecider with the provided state machine.
+ * Constructs a SimpleDelegate with the provided state machine.
  *
  * @param fsm The state machine to make decisions based on.
  */

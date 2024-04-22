@@ -3,7 +3,7 @@ package systems.symbol.controller.search;
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
@@ -83,7 +83,7 @@ return new OopsResponse("api.search.facts#repository.offline", Response.Status.S
 // Use the platform SPARQL repository
 try (RepositoryConnection connection = repository.getConnection()) {
 IQConnection iq = new IQConnection(platform.getSelf(), connection);
-ScriptCatalog library = new ScriptCatalog(iq);
+IQScriptCatalog library = new IQScriptCatalog(iq);
 
 // Set a default relevancy threshold if not provided
 if (relevancy < 0.1) relevancy = 0.5;

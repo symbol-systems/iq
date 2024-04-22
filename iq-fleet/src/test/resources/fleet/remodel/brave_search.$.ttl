@@ -1,0 +1,56 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix iq: <urn:iq:>.
+
+{{#each my.results.infobox.results}}
+
+<{{my.self}}> iq:knows <{{my.intent}}>.
+
+<{{my.intent}}> schema:hasPart <{{url}}>.
+<{{url}}>
+a schema:WebPage;
+schema:url <{{website_url}}> ;
+schema:name "{{title}} - {{description}}";
+schema:description "{{long_desc}}";
+schema:datePublished "{{page_age}}";
+schema:thumbnailUrl "{{thumbnail.original}}";
+.
+{{#each profiles}}
+<{{my.intent}}> schema:hasPart <{{url}}>.
+<{{url}}>
+a schema:ProfilePage;
+schema:url <{{url}}> ;
+schema:name "{{title}}";
+schema:description "{{title}} [{{long_name}}]";
+schema:datePublished "{{page_age}}";
+schema:thumbnailUrl "{{thumbnail.original}}";
+.
+{{/each}}
+
+{{/each}}
+
+{{#each my.results.videos.results}}
+<{{my.intent}}> schema:hasPart <{{url}}>.
+
+<{{url}}> a schema:VideoObject;
+schema:url <{{url}}> ;
+schema:name "{{title}}";
+schema:datePublished "{{page_age}}";
+schema:description "{{description}}";
+schema:thumbnailUrl "{{thumbnail.original}}";
+.
+{{/each}}
+
+{{#each my.results.web.results}}
+<{{my.intent}}> schema:hasPart <{{url}}>.
+
+<{{url}}> a schema:WebPage;
+  schema:url <{{url}}> ;
+  schema:name "{{title}}";
+  schema:datePublished "{{page_age}}";
+  schema:description "{{extra_snippets}}";
+  schema:thumbnailUrl "{{thumbnail.original}}";
+.
+{{/each}}

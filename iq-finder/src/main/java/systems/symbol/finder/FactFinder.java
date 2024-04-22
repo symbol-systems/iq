@@ -8,7 +8,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
@@ -16,7 +15,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScripts;
 
 import java.io.File;
 import java.util.HashSet;
@@ -104,7 +103,6 @@ return search(model, text, query, maxResults, minScore);
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(Model model, String text, GraphQuery query, int maxResults, double minScore) {
-SimpleValueFactory vf = SimpleValueFactory.getInstance();
 List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
 if (found.isEmpty()) return model;
 
@@ -140,7 +138,7 @@ Set<String> dupes = new HashSet<>();
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
 String id = textSegmentEmbeddingMatch.embeddingId();
 if (!dupes.contains(id)) {
-GraphQueryResult describe = ScriptCatalog.describe(connection, id);
+GraphQueryResult describe = IQScripts.describe(connection, id);
 log.info("search.describe: {}", id);
 for (Statement s : describe) {
 model.add(s);

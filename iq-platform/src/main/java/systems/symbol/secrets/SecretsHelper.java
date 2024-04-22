@@ -15,6 +15,7 @@ import java.security.spec.KeySpec;
 public class SecretsHelper {
 public static final String ALGORITHM = "AES";
 public static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+public static final String KEY_MATTER_ALGORITHM = "PBKDF2WithHmacSHA256";
 
 public static I_Secrets unlock(InputStream fileInputStream, String password) throws IOException, ClassNotFoundException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fileInputStream));
@@ -36,9 +37,8 @@ int keyLength = 256; // Key length in bits
 KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLength);
 
 // Using a SecretKeyFactory to derive the key material
-SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-SecretKey secretKey = keyFactory.generateSecret(keySpec);
-return secretKey;
+SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(KEY_MATTER_ALGORITHM);
+return keyFactory.generateSecret(keySpec);
 }
 
 public static byte[] encrypt(I_Secrets data, String password) throws NoSuchPaddingException, NoSuchAlgorithmException,
@@ -48,11 +48,11 @@ byte[] key = password.getBytes(StandardCharsets.UTF_8);
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 SecretKey secretKey = new SecretKeySpec(key, ALGORITHM);
 cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-return cipher.doFinal(Serialize(data));
+return cipher.doFinal(serialize(data));
 }
 
-public static I_Secrets decrypt(byte[] encryptedData, String password) throws NoSuchPaddingException, NoSuchAlgorithmException,
-InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException, ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException {
+public static I_Secrets decrypt(byte[] encryptedData, String password) throws NoSuchAlgorithmException,
+InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IOException, ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException {
 
 byte[] key = password.getBytes(StandardCharsets.UTF_8);
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -62,7 +62,7 @@ byte[] decryptedData = cipher.doFinal(encryptedData);
 return (I_Secrets) Deserialize(decryptedData);
 }
 
-public static byte[] Serialize(I_Secrets obj) throws IOException {
+public static byte[] serialize(I_Secrets obj) throws IOException {
 try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
  ObjectOutputStream oos = new ObjectOutputStream(bos)) {
 oos.writeObject(obj);

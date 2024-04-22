@@ -12,6 +12,5 @@ system, assistant, user
 
 MessageType getType();
 RoleType getRole();
-String getName();
 T getContent();
 }

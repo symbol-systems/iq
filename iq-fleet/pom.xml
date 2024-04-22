@@ -32,21 +32,17 @@
 <kotlin.version>1.9.23</kotlin.version>
 </properties>
 <dependencies>
-<!--<dependency>-->
-<!--  <groupId>systems.symbol</groupId>-->
-<!--  <artifactId>iq-rdf4j</artifactId>-->
-<!--  <version>${project.version}</version>-->
-<!--</dependency>-->
-<dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-finder</artifactId>
-<version>${project.version}</version>
-</dependency>
 <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-platform</artifactId>
 <version>${project.version}</version>
 </dependency>
+
+<dependency>
+<groupId>com.maxmind.geoip2</groupId>
+<artifactId>geoip2</artifactId>
+</dependency>
+
 
 <!--<dependency>-->
 <!--<groupId>jakarta.ws.rs</groupId>-->

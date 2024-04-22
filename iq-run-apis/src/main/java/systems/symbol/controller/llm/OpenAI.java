@@ -63,7 +63,7 @@ return new OopsResponse("api.llm.oai#not-configured", Response.Status.SERVICE_UN
 }
 ChatGPT gpt = new ChatGPT(System.getenv("OPENAI_API_KEY"), 100);
 ChatThread chat = new ChatThread();
-chat.add("me", "user", query);
+chat.add("user", query);
 I_Thread<String> generated = gpt.generate(chat);
 
 System.out.println("api.llm.openai.generated: "+generated.messages());

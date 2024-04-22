@@ -6,14 +6,14 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.COMMONS;
 import systems.symbol.RDF;
+import systems.symbol.agent.MyFacade;
 import systems.symbol.finder.I_FactFinder;
 import systems.symbol.fsm.StateException;
-import systems.symbol.model.I_Self;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.IRIs;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScripts;
 import systems.symbol.render.HBSRenderer;
 
 import javax.script.Bindings;
@@ -53,7 +53,7 @@ this.knows = Values.iri(COMMONS.IQ_NS, "knows");
 @Override
 @RDF(COMMONS.IQ_NS + "find")
 public Set<IRI> execute(IRI actor, Resource state, Bindings ctx) throws StateException {
-Literal prompt = ScriptCatalog.findScript(model, state, null, null);
+Literal prompt = IQScripts.findScript(model, state, null, null);
 if (prompt==null||prompt.stringValue().isEmpty()) return new IRIs();
 try {
 Bindings bindings = MyFacade.rebind(actor, ctx);

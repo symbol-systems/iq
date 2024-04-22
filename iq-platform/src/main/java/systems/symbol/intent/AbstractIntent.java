@@ -12,7 +12,7 @@ import javax.script.Bindings;
 import java.util.Set;
 
 /**
- * Abstract base class for intents within a symbolic system.
+ * Abstract base class for intents.
  */
 public abstract class AbstractIntent implements I_Intent {
 protected final Logger log = LoggerFactory.getLogger(getClass());

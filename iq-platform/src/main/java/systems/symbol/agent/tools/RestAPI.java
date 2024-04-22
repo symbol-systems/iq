@@ -13,11 +13,15 @@ import java.util.Map;
  * Implementation of the I_API interface using OkHttp for REST API calls.
  */
 public class RestAPI implements I_API<Response> {
+private static final String BEARER_AUTH_HEADER = "Authorization";
 private final Logger log = LoggerFactory.getLogger(getClass());
 private final OkHttpClient client;
 private final ObjectMapper objectMapper = new ObjectMapper();
 private final String baseURL;
 private final String authToken;
+private final HttpUrl httpUrl;
+private String authHeader;
+private final Map<String,String> headers = new HashMap<>();
 
 /**
  * Creates a new instance of the RestAPI class.
@@ -25,16 +29,20 @@ private final String authToken;
  * @param baseURL   The base URL of the API.
  * @param authToken The authentication token for API requests.
  */
-public RestAPI(String baseURL, String authToken) {
+public RestAPI(String baseURL, String authToken, String authHeader) {
 this.client = new OkHttpClient();
 this.baseURL = baseURL;
 this.authToken = authToken;
+this.authHeader = authHeader;
+this.httpUrl = HttpUrl.parse(getURL());
+}
+
+public RestAPI(String baseURL, String authToken) {
+this(baseURL, authToken, BEARER_AUTH_HEADER);
 }
 
 public RestAPI(String baseURL) {
-this.client = new OkHttpClient();
-this.baseURL = baseURL;
-this.authToken = null;
+this(baseURL, null, null);
 }
 
 /**
@@ -47,14 +55,14 @@ public String getURL() {
 return baseURL;
 }
 
-/**
- * Gets the authentication token for API requests.
- *
- * @return The authentication token.
- */
-@Override
-public String getAuthToken() {
-return authToken;
+public RestAPI authenticate(String header) {
+this.authHeader = header;
+return this;
+}
+
+public RestAPI header(String name, String value) {
+this.headers.put(name, value);
+return this;
 }
 
 /**
@@ -76,8 +84,6 @@ return new HashMap<>();
  */
 @Override
 public Response head(Map<String, String> queryParams) throws IOException, APIException {
-HttpUrl httpUrl = HttpUrl.parse(getURL());
-if (httpUrl==null) return null;
 HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
 buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -107,8 +113,6 @@ return get(null);
  */
 @Override
 public Response get(Map<String, String> queryParams) throws IOException, APIException {
-HttpUrl httpUrl = HttpUrl.parse(getURL());
-if (httpUrl==null) return null;
 HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
 if (queryParams!=null) buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -126,8 +130,6 @@ return executeRequest(request);
  */
 @Override
 public Response delete(Map<String, String> queryParams) throws IOException, APIException {
-HttpUrl httpUrl = HttpUrl.parse(getURL());
-if (httpUrl==null) return null;
 HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
 buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -148,7 +150,7 @@ public Response post(Map<String, Object> json) throws IOException, APIException 
 String jsonBody = convertObjectToJsonString(json);
 RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
-log.debug("agent.api.post: {} -> {}", getURL(), getAuthToken());
+log.debug("agent.api.post: {} -> {}", getURL(), jsonBody);
 Request request = createRequestBuilder().url(getURL()).post(requestBody).build();
 return executeRequest(request);
 }
@@ -191,8 +193,18 @@ urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
  */
 private Request.Builder createRequestBuilder() {
 Request.Builder builder = new Request.Builder();
-if (null!= getAuthToken() && !getAuthToken().isEmpty())
-builder.header("Authorization", "Bearer " + getAuthToken());
+for(String n: headers.keySet()) {
+builder.header(n, headers.get(n));
+}
+if (null!= authToken && null != authHeader && !authToken.isEmpty()) {
+if (authHeader.equalsIgnoreCase(BEARER_AUTH_HEADER)) {
+builder.header(authHeader, "Bearer " + authToken);
+} else {
+builder.header(authHeader, authToken);
+}
+log.info("api.bearer: {} -> {}", authHeader, authToken);
+}
+
 return builder;
 }
 

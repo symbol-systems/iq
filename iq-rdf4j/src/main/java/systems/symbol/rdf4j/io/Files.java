@@ -11,14 +11,6 @@ import static java.util.***REMOVED***.Pattern.compile;
 
 public class Files {
 
-//public static  File toFile(File home, IRI _ns, IRI _iri) {
-//String iri = _iri.stringValue();
-//String ns = _ns.stringValue();
-//if (!iri.startsWith(ns)) return null;
-//String local = iri.substring(ns.length());
-//return new File(home,local);
-//}
-
 static Pattern any_slash = compile("(?<![:/])[/\\\\]+");
 
 public static IRI toIRI(ValueFactory vf, IRI baseIRI, File parentFile, File file) {

@@ -7,7 +7,7 @@ import systems.symbol.platform.APIPlatform;
 import systems.symbol.finder.IndexHelper;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.rdf4j.util.RDFPrefixer;
@@ -57,7 +57,7 @@ return new OopsResponse("api.iq.text.indexer#repository-offline", Response.Statu
 }
 try (RepositoryConnection connection = repository.getConnection()) {
 IQ iq = new IQConnection(platform.getSelf(), connection);
-ScriptCatalog library = new ScriptCatalog(iq);
+IQScriptCatalog library = new IQScriptCatalog(iq);
 String sparql = query==null||query.isEmpty()? RDFPrefixer.getSPARQLPrefix(connection)+UsefulSPARQL.INDEXER :library.getSPARQL(query);
 if (sparql==null || sparql.isEmpty()) {
 return new OopsResponse("api.iq.text.indexer#query-missing", Response.Status.NO_CONTENT).asJSON();

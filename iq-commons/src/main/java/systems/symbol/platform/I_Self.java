@@ -1,4 +1,4 @@
-package systems.symbol.model;
+package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.IRI;
 
@@ -8,10 +8,5 @@ import org.eclipse.rdf4j.model.IRI;
  */
 public interface I_Self {
 
-/**
- * Retrieves the IRI representing the self-reference of the entity.
- *
- * @return The IRI representing the self-reference of the entity.
- */
 IRI getSelf();
 }

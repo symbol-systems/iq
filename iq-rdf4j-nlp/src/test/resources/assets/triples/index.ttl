@@ -17,7 +17,7 @@
 
 :
 a skos:Concept;
-skos:prefLabel "GG: RDF4J";
+skos:prefLabel "IQ:  RDF4J";
 .
 
 :TestSuite

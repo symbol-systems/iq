@@ -70,7 +70,7 @@ return prompt(new ChatThread(), prompt);
 }
 
 @Override
-public I_Thread<String> prompt(ChatThread history, String prompt) throws APIException, IOException, StateException {
+public I_Thread<String> prompt(I_Thread<String> history, String prompt) throws APIException, IOException, StateException {
 history.user(prompt);
 
 String prompt$ = history.messages().stream()

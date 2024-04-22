@@ -25,32 +25,32 @@
 @prefix dama: <https://symbol.systems/v0/onto/dama#>.
 @prefix fab: <https://symbol.systems/v0/onto/fab#>.
 @prefix pmo: <https://symbol.systems/v0/onto/pmo#>.
-@prefix gg: <https://symbol.systems/v0/onto/gg#>.
+@prefix IQ:  <https://symbol.systems/v0/onto/gg#>.
 @prefix iq-test: <https://test.symbol.systems/cases#>.
 
 # Model Definitions
 
 dama:DataAccountability
 a dama:Outcome;
-frames:requires gg:Story_DAMARolesResponsibilities;
-frames:requires gg:Story_DAMADataGovernanceFramework;
-frames:requires gg:Story_DAMACorporateDataPolicy;
-frames:requires gg:Story_DAMADocumentDataStandards;
-frames:requires gg:Story_DAMATrainDataAccountability;
+frames:requires IQ: Story_DAMARolesResponsibilities;
+frames:requires IQ: Story_DAMADataGovernanceFramework;
+frames:requires IQ: Story_DAMACorporateDataPolicy;
+frames:requires IQ: Story_DAMADocumentDataStandards;
+frames:requires IQ: Story_DAMATrainDataAccountability;
 .
 
 dama:DataQuality
 a dama:Outcome;
-frames:requires gg:Story_DAMADefineKPI;
-frames:requires gg:Story_DAMAMonitorQualityImprovements;
-frames:requires gg:Story_DAMADevelopQualityImprovements;
-frames:requires gg:Story_DAMAImplementQualityImprovements;
+frames:requires IQ: Story_DAMADefineKPI;
+frames:requires IQ: Story_DAMAMonitorQualityImprovements;
+frames:requires IQ: Story_DAMADevelopQualityImprovements;
+frames:requires IQ: Story_DAMAImplementQualityImprovements;
 .
 
 dama:DataCulture
 a dama:Outcome;
-frames:requires gg:Story_DAMACultureBenefit;
-frames:requires gg:Story_DAMACultureCommunity;
-frames:requires gg:Story_DAMACultureEngage;
-frames:requires gg:Story_DAMACultureRole;
+frames:requires IQ: Story_DAMACultureBenefit;
+frames:requires IQ: Story_DAMACultureCommunity;
+frames:requires IQ: Story_DAMACultureEngage;
+frames:requires IQ: Story_DAMACultureRole;
 .

@@ -4,7 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 
 /**
- * Interface defining the contract for an instruction within a symbolic system.
+ * Interface defining the contract for an instruction.
  * An instruction consists of a subject, an intent, and an object.
  */
 public interface I_Instruct {

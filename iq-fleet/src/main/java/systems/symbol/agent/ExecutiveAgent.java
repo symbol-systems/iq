@@ -11,7 +11,6 @@ import systems.symbol.intent.Executive;
 import systems.symbol.intent.I_Intent;
 
 import javax.script.Bindings;
-import javax.script.SimpleBindings;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
-//I_Secrets secrets;
 I_Decide<Resource> manager;
 Set<Resource> seen = new HashSet<>();
 
@@ -29,13 +27,8 @@ Set<Resource> seen = new HashSet<>();
  * @param memo The working memory of the agent as an RDF4J Model.
  */
 
-public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent) throws StateException {
-this(self,memo, intent, null, new SimpleBindings());
-}
-
 public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
-super(self, memo, new Executive(self, memo, intent), bindings);
-//this.secrets = secrets;
+super(self, memo, intent, bindings);
 this.manager = manager;
 }
 
@@ -78,7 +71,7 @@ return true;
 @Override
 public Resource decide() throws StateException {
 Collection<Resource> choices = getStateMachine().getTransitions();
-log.info("onDecision: {} -> {}", choices, manager==null?"solo":manager);
+log.info("decide: {} -> {}", choices, manager==null?"solo":manager);
 if (choices.isEmpty()) return null;
 if (choices.size()==1) return choices.iterator().next();
 if (manager == null) return null;
@@ -86,7 +79,7 @@ Future<I_Delegate<Resource>> delegated = manager.delegate(this);
 try {
 return delegated.get().decide();
 } catch (InterruptedException | ExecutionException e) {
-throw new RuntimeException(e);
+throw new StateException(e.getMessage(), getStateMachine().getState(), e);
 }
 }
 }

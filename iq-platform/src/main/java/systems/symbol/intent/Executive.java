@@ -27,13 +27,15 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 Map<IRI, I_Intent> intents = new HashMap<>();
 
 /**
- * An executive able to learn/forget facts, and follow next-steps.
+ * An executive represents a set of I_Intents. During execution, matching intents are executed.
+ * All Executives have the ability to learn/forget facts and `execute` Intents in other states (indirection).
  *
  * @param self The IRI identifier for the Executive itself.
  */
 public Executive(IRI self, Model model) {
 super(self, model);
 memorize();
+add(this);
 }
 
 /**
@@ -44,14 +46,15 @@ memorize();
  */
 public Executive(IRI self, Model model, I_Intent intent) {
 super(self, model);
-add(intent);
 memorize();
+add(intent);
+add(this);
 }
 
 public void memorize() {
 add(new Learn(self, model));
 add(new Forget(self, model));
-log.info("memorize: {} -> {}", self, intents.keySet());
+log.info("memorized: {} -> {}", self, intents.keySet());
 }
 
 /**
@@ -70,13 +73,18 @@ log.debug("method.add: {} -> {}", method.getName(), method.isAnnotationPresent(R
 if (method.isAnnotationPresent(RDF.class)) {
 RDF methodRdfAnnotation = method.getAnnotation(RDF.class);
 IRI methodIRI = Values.iri(methodRdfAnnotation.value());
-log.debug("method.rdf: {} -> {}", method.getName(), methodIRI);
+log.info("method.rdf: {} -> {}", method.getName(), methodIRI);
 if (intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
 intents.put(methodIRI, intent);
 return methodIRI;
 }
 }
 return null;
+}
+
+@Override
+public Set<IRI> getIntents() {
+return intents.keySet();
 }
 
 /**
@@ -86,53 +94,54 @@ return null;
  * @return A Set of IRIs representing the result of the intent.
  */
 protected Set<IRI> execute(Statement s, Bindings bindings) throws StateException {
-return execute((IRI) s.getSubject(), s.getPredicate(), (IRI) s.getObject(), bindings);
+return executeIntent((IRI) s.getSubject(), s.getPredicate(), (IRI) s.getObject(), bindings);
 }
 
 /**
  * Performs an intent based on the provided IRIs (RDF triple).
  *
- * @param s The subject IRI - the input/source for the intent.
+ * @param actor The subject IRI - the input/source for the intent.
  * @param p The predicate IRI - used to identify the intent.
  * @param o The object IRI - the object/target of the intent.
  * @return A Set of IRIs representing the result of the intent or null if no intent.
  */
-protected Set<IRI> execute(IRI s, IRI p, IRI o, Bindings bindings) throws StateException {
+protected Set<IRI> executeIntent(IRI actor, IRI p, IRI o, Bindings bindings) throws StateException {
 I_Intent intent = this.intents.get(p);
 if (intent == null) return new IRIs();
-log.info("execute.intent: {} @ {}", p, intent);
-return intent.execute(s, o, bindings);
+log.info("execute.intent: {} @ {}", p, o);
+Set<IRI> executed = intent.execute(actor, o, bindings);
+provenance(executed, actor, o);
+return executed;
 }
 
 /**
  * Find matching the I_Intents and execute each.
  */
 
-protected void execute(IRI subject, Iterable<Statement> intentions, Set<IRI> done, Bindings bindings) throws StateException {
-for (Statement triple : intentions) {
-Resource s = triple.getSubject();
-IRI p = triple.getPredicate();
-Value o = triple.getObject();
+protected void executeMatchingIntents(IRI actor, Iterable<Statement> maybes, Set<IRI> done, Bindings bindings) throws StateException {
+for (Statement maybe : maybes) {
+Resource s = maybe.getSubject();
+IRI p = maybe.getPredicate();
+Value o = maybe.getObject();
 if (s.isIRI() && o.isIRI() && p.isResource()) {
-Set<IRI> performed = execute(subject, p, (IRI) o, bindings);
-if (!performed.isEmpty()) done.addAll(performed);
-} else {
-log.info("execute.skip: {} -> {} --> {}", s, p, o);
+done.addAll( executeIntent(actor, p, (IRI) o, bindings) );
 }
 }
 log.info("execute.done: {}", done);
 }
 
+void provenance(Set<IRI> done, IRI actor, Resource state) {
+done.forEach(result -> {
+generated(model, actor, state, result, getSelf());
+});
+}
 @Override
 @RDF(COMMONS.IQ_NS + "execute")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 IRIs done = new IRIs();
 Iterable<Statement> statements = model.getStatements(state, null, null);
-log.info("execute.intents: {} -> {}", state, statements.iterator().hasNext());
-execute(actor, statements, done, bindings);
-done.forEach(result -> {
-generated(model, actor, state, result, getSelf());
-});
+log.info("execute.intents: {} -> {} -> {}", state, statements.iterator().hasNext(), intents.keySet());
+executeMatchingIntents(actor, statements, done, bindings);
 return done;
 }
 }

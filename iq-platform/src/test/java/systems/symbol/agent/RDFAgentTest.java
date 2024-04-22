@@ -8,7 +8,7 @@ import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.sparql.ScriptCatalog;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.GraphQuery;
@@ -42,7 +42,7 @@ iriGroovyScript = vf.createIRI(COMMONS.IQ_NS_TEST +"scripts/hello");
 public void testLoadedScript() {
 try (RepositoryConnection connection = assets.getConnection()) {
 IQConnection iq = new IQConnection(iriSelf,connection);
-ScriptCatalog scripts = new ScriptCatalog(iq);
+IQScriptCatalog scripts = new IQScriptCatalog(iq);
 
 Literal script = scripts.getContent(iriGroovyScript, null);
 System.out.println("agent.rdf.script: "+iriGroovyScript+" -> "+script);
