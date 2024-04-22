@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * A simple decision-maker that uses random selection to pick next state.
  */
-public class DelegateFinder extends SimpleDelegate<Resource> implements I_Prompt<String> {
+public class DelegateFinder extends SimpleDelegate<Resource> {
     I_Finder finder;
     private double minScore = 0.9;
     private int maxResults = 5;
@@ -64,28 +64,4 @@ public class DelegateFinder extends SimpleDelegate<Resource> implements I_Prompt
         return transitions.stream().skip(decision).findFirst().orElse(null);
     }
 
-    @Override
-    public I_Thread<String> prompt(String prompt) throws APIException, IOException, StateException {
-        return prompt(new ChatThread(), prompt);
-    }
-
-    @Override
-    public I_Thread<String> prompt(I_Thread<String> history, String prompt) throws APIException, IOException, StateException {
-        history.user(prompt);
-
-        String prompt$ = history.messages().stream()
-                .filter(m -> m.getRole() == I_LLMessage.RoleType.user)
-                .distinct()
-                .map(I_LLMessage::getContent)
-                .collect(Collectors.joining("\n"));
-
-        List<EmbeddingMatch<TextSegment>> matches = finder.find(finder.embed(prompt$), maxResults, minScore);
-        Resource found = null;
-        for (EmbeddingMatch<TextSegment> match : matches) {
-            IRI iri = Values.iri(match.embeddingId());
-            if (found == null && getStateMachine().isAllowed(iri)) found = iri;
-        }
-        if (found != null) choice(found);
-        return history;
-    }
 }

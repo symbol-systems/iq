@@ -53,4 +53,4 @@
           schema:description "{{extra_snippets}}";
           schema:thumbnailUrl "{{thumbnail.original}}";
 .
-        {{/each}}
+{{/each}}

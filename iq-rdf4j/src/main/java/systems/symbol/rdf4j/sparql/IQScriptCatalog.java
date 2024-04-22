@@ -13,7 +13,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.COMMONS;
-import systems.symbol.platform.I_Self;
+import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.render.HBSRenderer;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 
 
-public class IQScriptCatalog implements I_Self.I_Contents {
+public class IQScriptCatalog implements I_Contents {
     private static final Logger log = LoggerFactory.getLogger(IQScriptCatalog.class);
     public static IRI HAS_CONTENT = RDF.VALUE;
     public static IRI SPARQL_MIME = IQ.vf.createIRI("urn:"+COMMONS.MIME_SPARQL);

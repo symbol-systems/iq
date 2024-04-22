@@ -7,7 +7,6 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.COMMONS;
 import systems.symbol.RDF;
@@ -25,18 +24,18 @@ import java.util.*;
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
 import static systems.symbol.agent.MyFacade.INTENT;
 
-public class Remodel extends AbstractIntent {
+public class Think extends AbstractIntent {
 
     IRI templateMime;
     I_Contents contents;
 
-    public Remodel(IRI self, Model model, I_Contents contents) {
+    public Think(IRI self, Model model, I_Contents contents) {
         boot(self, model);
         this.templateMime = null;
         this.contents = contents;
     }
 
-    protected Remodel(IRI self, Model model, IRI templateMime, I_Contents contents) {
+    protected Think(IRI self, Model model, IRI templateMime, I_Contents contents) {
         boot(self, model);
         this.templateMime = templateMime;
         this.contents = contents;
@@ -84,14 +83,9 @@ public class Remodel extends AbstractIntent {
         config.set(FAIL_ON_INVALID_LINES, false);
 
         String intent = my.containsKey(INTENT)?my.get(INTENT).toString():actor.stringValue();
-        try {
-            Model parsed = Rio.parse(new StringReader(remodelled), intent, format);
-            model.addAll(parsed);
-            return Models.subjectIRIs(parsed);
-        } catch (RDFParseException e) {
-            log.error("remodel.failed: {} ", remodelled, e);
-            throw new IOException(e.getMessage(), e);
-        }
+        Model parsed = Rio.parse(new StringReader(remodelled), intent, format);
+        model.addAll(parsed);
+        return Models.subjectIRIs(parsed);
     }
 
     @Override

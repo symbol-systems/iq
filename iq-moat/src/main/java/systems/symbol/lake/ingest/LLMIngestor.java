@@ -26,7 +26,7 @@ public class LLMIngestor extends AbstractIngestor<ContentEntity<String>> {
         ChatThread thread = new ChatThread();
         thread.system(systemPrompt+"\n: Your base URI is:"+content.getSelf());
         thread.user(content.getContent().toString());
-        I_Thread<String> answer = this.llm.generate(thread);
+        I_Thread<String> answer = this.llm.complete(thread);
         I_LLMessage<?> latest = answer.latest();
         String reply = latest.getContent().toString();
         log.debug("llm.reply: {} -> {}", latest.getType(), reply);

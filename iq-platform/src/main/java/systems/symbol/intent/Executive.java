@@ -141,7 +141,7 @@ public class Executive extends AbstractIntent implements I_Intents {
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         IRIs done = new IRIs();
         Iterable<Statement> statements = model.getStatements(state, null, null);
-        log.info("execute.intents: {} -> {} -> {}", state, statements.iterator().hasNext(), intents.keySet());
+        log.info("execute.state: {} -> {} -> {}", state, statements.iterator().hasNext(), intents.keySet());
         executeMatchingIntents(actor, statements, done, bindings);
         return done;
     }

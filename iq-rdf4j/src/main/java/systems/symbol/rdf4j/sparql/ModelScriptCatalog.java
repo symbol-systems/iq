@@ -4,9 +4,9 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.platform.I_Self;
+import systems.symbol.platform.I_Contents;
 
-public class ModelScriptCatalog implements I_Self.I_Contents {
+public class ModelScriptCatalog implements I_Contents {
     Model model;
     public ModelScriptCatalog(Model model) {
         this.model = model;

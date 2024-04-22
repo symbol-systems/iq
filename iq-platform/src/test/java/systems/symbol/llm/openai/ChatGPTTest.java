@@ -18,7 +18,7 @@ class ChatGPTTest {
                 ChatThread chat = new ChatThread();
                 chat.add("user", "hello");
                 System.out.println("agent.llm.openai.messages: "+chat.messages());
-                I_Thread<String> generated = ai.generate(chat);
+                I_Thread<String> generated = ai.complete(chat);
                 assert null != generated;
                 System.out.println("agent.llm.openai: "+generated);
                 assert !generated.messages().isEmpty();

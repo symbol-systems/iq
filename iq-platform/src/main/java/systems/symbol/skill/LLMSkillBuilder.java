@@ -113,7 +113,7 @@ public class LLMSkillBuilder<T> extends AbstractSkillBuilder {
 //
             ChatThread thread = new ChatThread();
             thread.user(finalPrompt);
-            I_Thread answer = gpt.generate(thread);
+            I_Thread answer = gpt.complete(thread);
 //            List<ChatMessage> messages = new ArrayList<>();
 //            messages.add(new UserMessage(finalPrompt));
             // Execute final prompt against the LLM

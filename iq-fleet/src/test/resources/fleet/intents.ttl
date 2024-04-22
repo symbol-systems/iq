@@ -12,7 +12,7 @@
     iq:initial :intents;
 .
 :intents
-    rdf:value "You can only use the following intents.";
+    rdf:value "Think carefully about the user's intention. You can only use the following intents.";
     iq:prompt "{{my.prompt}}";
     iq:to :search;
     iq:to :ask;
@@ -39,6 +39,7 @@ iq:knows rdfs:range rdf:Statement .
 .
 :find
     rdfs:label "You can find in your knowledge base";
+    iq:to :search;
 .
 :search
     rdfs:label "You can search the web ";
