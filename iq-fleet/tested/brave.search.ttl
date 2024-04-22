@@ -1,7 +1,7 @@
 
-<urn:iq:test:> <urn:iq:knows> <urn:iq:test:#237c8ded-8956-4b12-a2ef-c26c97c78364> .
+<urn:iq:test:> <urn:iq:knows> <urn:iq:test:#80b958ba-4ae0-46ce-b597-e6e983e36a25> .
 
-<urn:iq:test:#237c8ded-8956-4b12-a2ef-c26c97c78364> <http://schema.org/hasPart> <https://en.wikipedia.org/wiki/OpenAI>,
+<urn:iq:test:#80b958ba-4ae0-46ce-b597-e6e983e36a25> <http://schema.org/hasPart> <https://en.wikipedia.org/wiki/OpenAI>,
     <https://www.reddit.com/t/openai>, <https://www.facebook.com/openai.research>, <https://www.youtube.com/@OpenAI>,
     <https://twitter.com/OpenAI>, <https://www.linkedin.com/company/openai/>, <https://play.google.com/store/apps/developer?id&#x3D;OpenAI>,
     <https://github.com/openai>, <https://www.quora.com/topic/OpenAI>, <https://apps.apple.com/developer/id1684349733>,

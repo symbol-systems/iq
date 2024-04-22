@@ -33,11 +33,11 @@ public class GraphsTest {
         repository = new BootstrapRepository();
         ctx = repository.load(new File("src/test/resources/"), COMMONS.IQ_NS_TEST);
         assert ctx!=null;
-        alice = repository.getValueFactory().createIRI("https://symbol.systems/demo/tropes#Alice");
-        bob = repository.getValueFactory().createIRI("https://symbol.systems/demo/tropes#Bob");
-        charlie = repository.getValueFactory().createIRI("https://symbol.systems/demo/tropes#Charlie");
-        delta = repository.getValueFactory().createIRI("https://symbol.systems/demo/tropes#Delta");
-        knows = repository.getValueFactory().createIRI("https://myiq.cloud/storystream/tropes#knows");
+        alice = repository.getValueFactory().createIRI("urn:iq:test:Alice");
+        bob = repository.getValueFactory().createIRI("urn:iq:test:Bob");
+        charlie = repository.getValueFactory().createIRI("urn:iq:test:Charlie");
+        delta = repository.getValueFactory().createIRI("urn:iq:test:Delta");
+        knows = repository.getValueFactory().createIRI("urn:iq:test:knows");
 
 //        triples = repository.getTripleSource();
     }
