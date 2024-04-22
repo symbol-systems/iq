@@ -3,7 +3,7 @@
   <parent>
 <artifactId>iq-parent</artifactId>
 <groupId>systems.symbol</groupId>
-<version>0.76.5</version>
+<version>0.76.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
