@@ -1,24 +1,24 @@
 package systems.symbol.controller.trust;
 
-import systems.symbol.platform.APIPlatform;
-import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.trust.generate.JWTGen;
 import com.auth0.jwt.JWTCreator;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.platform.APIPlatform;
+import systems.symbol.trust.generate.JWTGen;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Path("trust")
 public class JWTIssuer {
@@ -40,7 +40,7 @@ public class JWTIssuer {
         if (redirect==null||redirect.isEmpty()) {
             redirect = "/callback/token";
         }
-        if (subject==null || subject.toString().length()<8) {
+        if (subject==null || subject.length()<8) {
             return new OopsResponse("api.trust.issuer#subject-missing", Response.Status.BAD_REQUEST).asJSON();
         }
         if (repoName==null || repoName.isEmpty()) {

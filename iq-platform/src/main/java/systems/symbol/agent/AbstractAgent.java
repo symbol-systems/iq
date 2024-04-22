@@ -58,7 +58,7 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_I
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop()  {
         log.info("stopped: {} @ {}", getSelf(), getStateMachine().getState());
     }
 

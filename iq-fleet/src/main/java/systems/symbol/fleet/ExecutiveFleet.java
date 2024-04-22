@@ -7,7 +7,7 @@ import systems.symbol.agent.AgentContext;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_AgentContext;
-import systems.symbol.decide.ExecutiveDecision;
+import systems.symbol.decide.LLMDecision;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
@@ -15,9 +15,7 @@ import systems.symbol.intent.Executive;
 import systems.symbol.intent.JSR233;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_LLMessage;
 import systems.symbol.secrets.I_Secrets;
-import systems.symbol.util.Stopwatch;
 
 import javax.script.SimpleBindings;
 import java.util.HashMap;
@@ -25,11 +23,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource> {
+public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, Runnable {
     private final I_LLM<String> llm;
     private final Map<IRI, I_AgentContext<String, Resource>> contexts = new HashMap<>();
-//    private final Map<IRI,Thread> workers = new HashMap<>();
-    private final Map<IRI, Future<I_Delegate<Resource>>> pending = new HashMap<>();
+    private final Map<IRI, CompletableFuture<I_Delegate<Resource>>> pending = new HashMap<>();
+    private boolean isRunning = false;
 
     public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm) throws StateException {
         super(self, fleet, new Executive(self, fleet), secrets);
@@ -46,67 +44,91 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource> {
     public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
         IRI actor = agent.getSelf();
         if (this.pending.containsKey(actor)) return this.pending.get(actor);
-
-        if (awaitingPrompt(getContext(actor))) {
-            log.info("decision.pending: {}", actor);
-            return null;
-        }
-
         CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
-//        Thread worker = new Thread(() -> {
-            Stopwatch stopwatch = new Stopwatch();
-            I_Delegate<Resource> delegate = delegate(future, agent, contexts.get(actor));
-            log.info("decision.pending {} -> {} @ {}", actor, agent.getStateMachine().getState(), stopwatch.summary());
-//            this.workers.remove(actor);
-            this.pending.remove(actor);
-            future.complete(delegate);
-
-//        });
-        I_LLMessage<String> latest = getContext(actor).getConversation().latest();
-        log.info("decision.delegated: {} @ {} ==> {}", actor, agent.getStateMachine().getState(), latest.getContent() );
-//        this.workers.put(actor, worker);
-//        worker.start();
+        this.pending.put( actor, future);
+        new Thread(() -> process(actor)).start();
+        log.info("decision.delegated: {} @ {}", actor, agent.getStateMachine().getState());
         return future;
     }
 
-    protected I_Delegate<Resource> delegate(CompletableFuture<I_Delegate<Resource>> future, I_Agent agent, I_AgentContext<String, Resource> context) {
-        this.pending.put(agent.getSelf(), future);
-        return new ExecutiveDecision(llm, agent, context);
+    @Override
+    public void run() {
+        log.info("running: {}",isRunning);
+        try {
+            super.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        while(isRunning && !pending.isEmpty()) {
+            try {
+                log.info("decision.loop: {}",pending.keySet());
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    protected boolean awaitingPrompt(I_AgentContext<String,Resource> context) {
-        I_LLMessage<String> latest = context.getConversation().latest();
-        if (latest==null) return true;
-        return !(context.getConversation().latest().getRole().equals(I_LLMessage.RoleType.user));
+    private void process(IRI actor) {
+        if (!isRunning) return; // forceful
+        I_Agent agent = getAgent(actor);
+        CompletableFuture<I_Delegate<Resource>> decider = pending.get(actor);
+        I_Delegate<Resource> delegate = delegate(agent, getContext(actor));
+        log.info("decision.pending {} @ {}", actor, agent.getStateMachine().getState());
+        try {
+            Resource decision = delegate.decide();
+            if (decision!=null) {
+                pending.remove(actor);
+                decider.complete(() -> decision);
+            }
+        } catch (StateException e) {
+            log.error("decision.failed: {} -> {}", actor, e.getMessage(), e);
+        }
+
+    }
+
+    protected I_Delegate<Resource> delegate(I_Agent agent, I_AgentContext<String, Resource> context) {
+        return new LLMDecision(llm, agent, context);
     }
 
     /**
-     * Deploy a new agent instance.
+     * Deploy a new contextual Agent who delegates to this.
      *
-     * @param agent    the agent IRI
+     * @param actor    the agent IRI
      * @return the newly created agent
      * @throws StateException if there is an issue with the deployment
      */
-    public I_Agent deploy(IRI agent) throws StateException {
+    public I_Agent deploy(IRI actor) throws StateException {
+        if (this.agents.containsKey(actor)) return agents.get(actor);
         I_AgentContext<String, Resource> context = new AgentContext<>(new SimpleBindings(), new ChatThread());
-        contexts.put(agent, context);
-        return new ExecutiveAgent(agent, fleet, intents, this, context.getBindings());
+        contexts.put(actor, context);
+        ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, this, context.getBindings());
+        agents.put(actor,agent);
+        return agent;
     }
 
     /**
+     * starts the fleet of agents
+     * @throws Exception throws an error is something went wrong
+     */
+    public void start() throws Exception {
+        isRunning = true;
+    }
+    /**
      * Stops all agents in the fleet.
-     *
-     * @throws Exception if there is an issue stopping the agents
      */
     @Override
-    public void stop() throws Exception {
-        for (IRI agent : agents.keySet()) {
-//            Thread thread = workers.get(agent);
-//            if(thread!=null) {
-//                log.warn("agent.active: {}", agent);
-//                thread.interrupt();
-//            }
-            super.stop(agent);
+    public void stop() {
+        log.info("stop.gratefully: {}", pending.keySet());
+        long start = System.currentTimeMillis();
+        while (!pending.isEmpty() && (System.currentTimeMillis()-start<5000)) {
+            try {
+                Thread.sleep(1000);
+                isRunning = false;
+                super.stop();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

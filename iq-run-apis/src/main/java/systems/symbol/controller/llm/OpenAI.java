@@ -59,7 +59,7 @@ public class OpenAI extends GuardedAPI {
 
         String TOKEN = System.getenv("OPENAI_API_KEY");
         if (Validate.isMissing(TOKEN)) {
-            return new OopsResponse("api.llm.oai#not-configured", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+            return new OopsResponse("api.llm.oai#disabled", Response.Status.SERVICE_UNAVAILABLE).asJSON();
         }
         ChatGPT gpt = new ChatGPT(System.getenv("OPENAI_API_KEY"), 100);
         ChatThread chat = new ChatThread();
