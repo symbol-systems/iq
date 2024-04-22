@@ -55,7 +55,7 @@ public void deploy() throws StateException {
 Iterable<Statement> found = fleet.getStatements(null, IQ_NS.initialStep, null);
 for (Statement s : found) {
 IRI self = (IRI) s.getSubject();
-I_Agent agent = newAgent(self);
+I_Agent agent = deploy(self);
 agents.put(self, agent);
 log.info("fleet.agent: {}", self);
 }
@@ -69,7 +69,7 @@ log.info("fleet.deployed: {}", agents.keySet());
  * @return the newly created agent
  * @throws StateException if there is an issue with the state machine
  */
-public abstract I_Agent newAgent(IRI self) throws StateException;
+public abstract I_Agent deploy(IRI self) throws StateException;
 
 /**
  * Retrieves the agent with the given IRI.
@@ -104,6 +104,7 @@ log.info("fleet.start: {}", iris);
 for (IRI agent : iris) {
 start(agent);
 }
+log.info("fleet.started: {}", iris);
 }
 
 /**

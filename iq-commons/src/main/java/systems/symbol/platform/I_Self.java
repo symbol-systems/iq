@@ -12,8 +12,4 @@ public interface I_Self {
 
 IRI getSelf();
 
-interface I_Contents {
-Literal getContent(Resource subject, IRI datatype);
-
-}
 }

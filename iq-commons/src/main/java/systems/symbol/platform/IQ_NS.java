@@ -19,6 +19,7 @@ IRI doStop = Values.iri(IQ_NS, "stop");
 
 IRI doBoot = Values.iri(IQ_NS, "boot");
 IRI KNOWS = Values.iri(IQ_NS, "knows");
+IRI PROMPT = Values.iri(IQ_NS, "prompt");
 
 IRI nop = Values.iri(IQ_NS, "nop");
 

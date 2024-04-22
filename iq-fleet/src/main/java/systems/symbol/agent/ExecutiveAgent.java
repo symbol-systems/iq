@@ -26,7 +26,6 @@ Set<Resource> seen = new HashSet<>();
  * @param self The identity of the agent
  * @param memo The working memory of the agent as an RDF4J Model.
  */
-
 public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
 super(self, memo, intent, bindings);
 this.manager = manager;
@@ -53,10 +52,10 @@ log.info("onTransition: {} -> {} --> {}", self, to, bindings);
 Set<IRI> executed = execute(getSelf(), to, bindings);
 Resource next = decide();
 log.info("onDecision: {} -> {} -> {}", executed, next, seen);
-if (next!=null && !seen.contains(next)) {
+if (next==null) return true;
+if (seen.contains(next)) return false;
 getStateMachine().transition(next);
 seen.add(next);
-}
 return true;
 }
 
@@ -76,8 +75,10 @@ if (choices.isEmpty()) return null;
 if (choices.size()==1) return choices.iterator().next();
 if (manager == null) return null;
 Future<I_Delegate<Resource>> delegated = manager.delegate(this);
+if (delegated==null) return null;
 try {
-return delegated.get().decide();
+I_Delegate<Resource> delegate = delegated.get();
+return (delegate==null)?null:delegate.decide();
 } catch (InterruptedException | ExecutionException e) {
 throw new StateException(e.getMessage(), getStateMachine().getState(), e);
 }

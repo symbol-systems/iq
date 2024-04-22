@@ -85,8 +85,8 @@ return !find(state, hasGuard).isEmpty();
 /**
  * Check if the transition is allowed based on guard rules
  *
- * @param subject  The subject resource.
- * @param target  The target state resource.
+ * @param subject   The subject resource.
+ * @param targetThe target state resource.
  * @return true if the transition is allowed, false otherwise.
  */
 public boolean isAllowedByGuard(Resource subject, Resource target) {

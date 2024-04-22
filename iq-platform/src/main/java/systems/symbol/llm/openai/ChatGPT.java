@@ -42,7 +42,7 @@ return config;
 }
 
 @Override
-public I_Thread<String> generate(I_Thread<String> chats) throws APIException, IOException {
+public I_Thread<String> complete(I_Thread<String> chats) throws APIException, IOException {
 
 RestAPI api = new RestAPI(config.getURL(), token);
 

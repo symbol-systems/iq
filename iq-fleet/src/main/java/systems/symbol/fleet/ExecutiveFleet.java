@@ -3,10 +3,11 @@ package systems.symbol.fleet;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import systems.symbol.agent.AgentContext;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.decide.ExecutiveDelegate;
+import systems.symbol.agent.I_AgentContext;
+import systems.symbol.decide.ExecutiveDecision;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
@@ -14,127 +15,82 @@ import systems.symbol.intent.Executive;
 import systems.symbol.intent.JSR233;
 import systems.symbol.llm.ChatThread;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_Prompt;
-import systems.symbol.llm.I_Thread;
-import systems.symbol.platform.I_Self;
+import systems.symbol.llm.I_LLMessage;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.util.Stopwatch;
 
-import javax.script.Bindings;
 import javax.script.SimpleBindings;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, I_Prompt<String>, I_Self {
-private final Bindings bindings;
-private int retries = 0;
+public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource> {
 private final I_LLM<String> llm;
-private final I_Thread<String> manager = new ChatThread();
-private final Map<IRI, Bindings> scratch = new HashMap<>();
-private final Map<IRI,Thread> workers = new HashMap<>();
-private final Map<IRI, Future<I_Delegate<Resource>>> futures = new HashMap<>();
+private final Map<IRI, I_AgentContext<String, Resource>> contexts = new HashMap<>();
+//private final Map<IRI,Thread> workers = new HashMap<>();
+private final Map<IRI, Future<I_Delegate<Resource>>> pending = new HashMap<>();
 
-public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm, Bindings bindings) throws StateException {
+public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm) throws StateException {
 super(self, fleet, new Executive(self, fleet), secrets);
 this.llm = llm;
-this.bindings = bindings;
 this.intents.add( new JSR233(self, fleet, secrets) );
-log.info("fleet.intents: {} -> {}", intents.getIntents(), bindings.values());
+log.info("fleet.intents: {}", intents.getIntents());
 }
 
-public void setRetries(int retries) {
-this.retries = retries;
-}
-
-public I_Thread<String> newChat(I_Agent agent) {
-I_Thread<String> chat = new ChatThread(manager);
-log.info("decision.chat {} @ {}", agent.getSelf(), chat.messages() );
-return chat;
+public I_AgentContext<String, Resource> getContext(IRI agent) {
+return contexts.get(agent);
 }
 
 @Override
 public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
 IRI actor = agent.getSelf();
-if (this.futures.containsKey(actor)) return this.futures.get(actor);
+if (this.pending.containsKey(actor)) return this.pending.get(actor);
+
+if (awaitingPrompt(getContext(actor))) {
+log.info("decision.pending: {}", actor);
+return null;
+}
 
 CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
-this.futures.put(actor, future);
+//Thread worker = new Thread(() -> {
 Stopwatch stopwatch = new Stopwatch();
+I_Delegate<Resource> delegate = delegate(future, agent, contexts.get(actor));
+log.info("decision.pending {} -> {} @ {}", actor, agent.getStateMachine().getState(), stopwatch.summary());
+//this.workers.remove(actor);
+this.pending.remove(actor);
+future.complete(delegate);
 
-log.info("decision.delegate {} @ {}", actor, scratch.values() );
-Thread worker = new Thread(() -> {
-try {
-// delegate our decision
-future.complete( delegate(agent, retries) );
-} catch (StateException e) {
-log.error("decision.failed {} @ {}", actor, stopwatch.summary(), e );
-future.completeExceptionally(e);
-}
-log.info("decision.done {} @ {}", actor, stopwatch.summary() );
-this.workers.remove(actor);
-this.futures.remove(actor);
-});
-
-log.info("delegating: {} @ {}", actor, stopwatch.getStartTimestamp() );
-this.workers.put(actor, worker);
-worker.start();
+//});
+I_LLMessage<String> latest = getContext(actor).getConversation().latest();
+log.info("decision.delegated: {} @ {} ==> {}", actor, agent.getStateMachine().getState(), latest.getContent() );
+//this.workers.put(actor, worker);
+//worker.start();
 return future;
 }
 
-protected I_Delegate<Resource> delegate(I_Agent agent, int attempt) throws StateException {
-log.info("delegate: #{}: {} @ {}", retries-attempt, agent.getStateMachine().getState(), agent.getSelf() );
-
-ExecutiveDelegate delegation = new ExecutiveDelegate(llm, agent.getSelf(), agent.getMemo(), agent.getStateMachine());
-try {
-I_Thread<String> chat = newChat(agent);
-Bindings my = getScratchPad(agent.getSelf());
-log.info("delegate.history: {} -> {}", my, chat.messages());
-I_Thread<String> answer = delegation.decide(chat, my);
-
-log.info("delegated: {} <-- {}", delegation.decide(), answer.latest());
-} catch (APIException | IOException e) {
-log.info("retry: {} left", attempt );
-if (attempt>0) return delegate(agent, attempt-1);
-}
-return delegation;
+protected I_Delegate<Resource> delegate(CompletableFuture<I_Delegate<Resource>> future, I_Agent agent, I_AgentContext<String, Resource> context) {
+this.pending.put(agent.getSelf(), future);
+return new ExecutiveDecision(llm, agent, context);
 }
 
-@Override
-public I_Thread<String> prompt(String prompt) throws APIException, IOException, StateException {
-return prompt(manager,prompt);
-}
-
-@Override
-public I_Thread<String> prompt(I_Thread<String> history, String prompt) throws APIException, IOException, StateException {
-manager.user(prompt);
-return manager;
+protected boolean awaitingPrompt(I_AgentContext<String,Resource> context) {
+I_LLMessage<String> latest = context.getConversation().latest();
+if (latest==null) return true;
+return !(context.getConversation().latest().getRole().equals(I_LLMessage.RoleType.user));
 }
 
 /**
- * Creates a new agent instance.
+ * Deploy a new agent instance.
  *
- * @param selfthe self IRI representing the agent
+ * @param agentthe agent IRI
  * @return the newly created agent
- * @throws StateException if there is an issue with the state machine
+ * @throws StateException if there is an issue with the deployment
  */
-public I_Agent newAgent(IRI self) throws StateException {
-return new ExecutiveAgent(self, fleet, intents, this, getScratchPad(self));
-}
-
-/**
- * Return the working context of an Agent
- * @param agent The IRI of a fleet agent
- * @return scratch-pad bindings
- */
-public Bindings getScratchPad(IRI agent) {
-Bindings bindings = scratch.get(agent);
-if (bindings!=null) return bindings;
-bindings = new SimpleBindings(this.bindings);
-scratch.put(agent, bindings);
-return bindings;
+public I_Agent deploy(IRI agent) throws StateException {
+I_AgentContext<String, Resource> context = new AgentContext<>(new SimpleBindings(), new ChatThread());
+contexts.put(agent, context);
+return new ExecutiveAgent(agent, fleet, intents, this, context.getBindings());
 }
 
 /**
@@ -145,11 +101,11 @@ return bindings;
 @Override
 public void stop() throws Exception {
 for (IRI agent : agents.keySet()) {
-Thread thread = workers.get(agent);
-if(thread!=null) {
-log.warn("agent.active: {}", agent);
-thread.interrupt();
-}
+//Thread thread = workers.get(agent);
+//if(thread!=null) {
+//log.warn("agent.active: {}", agent);
+//thread.interrupt();
+//}
 super.stop(agent);
 }
 }
