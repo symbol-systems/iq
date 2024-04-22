@@ -24,7 +24,7 @@ static IRI workflow_0 = vf.createIRI(COMMONS.IQ_NS_TEST +"skill-0");
 @Test
 void testFSM() throws StateException {
 Model model = dmf.createEmptyModel();
-AbstractAgent agent = new LazyAgent(model, self);
+AbstractAgent agent = new LazyAgent(self, model);
 
 ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
 assert LazyAgentTest.workflow_0.equals(workflow_0.getSelf());

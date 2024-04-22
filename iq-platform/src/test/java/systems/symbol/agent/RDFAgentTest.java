@@ -24,14 +24,14 @@ import java.util.Set;
 public class RDFAgentTest {
 public static BootstrapRepository assets;
 public static ValueFactory vf;
-public static IRI iriSelf, iriGroovyScript, iriWorkflow0;
+public static IRI self, iriGroovyScript, iriWorkflow0;
 IRI ideation = vf.createIRI(COMMONS.IQ_NS_TEST +"ideation");
 IRI wip = vf.createIRI(COMMONS.IQ_NS_TEST +"work-in-progress");
 
 @BeforeAll
 public static void setUp() throws IOException {
 assets = new BootstrapRepository();
-iriSelf = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
+self = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
 vf = assets.getValueFactory();
 iriWorkflow0 = vf.createIRI(COMMONS.IQ_NS_TEST +"workflow_0");
 iriGroovyScript = vf.createIRI(COMMONS.IQ_NS_TEST +"scripts/hello");
@@ -41,7 +41,7 @@ iriGroovyScript = vf.createIRI(COMMONS.IQ_NS_TEST +"scripts/hello");
 @Test
 public void testLoadedScript() {
 try (RepositoryConnection connection = assets.getConnection()) {
-IQConnection iq = new IQConnection(iriSelf,connection);
+IQConnection iq = new IQConnection(self,connection);
 IQScriptCatalog scripts = new IQScriptCatalog(iq);
 
 Literal script = scripts.getContent(iriGroovyScript, null);
@@ -63,8 +63,8 @@ assert model.size() > 100;
 RDFDump.dump(model, System.out, RDFFormat.TURTLE);
 
 boolean[] actioned = {false};
-System.out.println("agent.rdf.self: "+iriSelf);
-LazyAgent agent = new LazyAgent(model, iriSelf) {
+System.out.println("agent.rdf.self: "+ self);
+LazyAgent agent = new LazyAgent(self, model) {
 public boolean onTransition(Resource from, Resource to) {
 return actioned[0] = true;
 }

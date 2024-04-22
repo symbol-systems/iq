@@ -1,5 +1,6 @@
 package systems.symbol.intent;
 
+import org.jetbrains.annotations.NotNull;
 import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.COMMONS;
@@ -34,8 +35,7 @@ Map<IRI, I_Intent> intents = new HashMap<>();
  */
 public Executive(IRI self, Model model) {
 super(self, model);
-memorize();
-add(this);
+log.info("booted: {} -> {}", self, intents.keySet());
 }
 
 /**
@@ -46,15 +46,15 @@ add(this);
  */
 public Executive(IRI self, Model model, I_Intent intent) {
 super(self, model);
-memorize();
 add(intent);
-add(this);
+log.info("booted: {} -> {}", self, intents.keySet());
 }
 
-public void memorize() {
+public void boot(@NotNull IRI self, Model model) {
+super.boot(self, model);
 add(new Learn(self, model));
 add(new Forget(self, model));
-log.info("memorized: {} -> {}", self, intents.keySet());
+add(this);
 }
 
 /**

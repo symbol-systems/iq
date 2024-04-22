@@ -69,6 +69,5 @@ iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 :self
 rdfs:label "You can answer questions about yourself";
 iq:learn :Self;
-iq:execute :search;
 iq:script <urn:iq:test:script/self>.
 

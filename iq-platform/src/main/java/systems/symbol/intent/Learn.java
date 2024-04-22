@@ -1,20 +1,23 @@
 package systems.symbol.intent;
 
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.util.Values;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
+import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
-import systems.symbol.COMMONS;
 
 import javax.script.Bindings;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import static systems.symbol.platform.IQ_NS.KNOWS;
 
 public class Learn extends AbstractIntent {
 
-public final static IRI KNOWS = Values.iri(COMMONS.IQ_NS, "knows");
 public Learn(IRI self, Model model) {
-super(model, self);
+super(self, model);
 }
 
 /**

@@ -63,7 +63,7 @@ Object result = executeScript(script, actor, state, my );
 done.add(actor);
 //log.info("script.result: {} -> {}", state, result);
 } catch (ScriptException e) {
-throw new RuntimeException(e);
+throw new StateException(e.getMessage(), state, e);
 }
 return done;
 }

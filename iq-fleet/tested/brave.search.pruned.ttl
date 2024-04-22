@@ -7,7 +7,7 @@
   <http://schema.org/thumbnailUrl> "https://yt3.googleusercontent.com/UqT_vCkJIn1P2fH1pchr6lbe3xeEekY61h4bUpJkVuityqKOEtUYcNy3pLiJ5OKdj4uKA81FWE8&#x3D;s900-c-k-c0x00ffffff-no-rj";
   <urn:iq:score> "0.7433846"^^<http://www.w3.org/2001/XMLSchema#float> .
 
-<urn:iq:test:#76348b9d-7517-4e65-9b52-fcfbad202b11> <http://schema.org/hasPart> <https://www.youtube.com/@OpenAI/about>,
+<urn:iq:test:#73329aa1-7839-449a-8390-195cf9bc59bb> <http://schema.org/hasPart> <https://www.youtube.com/@OpenAI/about>,
 <https://openai.com/about/>, <https://en.wikipedia.org/wiki/OpenAI>, <https://www.tealhq.com/company/openai>,
 <https://www.jobsage.com/companies/about/openai>, <https://www.reddit.com/t/openai> .
 

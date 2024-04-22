@@ -22,8 +22,8 @@ public class LazyAgent extends AbstractAgent {
  * @param model The RDF4J model associated with the agent.
  * @param self  The self identity of the agent.
  */
-public LazyAgent(Model model, IRI self) throws StateException {
-super(model, self);
+public LazyAgent(IRI self, Model model) throws StateException {
+super(self, model);
 }
 
 /**

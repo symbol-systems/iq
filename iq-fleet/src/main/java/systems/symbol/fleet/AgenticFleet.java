@@ -9,7 +9,7 @@ import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intents;
 import systems.symbol.platform.I_Self;
-import systems.symbol.rdf4j.store.IQ_NS;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
 
 import java.util.Collection;
