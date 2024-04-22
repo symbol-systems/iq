@@ -37,7 +37,7 @@ private final Map<IRI, Bindings> scratch = new HashMap<>();
 private final Map<IRI,Thread> workers = new HashMap<>();
 private final Map<IRI, Future<I_Delegate<Resource>>> futures = new HashMap<>();
 
-public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm, Bindings bindings) {
+public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm, Bindings bindings) throws StateException {
 super(self, fleet, new Executive(self, fleet), secrets);
 this.llm = llm;
 this.bindings = bindings;

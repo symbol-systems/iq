@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-import static systems.symbol.COMMONS.IQ_NS;
+import static systems.symbol.platform.IQ_NS.*;
 
 /**
  * State machine (FSM) uses RDF4J Model for state representation.
@@ -22,12 +22,6 @@ import static systems.symbol.COMMONS.IQ_NS;
  */
 public class ModelStateMachine extends AbstractStateMachine<Resource> implements I_Self {
 private final Model model;
-public static final IRI A_WORKFLOW = Values.iri(IQ_NS, "Workflow");
-public static final IRI hasInitialState = Values.iri(IQ_NS, "initial");
-public static final IRI hasTransition = Values.iri(IQ_NS, "to");
-public static final IRI hasGuard = Values.iri(IQ_NS, "guard");
-public static final IRI hasCurrentState = Values.iri(IQ_NS, "state");
-
 protected IRI self;
 
 /**
@@ -50,7 +44,7 @@ this.initialize();
  *
  */
 public void initialize() {
-Iterator<Resource> found_initial = find(self, hasInitialState).iterator();
+Iterator<Resource> found_initial = find(self, initialStep).iterator();
 if (found_initial.hasNext()) {
 setInitial(found_initial.next());
 }
@@ -63,8 +57,8 @@ log.info("initialized: {} -> {} @ {}", initialState, getState(), self);
 
 @Override
 public I_StateMachine<Resource> setInitial(Resource initialState) {
-model.remove(getSelf(), hasInitialState, null);
-model.add(getSelf(), hasInitialState, initialState);
+model.remove(getSelf(), initialStep, null);
+model.add(getSelf(), initialStep, initialState);
 model.add(getSelf(), RDF.TYPE, A_WORKFLOW);
 return super.setInitial(initialState);
 }
@@ -72,13 +66,13 @@ return super.setInitial(initialState);
 @Override
 public boolean isAllowed(Resource target) {
 if (this.currentState != null && this.currentState.equals(target)) return true;
-Iterable<Statement> transitions = model.getStatements(getState(), hasTransition, target);
+Iterable<Statement> transitions = model.getStatements(getState(), nextStep, target);
 
 boolean hasTransitions = transitions.iterator().hasNext();
-log.debug("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
+log.info("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
 if (!hasTransitions) return false; // No transitions
 
-log.debug("allowed/final&guarded: {} -> {} & {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
+log.info("allowed/final&guarded: {} -> {} & {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
 //if (isFinal(getState())) return false; // No states
 if (!isGuarded(target)) return true; // Not guarded
 return isAllowedByGuard(self, target); // Ask the guards ...
@@ -98,28 +92,29 @@ return !find(state, hasGuard).isEmpty();
 public boolean isAllowedByGuard(Resource subject, Resource target) {
 Collection<Resource> guards = find(target, hasGuard);
 Iterator<Resource> iGuards = guards.iterator();
-log.debug("guards: {} -> {} -> {}", subject, target, iGuards.hasNext());
+log.info("guards: {} -> {} -> {}", subject, target, iGuards.hasNext());
 if (!iGuards.hasNext()) return true; // No guards, we're good
 
 while (iGuards.hasNext()) {
 Resource guard = iGuards.next();
 Iterable<Statement> rules = model.getStatements(guard, null, null);
 Iterator<Statement> iRules = rules.iterator();
-log.debug("guard: {} -> {}", guard, iRules.hasNext());
+log.info("guard: {} --> {} = {}", subject, guard, iRules.hasNext());
 
 // ensure the rule 2-tuple match the subject's 2-tuple (aka name/value)
 while (iRules.hasNext()) {
 Statement rule = iRules.next();
+log.info("check: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
 if ( ! hasGuard.equals(rule.getPredicate()) ) {
 // ensure rules tuples match the subject
 Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(), rule.getObject());
 boolean matches = (!rule.getPredicate().equals(hasGuard) && statements.iterator().hasNext());
-log.debug("rule: {} -> {} -> {}", guard, rule, matches);
+log.info("guard.matched: {} -> {}", statements.iterator().hasNext(), matches);
 if (!matches) return false;
 }
 }
 }
-log.debug("guard.grants: {} -> {}", subject, target);
+log.info("guard.grants: {} -> {}", subject, target);
 return true; // All rules must have matched
 }
 
@@ -137,7 +132,7 @@ model.add(self, hasCurrentState, target);
 @Override
 protected Collection<Resource> getTransitions(Resource state) {
 // Get transitions for the given state
-Collection<Resource> transitions = find(state, hasTransition);
+Collection<Resource> transitions = find(state, nextStep);
 
 if (!isGuarded(state)) return transitions;
 
@@ -159,7 +154,7 @@ if (initialState==null) {
 this.setInitial(from);
 log.debug("initial: {} == {}", this.initialState, this.currentState);
 }
-model.add(from, hasTransition, to);
+model.add(from, nextStep, to);
 }
 
 /**
@@ -184,7 +179,7 @@ model.add(guard, predicate, object);
  * @return True if the state is final (no transitions), false otherwise.
  */
 public boolean isFinal(Resource state) {
-return find(state, hasTransition).isEmpty();
+return find(state, nextStep).isEmpty();
 }
 
 /**
@@ -195,16 +190,14 @@ return find(state, hasTransition).isEmpty();
  * @return A collection of related resources.
  */
 private Collection<Resource> find(Resource state, IRI predicate) {
-Collection<Resource> transitions = new HashSet<>();
-Iterator<Statement> hasTransitions = model.getStatements(state, predicate, null).iterator();
+Collection<Resource> found = new HashSet<>();
 
-while (hasTransitions.hasNext()) {
-Statement next = hasTransitions.next();
+for (Statement next : model.getStatements(state, predicate, null)) {
 if (next.getObject().isResource()) {
-transitions.add((Resource) next.getObject());
+found.add((Resource) next.getObject());
 }
 }
-return transitions;
+return found;
 }
 
 @Override

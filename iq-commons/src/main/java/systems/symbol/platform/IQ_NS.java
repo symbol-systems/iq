@@ -2,20 +2,24 @@ package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.COMMONS;
+
+import static systems.symbol.COMMONS.IQ_NS;
 
 
 public interface IQ_NS {
 
-public static final IRI A_WORKFLOW = Values.iri(COMMONS.IQ_NS, "Workflow");
-public static final IRI hasInitialState = Values.iri(COMMONS.IQ_NS, "initial");
-public static final IRI hasTransition = Values.iri(COMMONS.IQ_NS, "to");
-public static final IRI hasGuard = Values.iri(COMMONS.IQ_NS, "guard");
-public static final IRI hasCurrentState = Values.iri(COMMONS.IQ_NS, "state");
+IRI A_WORKFLOW = Values.iri(IQ_NS, "Workflow");
+IRI initialStep = Values.iri(IQ_NS, "initial");
+IRI nextStep = Values.iri(IQ_NS, "to");
+IRI hasGuard = Values.iri(IQ_NS, "guard");
+IRI hasCurrentState = Values.iri(IQ_NS, "state");
 
-public static final IRI doStart = Values.iri(COMMONS.IQ_NS, "start");
-public static final IRI doStop = Values.iri(COMMONS.IQ_NS, "stop");
+IRI doStart = Values.iri(IQ_NS, "start");
+IRI doStop = Values.iri(IQ_NS, "stop");
 
-public final static IRI KNOWS = Values.iri(COMMONS.IQ_NS, "knows");
+IRI doBoot = Values.iri(IQ_NS, "boot");
+IRI KNOWS = Values.iri(IQ_NS, "knows");
+
+IRI nop = Values.iri(IQ_NS, "nop");
 
 }

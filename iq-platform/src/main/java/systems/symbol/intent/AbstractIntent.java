@@ -24,14 +24,8 @@ protected IRI self;
 /**
  * Constructs a new AbstractIntent with the provided RDF4J model and self identity.
  *
- * @param model The RDF4J model associated with the intent.
- * @param self  The self identity of the intent.
  */
-protected AbstractIntent(Model model, IRI self) {
-boot(self, model);
-}
-protected AbstractIntent(IRI self, Model model) {
-boot(self, model);
+protected AbstractIntent() {
 }
 
 /**

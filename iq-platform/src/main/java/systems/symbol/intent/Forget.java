@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static systems.symbol.intent.Learn.KNOWS;
+import static systems.symbol.platform.IQ_NS.KNOWS;
+
 
 public class Forget extends AbstractIntent {
 //static final IRI FORGETS = Values.iri(COMMONS.IQ_NS, "forget");
 public Forget(IRI self, Model model) {
-super(model, self);
+boot(self, model);
 }
 
 /**

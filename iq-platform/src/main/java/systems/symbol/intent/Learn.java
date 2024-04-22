@@ -17,7 +17,7 @@ import static systems.symbol.platform.IQ_NS.KNOWS;
 public class Learn extends AbstractIntent {
 
 public Learn(IRI self, Model model) {
-super(self, model);
+boot(self, model);
 }
 
 /**

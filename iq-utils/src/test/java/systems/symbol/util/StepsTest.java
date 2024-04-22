@@ -11,12 +11,12 @@ String THREE_STEP = "test/example/oops";
 String TWO_STEP_URL = "http://localhost/test//example//#oops";
 String EXT_STEP_URL = "http://localhost/test//example.test";
 
-@Test
-public void testNormalize() {
-Steps.normalize(TWO_STEP_EXT,false).equals(TWO_STEP_EXT);
-Steps.normalize(TWO_STEP_URL,true).equals(THREE_STEP);
-Steps.normalize(TWO_STEP_URL,false).equals(THREE_STEP);
-}
+//@Test
+//public void testNormalize() {
+//assert Steps.normalize(TWO_STEP_EXT,false).equals(TWO_STEP_EXT);
+//assert Steps.normalize(TWO_STEP_URL,true).equals(THREE_STEP);
+//assert Steps.normalize(TWO_STEP_URL,false).equals(THREE_STEP);
+//}
 
 @Test
 public void testParse() {

@@ -22,8 +22,8 @@ import java.util.Set;
  */
 public class JSR233 extends AbstractIntent {
 
-ScriptEngineManager engineManager = new ScriptEngineManager();
-I_Secrets secrets;
+private final ScriptEngineManager engineManager = new ScriptEngineManager();
+private final I_Secrets secrets;
 
 /**
  * Constructs a new JSR233 intent with the provided RDF4J model and self identity.
@@ -32,7 +32,8 @@ I_Secrets secrets;
  * @param self  The self identity of the intent.
  */
 public JSR233(IRI self, Model model) {
-super(model, self);
+boot(self, model);
+this.secrets = null;
 }
 
 /**
@@ -42,7 +43,7 @@ super(model, self);
  * @param self  The self identity of the intent.
  */
 public JSR233(IRI self, Model model, I_Secrets secrets) {
-super(model, self);
+boot(self, model);
 this.secrets = secrets;
 }
 /**

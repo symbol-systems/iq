@@ -26,11 +26,11 @@ protected Consumer<ContentEntity<String>> processor;
 protected Consumer<ContentEntity<String>> ingestRDF;
 protected Consumer<ContentEntity<String>>  llm2RDF;
 public WebPage(IRI self, Model model) throws IOException {
-super(model,self);
+boot(self, model);
 }
 
 public WebPage(IRI self, Model model, I_LLM<String> llm, String prompt) throws IOException {
-super(model,self);
+boot(self, model);
 init(llm, prompt, RDFFormat.JSONLD);
 }
 public void init(I_LLM<String> llm, String prompt, RDFFormat format) throws IOException {
