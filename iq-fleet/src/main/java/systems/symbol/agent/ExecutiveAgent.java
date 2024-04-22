@@ -70,7 +70,7 @@ return true;
 @Override
 public Resource decide() throws StateException {
 Collection<Resource> choices = getStateMachine().getTransitions();
-log.info("decide: {} -> {}", choices, manager==null?"solo":manager);
+log.info("delegating: {} -> {}", choices, manager==null?"solo":manager);
 if (choices.isEmpty()) return null;
 if (choices.size()==1) return choices.iterator().next();
 if (manager == null) return null;

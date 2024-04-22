@@ -5,14 +5,16 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intents;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Bootstrap;
 import systems.symbol.platform.I_Self;
-import systems.symbol.platform.IQ_NS;
 import systems.symbol.secrets.I_Secrets;
 
+import javax.script.SimpleBindings;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,7 @@ import java.util.Set;
 /**
  * Represents a fleet of agents capable of executing intents.
  */
-public abstract class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
+public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 Map<IRI, I_Agent> agents = new HashMap<>();
 IRI self;
@@ -69,7 +71,19 @@ log.info("fleet.deployed: {}", agents.keySet());
  * @return the newly created agent
  * @throws StateException if there is an issue with the state machine
  */
-public abstract I_Agent deploy(IRI self) throws StateException;
+/**
+ * Deploy a new actor instance.
+ *
+ * @param actorthe Agent IRI
+ * @return the newly created actor
+ * @throws StateException if there is an issue with the deployment
+ */
+public I_Agent deploy(IRI actor) throws StateException {
+if (this.agents.containsKey(actor)) return agents.get(actor);
+ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, null, new SimpleBindings());
+agents.put(actor, agent);
+return agent;
+}
 
 /**
  * Retrieves the agent with the given IRI.
@@ -113,9 +127,13 @@ log.info("fleet.started: {}", iris);
  * @throws Exception if there is an issue stopping the agents
  */
 @Override
-public void stop() throws Exception {
+public void stop() {
 for (IRI agent : agents.keySet()) {
+try {
 stop(agent);
+} catch (Exception e) {
+
+}
 }
 }
 

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import systems.symbol.COMMONS;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_AgentContext;
-import systems.symbol.agent.tools.APIException;
 import systems.symbol.finder.Recommends;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Remodel;
@@ -60,11 +59,12 @@ secrets.grant("https://api.search.brave.com", "BRAVE_API_KEY");
 }
 
 @Test
-void fleetHealthy() throws Exception, APIException {
+void fleetSelfTest() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("healthy.fleet.llm.skipped: ");
 return;
 }
+System.out.println("---- self");
 ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
@@ -79,11 +79,13 @@ I_AgentContext<String, Resource> context = fleet.getContext(self);
 assert null != context;
 Bindings my = context.getBindings();
 
+fleet.start();
 System.out.println("healthy.fleet.prompting: "+self);
 context.getConversation().user("How are you ?");
-fleet.start();
-System.out.println("healthy.fleet.started: "+gson.toJson(context.getBindings()));
+fleet.run();
+System.out.println("healthy.fleet.done: "+gson.toJson(context.getBindings()));
 fleet.stop();
+System.out.println("healthy.fleet.stopped");
 
 Iterable<Statement> statements = model.getStatements(self, KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "Self"));
 boolean hasNext = statements.iterator().hasNext();
@@ -101,6 +103,7 @@ if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("brave.fleet.llm.skipped: ");
 return;
 }
+System.out.println("---- search");
 ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
 System.out.println("brave.fleet: "+self);
 
@@ -123,8 +126,10 @@ assert null != context.getConversation();
 String prompt = "What is OpenAI mission?";
 context.getConversation().user(prompt);
 
-System.out.println("brave.deployed @ "+stopwatch.summary());
+System.out.println("brave.thread.in: @ "+stopwatch.summary());
 fleet.start();
+fleet.run();
+System.out.println("brave.thread.out: @ "+stopwatch.summary());
 fleet.stop();
 
 Map<Resource, Double> similarity = Recommends.similarity(memoryModel, Values.iri("http://schema.org/description"), prompt, 0.6);
@@ -144,15 +149,15 @@ System.out.println("brave.dumpFile @ "+stopwatch.summary());
 }
 }
 
-
 @Test
 void guardedFleet() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
-System.err.println("exec.fleet.llm.skipped: ");
+System.err.println("guarded.llm.skipped: ");
 return;
 }
+System.out.println("---- guarded");
 ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
-System.out.println("exec.fleet: "+self);
+System.out.println("guarded.fleet: "+self);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 

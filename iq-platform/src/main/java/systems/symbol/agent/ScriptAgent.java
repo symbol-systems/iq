@@ -19,11 +19,11 @@ public class ScriptAgent extends IntentAgent {
  * @param model The RDF4J model associated with the agent.
  * @param self  The self identity of the agent.
  */
-public ScriptAgent(@NotNull Model model, @NotNull IRI self, Bindings bindings) throws StateException {
+public ScriptAgent(@NotNull IRI self, @NotNull Model model, Bindings bindings) throws StateException {
 super(self, model, new JSR233(self, model), bindings);
 }
 
-public ScriptAgent(@NotNull Model model, @NotNull IRI self) throws StateException {
+public ScriptAgent(@NotNull IRI self, @NotNull Model model) throws StateException {
 super(self, model, new JSR233(self, model), new SimpleBindings());
 }
 }

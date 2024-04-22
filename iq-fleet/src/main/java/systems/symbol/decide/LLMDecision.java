@@ -26,7 +26,7 @@ import static systems.symbol.agent.MyFacade.PROMPT;
 /*
  * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
  */
-public class ExecutiveDecision implements I_Delegate<Resource> {
+public class LLMDecision implements I_Delegate<Resource> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 
 private final I_LLM<String> llm;
@@ -41,7 +41,7 @@ I_AgentContext<String,Resource> context;
  * @param agent The agent requesting a decision.
  * @param agent The FSM associated with the decision.
  */
-public ExecutiveDecision(I_LLM<String> llm, I_Agent agent, I_AgentContext<String,Resource> context) {
+public LLMDecision(I_LLM<String> llm, I_Agent agent, I_AgentContext<String,Resource> context) {
 this.llm = llm;
 this.agent = agent;
 this.context = context;

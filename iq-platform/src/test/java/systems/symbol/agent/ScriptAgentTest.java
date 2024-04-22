@@ -38,7 +38,7 @@ model.add(wip, RDF.VALUE, scriptBody);
 
 @Test
 void testExecution() throws Exception {
-ScriptAgent agent = new ScriptAgent(model, self);
+ScriptAgent agent = new ScriptAgent(self, model);
 Set<IRI> executed = agent.execute(self, wip, new SimpleBindings());
 System.out.println("agent.script.executed: "+executed);
 RDFDump.dump(model);
@@ -50,7 +50,7 @@ assert propertyLiteral.get().stringValue().equals("world");
 
 @Test
 void testStateExecution() throws Exception {
-ScriptAgent agent = new ScriptAgent(model, self);
+ScriptAgent agent = new ScriptAgent(self, model);
 ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
 agent.setFSM(workflow_0);
 assert workflow_0.equals(agent.fsm);

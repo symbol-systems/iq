@@ -58,7 +58,7 @@ log.info("started: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
 @Override
-public void stop() throws Exception {
+public void stop()  {
 log.info("stopped: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
