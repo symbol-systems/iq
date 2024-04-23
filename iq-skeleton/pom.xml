@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.7</version>
+        <version>0.76.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>

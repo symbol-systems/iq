@@ -1,15 +1,14 @@
 package systems.symbol.rdf4j.sparql;
 
 import com.github.jknack.handlebars.Handlebars;
-import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.rdf4j.util.RDFPrefixer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -89,27 +88,7 @@ public class SPARQLer {
     }
 
     public static String ensurePrefixes(RepositoryConnection connection, String query) {
-        if (!query.toUpperCase().contains("PREFIX ")) {
-            return getPrefixes(connection).append(query).toString();
-        }
-        return query;
-    }
-
-    public static StringBuilder getPrefixes(RepositoryConnection connection) {
-        StringBuilder prefixes = new StringBuilder();
-
-        try (RepositoryResult<Namespace> namespaces = connection.getNamespaces()) {
-            while (namespaces.hasNext()) {
-                Namespace namespace = namespaces.next();
-                prefixes.append("PREFIX ")
-                        .append(namespace.getPrefix())
-                        .append(": <")
-                        .append(namespace.getName())
-                        .append(">\n");
-            }
-            // namespaces.close();
-            return prefixes;
-        }
-
+        if (query.toUpperCase().contains("PREFIX ")) return query;
+        return RDFPrefixer.getSPARQLPrefix(connection)+"\n"+query;
     }
 }

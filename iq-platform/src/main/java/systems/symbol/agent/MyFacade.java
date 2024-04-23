@@ -1,5 +1,6 @@
 package systems.symbol.agent;
 
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -53,8 +54,14 @@ public class MyFacade {
     }
 
     public static Bindings rebind(IRI agent, Resource state, Model model, Bindings my, I_Secrets secrets) {
-        Bindings bindings = rebind(agent,state, my);
-        bindings.put(IQ, new IQFacade(agent, model, secrets));
+        Bindings bindings = rebind(agent, state, my);
+        IQFacade facade = new IQFacade(agent, model, secrets);
+        try {
+            facade.enableVFS();
+        } catch (FileSystemException e) {
+            // ignore
+        }
+        bindings.put(IQ, facade);
         return bindings;
     }
 

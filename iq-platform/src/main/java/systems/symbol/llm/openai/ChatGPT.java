@@ -42,7 +42,7 @@ public class ChatGPT implements I_LLM<String> {
     }
 
     @Override
-    public I_Thread<String> complete(I_Thread<String> chats) throws APIException, IOException {
+    public void complete(I_Thread<String> chats) throws APIException, IOException {
 
         RestAPI api = new RestAPI(config.getURL(), token);
 
@@ -66,7 +66,6 @@ public class ChatGPT implements I_LLM<String> {
                 }
             } else throw new IOException();
         }
-        return chats;
     }
 
     @Override
@@ -101,5 +100,37 @@ public class ChatGPT implements I_LLM<String> {
         message.put("role", chat.getRole());
         message.put("content", chat.getContent());
         return message;
+    }
+
+    public static class ChatGPTResponse {
+
+        public String id;
+        public String object;
+        public long created;
+        public String model;
+        public List<Choice> choices;
+        public Usage usage;
+        public String system_fingerprint;
+
+        public ChatGPTResponse() {}
+
+        public static class Choice {
+            public int index;
+            public Message message;
+            public Object logprobs;
+            public String finish_reason;
+        }
+
+        public static class Message {
+            public String role;
+            public String content;
+
+        }
+
+        public static class Usage {
+            public int prompt_tokens;
+            public int completion_tokens;
+            public int total_tokens;
+        }
     }
 }

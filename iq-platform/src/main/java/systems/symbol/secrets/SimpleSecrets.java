@@ -30,13 +30,11 @@ public class SimpleSecrets implements I_Secrets, Serializable {
      *
      * @param key   The key for which the secret is requested.
      * @return The secret associated with the key.
-     * @throws SecretsException If access is denied.
      */
     @Override
-    public String getSecret(String key) throws SecretsException {
+    public String getSecret(String key) {
         return secretStore.get(key);
     }
-
 
     /**
      * Provide a string representation of the secrets and access control information.

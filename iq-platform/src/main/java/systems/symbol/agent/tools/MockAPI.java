@@ -38,7 +38,7 @@ public class MockAPI implements I_API<Response> {
     }
 
     @Override
-    public Response get(Map<String, String> queryParams) {
+    public Response get(Map<String, Object> queryParams) {
         return build(url, secret, 200, body).build();
     }
 
@@ -48,19 +48,19 @@ public class MockAPI implements I_API<Response> {
     }
 
     @Override
-    public Response delete(Map<String, String> queryParams) {
+    public Response delete(Map<String, Object> queryParams) {
         return build(url, secret, 200, body).build();
 
     }
 
     @Override
-    public Response put(Map<String, String> json) {
+    public Response put(Map<String, Object> json) {
         return build(url, secret, 200, body).build();
 
     }
 
     @Override
-    public Response head(Map<String, String> queryParams) {
+    public Response head(Map<String, Object> queryParams) {
         return build(url, secret, 200, "").build();
     }
 

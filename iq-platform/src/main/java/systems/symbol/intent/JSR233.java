@@ -64,6 +64,7 @@ public class JSR233 extends AbstractIntent {
             done.add(actor);
 //            log.info("script.result: {} -> {}", state, result);
         } catch (ScriptException e) {
+            log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName(), e);
             throw new StateException(e.getMessage(), state, e);
         }
         return done;

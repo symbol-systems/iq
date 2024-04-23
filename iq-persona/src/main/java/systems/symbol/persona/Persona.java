@@ -23,6 +23,10 @@ public class Persona implements I_Persona {
 	public Persona()  {
 	}
 
+	public void speak(String words) throws JavaLayerException, IOException {
+		play(say(words));
+	}
+
 	public InputStream say(String words) {
 		PollyClient polly = PollyClient.builder()
 //                .region(Region.AP_SOUTHEAST_2)
@@ -48,10 +52,11 @@ public class Persona implements I_Persona {
 
 	}
 
-	public void play(InputStream mp3) throws JavaLayerException {
+	public void play(InputStream mp3) throws JavaLayerException, IOException {
+		System.out.println("audio.played: "+mp3);
+		if (mp3==null) return;
 		Player player = new Player(mp3);
 		player.play();
-		System.out.println("audio.played");
 	}
 
 	public static InputStream synthesize(PollyClient polly, String text, Voice voice, OutputFormat format) {

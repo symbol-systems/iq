@@ -11,7 +11,8 @@ import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
 
 import java.io.File;
 
-public class VFS extends DefaultFileSystemManager  {
+public class
+VFS extends DefaultFileSystemManager  {
 
     public VFS() throws FileSystemException {
         init();

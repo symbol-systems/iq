@@ -106,7 +106,7 @@ public class Executive extends AbstractIntent implements I_Intents {
      * @param o The object IRI - the object/target of the intent.
      * @return A Set of IRIs representing the result of the intent or null if no intent.
      */
-    protected Set<IRI> executeIntent(IRI actor, IRI p, IRI o, Bindings bindings) throws StateException {
+    protected Set<IRI> executeIntent(IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
         I_Intent intent = this.intents.get(p);
         if (intent == null) return new IRIs();
         log.info("execute.intent: {} @ {}", p, o);
@@ -124,8 +124,8 @@ public class Executive extends AbstractIntent implements I_Intents {
             Resource s = maybe.getSubject();
             IRI p = maybe.getPredicate();
             Value o = maybe.getObject();
-            if (s.isIRI() && o.isIRI() && p.isResource()) {
-                done.addAll( executeIntent(actor, p, (IRI) o, bindings) );
+            if (s.isIRI() && o.isResource() && p.isResource()) {
+                done.addAll( executeIntent(actor, p, (Resource) o, bindings) );
             }
         }
         log.info("execute.done: {}", done);

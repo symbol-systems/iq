@@ -1,16 +1,16 @@
 package systems.symbol.controller.llm;
 
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.llm.ChatThread;
-import systems.symbol.llm.I_Thread;
-import systems.symbol.llm.openai.ChatGPT;
-import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
-import systems.symbol.string.Validate;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.llm.ChatThread;
+import systems.symbol.llm.openai.ChatGPT;
+import systems.symbol.string.Validate;
+
 import java.io.IOException;
 
 /**
@@ -63,13 +63,9 @@ public class OpenAI extends GuardedAPI {
         }
         ChatGPT gpt = new ChatGPT(System.getenv("OPENAI_API_KEY"), 100);
         ChatThread chat = new ChatThread();
-        chat.add("user", query);
-        I_Thread<String> generated = gpt.complete(chat);
-
-        System.out.println("api.llm.openai.generated: "+generated.messages());
-        // to BODY into `JSON`
-//        Map<String, Object> map = objectMapper.readValue(body, Map.class);
-
-        return new SimpleResponse(generated).asJSON();
+        chat.user(query);
+        gpt.complete(chat);
+        System.out.println("api.llm.openai.generated: "+chat.messages());
+        return new SimpleResponse(chat).asJSON();
     }
 }

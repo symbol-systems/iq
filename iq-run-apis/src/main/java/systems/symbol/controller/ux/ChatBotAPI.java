@@ -40,9 +40,8 @@ public class ChatBotAPI extends GuardedAPI {
 
         I_LLM<String> llm = new ChatGPT(llmToken, 1000);
         I_Thread<String> chat = new ChatThread();
-        I_Thread<String> reply = llm.complete(chat);
-//        ScriptAgent agent = new ScriptAgent(IQ_NS.nop, );
-        log.info("api.chat: {}", reply.messages());
-        return new SimpleResponse(reply).asJSON();
+        llm.complete(chat);
+        log.info("api.chat: {}", chat.messages());
+        return new SimpleResponse(chat).asJSON();
     }
 }

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,10 @@ public class RestAPI implements I_API<Response> {
      * @param authToken The authentication token for API requests.
      */
     public RestAPI(String baseURL, String authToken, String authHeader) {
-        this.client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(Duration.ofSeconds(30));
+        builder.callTimeout(Duration.ofSeconds(30));
+        this.client = builder.build();
         this.baseURL = baseURL;
         this.authToken = authToken;
         this.authHeader = authHeader;
@@ -83,7 +87,7 @@ public class RestAPI implements I_API<Response> {
      * @throws APIException  If the API response is not successful.
      */
     @Override
-    public Response head(Map<String, String> queryParams) throws IOException, APIException {
+    public Response head(Map<String, Object> queryParams) throws IOException, APIException {
         HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
         buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -112,7 +116,7 @@ public class RestAPI implements I_API<Response> {
      * @throws APIException  If the API response is not successful.
      */
     @Override
-    public Response get(Map<String, String> queryParams) throws IOException, APIException {
+    public Response get(Map<String, Object> queryParams) throws IOException, APIException {
         HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
         if (queryParams!=null) buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -129,7 +133,7 @@ public class RestAPI implements I_API<Response> {
      * @throws APIException  If the API response is not successful.
      */
     @Override
-    public Response delete(Map<String, String> queryParams) throws IOException, APIException {
+    public Response delete(Map<String, Object> queryParams) throws IOException, APIException {
         HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
         buildUrlWithQueryParameters(urlBuilder, queryParams);
 
@@ -149,10 +153,10 @@ public class RestAPI implements I_API<Response> {
     public Response post(Map<String, Object> json) throws IOException, APIException {
         String jsonBody = convertObjectToJsonString(json);
         RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse("application/json"));
-
-        log.debug("agent.api.post: {} -> {}", getURL(), jsonBody);
-        Request request = createRequestBuilder().url(getURL()).post(requestBody).build();
-        return executeRequest(request);
+        log.info("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
+        Request.Builder builder = createRequestBuilder().url(getURL());
+        builder.post(requestBody);
+        return executeRequest(builder.build());
     }
 
     /**
@@ -164,7 +168,7 @@ public class RestAPI implements I_API<Response> {
      * @throws APIException  If the API response is not successful.
      */
     @Override
-    public Response put(Map<String, String> json) throws IOException, APIException {
+    public Response put(Map<String, Object> json) throws IOException, APIException {
         String jsonBody = convertObjectToJsonString(json);
         RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
@@ -178,10 +182,10 @@ public class RestAPI implements I_API<Response> {
      * @param urlBuilder   The URL builder.
      * @param queryParams  The query parameters.
      */
-    private void buildUrlWithQueryParameters(HttpUrl.Builder urlBuilder, Map<String, String> queryParams) {
+    private void buildUrlWithQueryParameters(HttpUrl.Builder urlBuilder, Map<String, Object> queryParams) {
         if (queryParams != null) {
-            for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-                urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+                urlBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
             }
         }
     }
@@ -217,10 +221,11 @@ public class RestAPI implements I_API<Response> {
      */
     private Response executeRequest(Request request) throws IOException {
         try {
+            log.info("api.request: {}", request );
             return client.newCall(request).execute();
         } catch (java.net.SocketTimeoutException e) {
             // retry
-            log.debug("retry: {}", request );
+            log.warn("api.retry: {}", request );
             return client.newCall(request).execute();
         }
     }

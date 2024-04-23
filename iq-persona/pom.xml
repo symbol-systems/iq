@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.7</version>
+        <version>0.76.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -136,11 +136,6 @@
             <artifactId>iq-platform</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>systems.symbol</groupId>
-            <artifactId>iq-fleet</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -166,6 +161,11 @@
             <version>0.3.45</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.vveird</groupId>
+            <artifactId>StreamDeckCore</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 
 </project>

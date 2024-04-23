@@ -2,7 +2,15 @@ package systems.symbol.agent;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.ivy.util.CopyProgressEvent;
+import org.apache.ivy.util.CopyProgressListener;
+import org.apache.ivy.util.FileUtil;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
@@ -12,12 +20,17 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.fsm.StateException;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +43,7 @@ public class IQFacade {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final Model model;
     private final IRI self;
+    private FileSystemManager vfs;
     I_Secrets secrets;
     Gson gson = new Gson();
 
@@ -47,10 +61,15 @@ public class IQFacade {
         this.secrets = secrets;
     }
 
+    protected void enableVFS() throws FileSystemException {
+        this.vfs = VFS.getManager();
+        log.info("api.vfs: {} ", vfs);
+    }
     public RestAPI api(String url) throws SecretsException {
-        log.info("api.url: {}", url);
+        String secret = secrets.getSecret(url);
+        log.info("api.url: {} -> {}", url, secret);
         if (secrets==null) return new RestAPI(url);
-        return new RestAPI(url, secrets.getSecret(url));
+        return new RestAPI(url, secret);
     }
 
     public RestAPI api(String url, String header) throws SecretsException {
@@ -121,5 +140,43 @@ public class IQFacade {
             }
         }
         return literals;
+    }
+
+    public FileObject download(String url) throws APIException, IOException, StateException {
+        RestAPI api = new RestAPI(url, secrets.getSecret(url));
+        Response response = api.get();
+        assert response.body() != null;
+        InputStream in = response.body().byteStream();
+        return save(in);
+    }
+    public FileObject save(InputStream in) throws StateException {
+        if (this.vfs==null) throw new StateException("save.disabled", self);
+        try {
+            File file = new File("tested/saved.png");
+            FileObject fileObject = vfs.resolveFile(file.toURI().toASCIIString());
+            log.info("copy.save: {}", fileObject);
+            fileObject.setWritable(true, true);
+            OutputStream out = fileObject.getContent().getOutputStream();
+            FileUtil.copy(in, out, new CopyProgressListener() {
+                @Override
+                public void start(CopyProgressEvent copyProgressEvent) {
+                    log.info("copy.start: {}", copyProgressEvent.getTotalReadBytes());
+                }
+
+                @Override
+                public void progress(CopyProgressEvent copyProgressEvent) {
+                    log.info("copy.progress: {}", copyProgressEvent.getTotalReadBytes());
+                }
+
+                @Override
+                public void end(CopyProgressEvent copyProgressEvent) {
+                    log.info("copy.end: {}", copyProgressEvent.getTotalReadBytes());
+                }
+            }, true);
+
+            return fileObject;
+        } catch (IOException e) {
+            throw new StateException(e.getMessage(), self, e);
+        }
     }
 }

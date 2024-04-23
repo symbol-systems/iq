@@ -199,7 +199,7 @@ mixed:
       all: false
   top: []
   side: []
-type: brave_search
+type: search
 videos:
   type: videos
   results:
@@ -304,7 +304,7 @@ videos:
         src: https://imgs.search.brave.com/FKyajJAl6wXEF_3zAC2l9ZRuKAJSp7f5Aw66mIEjo20/rs:fit:200:200:1/g:ce/aHR0cHM6Ly9pLnl0/aW1nLmNvbS92aS8x/RGN1NUJmbkVfYy9t/YXhyZXNkZWZhdWx0/LmpwZw
   mutated_by_goggles: false
 web:
-  type: brave_search
+  type: search
   results:
     - title: Jason Calacanis - Founder University | LinkedIn
       url: https://www.linkedin.com/in/jasoncalacanis
@@ -814,7 +814,7 @@ web:
         netloc: twitter.com
         hostname: twitter.com
         favicon: https://imgs.search.brave.com/Zq483bGX0GnSgym-1P7iyOyEDX3PkDZSNT8m56F862A/rs:fit:32:32:1/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2MxOTUxNzhj/OTY1ZTQ3N2I0MjJk/MTY5NGM0MTRlYWVi/MjU1YWE2NDUwYmQ2/YTA2MDFhMDlkZDEx/NTAzZGNiNi90d2l0/dGVyLmNvbS8
-        path: "› brave_search"
+        path: "› search"
     - title: This Week in Startups
       url: https://www.youtube.com/user/ThisWeekIn
       is_source_local: false

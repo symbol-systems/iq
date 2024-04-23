@@ -1,9 +1,7 @@
 package systems.symbol.rdf4j.util;
 
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Namespace;
-import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -24,7 +22,6 @@ import java.util.Map;
  */
 public class RDFPrefixer {
 
-
 	public static void defaultNamespaces(RepositoryConnection to) throws RepositoryException {
 		Map<String, String> ns = defaults();
 		for (String n : ns.keySet()) {
@@ -37,6 +34,14 @@ public class RDFPrefixer {
 		for (String n : ns.keySet()) {
 			to.setNamespace(n, ns.get(n));
 		}
+	}
+
+	public static Map<String, String> simple() {
+		Map<String, String> ns = new HashMap<>();
+		ns.put("rdf", RDF.NAMESPACE);
+		ns.put("rdfs", RDFS.NAMESPACE);
+		ns.put("skos", SKOS.NAMESPACE);
+		return ns;
 	}
 
 	public static Map<String, String> defaults() {
@@ -75,12 +80,7 @@ public class RDFPrefixer {
 		StringBuilder names$ = new StringBuilder();
 		for (String n : ns.keySet()) {
 			String v = ns.get(n);
-			names$.
-					append("PREFIX ").
-					append(n).
-					append(": <").
-					append(v).
-					append(">\n");
+			names$.append("PREFIX ").append(n).append(": <").append(v).append(">\n");
 		}
 		return names$.toString();
 	}
@@ -90,15 +90,19 @@ public class RDFPrefixer {
 		StringBuilder names$ = new StringBuilder();
 		for (String n : ns.keySet()) {
 			String v = ns.get(n);
-			names$.
-					append("@prefix ").
-					append(n).
-					append(": <").
-					append(v).
-					append(">.\n");
+			names$.append("@prefix ").append(n).append(": <").append(v).append(">.\n");
 		}
 		return names$;
 	}
 
+
+	public static StringBuilder toPrefix(Map<String, String> ns) throws RepositoryException {
+		StringBuilder names$ = new StringBuilder();
+		names$.append("|@prefix|namespace url|");
+		for (String n : ns.keySet()) {
+			names$.append("| ").append(n).append(": |").append(ns.get(n)).append("|\n");
+		}
+		return names$;
+	}
 
 }
