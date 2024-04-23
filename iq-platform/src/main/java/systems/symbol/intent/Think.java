@@ -11,15 +11,24 @@ import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
+import systems.symbol.llm.I_LLM;
+import systems.symbol.llm.I_Thread;
+import systems.symbol.llm.Prompts;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.io.FileFormats;
 import systems.symbol.render.HBSRenderer;
+import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.***REMOVED***.Matcher;
+import java.util.***REMOVED***.Pattern;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
 import static systems.symbol.agent.MyFacade.INTENT;
@@ -28,17 +37,21 @@ public class Think extends AbstractIntent {
 
 IRI templateMime;
 I_Contents contents;
+I_LLM<String> llm;
+Pattern extractBody = Pattern.compile("```(\\w+\n)\\s*(.*?)\n```", Pattern.DOTALL);
 
-public Think(IRI self, Model model, I_Contents contents) {
+public Think(IRI self, Model model, I_Contents contents, I_LLM<String> llm) {
 boot(self, model);
 this.templateMime = null;
 this.contents = contents;
+this.llm = llm;
 }
 
-protected Think(IRI self, Model model, IRI templateMime, I_Contents contents) {
+protected Think(IRI self, Model model, IRI templateMime, I_Contents contents, I_LLM<String> llm) {
 boot(self, model);
 this.templateMime = templateMime;
 this.contents = contents;
+this.llm = llm;
 }
 
 /**
@@ -48,52 +61,53 @@ this.contents = contents;
  * @param state  state for each model
  * @return Set of one IRI for the new triple
  */
-public Set<IRI> remodel(IRI actor, Resource state, Bindings bindings) throws IOException {
+public Set<IRI> thinks(IRI actor, Resource state, Bindings bindings) throws IOException, APIException {
 Set<IRI> done = new HashSet<>();
 Literal hbs = contents.getContent(state, templateMime);
-log.info("remodel: {} -> {} - {}", actor, state, hbs!=null);
+log.info("thinks: {} @ {} - {}", actor, state, hbs!=null);
 if (hbs == null) return done;
-done.addAll( remodel(actor, state, hbs, bindings, model) );
+done.addAll( thinks(actor, state, hbs, bindings, model) );
    return done;
 }
 
-public static List<Map<String, Object>> safeCast(Object rawResults) {
-if (rawResults == null ) return null;
-if (!(rawResults instanceof List)) return null;
-List<?> rawList = (List<?>) rawResults;
-if (rawList.isEmpty()) return new ArrayList<>();
-if (rawList.get(0) instanceof Map) {
-@SuppressWarnings("unchecked")
-List<Map<String, Object>> results = (List<Map<String, Object>>) rawResults;
-return results;
-}
-return null;
-}
-
-protected Set<IRI> remodel(IRI actor, Resource state, Literal hbs, Bindings my, Model model) throws IOException {
+protected Set<IRI> thinks(IRI actor, Resource state, Literal hbs, Bindings my, Model model) throws IOException, APIException {
 Bindings bindings = MyFacade.rebind(actor, state, my);
-log.info("remodel.bindings: {} -> {} -> {}", hbs.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
-String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);
+String intent = my.containsKey(INTENT)?my.get(INTENT).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
+log.info("think.bindings: {} -> {} -> {}", hbs.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
 String mime = FileFormats.toMime(templateMime);
 RDFFormat format = Rio.getWriterFormatForMIMEType(mime).orElseGet(() -> RDFFormat.TURTLE);
-log.info("remodel.format: {} --> {}", actor, format);
+
+String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);
+log.info("think.raw: {} -> {}", format, remodelled);
+
+I_Thread<String> thought = Prompts.think(actor, state, intent, model, my, format);
+thought.user(remodelled);
+log.info("think.prompt: {}", thought);
+llm.complete(thought);
+String rdf = hackItToWork(thought.latest().getContent());
+log.info("think.thoughts: {}", rdf);
 
 ParserConfig config = new ParserConfig();
 config.set(FAIL_ON_INVALID_LINES, false);
 
-String intent = my.containsKey(INTENT)?my.get(INTENT).toString():actor.stringValue();
-Model parsed = Rio.parse(new StringReader(remodelled), intent, format);
+Model parsed = Rio.parse(new StringReader(rdf), intent, format);
 model.addAll(parsed);
 return Models.subjectIRIs(parsed);
 }
 
+String hackItToWork(String msg) {
+Matcher matcher = extractBody.matcher(msg);
+if (!matcher.find()) return msg;
+return matcher.group(2);
+}
+
 @Override
-@RDF(COMMONS.IQ_NS+"remodel")
+@RDF(COMMONS.IQ_NS+"think")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 try {
-return remodel(actor, state, bindings);
-} catch (IOException e) {
+return thinks(actor, state, bindings);
+} catch (IOException | APIException e) {
 throw new StateException(e.getMessage(), state, e);
 }
 }

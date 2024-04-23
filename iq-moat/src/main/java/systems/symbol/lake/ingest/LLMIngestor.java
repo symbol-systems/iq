@@ -26,8 +26,8 @@ protected ContentEntity<String> transform (ContentEntity<?> content) throws IOEx
 ChatThread thread = new ChatThread();
 thread.system(systemPrompt+"\n: Your base URI is:"+content.getSelf());
 thread.user(content.getContent().toString());
-I_Thread<String> answer = this.llm.complete(thread);
-I_LLMessage<?> latest = answer.latest();
+this.llm.complete(thread);
+I_LLMessage<?> latest = thread.latest();
 String reply = latest.getContent().toString();
 log.debug("llm.reply: {} -> {}", latest.getType(), reply);
 return new ContentEntity<String>(content.getSelf(), reply);

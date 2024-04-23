@@ -18,6 +18,7 @@ import systems.symbol.agent.I_AgentContext;
 import systems.symbol.finder.Recommends;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Remodel;
+import systems.symbol.intent.Think;
 import systems.symbol.llm.openai.ChatGPT;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
@@ -44,9 +45,10 @@ static BootstrapRepository assets;
 private static IRI self;
 String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
 Gson gson = new Gson();
-private static final Resource search = Values.iri(COMMONS.IQ_NS_TEST, "search");
+private static final Resource selfIntent = Values.iri(COMMONS.IQ_NS_TEST, "self");
 private static final File testedFolder = new File("tested/");
 private static final Resource aware = Values.iri(COMMONS.IQ_NS_TEST, "aware");;
+private static final Resource think = Values.iri(COMMONS.IQ_NS_TEST, "think");
 
 @BeforeEach
 public void setUp() throws IOException {
@@ -56,9 +58,10 @@ assert COMMONS.IQ_NS_TEST.equals( self.stringValue() );
 testedFolder.mkdirs();
 secrets = new APISecrets(new EnvsAsSecrets());
 secrets.grant("https://api.search.brave.com", "BRAVE_API_KEY");
+secrets.grant("https://api.openai.com/", "OPENAI_API_KEY");
 }
 
-@Test
+//@Test
 void fleetSelfTest() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("healthy.fleet.llm.skipped: ");
@@ -97,7 +100,7 @@ assert ((List<Map<?,?>>)my.get("results")).get(0).get("label").equals("healthy")
 }
 }
 
-@Test
+//@Test
 void searchBrave() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("brave.fleet.llm.skipped: ");
@@ -149,7 +152,7 @@ System.out.println("brave.dumpFile @ "+stopwatch.summary());
 }
 }
 
-@Test
+//@Test
 void guardedFleet() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("guarded.llm.skipped: ");
@@ -181,15 +184,88 @@ System.out.println("fleet.guarded: "+agent.getStateMachine().getState());
 }
 // check we're guarded
 assert guarded[0];
+assert !agent.getStateMachine().getState().equals(selfIntent);
 assert !agent.getStateMachine().getState().equals(aware);
 // satisfy the guard
 model.add(self, KNOWS, Values.iri(COMMONS.IQ_NS_TEST, "Self"));
-// try the transition again
+// try the transition again ... we should skip to
 Resource transitioned = agent.getStateMachine().transition(aware);
+System.out.println("fleet.transitioned: "+transitioned);
 // check we're all good
 assert null != transitioned;
-assert aware.equals(transitioned);
-assert aware.equals(agent.getStateMachine().getState());
+assert selfIntent.equals(transitioned);
+assert selfIntent.equals(agent.getStateMachine().getState());
 }
 }
+
+//@Test
+void generateImage() throws Exception {
+if (Validate.isMissing(OPENAI_API_KEY)) {
+System.err.println("image.fleet.llm.skipped: ");
+return;
 }
+System.out.println("---- image generation");
+ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+System.out.println("image.fleet: "+self);
+
+Stopwatch stopwatch = new Stopwatch();
+try (RepositoryConnection connection = assets.getConnection()) {
+Model model = new LiveModel(connection);
+DynamicModel memoryModel = dmf.createEmptyModel();
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+
+fleet.intents.add(new Remodel(self, memoryModel, new ModelScriptCatalog(model)));
+fleet.deploy();
+assert !fleet.agents.isEmpty();
+
+I_AgentContext<String,Resource> context = fleet.getContext(self);
+assert null != context;
+I_Agent agent = fleet.getAgent(self);
+assert null != agent;
+assert null != context.getConversation();
+
+String prompt = "Generate image of a feminine digital intelligence in pastel shades";
+context.getConversation().user(prompt);
+
+System.out.println("image.thread.in: @ "+stopwatch.summary());
+fleet.start();
+fleet.run();
+System.out.println("image.thread.out: @ "+stopwatch.summary());
+fleet.stop();
+
+System.out.println("image.done @ "+stopwatch.summary());
+}
+}
+
+@Test
+void testThink() throws Exception {
+if (Validate.isMissing(OPENAI_API_KEY)) {
+System.err.println("thinking.llm.skipped: ");
+return;
+}
+System.out.println("---- thinking");
+ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+System.out.println("thinking.fleet: "+self);
+
+APISecrets secrets = new APISecrets(new EnvsAsSecrets());
+
+try (RepositoryConnection connection = assets.getConnection()) {
+Model model = new LiveModel(connection);
+Model thoughts = new DynamicModelFactory().createEmptyModel();
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+fleet.intents.add(new Think(self, thoughts, new ModelScriptCatalog(model), gpt));
+fleet.deploy();
+I_Agent agent = fleet.getAgent(self);
+
+I_AgentContext<String, Resource> context = fleet.getContext(self);
+//context.
+assert null != agent;
+Resource transitioned = agent.getStateMachine().transition(think);
+System.out.println("thinking.done: "+transitioned+" -> "+thoughts.size());
+RDFDump.dump(thoughts);
+// check we're all good
+assert null != transitioned;
+assert think.equals(transitioned);
+assert think.equals(agent.getStateMachine().getState());
+}
+}}

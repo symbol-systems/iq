@@ -1,4 +1,4 @@
-package fleet.script
+package fleet.tools.brave
 
 import systems.symbol.agent.IQFacade
 

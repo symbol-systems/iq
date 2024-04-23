@@ -1,11 +1,10 @@
 package systems.symbol.rdf4j.util;
 
-import org.eclipse.rdf4j.model.util.Models;
-import systems.symbol.rdf4j.NS;
-import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.util.Models;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
@@ -14,9 +13,11 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.rdf4j.NS;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * symbol.systems (c) 2014
@@ -55,11 +56,11 @@ public static IRI toIRI(RepositoryConnection c, String s) {
 		return namespace$;
 	}
 
-	public static CloseableIteration<? extends Statement, QueryEvaluationException> find(TripleSource tripleSource, IRI s, IRI p, Value v, IRI c) {
-	if (c==null)
-			return tripleSource.getStatements(s, p, v);
-		return tripleSource.getStatements(s, p, v, c);
-	}
+//	public static CloseableIteration<? extends Statement, QueryEvaluationException> find(TripleSource tripleSource, IRI s, IRI p, Value v, IRI c) {
+//	if (c==null)
+//			return tripleSource.getStatements(s, p, v);
+//		return tripleSource.getStatements(s, p, v, c);
+//	}
 
 	public static void save(RepositoryConnection connection, IRI subject, Map<IRI, Value> model, IRI context) {
 		ValueFactory vf = connection.getValueFactory();
@@ -72,16 +73,18 @@ public static IRI toIRI(RepositoryConnection c, String s) {
 		connection.commit();
 	}
 
-	public static Literal label(Model model, Resource self) {
-		Set<Literal> values = Models.getPropertyLiterals(model, self, RDFS.LABEL);
-		if (!values.isEmpty())  return values.iterator().next();
-		return null;
+	public static Literal label(Model model, Value find) {
+		if (find.isLiteral()) return (Literal)find;
+		Set<Literal> values = Models.getPropertyLiterals(model, (Resource) find, RDFS.LABEL);
+		if (values.isEmpty()) return null;
+		return values.iterator().next();
 	}
 
-	public static Literal value(Model model, Resource self) {
-		Set<Literal> values = values(model, self);
-		if (!values.isEmpty())  return values.iterator().next();
-		return null;
+	public static Literal value(Model model, Value find) {
+		if (find.isLiteral()) return (Literal)find;
+		Set<Literal> values = values(model, (Resource) find);
+		if (values.isEmpty()) return null;
+		return values.iterator().next();
 	}
 
 	public static Set<Literal> values(Model model, Resource self) {

@@ -11,8 +11,8 @@ import systems.symbol.agent.I_AgentContext;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_LLMessage;
 import systems.symbol.llm.I_Thread;
+import systems.symbol.llm.Prompts;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static systems.symbol.agent.MyFacade.PROMPT;
 
 /*
  * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
@@ -59,25 +57,25 @@ this.context = context;
 public Resource decide() throws StateException {
 try {
 I_Thread<String> situation = Prompts.decision(agent, context);
-if (situation.latest()==null) {
-throw new StateException("not ready", agent.getStateMachine().getState());
-}
-String prompt = Prompts.prompt(situation, I_LLMessage.RoleType.user);
-log.info("executive.prompt: {}", prompt);
-context.getBindings().put(PROMPT, prompt);
-I_Thread<String> response = llm.complete(situation);
+llm.complete(situation);
 
-String content = response.latest().getContent();
-log.info("executive.response: {}", content);
-if ( Validate.isMissing(content) ) return null;
-
-Map<String, Object> reply = gson.fromJson( content, new TypeToken<HashMap<String, Object>>() {}.getType() );
-history.add(reply);
+String decision = situation.latest().getContent();
+log.info("executive.decision: {}", decision);
+if ( Validate.isMissing(decision) ) return null;
+Map<String, Object> reply = gson.fromJson( decision, new TypeToken<HashMap<String, Object>>() {}.getType() );
 String intent = (String) reply.get(Prompts.INTENT);
 log.info("executive.intent: {} --> {}", reply, intent);
+if (intent==null||intent.isEmpty())
+throw new StateException("situation.failed", agent.getSelf());
+history.add(reply);
+String assistant = (String) reply.get(Prompts.CONTENT);
+if (assistant!=null) context.getConversation().assistant(assistant);
+
+context.getBindings().put("prompts", context.getConversation().messages());
+context.getBindings().put("answer", context.getConversation().latest().getContent());
 return Values.iri(intent);
 } catch (IOException | APIException e) {
-throw new StateException(e.getMessage(), agent.getStateMachine().getState(), e);
+throw new StateException(e.getMessage(), agent, e);
 }
 }
 

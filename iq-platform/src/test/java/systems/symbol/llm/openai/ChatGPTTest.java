@@ -1,9 +1,8 @@
 package systems.symbol.llm.openai;
 
+import org.junit.jupiter.api.Test;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.ChatThread;
-import systems.symbol.llm.I_Thread;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -16,12 +15,11 @@ if (openaiApiKey!=null) {
 try {
 ChatGPT ai = new ChatGPT(openaiApiKey, 100);
 ChatThread chat = new ChatThread();
-chat.add("user", "hello");
+chat.user( "hello");
 System.out.println("agent.llm.openai.messages: "+chat.messages());
-I_Thread<String> generated = ai.complete(chat);
-assert null != generated;
-System.out.println("agent.llm.openai: "+generated);
-assert !generated.messages().isEmpty();
+ai.complete(chat);
+System.out.println("agent.llm.openai: "+chat);
+assert !chat.messages().isEmpty();
 } catch (java.net.UnknownHostException e) {
 System.out.println("agent.llm.openai.offline");
 }

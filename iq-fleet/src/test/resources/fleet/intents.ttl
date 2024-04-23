@@ -8,21 +8,19 @@
 @prefix : <urn:iq:test:>.
 
 :   a iq:Agent;
-rdf:value "You an AI researcher. ";
+rdf:value "You are my assistant, JO, reply accordingly.";
 iq:initial :intents;
 .
 :intents
-rdf:value "Think carefully about the user's intention. You can only use the following intents.";
-iq:prompt "{{my.prompt}}";
+rdf:value "Think carefully about the user's intention. Then choose one of the following intents:";
 iq:to :search;
-iq:to :ask;
 iq:to :find;
 iq:to :select;
 iq:to :remodel;
 iq:to :prompt;
-iq:to :script;
+iq:to :image;
 iq:to :webpage;
-iq:to :rdf;
+iq:to :think;
 iq:to :self;
 iq:to :aware;
 .
@@ -34,20 +32,25 @@ iq:to rdfs:range iq:State.
 iq:knows rdfs:range rdf:Statement .
 #iq:find rdfs:range rdf:JSON  .
 
-:ask
-rdfs:label "You can ask the user for more information";
-.
 :find
 rdfs:label "You can find in your knowledge base";
 iq:to :search;
 .
+:image
+rdfs:label "You can generate an image";
+iq:script <urn:iq:test:tools/image/dal_e>;
+.
 :search
 rdfs:label "You can search the web ";
-iq:script <urn:iq:test:script/brave_search>;
-iq:to :remodel_search;
+iq:script <urn:iq:test:tools/brave/search>;
+iq:to :search_remodel;
 .
-:remodel_search
-iq:remodel <urn:iq:test:remodel/brave_search>;
+:search_remodel
+iq:remodel <urn:iq:test:tools/brave/remodel>;
+iq:to :search_answer;
+.
+:search_answer
+iq:answer <urn:iq:test:tools/brave/answer>;
 iq:to :intents;
 .
 :select
@@ -60,26 +63,28 @@ iq:remodel "{{my.prompt}}".
 rdfs:label "You can ask for executive assistance";
 iq:prompt "{{my.prompt}}".
 :think
-rdfs:label "You can ask for executive assistance";
-iq:think "{{my.prompt}}".
-:script
-rdfs:label "You can run scripts using Groovy and Javascript";
-iq:script <urn:iq:test:script/hello>.
+rdfs:label "You can generate new ideas, plans or thoughts";
+iq:think [
+rdf:value "Generate a plan using the SKOS vocabulary."];
+.
 :webpage
 rdfs:label "You can visit a webpage vis URL";
 iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
-:rdf
-rdfs:label "You can de-reference an RDF via URL";
-iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 
 :self
 rdfs:label "You can answer questions about yourself";
 iq:learn :Self;
-iq:script <urn:iq:test:script/self>.
+iq:script <urn:iq:test:tools/self>;
+iq:to :aware;
+.
 
 :aware
 iq:guard [
 iq:knows :Self;
 ];
-iq:execute :think;
+iq:to :self;
+.
+
+:intent_test
+iq:to :self;
 .

@@ -7,8 +7,6 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.PROV;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.util.List;
-
 /**
  * The Provenance class provides methods to generate PROV-O (Provenance Ontology) statements
  * within an RDF model to represent provenance information.
@@ -32,7 +30,7 @@ SimpleValueFactory vf = SimpleValueFactory.getInstance();
 
 // Create PROV-O statements
 Resource actorResource = vf.createIRI(actor.stringValue());
-Resource activityResource = vf.createIRI(activity.stringValue());
+Resource activityResource = activity.isIRI()?vf.createIRI(activity.stringValue()):vf.createBNode(activity.stringValue());
 Resource resultResource = vf.createIRI(result.stringValue());
 
 model.add(actorResource, RDF.TYPE, PROV.AGENT, ctx);

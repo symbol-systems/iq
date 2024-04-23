@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+<Appenders>
+<!-- Define your appenders here -->
+</Appenders>
+<Loggers>
+<!-- Root logger configuration -->
+<Root level="ALL">
+<AppenderRef ref="YourAppenderNameHere"/>
+</Root>
+</Loggers>
+</Configuration>

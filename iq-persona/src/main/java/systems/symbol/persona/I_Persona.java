@@ -16,7 +16,8 @@ public interface I_Persona {
 
 	InputStream say(String words);
 
-	void play(InputStream mp3) throws JavaLayerException;
+	void play(InputStream mp3) throws JavaLayerException, IOException;
+	void speak(String words) throws JavaLayerException, IOException;
 
 	void listen(Consumer<String> listener) throws IOException, LineUnavailableException;
 }
