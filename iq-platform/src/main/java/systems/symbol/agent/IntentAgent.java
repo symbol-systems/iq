@@ -32,7 +32,7 @@ this.intent = intent;
 this.bindings = bindings;
 }
 /**
- * Handles transitions within the symbolic system.
+ * Handles transitions within a symbolic system.
  *
  * @param from The resource representing the source state of the transition.
  * @param to   The resource representing the target state of the transition.

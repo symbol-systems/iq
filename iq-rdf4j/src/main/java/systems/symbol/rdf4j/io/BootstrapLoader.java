@@ -144,7 +144,7 @@ findAllFiles(home, file, true);
 			format = null;
 		}
 
-		log.info("deploy.file: {} @ {} -> {} ", mediatype==null?format:mediatype, iri, file.length());
+		log.debug("deploy.file: {} @ {} -> {} ", mediatype==null?format:mediatype, iri, file.length());
 
 		FileInputStream inStream = new FileInputStream(file);
 		deploy(iri, inStream, mediatype, format);

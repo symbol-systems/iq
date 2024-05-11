@@ -1,0 +1,4 @@
+
+<urn:iq:test:#a095f428-78ae-4c1d-b782-7dcbc8da531cPlan> a <http://www.w3.org/2004/02/skos/core#Concept>;
+  <http://www.w3.org/2004/02/skos/core#prefLabel> "Plan";
+  <http://www.w3.org/2004/02/skos/core#definition> "A proposed or intended course of action."@en .

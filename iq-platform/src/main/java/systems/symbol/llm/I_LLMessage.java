@@ -1,9 +1,12 @@
 package systems.symbol.llm;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(using = LLMessageDeserializer.class)
 public interface I_LLMessage<T> {
 
 enum MessageType {
-TEXT, IMAGE, JSON, AUDIO, VIDEO, FUNCTION, URL, DATA ,OTHER
+text, image, JSON, audio, video, fn, url, data, error
 }
 
 enum RoleType {

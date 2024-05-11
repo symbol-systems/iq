@@ -11,7 +11,7 @@ import systems.symbol.fsm.StateException;
 
 import java.util.Set;
 
-class ExecutiveTest {
+class ExecutiveIntentTest {
 
 ValueFactory vf = SimpleValueFactory.getInstance();
 IRI nop = vf.createIRI(COMMONS.IQ_NS, "nop");
@@ -19,11 +19,11 @@ IRI nop = vf.createIRI(COMMONS.IQ_NS, "nop");
 void testLazyNOP() throws StateException {
 DynamicModelFactory dmf = new DynamicModelFactory();
 DynamicModel model = dmf.createEmptyModel();
-Executive executive = new Executive(nop, model);
-IRI ok = executive.add(new NOP());
+ExecutiveIntent executiveIntent = new ExecutiveIntent(nop, model);
+IRI ok = executiveIntent.add(new NOP());
 System.out.println("nop.ok: "+ok);
 assert null != ok;
-Set<IRI> lazy = executive.execute(null, nop, null);
+Set<IRI> lazy = executiveIntent.execute(null, nop, null);
 assert null != lazy;
 System.out.println("nop.lazy: 0 == "+lazy.size());
 assert lazy.isEmpty();

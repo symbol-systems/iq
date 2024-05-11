@@ -59,12 +59,12 @@ writer.endRDF();
 @Override
 public Response asJSON() {
 Response.ResponseBuilder build = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(rdf$.toString());
-return I_Response.addCORS(build).build();
+return addCORS(build).build();
 }
 
 public Response asJSONLD() {
 Response.ResponseBuilder build = Response.status(Response.Status.OK).type(JSON_LD).entity(rdf$.toString());
-return I_Response.addCORS(build).build();
+return addCORS(build).build();
 }
 
 public static WriterConfig getWriterConfig() {

@@ -1,0 +1,11 @@
+curl -v http://localhost:8080/llm/agent/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $JWT" \
+  -d '{
+"messages": [
+  {
+"role": "user",
+"content": "what time is it?"
+  }
+]
+  }'

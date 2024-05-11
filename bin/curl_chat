@@ -1,0 +1,15 @@
+curl -v http://localhost:8080/llm/chat/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $JWT" \
+  -d '{
+"messages": [
+  {
+"role": "system",
+"content": "You are a helpful and succinct assistant."
+  },
+  {
+"role": "user",
+"content": "Hello!"
+  }
+]
+  }'

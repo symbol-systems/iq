@@ -32,7 +32,7 @@ JWTGen jwtGen = new JWTGen();
 try {
 return jwtGen.verify(platform.loadKeyPair(), token);
 } catch (Exception e) {
-log.error("token.broken: {}", token, e);
+log.error("token.broken: {} -> {}", token, e.getMessage());
 return null;
 }
 }

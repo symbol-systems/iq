@@ -32,7 +32,7 @@ this.init();
 public void init() throws IOException {
 workspace = new Workspace(home);
 this.repository = workspace.getCurrentRepository();
-log.info("iq.cli.workspace: " + workspace.getIdentity() +" @ "+(this.repository!=null?this.repository.getDataDir().getAbsolutePath():"n/a"));
+log.info("iq.cli.workspace: " + workspace.getSelf() +" @ "+(this.repository!=null?this.repository.getDataDir().getAbsolutePath():"n/a"));
 if (this.repository == null || !this.isInitialized()) {
 log.info("no repository: "+this.repository);
 }
@@ -77,7 +77,7 @@ return timestamp >= (file.lastModified()); // last 60 seconds
 
 @Override
 public IRI getSelf() {
-return workspace == null ? null : workspace.getIdentity();
+return workspace == null ? null : workspace.getSelf();
 }
 
 public String toString() {

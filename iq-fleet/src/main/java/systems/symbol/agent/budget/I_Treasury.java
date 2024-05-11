@@ -1,7 +1,7 @@
 package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.IRI;
-import systems.symbol.agent.cxo.BudgetException;
+import systems.symbol.agent.budget.BudgetException;
 
 import java.math.BigDecimal;
 

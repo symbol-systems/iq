@@ -4,15 +4,13 @@
  */
 package systems.symbol.controller.kb;
 
-import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.platform.APIPlatform;
-import systems.symbol.controller.responses.SimpleResponse;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.repository.Repository;
+import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ public Response initRepository(@PathParam("type") String type,
 if (!Validate.isBearer(auth)) {
 log.info("api.kb.find#protected");
 if (!Validate.isUnGuarded())
-return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.init#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.init#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

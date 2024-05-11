@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
-  <version>0.76.8</version>
+  <version>0.76.9</version>
   <packaging>pom</packaging>
   <name>symbol.systems - BoM</name>
   <url>https://symbol.systems</url>

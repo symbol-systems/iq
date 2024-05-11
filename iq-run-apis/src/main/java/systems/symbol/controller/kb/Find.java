@@ -1,6 +1,5 @@
 package systems.symbol.controller.kb;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,7 +12,6 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.finder.FactFinder;
-import systems.symbol.platform.APIPlatform;
 import systems.symbol.string.Validate;
 
 @Path("find")
@@ -31,7 +29,7 @@ public Response importLocal(@PathParam("finder")String finder, @PathParam("repo"
 if (!Validate.isBearer(auth)) {
 log.info("api.kb.find#protected");
 if (!Validate.isUnGuarded())
-return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.iq.find.indexer#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

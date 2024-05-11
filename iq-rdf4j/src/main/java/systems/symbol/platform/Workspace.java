@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
 
-public class Workspace {
+public class Workspace implements I_Self{
 private final Logger log = LoggerFactory.getLogger(getClass());
 final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
 final String ACTIVE_REPO_PROP = "current.repo";
@@ -43,7 +43,7 @@ Map<String, Repository> repositories = new HashMap<>();
 File home, propsFile;
 Properties properties = new Properties();
 String repoTemplatePath = "kbms/";
-IRI ns;
+IRI self;
 /**
  * Constructs a Workspace with the specified home directory.
  *
@@ -71,8 +71,8 @@ log.info("repo.initialized: {}", propsFile.getAbsolutePath());
 this.alwaysGetRepository(getCurrentRepositoryName());
 }
 properties.load(new FileInputStream(propsFile));
-this.ns = SimpleValueFactory.getInstance().createIRI(properties.getProperty(NS_PROP, DEFAULT_NS));
-log.info("workspace.initialized: {} -> {} @ {}", getIdentity(), this.repositories, new Date());
+this.self = SimpleValueFactory.getInstance().createIRI(properties.getProperty(NS_PROP, DEFAULT_NS));
+log.info("workspace.initialized: {} -> {} @ {}", getSelf(), this.repositories, new Date());
 }
 
 private void initProperties() {
@@ -82,7 +82,7 @@ properties.put("iq.modified", today);
 properties.put(NS_PROP, DEFAULT_NS);
 properties.put(ACTIVE_REPO_PROP, "default");
 properties.put(STORE_PROP, "default");
-this.ns = SimpleValueFactory.getInstance().createIRI(DEFAULT_NS);
+this.self = SimpleValueFactory.getInstance().createIRI(DEFAULT_NS);
 }
 
 public File getHome() {
@@ -101,8 +101,8 @@ public String getStoreType() {
 return properties.getProperty(STORE_PROP);
 }
 
-public IRI getIdentity() {
-return ns;
+public IRI getSelf() {
+return self;
 }
 
 public String getProperty(String key) {
@@ -200,7 +200,7 @@ final Model graph = new LinkedHashModel();
 ValueFactory vf = SimpleValueFactory.getInstance();
 final RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE, vf);
 rdfParser.setRDFHandler(new StatementCollector(graph));
-rdfParser.parse(new StringReader(configString), getIdentity().toString());
+rdfParser.parse(new StringReader(configString), getSelf().toString());
 
 Resource repositoryType = vf.createIRI(TYPEOF_REPOSITORY);
 final Resource repositoryNode = Models

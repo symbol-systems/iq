@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.security.KeyPair;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JWTGenTest {
@@ -37,7 +38,7 @@ System.out.println("publicKey: " + JWTGen.toPKCS8(keyPair.getPublic()) );
 
 JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, audience, 60);
 
-jwtGen.claim(jwtBuilder, "hello", "world");
+jwtBuilder.withClaim("hello", "world");
 String jwt = jwtGen.sign(jwtBuilder, keyPair);
 System.out.println("Generated JWT: " + jwt);
 
@@ -45,16 +46,17 @@ DecodedJWT verified = jwtGen.verify(keyPair, jwt);
 System.out.println("Verified JWT: " + verified.getPayload());
 DecodedJWT decoded = JWT.decode(jwt);
 System.out.println("Decoded JWT: " + decoded.getPayload());
-assertTrue( verified.getPayload().equals(decoded.getPayload()));
+assertEquals(verified.getPayload(), decoded.getPayload());
 
 System.out.println("JWT subject: " + decoded.getSubject());
 System.out.println("JWT issuer: " + decoded.getIssuer());
 System.out.println("JWT audience: " + decoded.getAudience());
 System.out.println("JWT expires: " + decoded.getExpiresAt());
 
-assertTrue( decoded.getSubject().equals(subject));
-assertTrue( decoded.getAudience().contains(audience));
-assertTrue( decoded.getIssuer().equals(issuer));
+assertEquals(decoded.getSubject(), subject);
+for (boolean b : new boolean[]{decoded.getSubject().contains(subject), decoded.getAudience().contains(audience), decoded.getIssuer().equals(issuer)}) {
+assertTrue(b);
+}
 
 }
 }

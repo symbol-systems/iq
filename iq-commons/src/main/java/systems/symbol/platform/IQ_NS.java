@@ -7,15 +7,11 @@ import static systems.symbol.COMMONS.IQ_NS;
 
 
 public interface IQ_NS {
-
 IRI A_WORKFLOW = Values.iri(IQ_NS, "Workflow");
 IRI initialStep = Values.iri(IQ_NS, "initial");
 IRI nextStep = Values.iri(IQ_NS, "to");
 IRI hasGuard = Values.iri(IQ_NS, "guard");
 IRI hasCurrentState = Values.iri(IQ_NS, "state");
-
-IRI doStart = Values.iri(IQ_NS, "start");
-IRI doStop = Values.iri(IQ_NS, "stop");
 
 IRI doBoot = Values.iri(IQ_NS, "boot");
 IRI KNOWS = Values.iri(IQ_NS, "knows");

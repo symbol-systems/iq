@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
 public class AbstractMessage<T> implements I_LLMessage<T> {
-MessageType type = MessageType.OTHER;
+
+public AbstractMessage() {
+}
+MessageType type = MessageType.error;
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 //String name;
 RoleType role;

@@ -27,7 +27,7 @@ super(self, model);
 }
 
 /**
- * Handles transitions within the symbolic system.
+ * Handles transitions within a symbolic system.
  * This agent performs no action upon transition.
  *
  * @param from The resource representing the source state of the transition.

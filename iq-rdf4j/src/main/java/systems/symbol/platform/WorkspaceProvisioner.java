@@ -82,7 +82,7 @@ log.warn("workspace.deploy.repository.missing: {}", name);
 return;
 }
 try (RepositoryConnection connection = repository.getConnection()) {
-IQ iq = new IQConnection(workspace.getIdentity(), connection);
+IQ iq = new IQConnection(workspace.getSelf(), connection);
 BootstrapLoader loader = new BootstrapLoader(iq);
 log.info("workspace.deploy.from: {} -> {} @ {}", name, from.getAbsolutePath(), iq.getSelf());
 loader.deploy(from);

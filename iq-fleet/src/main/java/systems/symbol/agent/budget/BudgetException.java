@@ -1,4 +1,4 @@
-package systems.symbol.agent.cxo;
+package systems.symbol.agent.budget;
 
 public class BudgetException extends Exception {
 

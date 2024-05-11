@@ -37,7 +37,7 @@ public Response importLocal(@PathParam("repo") String repo,
 if (!Validate.isBearer(auth)) {
 log.info("api.import#protected");
 if (!Validate.isUnGuarded())
-return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.import#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.import#invalid-repository", Response.Status.BAD_REQUEST).asJSON();

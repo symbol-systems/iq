@@ -29,8 +29,7 @@ SecureRandom random = new SecureRandom();
 // create keypair
 KeyPairGenerator keypairGen = KeyPairGenerator.getInstance(keypairAlgorithm);
 keypairGen.initialize(keySize, random);
-KeyPair keypair = keypairGen.generateKeyPair();
-return keypair;
+return keypairGen.generateKeyPair();
 }
 
 

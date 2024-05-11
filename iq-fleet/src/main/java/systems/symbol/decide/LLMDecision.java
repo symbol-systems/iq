@@ -11,7 +11,7 @@ import systems.symbol.agent.I_AgentContext;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_Thread;
+import systems.symbol.llm.I_Chat;
 import systems.symbol.llm.Prompts;
 import systems.symbol.string.Validate;
 
@@ -56,7 +56,7 @@ this.context = context;
 @Override
 public Resource decide() throws StateException {
 try {
-I_Thread<String> situation = Prompts.decision(agent, context);
+I_Chat<String> situation = Prompts.decision(agent, context, llm.getConfig().getMaxTokens());
 llm.complete(situation);
 
 String decision = situation.latest().getContent();
