@@ -29,6 +29,6 @@ public class OopsResponse  implements I_Response {
 
     public Response asJSON() {
         Response.ResponseBuilder builder = Response.status(this.status).type(MediaType.APPLICATION_JSON_TYPE).entity(this);
-        return I_Response.addCORS(builder).build();
+        return addCORS(builder).build();
     }
 }

@@ -1,14 +1,14 @@
 package systems.symbol.fsm;
 
-import systems.symbol.decide.I_Can;
+import systems.symbol.decide.I_Guard;
 
 import java.util.Collection;
 
 public class GuardedStateMachine<T> implements I_StateMachine<T> {
     I_StateMachine<T> fsm;
-    I_Can<T> ask;
+    I_Guard<T> ask;
     T actor;
-    public GuardedStateMachine(T actor, I_StateMachine<T> fsm, I_Can<T> ask) {
+    public GuardedStateMachine(T actor, I_StateMachine<T> fsm, I_Guard<T> ask) {
         this.actor = actor;
         this.fsm = fsm;
         this.ask = ask;
@@ -52,7 +52,7 @@ public class GuardedStateMachine<T> implements I_StateMachine<T> {
 
     @Override
     public boolean isAllowed(T intent) {
-        return ask.can(actor, intent);
+        return ask.allows(actor, intent);
     }
 
     @Override

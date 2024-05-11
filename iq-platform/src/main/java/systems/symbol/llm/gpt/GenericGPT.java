@@ -1,4 +1,4 @@
-package systems.symbol.llm.openai;
+package systems.symbol.llm.gpt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
@@ -14,27 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static systems.symbol.llm.openai.CommonLLM.OPENAI_COMPLETIONS;
-
-public class ChatGPT implements I_LLM<String> {
+public class GenericGPT implements I_LLM<String> {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     ObjectMapper objectMapper = new ObjectMapper();
     String token;
     I_LLMConfig config;
 
-    public ChatGPT(String token, I_LLMConfig config) {
+    public GenericGPT(String token, I_LLMConfig config) {
         this.token = token;
         this.config = config;
     }
 
-    public ChatGPT(String token, int tokens) {
+    public GenericGPT(String token, int tokens) {
         this.token = token;
-        this.config = newGPT3_5_Turbo(tokens);
+        this.config = CommonLLM.newGPT3_5_Turbo(tokens);
     }
 
-    I_LLMConfig newGPT3_5_Turbo(int tokens) {
-        return new DefaultLLConfig(OPENAI_COMPLETIONS, "gpt-3.5-turbo-0125", tokens);
-    }
 
     @Override
     public I_LLMConfig getConfig() {
@@ -42,7 +37,7 @@ public class ChatGPT implements I_LLM<String> {
     }
 
     @Override
-    public void complete(I_Thread<String> chats) throws APIException, IOException {
+    public void complete(I_Chat<String> chats) throws APIException, IOException {
 
         RestAPI api = new RestAPI(config.getURL(), token);
 
@@ -55,12 +50,12 @@ public class ChatGPT implements I_LLM<String> {
 
             // to BODY into `JSON`
             ResponseBody responseBody = response.body();
-            log.info("api.gpt.body: {}", responseBody);
             if (responseBody != null) {
                 body = responseBody.string();
-                ChatGPTResponse completion = objectMapper.readValue(body, ChatGPTResponse.class);
+                log.info("api.gpt.body: {}", body);
+                GPTResponse completion = objectMapper.readValue(body, GPTResponse.class);
                 if (completion!=null) {
-                    ChatGPTResponse.Message message = completion.choices.get(0).message;
+                    GPTResponse.Message message = completion.choices.get(0).message;
                     log.info("api.gpt.completion: {} -> {}", completion.choices, message);
                     chats.add(new TextMessage(message.role, message.content));
                 }
@@ -82,7 +77,7 @@ public class ChatGPT implements I_LLM<String> {
         json.put("seed", config.getSeed());
         List<Map<String, Object>> messages = new ArrayList<>();
         for (I_LLMessage<String> msg : msgs) {
-            if (msg.getType() == I_LLMessage.MessageType.TEXT) {
+            if (msg.getType() == I_LLMessage.MessageType.text) {
                 messages.add(toMap(msg));
             }
         }
@@ -102,35 +97,4 @@ public class ChatGPT implements I_LLM<String> {
         return message;
     }
 
-    public static class ChatGPTResponse {
-
-        public String id;
-        public String object;
-        public long created;
-        public String model;
-        public List<Choice> choices;
-        public Usage usage;
-        public String system_fingerprint;
-
-        public ChatGPTResponse() {}
-
-        public static class Choice {
-            public int index;
-            public Message message;
-            public Object logprobs;
-            public String finish_reason;
-        }
-
-        public static class Message {
-            public String role;
-            public String content;
-
-        }
-
-        public static class Usage {
-            public int prompt_tokens;
-            public int completion_tokens;
-            public int total_tokens;
-        }
-    }
 }

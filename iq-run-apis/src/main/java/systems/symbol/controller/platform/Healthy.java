@@ -1,16 +1,12 @@
 package systems.symbol.controller.platform;
 
-import jakarta.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.platform.Platform;
-import systems.symbol.controller.responses.HealthCheck;
-import systems.symbol.string.Validate;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.repository.Repository;
+import systems.symbol.controller.responses.HealthCheck;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.string.Validate;
 
 import java.io.IOException;
 
@@ -19,7 +15,6 @@ import java.io.IOException;
  */
 @Path("health")
 public class Healthy extends GuardedAPI{
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Checks the overall health status of the platform.
@@ -30,6 +25,7 @@ public class Healthy extends GuardedAPI{
     @Produces(MediaType.APPLICATION_JSON)
     public HealthCheck platformHealth() {
         return new HealthCheck(platform.isHealthy() ? "ok" : "api.offline");
+
     }
 
     /**
@@ -44,16 +40,16 @@ public class Healthy extends GuardedAPI{
     public Response repositoryHealth(@PathParam("repo") String repo,
                                         @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
-            log.info("api.health.repository#protected");
+            log.info("api.health#protected-repository");
             if (!Validate.isUnGuarded())
-                return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+                return new OopsResponse("api.health#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.health.repository#missing", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.health#repository-missing", Response.Status.BAD_REQUEST).asJSON();
         }
         Repository repository = this.platform.getRepository(repo);
         boolean healthy = (repository != null && repository.isInitialized());
         log.info("healthy.repo: {}", (healthy?repository.getDataDir():"n/a"));
-        return new HealthCheck(healthy ? "ok" : "api.health.repository#offline").asJSON();
+        return new HealthCheck(healthy ? "ok" : "api.health#repository-offline").asJSON();
     }
 }

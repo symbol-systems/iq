@@ -17,13 +17,13 @@ import java.util.Set;
 import static systems.symbol.platform.Provenance.generated;
 
 /**
- * The Executive executes operations based on the I_Intents it is equipped with.
+ * The ExecutiveIntent executes operations based on the I_Intents it is equipped with.
  * When the Executive transitions to a new state, it will automatically execute that state's intents.
  * If that state has a single child, it will automatically attempt to transition to the next step in its workflow.
  *
  * @author Symbol Systems
  */
-public class Executive extends AbstractIntent implements I_Intents {
+public class ExecutiveIntent extends AbstractIntent implements I_Intents {
 //    private final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Intent> intents = new HashMap<>();
 
@@ -33,7 +33,7 @@ public class Executive extends AbstractIntent implements I_Intents {
      *
      * @param self The IRI identifier for the Executive itself.
      */
-    public Executive(IRI self, Model model) {
+    public ExecutiveIntent(IRI self, Model model) {
         boot(self, model);
         log.info("booted: {} -> {}", self, intents.keySet());
     }
@@ -44,7 +44,7 @@ public class Executive extends AbstractIntent implements I_Intents {
      * @param model The working memory
      * @param intent The I_Intent to perform we undergo a state transitions
      */
-    public Executive(IRI self, Model model, I_Intent intent) {
+    public ExecutiveIntent(IRI self, Model model, I_Intent intent) {
         boot(self, model);
         add(intent);
         log.info("booted: {} -> {}", self, intents.keySet());

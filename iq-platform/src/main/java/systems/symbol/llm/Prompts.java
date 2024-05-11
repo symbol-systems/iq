@@ -28,15 +28,16 @@ public class Prompts {
     public static String CONTENT = "content";
     private static final String SYSTEM_JSON_INTENT = "\nOnly answer in valid JSON: { \""+CONTENT+"\": \"{explanation}\", \""+INTENT+"\": \"{user_intent_uri}\" }";
     private static final String CHOOSE_INTENT = "\n|available-intent|user instruction|";
+    protected static int max_tokens = 1024;
 
-    public static I_Thread<String> decision(I_Agent agent, I_AgentContext<String, Resource> context) throws IOException {
+    public static I_Chat<String> decision(I_Agent agent, I_AgentContext<String, Resource> context, int tokens) throws IOException {
         IRI actor = agent.getSelf();
         Model model = agent.getMemo();
         Bindings my = context.getBindings();
         I_StateMachine<Resource> fsm = agent.getStateMachine();
         Resource current = fsm.getState();
         // actor/state prompt
-        I_Thread<String> thread = prompt(actor, current, model, my);
+        I_Chat<String> thread = prompt(actor, current, model, my);
         // intents prompt
         Collection<Resource> transitions = fsm.getTransitions();
         log.info("prompt.transitions: {}", transitions);
@@ -69,8 +70,8 @@ public class Prompts {
         return thread;
     }
 
-    private static I_Thread<String> prompt(IRI actor, Resource current, Model model, Bindings my) throws IOException {
-        ChatThread thread = new ChatThread();
+    private static I_Chat<String> prompt(IRI actor, Resource current, Model model, Bindings my) throws IOException {
+        Conversation thread = new Conversation();
         Set<Literal> selfPrompts = RDFHelper.values(model, actor);
         log.info("prompt.actor: {} -> {}", actor, selfPrompts);
         for(Literal p: selfPrompts) {
@@ -87,12 +88,12 @@ public class Prompts {
         return thread;
     }
 
-    public static String user(I_Thread<String> thread) {
+    public static String user(I_Chat<String> thread) {
         return prompt(thread, I_LLMessage.RoleType.user);
     }
 
 
-    public static String prompt(I_Thread<String> thread, I_LLMessage.RoleType role) {
+    public static String prompt(I_Chat<String> thread, I_LLMessage.RoleType role) {
         StringBuilder prompt = new StringBuilder();
         for(I_LLMessage<String> message: thread.messages()) {
             if (message.getRole()==role) {
@@ -103,8 +104,8 @@ public class Prompts {
         return prompt.toString();
     }
 
-    public static I_Thread<String> think(IRI actor, Resource state, String intent, Model model, Bindings my, RDFFormat format) throws IOException {
-        I_Thread<String> thread = prompt(actor, state, model, my);
+    public static I_Chat<String> think(IRI actor, Resource state, String intent, Model model, Bindings my, RDFFormat format) throws IOException {
+        I_Chat<String> thread = prompt(actor, state, model, my);
         thread.system("Reply using valid "+format.getName()+". Use only these namespaces - remember to declare 'my:' prefix");
         Map<String, String> namespaces = RDFPrefixer.simple();
         namespaces.put("my", intent);

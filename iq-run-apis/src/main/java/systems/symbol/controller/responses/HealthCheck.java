@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Response;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HealthCheck implements I_Response{
+public class HealthCheck implements I_Response {
     public String status, now, message;
 
     public HealthCheck(String status) {

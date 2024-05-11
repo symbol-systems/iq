@@ -12,7 +12,6 @@ public interface I_Fleet extends I_StartStop {
     I_Agent getAgent(IRI agent);
     Collection<I_Agent> getAgents();
 
-
     void start(IRI agent) throws Exception;
     void stop(IRI agent) throws Exception;
 

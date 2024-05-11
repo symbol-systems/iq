@@ -35,7 +35,7 @@ public class TextIndexer extends GuardedAPI {
         if (!Validate.isBearer(auth)) {
             log.info("api.iq.text.indexer#protected");
             if (!Validate.isUnGuarded())
-                return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+                return new OopsResponse("api.iq.text#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(finder)) {
             return new OopsResponse("api.iq.text.indexer#finder-invalid", Response.Status.BAD_REQUEST).asJSON();

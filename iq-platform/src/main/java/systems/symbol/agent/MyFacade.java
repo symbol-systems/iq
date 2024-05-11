@@ -27,12 +27,13 @@ public class MyFacade {
     public static final String TIME = "time";
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static void results(Bindings bindings, List<Map<String, Object>> results) {
+    public static List<Map<String, Object>> results(Bindings bindings, List<Map<String, Object>> results) {
         Object o = bindings.get(MY);
-        if (!(o instanceof Map)) return;
+        if (!(o instanceof Map)) return null;
         @SuppressWarnings("unchecked")
         Map<String, Object> my = (Map<String, Object>) o;
         my.put(RESULTS, results);
+        return results;
     }
 
     public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface I_LLM<T> {
     I_LLMConfig getConfig();
-    void complete(I_Thread<T> request) throws APIException, IOException;
+    void complete(I_Chat<T> request) throws APIException, IOException;
 
     boolean isOnline();
 

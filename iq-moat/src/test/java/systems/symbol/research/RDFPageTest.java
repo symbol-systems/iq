@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.Test;
 import systems.symbol.agent.IntentAgent;
-import systems.symbol.intent.Executive;
+import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.COMMONS;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.LiveModel;
@@ -40,8 +40,8 @@ class RDFPageTest {
             Model memory = dmf.createEmptyModel();
             RDFPage page2rdf = new RDFPage(self, memory);
 
-            Executive executive = new Executive(self, model, page2rdf);
-            IntentAgent agent = new IntentAgent(self, model, executive, new SimpleBindings());
+            ExecutiveIntent executiveIntent = new ExecutiveIntent(self, model, page2rdf);
+            IntentAgent agent = new IntentAgent(self, model, executiveIntent, new SimpleBindings());
 
             agent.getStateMachine().transition(i_rdf);
             assert i_rdf.equals(agent.getStateMachine().getState());

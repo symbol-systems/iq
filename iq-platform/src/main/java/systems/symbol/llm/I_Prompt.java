@@ -14,5 +14,5 @@ public interface I_Prompt<T> {
 //     * @throws IOException If an IO-related error occurs.
 //     * @throws StateException If an error occurs with the state machine.
 //     */
-    I_Thread<T>  prompt(I_Thread<T> history) throws APIException, IOException, StateException;
+    I_Chat<T> prompt(I_Chat<T> history) throws APIException, IOException, StateException;
 }

@@ -44,7 +44,7 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
         this.intents = intents;
     }
 
-    public void boot(IRI self, Model model) throws StateException {
+    public void boot(IRI self, Model model) {
         this.self = self;
         this.fleet = model;
     }

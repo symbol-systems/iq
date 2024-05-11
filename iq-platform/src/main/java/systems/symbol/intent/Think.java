@@ -14,7 +14,7 @@ import systems.symbol.agent.MyFacade;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_Thread;
+import systems.symbol.llm.I_Chat;
 import systems.symbol.llm.Prompts;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.io.FileFormats;
@@ -81,7 +81,7 @@ public class Think extends AbstractIntent {
         String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);
         log.info("think.raw: {} -> {}", format, remodelled);
 
-        I_Thread<String> thought = Prompts.think(actor, state, intent, model, my, format);
+        I_Chat<String> thought = Prompts.think(actor, state, intent, model, my, format);
         thought.user(remodelled);
         log.info("think.prompt: {}", thought);
         llm.complete(thought);

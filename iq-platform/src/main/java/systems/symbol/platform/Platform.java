@@ -5,17 +5,17 @@
  */
 package systems.symbol.platform;
 
+import com.auth0.jwt.JWTCreator;
+import jakarta.inject.Singleton;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.finder.TextFinder;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.trust.generate.JWTGen;
-import jakarta.inject.Singleton;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.repository.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +65,15 @@ public class Platform implements I_Self {
         } else {
             log.info("platform.vault: {}", vaultHome.getAbsolutePath());
         }
+
+//        if (Validate.isUnGuarded())
+            System.out.printf("** DEVELOPER DEBUG ** \nexport JWT='%s'\n****\n", generateJWT());
+    }
+
+    protected String generateJWT() throws Exception {
+        String self = workspace.getSelf().stringValue();
+        JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, self, 600, "debug", new String[]{"debug"});
+        return jwtGen.sign(jwtBuilder, loadKeyPair());
     }
 
     public I_Secrets getSecrets() {
@@ -83,8 +92,6 @@ public class Platform implements I_Self {
     public Workspace getWorkspace() {
         return workspace;
     }
-
-
 
     /**
      * Retrieves a Repository based on the specified name.
@@ -139,8 +146,7 @@ public class Platform implements I_Self {
      * @return True if the Platform is healthy, otherwise false.
      */
     public boolean isHealthy() {
-        if (workspace == null || !workspace.getCurrentRepository().isInitialized()) return false;
-        return true;
+        return workspace != null && workspace.getCurrentRepository().isInitialized();
     }
 
     /**
@@ -152,23 +158,12 @@ public class Platform implements I_Self {
     }
 
     /**
-     * Generates an IRI using the provided name.
-     *
-     * @param name The name to be appended to the Workspace identity.
-     * @return The generated IRI.
-     */
-    public IRI getIdentity(String name) {
-        SimpleValueFactory vf = SimpleValueFactory.getInstance();
-        return vf.createIRI(workspace.getIdentity().stringValue() + name);
-    }
-
-    /**
      * Retrieves the identity of the Platform.
      *
      * @return The IRI representing the identity of the Platform.
      */
     @Override
     public IRI getSelf() {
-        return workspace.getIdentity();
+        return workspace.getSelf();
     }
 }

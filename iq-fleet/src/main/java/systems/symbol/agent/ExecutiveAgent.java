@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.Executive;
+import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.intent.I_Intent;
 
 import javax.script.Bindings;
@@ -22,7 +22,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     Set<Resource> seen = new HashSet<>();
 
     /**
-     * The ExecutiveAgent makes and delegates stateful decisions.
+     * The ExecutiveAgent makes simple decisions and delegates other to manager.
      * @param self The identity of the agent
      * @param memo The working memory of the agent as an RDF4J Model.
      */
@@ -35,12 +35,12 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         this.seen.clear();
     }
 
-    public Executive getExecutive() {
-        return (Executive) this.intent;
+    public ExecutiveIntent getExecutive() {
+        return (ExecutiveIntent) this.intent;
     }
 
     /**
-     * Handles transitions within the symbolic system.
+     * Handles transitions .
      *
      * @param from The resource representing the source state of the transition.
      * @param to   The resource representing the target state of the transition.
@@ -52,8 +52,8 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         Set<IRI> executed = execute(getSelf(), to, bindings);
         Resource next = decide();
         log.info("decided: {} <-> {} --> {}", next, seen, executed);
-        if (next==null) return true; // don't veto, we can try again
-        if (seen.contains(next)) return false; // veto
+        if (next==null) return true; // don't veto, we may try again
+        if (seen.contains(next)) return false; // veto to prevent cycles
         seen.add(next);
         getStateMachine().transition(next);
         return true;

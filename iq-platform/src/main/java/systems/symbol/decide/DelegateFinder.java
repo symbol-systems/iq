@@ -1,24 +1,12 @@
 package systems.symbol.decide;
 
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.EmbeddingMatch;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.agent.tools.APIException;
 import systems.symbol.finder.I_Finder;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.llm.ChatThread;
-import systems.symbol.llm.I_LLMessage;
-import systems.symbol.llm.I_Prompt;
-import systems.symbol.llm.I_Thread;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * A simple decision-maker that uses random selection to pick next state.

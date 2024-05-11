@@ -11,9 +11,9 @@ import systems.symbol.decide.LLMDecision;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.Executive;
+import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.intent.JSR233;
-import systems.symbol.llm.ChatThread;
+import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.secrets.I_Secrets;
 
@@ -30,7 +30,7 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
     private boolean isRunning = false;
 
     public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm) throws StateException {
-        super(self, fleet, new Executive(self, fleet), secrets);
+        super(self, fleet, new ExecutiveIntent(self, fleet), secrets);
         this.llm = llm;
         this.intents.add( new JSR233(self, fleet, secrets) );
         log.info("fleet.intents: {}", intents.getIntents());
@@ -100,7 +100,7 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
      */
     public I_Agent deploy(IRI actor) throws StateException {
         if (this.agents.containsKey(actor)) return agents.get(actor);
-        I_AgentContext<String, Resource> context = new AgentContext<>(new SimpleBindings(), new ChatThread());
+        I_AgentContext<String, Resource> context = new AgentContext<>(new SimpleBindings(), new Conversation());
         contexts.put(actor, context);
         ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, this, context.getBindings());
         agents.put(actor,agent);

@@ -2,13 +2,11 @@ package systems.symbol.lake.ingest;
 
 import org.apache.commons.vfs2.FileSystemException;
 import systems.symbol.lake.crawl.VFSCrawler;
-import systems.symbol.llm.openai.ChatGPT;
+import systems.symbol.llm.gpt.GenericGPT;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
 
 class LLMIngestorTest {
 
@@ -20,7 +18,7 @@ class LLMIngestorTest {
         String openaiApiKey = System.getenv("OPENAI_API_KEY");
         if (openaiApiKey != null) {
             try {
-                ChatGPT ai = new ChatGPT(openaiApiKey, 1000);
+                GenericGPT ai = new GenericGPT(openaiApiKey, 1000);
 
                 boolean[] done = {false};
                 LLMIngestor ingest = new LLMIngestor(ai, llmPrompt, content -> {

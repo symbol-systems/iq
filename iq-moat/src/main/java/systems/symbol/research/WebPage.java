@@ -25,6 +25,7 @@ public class WebPage extends AbstractIntent {
     protected Consumer<ContentEntity<String>> processor;
     protected Consumer<ContentEntity<String>> ingestRDF;
     protected Consumer<ContentEntity<String>>  llm2RDF;
+
     public WebPage(IRI self, Model model) throws IOException {
         boot(self, model);
     }

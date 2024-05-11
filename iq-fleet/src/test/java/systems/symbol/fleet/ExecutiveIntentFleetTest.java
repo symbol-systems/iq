@@ -19,7 +19,7 @@ import systems.symbol.finder.Recommends;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Remodel;
 import systems.symbol.intent.Think;
-import systems.symbol.llm.openai.ChatGPT;
+import systems.symbol.llm.gpt.GenericGPT;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static systems.symbol.platform.IQ_NS.KNOWS;
 
-class ExecutiveFleetTest {
+class ExecutiveIntentFleetTest {
     private static APISecrets secrets;
     DynamicModelFactory dmf = new DynamicModelFactory();
     static BootstrapRepository assets;
@@ -68,7 +68,7 @@ class ExecutiveFleetTest {
             return;
         }
         System.out.println("---- self");
-        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
 
         APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 
@@ -107,7 +107,7 @@ class ExecutiveFleetTest {
             return;
         }
         System.out.println("---- search");
-        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
         System.out.println("brave.fleet: "+self);
 
         Stopwatch stopwatch = new Stopwatch();
@@ -159,7 +159,7 @@ class ExecutiveFleetTest {
             return;
         }
         System.out.println("---- guarded");
-        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
         System.out.println("guarded.fleet: "+self);
 
         APISecrets secrets = new APISecrets(new EnvsAsSecrets());
@@ -205,7 +205,7 @@ class ExecutiveFleetTest {
             return;
         }
         System.out.println("---- image generation");
-        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
         System.out.println("image.fleet: "+self);
 
         Stopwatch stopwatch = new Stopwatch();
@@ -244,7 +244,7 @@ class ExecutiveFleetTest {
             return;
         }
         System.out.println("---- thinking");
-        ChatGPT gpt = new ChatGPT(OPENAI_API_KEY, 1000);
+        GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
         System.out.println("thinking.fleet: "+self);
 
         APISecrets secrets = new APISecrets(new EnvsAsSecrets());
@@ -257,12 +257,10 @@ class ExecutiveFleetTest {
             fleet.deploy();
             I_Agent agent = fleet.getAgent(self);
 
-            I_AgentContext<String, Resource> context = fleet.getContext(self);
-//            context.
             assert null != agent;
             Resource transitioned = agent.getStateMachine().transition(think);
             System.out.println("thinking.done: "+transitioned+" -> "+thoughts.size());
-            RDFDump.dump(thoughts);
+            RDFDump.dump(thoughts, Files.newOutputStream(new File("tested/thoughts.ttl").toPath()), RDFFormat.TURTLE);
             // check we're all good
             assert null != transitioned;
             assert think.equals(transitioned);

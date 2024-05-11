@@ -1,4 +1,4 @@
-package systems.symbol.agent.cxo;
+package systems.symbol.agent.budget;
 
 import org.eclipse.rdf4j.model.IRI;
 import systems.symbol.agent.I_Fund;

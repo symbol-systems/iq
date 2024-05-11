@@ -42,15 +42,15 @@ public class Select extends GuardedAPI {
             @QueryParam("maxResults") int maxResults,
             @HeaderParam("Authorization") String auth) {
         if (!Validate.isBearer(auth)) {
-            log.info("api.kb.sparql#protected");
+            log.info("api.iq.select#protected");
             if (!Validate.isUnGuarded())
-                return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+                return new OopsResponse("api.select#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.kb.sparql#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.iq.select#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
         if (Validate.isMissing(query)) {
-            return new OopsResponse("api.kb.sparql#query-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.iq.select#query-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
 
         if (maxResults<0) maxResults = 10000;
@@ -58,7 +58,7 @@ public class Select extends GuardedAPI {
         Repository repository = platform.getRepository(repo);
         if (repository == null) {
             // Return an error response if the repository is not found
-            return new OopsResponse("api.kb.sparql#repository-missing", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("api.iq.select#repository-missing", Response.Status.NOT_FOUND).asJSON();
         }
 
         try (RepositoryConnection connection = repository.getConnection()) {
@@ -69,7 +69,7 @@ public class Select extends GuardedAPI {
 
             // Check for non-null and non-empty SPARQL query
             if (sparql == null || sparql.isEmpty()) {
-                return new OopsResponse("api.kb.sparql#query-missing", Response.Status.NOT_FOUND).asJSON();
+                return new OopsResponse("api.iq.select#query-missing", Response.Status.NOT_FOUND).asJSON();
             }
 
             // Execute SPARQL query against the repository
@@ -81,7 +81,7 @@ public class Select extends GuardedAPI {
                 return new SimpleResponse(models).asJSON();
             } catch (QueryEvaluationException e) {
                 // Return an error response if SPARQL query execution fails
-                return new OopsResponse("api.kb.sparql#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+                return new OopsResponse("api.iq.select#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
             }
         }
     }

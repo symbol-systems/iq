@@ -12,35 +12,37 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.trust.generate.JWTGen;
 
 import java.io.IOException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Path("trust")
-public class JWTIssuer {
+public class JWT {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     @Inject
     APIPlatform platform;
 
-    private String formatDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
-    }
-
     @GET
-//    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("publickey")
+    public Response publicKey() throws Exception {
+        KeyPair keys = platform.loadKeyPair();
+        String pkcs8 = JWTGen.toPKCS8(keys.getPublic());
+        return new SimpleResponse(pkcs8).asJSON();
+    }
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("issuer/{repo}")
-    public Response issue(@PathParam("repo")String repoName,
+    public Response issueJWT(@PathParam("repo")String repoName,
                           @QueryParam("sub") String subject, @QueryParam("aud") String audience, @QueryParam("redirect") String redirect) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         if (redirect==null||redirect.isEmpty()) {
-            redirect = "/callback/token";
+            redirect = "http://localhost:3000/callback/login";
         }
-        if (subject==null || subject.length()<8) {
+        if (subject==null || subject.length()<4) {
             return new OopsResponse("api.trust.issuer#subject-missing", Response.Status.BAD_REQUEST).asJSON();
         }
         if (repoName==null || repoName.isEmpty()) {
@@ -61,9 +63,14 @@ public class JWTIssuer {
 
             JWTGen jwtGen = new JWTGen();
             JWTCreator.Builder generator = jwtGen.generate(issuer.stringValue(), subject, audience, 600);
+
+            // TODO: lookup
+            generator.withClaim("fullName", "Anon");
+            generator.withArrayClaim("roles", new String[] { "user" });
             String signedToken = jwtGen.sign(generator, platform.loadKeyPair());
 
             redirect = redirect+"?token="+signedToken;
+            log.info("trust.login: {}", redirect);
             return Response.status(Response.Status.TEMPORARY_REDIRECT)
                     .location(UriBuilder.fromUri(redirect).build())
                     .build();
