@@ -23,8 +23,8 @@ class RDFPageTest {
     File ttl = new File("src/test/resources/assets/agent.ttl");
     File moat = new File("tested/moat/");
     ValueFactory vf = SimpleValueFactory.getInstance();
-    IRI self = vf.createIRI(COMMONS.IQ_NS_TEST);
-    IRI i_rdf = Values.iri(COMMONS.IQ_NS_TEST+"rdf");
+    IRI self = vf.createIRI(IQ_NS.TEST);
+    IRI i_rdf = Values.iri(IQ_NS.TEST+"rdf");
 
     @Test
     void testCrawlPage() throws Exception {

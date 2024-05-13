@@ -2,24 +2,6 @@
 
 IQ comprises a set of integrated modules handling data, communication and interaction among humans and AI.
 
-### The Maven modules include:
-
-- **iq-cli:** Command-line interface for knowledge base bootstrapping.
-- **iq-blockchain:** Design, build, deploy, and govern through Ethereum smart contracts.
-- **iq-finder:** Module dedicated to locating and retrieving information.
-- **iq-fsm:** Finite State Machine implementation for agent behavior modeling.
-- **iq-graphs:** Component for managing and visualizing relationships between entities.
-- **iq-moat:** Module ensuring the discovery, curation, and storage of knowledge.
-- **iq-onto:** Ontology module defining the structure and semantics of IQ.
-- **iq-platform:** Core  functionality and governance mechanisms.
-- **iq-rdf4j:** Integration with RDF4j for semantic data storage and retrieval.
-- **iq-rdf4j-camel:** RDF4j and Apache Camel for semantic integration.
-- **iq-rdf4j-graphql:** GraphQL integration for flexible query capabilities.
-- **iq-rdf4j-nlp:** Integration for language understanding.
-- **iq-run-apis:** Module for executing external APIs within the IQ ecosystem.
-- **iq-strings:** String manipulation utilities for handling textual data.
-- **iq-commons:** Shared functionalities and utilities across the IQ ecosystem.
-
 ### The build system steps:
 
 1. **Clean and Install:**

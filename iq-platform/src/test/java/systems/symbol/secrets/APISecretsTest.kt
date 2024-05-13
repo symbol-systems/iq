@@ -8,13 +8,14 @@ import systems.symbol.agent.tools.APIException
 import systems.symbol.agent.tools.I_API
 import systems.symbol.agent.tools.MockAPI
 import systems.symbol.COMMONS
+import systems.symbol.platform.IQ_NS
 import java.io.IOException
 
 internal class APISecretsTest {
     var HELLO_WORLD: String = "{\"hello\": \"world\"}"
     var BASE_URL: String = "http://localhost:8080/"
 
-    var self: IRI = Values.iri(COMMONS.IQ_NS_TEST)
+    var self: IRI = Values.iri(IQ_NS.TEST)
 
     @Test
     @Throws(SecretsException::class, APIException::class, IOException::class)

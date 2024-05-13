@@ -4,7 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +19,10 @@ public class AbstractTripleTest {
     @BeforeMethod
     public void setUp() throws IOException {
         assets = new BootstrapRepository();
-        ctx = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
+        ctx = assets.load(new File("src/test/resources/assets"), IQ_NS.TEST);
         vf = assets.getValueFactory();
 
-        iriTestCase = vf.createIRI(COMMONS.IQ_NS_TEST +"TestCase");
+        iriTestCase = vf.createIRI(IQ_NS.TEST +"TestCase");
         iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all");
         iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index");
     }

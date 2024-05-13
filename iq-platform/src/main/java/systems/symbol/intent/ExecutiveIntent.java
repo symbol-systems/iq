@@ -3,9 +3,9 @@ package systems.symbol.intent;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Values;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.IRIs;
 
 import javax.script.Bindings;
@@ -17,11 +17,16 @@ import java.util.Set;
 import static systems.symbol.platform.Provenance.generated;
 
 /**
- * The ExecutiveIntent executes operations based on the I_Intents it is equipped with.
- * When the Executive transitions to a new state, it will automatically execute that state's intents.
- * If that state has a single child, it will automatically attempt to transition to the next step in its workflow.
+ * The ExecutiveIntent class represents an intent executor capable of executing sets of operations based on the
+ * I_Intents it is constructed with.
  *
- * @author Symbol Systems
+ * When transitioning to a new state, it automatically executes the intents associated with that state.
+ * If the state has exactly one next step, it automatically attempts to transition to the next step in its workflow.
+ *
+ * An ExecutiveIntent is composed of a collection of I_Intent implementations, each associated with a specific
+ * action or operation.
+ *
+ * It has the capability to learn or forget facts and execute scripts and/or other intents in other states through indirection.
  */
 public class ExecutiveIntent extends AbstractIntent implements I_Intents {
 //    private final Logger log = LoggerFactory.getLogger(getClass());
@@ -137,7 +142,7 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         });
     }
     @Override
-    @RDF(COMMONS.IQ_NS + "execute")
+    @RDF(IQ_NS.IQ + "execute")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         IRIs done = new IRIs();
         Iterable<Statement> statements = model.getStatements(state, null, null);

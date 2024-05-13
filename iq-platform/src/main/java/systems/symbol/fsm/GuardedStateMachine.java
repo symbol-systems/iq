@@ -4,15 +4,29 @@ import systems.symbol.decide.I_Guard;
 
 import java.util.Collection;
 
+/**
+ * We pass state transitions to the underlying state machine
+ * only if the guard to determines the transition is allowed.
+ *
+ * @param <T> The type representing states in the state machine.
+ */
 public class GuardedStateMachine<T> implements I_StateMachine<T> {
-    I_StateMachine<T> fsm;
-    I_Guard<T> ask;
-    T actor;
-    public GuardedStateMachine(T actor, I_StateMachine<T> fsm, I_Guard<T> ask) {
+
+    private final I_StateMachine<T> fsm; // The underlying state machine
+    private final I_Guard<T> guard; // The guard condition
+    private final T actor; // The entity associated with the state machine
+
+    /**
+     * Constructs a GuardedStateMachine with the provided actor, underlying state machine, and guard condition.
+     *
+     * @param actor The entity associated with the state machine.
+     * @param fsm   The underlying state machine.
+     * @param guard The guard condition determining whether a transition is allowed.
+     */
+    public GuardedStateMachine(T actor, I_StateMachine<T> fsm, I_Guard<T> guard) {
         this.actor = actor;
         this.fsm = fsm;
-        this.ask = ask;
-        // assume fsm is initialized()
+        this.guard = guard;
     }
 
     @Override
@@ -52,11 +66,11 @@ public class GuardedStateMachine<T> implements I_StateMachine<T> {
 
     @Override
     public boolean isAllowed(T intent) {
-        return ask.allows(actor, intent);
+        return guard.allows(actor, intent);
     }
 
     @Override
     public void add(T from, T to) {
-        fsm.add(from,to);
+        fsm.add(from, to);
     }
 }

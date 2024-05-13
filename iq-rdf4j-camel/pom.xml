@@ -11,7 +11,7 @@
     <artifactId>iq-camel-rdf4j</artifactId>
     <packaging>jar</packaging>
 
-    <name>symbol.systems - Camel / RDF4J</name>
+    <name>Camel / RDF4J</name>
     <url>https://symbol.systems</url>
 
     <organization>

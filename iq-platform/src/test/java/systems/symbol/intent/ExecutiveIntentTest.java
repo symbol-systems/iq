@@ -6,15 +6,15 @@ import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
-import systems.symbol.COMMONS;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 
 import java.util.Set;
 
 class ExecutiveIntentTest {
 
     ValueFactory vf = SimpleValueFactory.getInstance();
-    IRI nop = vf.createIRI(COMMONS.IQ_NS, "nop");
+    IRI nop = vf.createIRI(IQ_NS.IQ, "nop");
     @Test
     void testLazyNOP() throws StateException {
         DynamicModelFactory dmf = new DynamicModelFactory();

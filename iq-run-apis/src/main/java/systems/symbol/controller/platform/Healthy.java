@@ -29,7 +29,7 @@ public class Healthy extends GuardedAPI{
     }
 
     /**
-     * Checks the health status of a specific repository within the platform.
+     * Checks the health status of a specific repository.
      *
      * @param repo The name of the repository to check.
      * @return HealthCheck response indicating the repository's health status.
@@ -41,8 +41,7 @@ public class Healthy extends GuardedAPI{
                                         @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("api.health#protected-repository");
-            if (!Validate.isUnGuarded())
-                return new OopsResponse("api.health#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.health#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.health#repository-missing", Response.Status.BAD_REQUEST).asJSON();

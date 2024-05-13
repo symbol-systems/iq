@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.Test;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.rdf4j.store.LiveModel;
 
@@ -16,7 +16,7 @@ import java.util.Map;
 
 class RecommendsTest {
     File assetsFolder = new File("src/test/resources/assets");
-    IRI self = Values.iri(COMMONS.IQ_NS_TEST);
+    IRI self = Values.iri(IQ_NS.TEST);
     @Test
     void similarity() throws IOException {
 

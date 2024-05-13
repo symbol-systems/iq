@@ -1,6 +1,10 @@
-## My:IQ - Camel Components
+## IQ: An operating environment for symbolic cognition
 
-My:IQ is a cognitive-intelligence platform. This repository hosts Apache Camel components for My:IQ.
+IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+
+It transforms an RDF graph into an executable playbook.
+
+This repository augments the IQ operation model with Apache Camel for executable integration patterns.
 
 ### Getting Started
 

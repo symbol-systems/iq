@@ -12,7 +12,7 @@
     <artifactId>iq-rdf4j-graphql</artifactId>
     <packaging>jar</packaging>
 
-    <name>symbol.systems - GraphQL</name>
+    <name>GraphQL</name>
     <url>https://symbol.systems</url>
 
     <organization>

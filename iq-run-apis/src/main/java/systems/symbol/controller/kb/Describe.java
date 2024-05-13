@@ -36,8 +36,7 @@ public class Describe extends GuardedAPI  {
             @HeaderParam("Authorization") String auth) {
         if (!Validate.isBearer(auth)) {
             log.info("api.describe#protected");
-            if (!Validate.isUnGuarded())
-                return new OopsResponse("api.describe#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.describe#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.describe#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

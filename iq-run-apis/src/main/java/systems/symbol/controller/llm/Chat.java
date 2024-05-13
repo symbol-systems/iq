@@ -52,8 +52,7 @@ public class Chat extends GuardedAPI {
         }
         if (!Validate.isBearer(auth)) {
             log.info("api.llm.chat#protected");
-            if (!Validate.isUnGuarded())
-                return new OopsResponse("api.llm.chat#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.llm.chat#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         DecodedJWT jwt = authenticate(auth);
         if (jwt == null) {

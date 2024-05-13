@@ -1,11 +1,11 @@
 package systems.symbol.intent;
 
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +19,10 @@ public class AbstractIntentTest {
     @BeforeAll
     public static void setUp() throws IOException {
         bootstrap = new BootstrapRepository();
-        self = bootstrap.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
+        self = bootstrap.load(new File("src/test/resources/assets"), IQ_NS.TEST);
         vf = bootstrap.getValueFactory();
 //        triples = assets.getTripleSource(true);
-        iriTestCase = vf.createIRI(COMMONS.IQ_NS_TEST +"TestCase");
+        iriTestCase = vf.createIRI(IQ_NS.TEST +"TestCase");
         iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all");
         iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index");
 

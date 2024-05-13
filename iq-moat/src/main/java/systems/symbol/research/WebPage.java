@@ -42,7 +42,7 @@ public class WebPage extends AbstractIntent {
         log.info("init: {} --> {}", self, prompt);
     }
     @Override
-    @RDF(COMMONS.IQ_NS+"webpage")
+    @RDF(IQ_NS.IQ+"webpage")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
         Set<IRI> done = new HashSet<>();
         log.info("read: {} @ {}", state, actor);

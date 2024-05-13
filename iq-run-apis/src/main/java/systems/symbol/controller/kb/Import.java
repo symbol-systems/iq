@@ -36,8 +36,7 @@ public class Import extends GuardedAPI {
                                 @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("api.import#protected");
-            if (!Validate.isUnGuarded())
-                return new OopsResponse("api.import#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.import#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.import#invalid-repository", Response.Status.BAD_REQUEST).asJSON();

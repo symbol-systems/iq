@@ -28,8 +28,7 @@ public class Find extends GuardedAPI {
             @HeaderParam("Authorization") String auth) {
         if (!Validate.isBearer(auth)) {
             log.info("api.kb.find#protected");
-            if (!Validate.isUnGuarded())
-                return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.iq.find.indexer#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

@@ -4,10 +4,10 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.sparql.IQScripts;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
@@ -17,8 +17,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * An intent implementation that executes scripts using JSR-233 (Java Scripting API).
- * Extends the AbstractIntent class.
+ * An intent that executes scripts using JSR-233 - the Java Scripting API.
+ *
+ * This class represents an intent capable of executing scripts written in various scripting languages supported
+ * by the JSR-233 (Java Scripting API) standard.
+ *
+ * We leverage the ScriptEngineManager to dynamically obtain and execute scripts based on their MIME types.
+ *
+ * The class is designed to be instantiated with a well-known IRI an RDF4J model containing the knowledge graph,
+ * and an optional secrets provider for accessing sensitive data.
+ *
+ * @see systems.symbol.intent.AbstractIntent
+ * @see systems.symbol.RDF
+ * @see systems.symbol.platform.IQ_NS
  */
 public class JSR233 extends AbstractIntent {
 
@@ -54,7 +65,7 @@ public class JSR233 extends AbstractIntent {
      * @return A set of IRIs indicating the completion of execution.
      */
     @Override
-    @RDF(COMMONS.IQ_NS + "script")
+    @RDF(IQ_NS.IQ + "script")
     public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
         Set<IRI> done = new HashSet<>();
         Literal script = IQScripts.findScript(model, state, null, null);

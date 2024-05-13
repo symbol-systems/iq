@@ -32,7 +32,7 @@ public class RDFPage extends AbstractIntent {
         log.info("init: {} --> {}", self, format);
     }
     @Override
-    @RDF(COMMONS.IQ_NS+"rdf")
+    @RDF(IQ_NS.IQ+"rdf")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
         Set<IRI> done = new HashSet<>();
         log.info("rdf: {} @ {}", state, actor);

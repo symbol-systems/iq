@@ -3,9 +3,9 @@ package systems.symbol.intent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
 
 import javax.script.Bindings;
@@ -17,7 +17,18 @@ import static systems.symbol.platform.Provenance.generated;
  * The GovernedIntent class represents an intent that is governed by a set of rules or policies.
  * It implements the I_Intent interface and introduces governance by adding provenance information
  * using the Provenance class for each executed intent.
- */
+ * <p>
+ * GovernedIntent enables the enforcement of policies by wrapping an underlying intent
+ * and intercepting its execution.
+ * <p>
+ * Upon executing the underlying intent, GovernedIntent adds  provenance information to the execution results,
+ * ensuring traceability and accountability.
+ * <p>
+ * @author Symbol Systems
+ * @see systems.symbol.intent.I_Intent
+ * @see systems.symbol.platform.Provenance
+**/
+
 public class GovernedIntent implements I_Intent, I_Self {
 
     private final IRI self;
@@ -45,7 +56,7 @@ public class GovernedIntent implements I_Intent, I_Self {
      * @return A set of IRIs representing the results of the executed intent.
      */
     @Override
-    @RDF(COMMONS.IQ_NS+"govern")
+    @RDF(IQ_NS.IQ+"govern")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         Set<IRI> done = intent.execute(actor, state, bindings);
 

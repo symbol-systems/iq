@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.9</version>
+        <version>0.77.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,8 @@
     <artifactId>iq-cli</artifactId>
     <packaging>jar</packaging>
 
-    <name>symbol.systems - CLI</name>
+    <name>command-line IQ</name>
+    <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
     <url>https://symbol.systems</url>
 
     <organization>

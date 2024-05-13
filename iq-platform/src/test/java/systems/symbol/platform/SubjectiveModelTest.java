@@ -14,7 +14,7 @@ class SubjectiveModelTest {
     @Test
     void addSubjectiveFacts() {
         ValueFactory vf = SimpleValueFactory.getInstance();
-        IRI self = vf.createIRI(COMMONS.IQ_NS_TEST);
+        IRI self = vf.createIRI(IQ_NS.TEST);
         Model baseModel = new DynamicModelFactory().createEmptyModel();
         Model selfModel = new SubjectiveModel(baseModel, self);
 

@@ -8,14 +8,14 @@ import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
-import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_Chat;
+import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.Prompts;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.io.FileFormats;
 import systems.symbol.render.HBSRenderer;
@@ -33,23 +33,29 @@ import java.util.regex.Pattern;
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
 import static systems.symbol.agent.MyFacade.INTENT;
 
+/**
+ * An intent that processes and renders structured content into a format suitable for human consumption.
+ * It takes a template in Handlebars format and binds it with provided data, rendering the content.
+ * The rendered content is then passed to a conversational agent for further processing.
+ */
+
 public class Think extends AbstractIntent {
 
-    IRI templateMime;
+    IRI fallbackMime;
     I_Contents contents;
     I_LLM<String> llm;
     Pattern extractBody = Pattern.compile("```(\\w+\n)\\s*(.*?)\n```", Pattern.DOTALL);
 
     public Think(IRI self, Model model, I_Contents contents, I_LLM<String> llm) {
         boot(self, model);
-        this.templateMime = null;
+        this.fallbackMime = null;
         this.contents = contents;
         this.llm = llm;
     }
 
-    protected Think(IRI self, Model model, IRI templateMime, I_Contents contents, I_LLM<String> llm) {
+    protected Think(IRI self, Model model, IRI fallbackMime, I_Contents contents, I_LLM<String> llm) {
         boot(self, model);
-        this.templateMime = templateMime;
+        this.fallbackMime = fallbackMime;
         this.contents = contents;
         this.llm = llm;
     }
@@ -63,22 +69,41 @@ public class Think extends AbstractIntent {
      */
     public Set<IRI> thinks(IRI actor, Resource state, Bindings bindings) throws IOException, APIException {
         Set<IRI> done = new HashSet<>();
-        Literal hbs = contents.getContent(state, templateMime);
+        Literal hbs = contents.getContent(state, fallbackMime);
         log.info("thinks: {} @ {} - {}", actor, state, hbs!=null);
         if (hbs == null) return done;
         done.addAll( thinks(actor, state, hbs, bindings, model) );
        return done;
     }
 
-    protected Set<IRI> thinks(IRI actor, Resource state, Literal hbs, Bindings my, Model model) throws IOException, APIException {
+    /**
+     * Interpolates the template, sending it to an LLM for neural inference, then merges the new graph into the existing model.
+     *
+     * The LLM is expected to return valid RDF in the expected format - either the mimetype, the .
+     *
+     * The format of the returned RDF is inferred from the datatype of the template.
+     *
+     * @param actor   The actor/source of the models.
+     * @param state   The state for each model.
+     * @param template     The Handlebars template to render.
+     * @param my      Bindings for script execution.
+     * @param model   The RDF4J model associated with the intent.
+     * @return A set of IRIs representing the result of the execution.
+     * @throws IOException    If an IO exception occurs.
+     * @throws APIException   If an API exception occurs.
+     */
+
+    protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings my, Model model) throws IOException, APIException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
         String intent = my.containsKey(INTENT)?my.get(INTENT).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
-        log.info("think.bindings: {} -> {} -> {}", hbs.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
-        String mime = FileFormats.toMime(templateMime);
-        RDFFormat format = Rio.getWriterFormatForMIMEType(mime).orElseGet(() -> RDFFormat.TURTLE);
+        log.info("think.bindings: {} -> {} -> {}", template.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
+        String mime = FileFormats.toMime(fallbackMime);
+        // Determine the RDF format based on the datatype of the template literal, falling/failing gracefully.
+        RDFFormat format = Rio.getWriterFormatForMIMEType(template.getDatatype().stringValue())
+                .orElseGet(() -> Rio.getWriterFormatForMIMEType(mime).orElse(RDFFormat.TURTLE));
 
-        String remodelled = HBSRenderer.template(hbs.stringValue(), bindings);
+        String remodelled = HBSRenderer.template(template.stringValue(), bindings);
         log.info("think.raw: {} -> {}", format, remodelled);
 
         I_Chat<String> thought = Prompts.think(actor, state, intent, model, my, format);
@@ -103,7 +128,7 @@ public class Think extends AbstractIntent {
     }
 
     @Override
-    @RDF(COMMONS.IQ_NS+"think")
+    @RDF(IQ_NS.IQ+"think")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         try {
             return thinks(actor, state, bindings);

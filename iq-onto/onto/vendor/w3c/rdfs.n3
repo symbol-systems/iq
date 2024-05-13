@@ -139,7 +139,7 @@ rdf:value     a rdf:Property;
      :subClassOf rdf:Property .
 
 :Datatype     a :Class;
-     :comment "The class of RDF datatypes.";
+     :comment "The class of RDF graphtypes.";
      :isDefinedBy :;
      :label "Datatype";
      :subClassOf :Class .

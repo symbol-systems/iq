@@ -1,21 +1,21 @@
 package systems.symbol.fsm;
 
-import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
+import systems.symbol.platform.IQ_NS;
 
 import static systems.symbol.fsm.SimpleStateMachineTest.*;
 
 public class ModelStateMachineTest {
     DynamicModelFactory dmf = new DynamicModelFactory();
-    public static IRI self = Values.iri(COMMONS.IQ_NS_TEST);
+    public static IRI self = Values.iri(IQ_NS.TEST);
     public static IRI useGuardRule = RDF.TYPE;
-    public static IRI useGuardMatch = Values.iri(COMMONS.IQ_NS_TEST,"SignOff");
+    public static IRI useGuardMatch = Values.iri(IQ_NS.TEST,"SignOff");
 
     public static ModelStateMachine newMSM(Model model, IRI iri) {
         ModelStateMachine msm = new ModelStateMachine(model, iri);

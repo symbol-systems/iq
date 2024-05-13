@@ -17,13 +17,12 @@ public class MemoryVault implements I_SecretsStore {
     }
 
     @Override
-    public I_Secrets setSecrets(IRI agent, String key, String value) {
-        return setSecrets(agent, new SimpleSecrets());
+    public void setSecrets(IRI agent, String key, String value) {
+        setSecrets(agent, new SimpleSecrets());
     }
 
     @Override
-    public I_Secrets setSecrets(IRI agent, I_Secrets secrets) {
+    public void setSecrets(IRI agent, I_Secrets secrets) {
         store.put(agent, secrets);
-        return secrets;
     }
 }

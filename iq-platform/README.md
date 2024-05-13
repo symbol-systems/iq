@@ -1,12 +1,23 @@
-# iq-platform
+## IQ: An operating environment for symbolic cognition
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+
+It transforms an RDF graph into an executable playbook.
+
+This repository defines the IQ operation model as a suite of Java interfaces.
+
+## Runtime environment
+
+This project uses Quarkus, the `Supersonic Subatomic Java Framework`.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+Quarkus provides an efficient, robust and performant runtime for your IQ.
+
 ## Running the application in dev mode
 
-You can run your application in dev mode that enables live coding using:
+You can run your IQ in dev mode to enables live coding and debugging:
+
 ```shell script
 ./mvnw compile quarkus:dev
 ```

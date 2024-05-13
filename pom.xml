@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
-  <version>0.76.9</version>
+  <version>0.77.1</version>
   <packaging>pom</packaging>
-  <name>symbol.systems - BoM</name>
+  <name>BoM</name>
   <url>https://symbol.systems</url>
   <organization>
     <name>symbol.systems</name>
@@ -39,23 +39,23 @@
     </developer>
   </developers>
   <modules>
-    <module>iq-utils</module>
-    <module>iq-commons</module>
+    <module>iq-aspects</module>
+    <module>iq-abstract</module>
     <module>iq-rdf4j</module>
     <!-- <module>iq-actions</module> -->
     <!-- <module>iq-camel</module> -->
     <module>iq-cli</module>
-    <module>iq-cli-pro</module>
+    <module>iq-cli-devops</module>
 <!--    <module>iq-rdf4j-graphql</module>-->
 <!--    <module>iq-rdf4j-nlp</module>-->
 <!--    <module>iq-codehub</module>-->
     <module>iq-platform</module>
     <module>iq-moat</module>
     <module>iq-finder</module>
-    <module>iq-fleet</module>
+    <module>iq-agentic</module>
     <module>iq-run-apis</module>
     <module>iq-persona</module>
-    <module>iq-graphs</module>
+    <module>iq-analytics</module>
 <!--    <module>iq-dao</module>-->
   </modules>
   <scm>
@@ -471,8 +471,9 @@
               <manifest>
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                 <addClasspath>true</addClasspath>
-                <useUniqueVersions>false</useUniqueVersions>
+                <useUniqueVersions>true</useUniqueVersions>
 <!--                <mainClass>${main.class}</mainClass>-->
+                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               </manifest>
               <manifestEntries>
                 <Implementation-Build>$\{buildNumber}</Implementation-Build>

@@ -12,7 +12,7 @@
     <artifactId>iq-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>symbol.systems - Cloud APIs </name>
+    <name>Cloud APIs </name>
     <url>https://symbol.systems</url>
 
     <organization>
