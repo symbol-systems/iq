@@ -39,7 +39,6 @@ public Response constructQuery(@PathParam("repo") String repo,
    @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
 log.info("api.construct#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {

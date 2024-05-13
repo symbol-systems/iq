@@ -6,11 +6,11 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.finder.I_FactFinder;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.sparql.IQScripts;
@@ -21,7 +21,20 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- * An intent
+ * An intent that semantically finds facts within IQ.
+ * *
+ * This intent enables agents to search for facts based on a semantic query. It utilizes a fact finder
+ * to perform the search and returns the found facts as a set of IRIs.
+ * *
+ * The intent is instantiated with a well-known IRI, an RDF4J model containing the knowledge graph,
+ * and a fact finder implementation.
+ * *
+ * By adhering to the contract defined in I_Intent and I_Self, it seamlessly integrates with the IQ operating
+ * system and enables agents to leverage its capabilities for symbolic cognition.
+ *
+ * @see systems.symbol.intent.I_Intent
+ * @see systems.symbol.platform.I_Self
+ * @see systems.symbol.finder.I_FactFinder
  */
 public class Find implements I_Intent, I_Self {
 private final IRI self;
@@ -30,45 +43,52 @@ private final Model model;
 private final IRI knows;
 
 /**
- * Constructs a new SPARQL intent with the provided Connection and self identity.
+ * Constructs a new Find intent with the provided self identity, RDF4J model, and fact finder.
  *
- * @param self  The self identity of the agent.
+ * @param self   The self identity of the agent.
+ * @param model  The RDF4J model associated with the agent.
+ * @param finder The fact finder implementation used for searching.
  */
 public Find(IRI self, Model model, I_FactFinder finder) {
 this.self = self;
 this.finder = finder;
 this.model = model;
-this.knows = Values.iri(COMMONS.IQ_NS, "knows");
+this.knows = Values.iri(IQ_NS.IQ, "knows");
 }
 
 /**
- * Creates a new bindings object for script execution.
- * Executes the SPARQL query based on the provided actor and resource.
+ * Executes the Find intent, searching for facts based on the provided semantic query.
  *
- * @param actor   The actor of the execution.
- * @param state  The resource containing the script.
- * @param ctxBindings used in query interpolation.
- * @return A set of IRIs indicating the completion of execution.
+ * @param actor  The actor executing the intent.
+ * @param intent The resource containing the semantic query.
+ * @param ctxAdditional bindings for query interpolation.
+ * @return A set of IRIs representing the found facts.
+ * @throws StateException If an error occurs during the execution of the intent.
  */
 @Override
-@RDF(COMMONS.IQ_NS + "find")
-public Set<IRI> execute(IRI actor, Resource state, Bindings ctx) throws StateException {
-Literal prompt = IQScripts.findScript(model, state, null, null);
-if (prompt==null||prompt.stringValue().isEmpty()) return new IRIs();
+@RDF(IQ_NS.IQ + "find")
+public Set<IRI> execute(IRI actor, Resource intent, Bindings ctx) throws StateException {
+Literal prompt = IQScripts.findScript(model, intent, null, null);
+if (prompt == null || prompt.stringValue().isEmpty()) return new IRIs();
 try {
 Bindings bindings = MyFacade.rebind(actor, ctx);
 String query = HBSRenderer.template(prompt.stringValue(), bindings);
 Model found = finder.search(query);
 Set<IRI> iris = Models.subjectIRIs(found);
-for(IRI iri:iris) {
+for (IRI iri : iris) {
 model.add(actor, this.knows, iri);
 }
 return iris;
 } catch (IOException e) {
-throw new StateException(e.getMessage(), state, e);
+throw new StateException(e.getMessage(), intent, e);
 }
 }
 
+/**
+ * Retrieves the self identity associated with this intent.
+ *
+ * @return The self identity of the intent.
+ */
 @Override
 public IRI getSelf() {
 return self;

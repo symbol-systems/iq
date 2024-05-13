@@ -28,7 +28,6 @@ public Response importLocal(@PathParam("finder")String finder, @PathParam("repo"
 @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
 log.info("api.kb.find#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {

@@ -10,12 +10,11 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.I_AgentContext;
+import systems.symbol.agent.Agentic;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.fleet.ExecutiveFleet;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.gpt.GenericGPT;
@@ -47,16 +46,16 @@ I_LLM<String> llm = new GenericGPT(llmToken, 1000);
 IRI self = Values.iri(jwt.getSubject());
 log.info("api.agent.self: {}", self);
 Model model = new LiveModel(connection);
-//ExecutiveAgent agent = new ExecutiveAgent(self, model);
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, llm);
-fleet.deploy();
-fleet.start();
-I_AgentContext<String, Resource> context = fleet.getContext(self);
+Agentic<String, Resource> agentic = new Agentic<>(chat);
+//LLMDecision manager = new LLMDecision(llm, agent, agentic);
+//ExecutiveAgent agent = new ExecutiveAgent(self, model, new ExecutiveIntent(self,model), manager, agentic.getBindings());
+//manager.decide();
 
-context.getConversation().add( chat.latest() );
 
-fleet.run();
-fleet.stop();
+//context.getConversation().add( chat.latest() );
+//
+//fleet.run();
+//fleet.stop();
 log.info("api.agent: {}", chat.messages());
 return new ChatResponse(chat).asJSON();
 }

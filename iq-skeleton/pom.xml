@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.76.9</version>
+<version>0.77.1</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
 <artifactId>iq-skeleton</artifactId>
 <packaging>jar</packaging>
 
-<name>symbol.systems - Skeleton</name>
+<name>Skeleton</name>
 <url>https://symbol.systems</url>
 
 <organization>

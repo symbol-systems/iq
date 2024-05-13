@@ -1,20 +1,20 @@
 package systems.symbol.agent;
 
-import org.eclipse.rdf4j.rio.RDFFormat;
-import systems.symbol.fsm.I_StateMachine;
-import systems.symbol.fsm.StateException;
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.IRIs;
-import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.sparql.IQScriptCatalog;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.IRIs;
+import systems.symbol.rdf4j.io.RDFDump;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.rdf4j.sparql.SPARQLMapper;
+import systems.symbol.rdf4j.store.BootstrapRepository;
+import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
 import java.io.File;
@@ -25,16 +25,16 @@ public class RDFAgentTest {
 public static BootstrapRepository assets;
 public static ValueFactory vf;
 public static IRI self, iriGroovyScript, iriWorkflow0;
-IRI ideation = vf.createIRI(COMMONS.IQ_NS_TEST +"ideation");
-IRI wip = vf.createIRI(COMMONS.IQ_NS_TEST +"work-in-progress");
+IRI ideation = vf.createIRI(IQ_NS.TEST +"ideation");
+IRI wip = vf.createIRI(IQ_NS.TEST +"work-in-progress");
 
 @BeforeAll
 public static void setUp() throws IOException {
 assets = new BootstrapRepository();
-self = assets.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST);
+self = assets.load(new File("src/test/resources/assets"), IQ_NS.TEST);
 vf = assets.getValueFactory();
-iriWorkflow0 = vf.createIRI(COMMONS.IQ_NS_TEST +"workflow_0");
-iriGroovyScript = vf.createIRI(COMMONS.IQ_NS_TEST +"scripts/hello");
+iriWorkflow0 = vf.createIRI(IQ_NS.TEST +"workflow_0");
+iriGroovyScript = vf.createIRI(IQ_NS.TEST +"scripts/hello");
 
 }
 

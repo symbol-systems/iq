@@ -10,7 +10,7 @@ import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 
 import java.util.*;
 
@@ -100,7 +100,7 @@ return dotProduct / magnitudeProduct;
 
 public static Model score(Model memoryModel, Map<Resource, Double> similarity) {
 for(Resource r: similarity.keySet()) {
-memoryModel.add(r, Values.iri(COMMONS.IQ_NS, "score"), Values.***REMOVED***(similarity.get(r).floatValue()));
+memoryModel.add(r, Values.iri(IQ_NS.IQ, "score"), Values.***REMOVED***(similarity.get(r).floatValue()));
 }
 return memoryModel;
 }

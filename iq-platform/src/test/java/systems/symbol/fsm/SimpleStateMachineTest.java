@@ -4,14 +4,32 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.junit.jupiter.api.Test;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 
+/**
++---------+   +-----+
+ ----->| ideation | -->  | wip |
+ |  +---------+  +-----+
+ ||   |
+ ||   |
+ |v   |
+ | +-------+  |
+ | | review|  |
+ | +-------+  |
+ ||   |
+ ||   |
+ +--------|   |
+  v   |
+ +---------+  |
+ | revision|<---------+
+ +---------+
+ */
 public class SimpleStateMachineTest {
-public static IRI ideation = Values.iri(COMMONS.IQ_NS_TEST,"ideation");
-public static IRI wip = Values.iri(COMMONS.IQ_NS_TEST, "work-in-progress");
-public static IRI review = Values.iri(COMMONS.IQ_NS_TEST,"in-review");
-public static IRI revision = Values.iri(COMMONS.IQ_NS_TEST,"revision");
-public static IRI complete = Values.iri(COMMONS.IQ_NS_TEST,"complete");
+public static IRI ideation = Values.iri(IQ_NS.TEST,"ideation");
+public static IRI wip = Values.iri(IQ_NS.TEST, "work-in-progress");
+public static IRI review = Values.iri(IQ_NS.TEST,"in-review");
+public static IRI revision = Values.iri(IQ_NS.TEST,"revision");
+public static IRI complete = Values.iri(IQ_NS.TEST,"complete");
 
 public static I_StateMachine<Resource> newFSM() {
 return addFSM(new SimpleStateMachine<>());

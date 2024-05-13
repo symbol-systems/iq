@@ -86,7 +86,7 @@ return vf.createIRI(page.getPublicURIString());
 
 
 @Override
-@RDF(COMMONS.IQ_NS+"research-sitemap")
+@RDF(IQ_NS.IQ+"research-sitemap")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
 Set<IRI> done = new HashSet<>();
 try {

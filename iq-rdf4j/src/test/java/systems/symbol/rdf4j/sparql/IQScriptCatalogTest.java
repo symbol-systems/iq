@@ -1,14 +1,15 @@
 package systems.symbol.rdf4j.sparql;
 
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.store.LiveModel;
-import systems.symbol.rdf4j.store.AbstractTripleTest;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.testng.annotations.Test;
+import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.io.RDFDump;
+import systems.symbol.rdf4j.store.AbstractTripleTest;
+import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.rdf4j.store.LiveModel;
 
 
 public class IQScriptCatalogTest extends AbstractTripleTest {
@@ -16,7 +17,7 @@ public class IQScriptCatalogTest extends AbstractTripleTest {
 @Test
 public void testGetSPARQLWithIRIFromConnection() {
 try (RepositoryConnection connection = assets.getConnection()) {
-IQScriptCatalog library = new IQScriptCatalog(new IQConnection(COMMONS.IQ_NS_TEST, connection));
+IQScriptCatalog library = new IQScriptCatalog(new IQConnection(IQ_NS.TEST, connection));
 String sparql = library.getSPARQL(iriSparqlQuery);
 assert sparql !=null && !sparql.isEmpty();
 assert sparql.contains("SELECT ");

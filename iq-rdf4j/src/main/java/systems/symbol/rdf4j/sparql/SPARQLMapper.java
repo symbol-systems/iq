@@ -22,7 +22,7 @@ import static systems.symbol.rdf4j.NS.KEY_AT_THIS;
 import static systems.symbol.rdf4j.NS.KEY_SELF;
 
 /**
- * The SPARQLMapper class provides a set of utility methods for working with RDF data using SPARQL queries.
+ * The SPARQLMapper class provides a set of utility methods for working with RDF graph using SPARQL queries.
  * It is designed to interact with an RDF repository through the Eclipse RDF4J framework.
  *
  * The class includes methods for executing various types of SPARQL queries, retrieving query results, and

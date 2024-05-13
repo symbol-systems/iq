@@ -52,7 +52,6 @@ return new OopsResponse("api.llm.chat#disabled", Response.Status.SERVICE_UNAVAIL
 }
 if (!Validate.isBearer(auth)) {
 log.info("api.llm.chat#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.llm.chat#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 DecodedJWT jwt = authenticate(auth);

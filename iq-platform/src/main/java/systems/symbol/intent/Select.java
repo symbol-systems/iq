@@ -4,10 +4,10 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.COMMONS;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
@@ -22,8 +22,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An intent implementation that executes scripts using SPARQL (Java Scripting API).
- * Extends the AbstractIntent class.
+ * An intent implementation that executes scripts using SPARQL.
+ *
+ * The Select intent executes SPARQL queries stored in the IQScriptCatalog and returns the results
+ * as a named list of maps stored in the bindings object.
+ *
+ * It embodies an agent's capability to retrieve structured/tabular data from arbitrary RDF graphs.
+ *
+ * This intent provides a versatile mechanism for querying RDF, allowing agents to dynamically
+ * retrieve information based on their internal state, context, through interpolated queries.
+ *
+ * @author Symbol Systems
+ * @see systems.symbol.intent.I_Intent
+ * @see systems.symbol.rdf4j.sparql.IQScriptCatalog
+ * @see systems.symbol.rdf4j.sparql.SPARQLMapper
  */
 public class Select implements I_Intent, I_Self {
 private final IQScriptCatalog catalog;
@@ -51,7 +63,7 @@ this.catalog = new IQScriptCatalog(iq);
  * @return A set of IRIs indicating the completion of execution.
  */
 @Override
-@RDF(COMMONS.IQ_NS + "select")
+@RDF(IQ_NS.IQ + "select")
 public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
 Set<IRI> done = new HashSet<>();
 try {

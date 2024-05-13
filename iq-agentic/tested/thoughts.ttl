@@ -1,0 +1,4 @@
+
+<urn:iq:test:#9fefcd83-4037-4be5-8654-654839bdba5aPlan> a <http://www.w3.org/2004/02/skos/core#Concept>;
+  <http://www.w3.org/2004/02/skos/core#prefLabel> "Plan";
+  <http://www.w3.org/2004/02/skos/core#broader> <urn:iq:test:#9fefcd83-4037-4be5-8654-654839bdba5aAction> .

@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.*;
 import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.util.URLHelper;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ add("", baseNS);
 }
 
 public static NS defaults() {
-return new NS(IQ_NS_TEST);
+return new NS(IQ_NS.TEST);
 }
 
 public static NS defaults(NS ns) {

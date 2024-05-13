@@ -34,7 +34,6 @@ public Response importLocal(@PathParam("finder")String finder,
 @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
 log.info("api.iq.text.indexer#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.iq.text#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(finder)) {

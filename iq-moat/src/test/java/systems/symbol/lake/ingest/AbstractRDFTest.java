@@ -14,14 +14,14 @@ import java.io.IOException;
 public class AbstractRDFTest {
 static protected BootstrapRepository repository;
 protected static ValueFactory vf = SimpleValueFactory.getInstance();
-protected static IRI self = vf.createIRI(COMMONS.IQ_NS_TEST);
+protected static IRI self = vf.createIRI(IQ_NS.TEST);
 
 public AbstractRDFTest() {}
 
 public static void bootUp() throws IOException {
 repository = new BootstrapRepository();
 vf = repository.getValueFactory();
-assert self.equals(repository.load(new File("src/test/resources/assets"), COMMONS.IQ_NS_TEST));
+assert self.equals(repository.load(new File("src/test/resources/assets"), IQ_NS.TEST));
 }
 
 public void shutDown() throws RDFParseException, RepositoryException, IOException {

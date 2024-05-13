@@ -1,11 +1,11 @@
 package systems.symbol.rdf4j.fn;
 
-import systems.symbol.COMMONS;
-import systems.symbol.string.PrettyString;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 import org.eclipse.rdf4j.query.algebra.evaluation.function.Function;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.string.PrettyString;
 
 /**
  * a custom SPARQL function that determines whether an input ***REMOVED*** string is a palindrome.
@@ -23,7 +23,7 @@ public abstract class CustomFunction implements Function {
    * return the function's URI in the 'urn:symbol.systems:fn' namespace
    */
   public String getURI() {
-  return COMMONS.IQ_NS + getFunctionName();
+  return IQ_NS.IQ + getFunctionName();
   }
 
   public String getFunctionName() {

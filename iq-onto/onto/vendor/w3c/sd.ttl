@@ -22,7 +22,7 @@ sd:BasicFederatedQuery
 .
 sd:Dataset
   rdf:type rdfs:Class ;
-  rdfs:comment "An instance of sd:Dataset represents a RDF Dataset comprised of a default graph and zero or more named graphs." ;
+  rdfs:comment "An instance of sd:Dataset represents a RDF graphset comprised of a default graph and zero or more named graphs." ;
   rdfs:label "Dataset" ;
   rdfs:subClassOf sd:GraphCollection ;
 .

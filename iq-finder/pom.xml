@@ -4,16 +4,17 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.76.9</version>
+<version>0.77.1</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
 
 <artifactId>iq-finder</artifactId>
+<name>Find IQ</name>
+<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<url>https://symbol.systems</url>
 <packaging>jar</packaging>
 
-<name>symbol.systems - Fact Finder</name>
-<url>https://symbol.systems</url>
 
 <organization>
 <name>symbol.systems</name>

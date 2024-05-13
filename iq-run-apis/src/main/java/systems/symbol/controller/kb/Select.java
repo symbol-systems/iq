@@ -43,7 +43,6 @@ public Response query(
 @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
 log.info("api.iq.select#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.select#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {

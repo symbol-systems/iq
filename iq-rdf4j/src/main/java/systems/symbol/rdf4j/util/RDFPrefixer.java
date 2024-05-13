@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +54,8 @@ public class RDFPrefixer {
 		ns.put("dct", DCTERMS.NAMESPACE);
 		ns.put("dcat", DCAT.NAMESPACE);
 		ns.put("xsd", XSD.NAMESPACE);
-		ns.put("iq", COMMONS.IQ_NS);
-		ns.put("my", COMMONS.MY_NS);
+		ns.put("iq", IQ_NS.IQ);
+		ns.put("my", IQ_NS.MY);
 		ns.put("prov", PROV.NAMESPACE);
 		ns.put("void", VOID.NAMESPACE);
 		ns.put("schema", "http://schema.org/");

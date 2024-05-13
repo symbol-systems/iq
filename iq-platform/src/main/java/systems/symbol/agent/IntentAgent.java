@@ -1,12 +1,12 @@
 package systems.symbol.agent;
 
-import systems.symbol.RDF;
-import systems.symbol.fsm.StateException;
-import systems.symbol.intent.I_Intent;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.RDFCollections;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.COMMONS;
+import systems.symbol.RDF;
+import systems.symbol.fsm.StateException;
+import systems.symbol.intent.I_Intent;
+import systems.symbol.platform.IQ_NS;
 
 import javax.script.Bindings;
 import java.util.Collection;
@@ -58,7 +58,7 @@ return false;
  * @throws StateException If an error occurs during execution.
  */
 @Override
-@RDF(COMMONS.IQ_NS + "agent")
+@RDF(IQ_NS.IQ + "agent")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 log.info("agent.execute: {} -> {}", actor, state);
 if (state instanceof IRI)

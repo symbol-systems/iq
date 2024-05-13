@@ -1,8 +1,5 @@
 package systems.symbol.agent;
 
-import systems.symbol.fsm.ModelStateMachine;
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.io.RDFDump;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.util.Models;
@@ -11,21 +8,25 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import systems.symbol.COMMONS;
+import systems.symbol.fsm.ModelStateMachine;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.util.RDFPrefixer;
-
 
 import javax.script.SimpleBindings;
 import java.util.Optional;
 import java.util.Set;
 
-import static systems.symbol.fsm.ModelStateMachineTest.*;
+import static systems.symbol.fsm.ModelStateMachineTest.newMSM;
+import static systems.symbol.fsm.ModelStateMachineTest.self;
 import static systems.symbol.fsm.SimpleStateMachineTest.wip;
 
 class ScriptAgentTest {
 DynamicModelFactory dmf = new DynamicModelFactory();
 Model model;
 String groovyExample = "print 'hello world'; iq.set('hello', 'world'); return 'hello'";
-IRI helloProperty = Values.iri(COMMONS.IQ_NS_TEST+"hello");
+IRI helloProperty = Values.iri(IQ_NS.TEST+"hello");
 
 @BeforeEach
 void setupAgentModel() {

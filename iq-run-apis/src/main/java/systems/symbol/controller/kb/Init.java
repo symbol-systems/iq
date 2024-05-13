@@ -34,7 +34,6 @@ public Response initRepository(@PathParam("type") String type,
    @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
 log.info("api.kb.find#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.init#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {

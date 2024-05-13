@@ -1,16 +1,16 @@
 package systems.symbol.finder;
 
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.io.BootstrapLoader;
-import systems.symbol.rdf4j.store.IQ;
-import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.sparql.IQScriptCatalog;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.testng.annotations.Test;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.rdf4j.store.BootstrapRepository;
+import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +22,10 @@ File ASSETS_HOME = new File("src/test/resources/assets/");
 public void testHydrateTriple() throws IOException {
 BootstrapRepository repo = new BootstrapRepository();
 try (RepositoryConnection connection = repo.getConnection()) {
-IQ iq = new IQConnection(COMMONS.IQ_NS_TEST, connection);
+IQ iq = new IQConnection(IQ_NS.TEST, connection);
 IQScriptCatalog library = new IQScriptCatalog(iq);
 
-BootstrapLoader loader = new BootstrapLoader(COMMONS.IQ_NS_TEST, connection, true, true, true, false);
+BootstrapLoader loader = new BootstrapLoader(IQ_NS.TEST, connection, true, true, true, false);
 loader.deploy(ASSETS_HOME);
 
 

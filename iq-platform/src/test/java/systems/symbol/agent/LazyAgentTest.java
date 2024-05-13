@@ -1,8 +1,5 @@
 package systems.symbol.agent;
 
-import systems.symbol.fsm.ModelStateMachine;
-import systems.symbol.fsm.StateException;
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -10,16 +7,19 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
+import systems.symbol.fsm.ModelStateMachine;
+import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 
-import static systems.symbol.fsm.ModelStateMachineTest.*;
+import static systems.symbol.fsm.ModelStateMachineTest.newMSM;
 import static systems.symbol.fsm.SimpleStateMachineTest.ideation;
 import static systems.symbol.fsm.SimpleStateMachineTest.wip;
 
 class LazyAgentTest {
 DynamicModelFactory dmf = new DynamicModelFactory();
 static ValueFactory vf = SimpleValueFactory.getInstance();
-static IRI self = vf.createIRI(COMMONS.IQ_NS_TEST);
-static IRI workflow_0 = vf.createIRI(COMMONS.IQ_NS_TEST +"skill-0");
+static IRI self = vf.createIRI(IQ_NS.TEST);
+static IRI workflow_0 = vf.createIRI(IQ_NS.TEST +"skill-0");
 
 @Test
 void testFSM() throws StateException {

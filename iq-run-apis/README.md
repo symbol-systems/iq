@@ -1,8 +1,18 @@
-# iq-run-apis
+## IQ: An operating environment for symbolic cognition
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+
+It transforms an RDF graph into an executable playbook.
+
+This repository defines the IQ operation model as a suite of Java interfaces.
+
+## Runtime environment
+
+This project uses Quarkus, the `Supersonic Subatomic Java Framework`.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+
+Quarkus provides an efficient, robust and performant runtime for your IQ APIs.
 
 ## Running the application in dev mode
 
@@ -46,15 +56,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/iq-ce-notary-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Related Guides
-
-- RESTEasy Reactive ([guide](https://quarkus.io/guides/resteasy-reactive)): A JAX-RS implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

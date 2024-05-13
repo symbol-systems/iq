@@ -12,7 +12,8 @@
 <artifactId>iq-camel</artifactId>
 <packaging>jar</packaging>
 
-<name>symbol.systems - Camel</name>
+<name>Integrated IQ</name>
+<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
 <url>https://symbol.systems</url>
 
 <organization>

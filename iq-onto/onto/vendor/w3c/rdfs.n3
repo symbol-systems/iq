@@ -139,7 +139,7 @@ all of which are sub-properties of 'member'.""";
  :subClassOf rdf:Property .
 
 :Datatype a :Class;
- :comment "The class of RDF datatypes.";
+ :comment "The class of RDF graphtypes.";
  :isDefinedBy :;
  :label "Datatype";
  :subClassOf :Class .

@@ -36,7 +36,6 @@ public Response importLocal(@PathParam("repo") String repo,
 @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
 log.info("api.import#protected");
-if (!Validate.isUnGuarded())
 return new OopsResponse("api.import#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
