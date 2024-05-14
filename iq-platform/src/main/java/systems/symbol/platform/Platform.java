@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.util.Date;
 
-import static systems.symbol.COMMONS.CODENAME;
+import static systems.symbol.COMMONS.IQ;
 
 @Singleton
 public class Platform implements I_Self {
@@ -40,7 +40,7 @@ public class Platform implements I_Self {
      * @throws IOException If an error occurs during workspace initialization.
      */
     public Platform() throws Exception {
-        init(new File(CODENAME.toLowerCase()));
+        init(new File(IQ.toLowerCase()));
     }
 
     /**
