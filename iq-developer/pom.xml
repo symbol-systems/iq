@@ -9,11 +9,11 @@
 </parent>
 <modelVersion>4.0.0</modelVersion>
 
-<artifactId>iq-codehub</artifactId>
+<artifactId>iq-developer</artifactId>
 <packaging>jar</packaging>
 
 <name>Developer IQ</name>
-<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<description>Trust-able AI.</description>
 <url>https://symbol.systems</url>
 
 <organization>

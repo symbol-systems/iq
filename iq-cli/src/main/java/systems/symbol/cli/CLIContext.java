@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class CLIContext implements I_Self {
 protected static final Logger log = LoggerFactory.getLogger(CLIContext.class);
-public static final String CODENAME = COMMONS.CODENAME;
+public static final String CODENAME = COMMONS.IQ;
 Workspace workspace;
 public File home, backups, assets, www_docs; // , kbms, onto;
 final long timestamp = System.currentTimeMillis();

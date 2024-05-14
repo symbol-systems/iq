@@ -1,10 +1,32 @@
+## IQ: An operating environment for symbolic cognition
 
-```
-export PROJECT_ID=iq-run-apis
-mvn io.quarkus.platform:quarkus-maven-plugin:2.16.3.Final:create \
--DprojectGroupId=systems.symbol \
--DprojectArtifactId=$PROJECT_ID \
--Dextensions='resteasy-reactive'
-cd $PROJECT_ID
+IQ enforces operational governance for fleets of neuro-symbolic cognitive AI.
 
-```
+An AI in this context refers to a well-governed entity capable of making autonomous decisions
+and executing tasks based on its internal state.
+
+IQ converts RDF graphs, templates into actionable playbooks and patterns.
+
+### Declare an example AI domain
+
+@base https://example.com/v0/
+ai: a iq:AI.
+
+# This AI domain trusts the IQ runtime.
+
+ai: iq:trusts iq:.
+
+### The user runtime domain trusts this AI runtime.
+
+my: iq:trusts ai:.
+my: iq:trusts iq:.
+
+### Initialize the AI domain from your knowledge lake. 
+
+iq: iq:knows ai:.
+ai: iq:knows iq:.
+iq: iq:knows my:.
+
+### Basic needs
+
+ai: iq:needs iq:.

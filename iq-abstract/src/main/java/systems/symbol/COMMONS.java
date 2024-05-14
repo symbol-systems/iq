@@ -1,5 +1,7 @@
 package systems.symbol;
 
+import systems.symbol.platform.I_Self;
+
 /**
  * The {@code COMMONS} interface provides common constants used in IQ.
  * These constants include codenames, namespaces, and MIME types.
@@ -7,7 +9,7 @@ package systems.symbol;
 public interface COMMONS {
 
 	// Codename for the IQ operating environment
-	String CODENAME = "IQ";
+	String IQ = I_Self.name();
 
 	// Namespace prefixes
 	// MIME types

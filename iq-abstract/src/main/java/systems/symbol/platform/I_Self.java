@@ -31,4 +31,26 @@ Properties properties = new Properties();
 properties.load(inputStream);
 return properties.getProperty("Implementation-Version");
 }
+
+static String name() {
+return System.getenv("MY_IQ") == null ? "IQ" : System.getenv("MY_IQ").toUpperCase().substring(4);
+}
+
+static boolean trust() {
+return trust(name());
+}
+
+static boolean trust(String name) {
+return name.startsWith(name()) && !name.substring(name().length()).contains("#");
+}
+
+static boolean trust(I_Self self) {
+return self.getSelf().stringValue().startsWith(name()) &&
+trust(self.getSelf().stringValue());
+}
+
+static boolean trust(IRI self) {
+return self.stringValue().startsWith(name()) &&
+trust(self.stringValue());
+}
 }

@@ -10,10 +10,10 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.Test;
 import systems.symbol.agent.IntentAgent;
 import systems.symbol.intent.ExecutiveIntent;
-import systems.symbol.COMMONS;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.rdf4j.store.BootstrapRepository;
+import systems.symbol.rdf4j.store.LiveModel;
 
 import javax.script.SimpleBindings;
 import java.io.File;
