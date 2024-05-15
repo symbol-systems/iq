@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>iq-platform</artifactId>
-    <name>Platform IQ</name>
+    <name>IQ Platform </name>
     <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
     <url>https://symbol.systems</url>
 

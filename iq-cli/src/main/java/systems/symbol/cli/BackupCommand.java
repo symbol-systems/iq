@@ -1,15 +1,15 @@
 package systems.symbol.cli;
 
-import systems.symbol.io.FileHelper;
 import picocli.CommandLine;
+import systems.symbol.io.FileHelper;
+import systems.symbol.platform.I_Self;
 
 import java.io.File;
 import java.io.IOException;
 
-import static systems.symbol.cli.CLIContext.CODENAME;
 import static systems.symbol.io.ImportExport.export;
 
-@CommandLine.Command(name = "backup", description = "Backup knowledge from this "+CODENAME)
+@CommandLine.Command(name = "backup", description = "Backup knowledge from this "+ I_Self.CODENAME)
 public class BackupCommand extends AbstractCLICommand{
 
     public BackupCommand(CLIContext context) throws IOException {

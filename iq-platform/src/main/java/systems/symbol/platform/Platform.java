@@ -25,7 +25,7 @@ import java.util.Date;
 import static systems.symbol.COMMONS.IQ;
 
 @Singleton
-public class Platform implements I_Self {
+public class Platform implements I_Self, I_StartStop {
     private static final Logger log = LoggerFactory.getLogger(Platform.class);
 
     Workspace workspace;
@@ -72,7 +72,8 @@ public class Platform implements I_Self {
 
     protected String generateJWT() throws Exception {
         String self = workspace.getSelf().stringValue();
-        JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, self, 600, "debug", new String[]{"debug"});
+        // expires in an hour
+        JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, self, 3600, I_Self.name(), new String[]{I_Self.name()});
         return jwtGen.sign(jwtBuilder, loadKeyPair());
     }
 
@@ -165,5 +166,16 @@ public class Platform implements I_Self {
     @Override
     public IRI getSelf() {
         return workspace.getSelf();
+    }
+
+    public void boot() {
+    }
+
+    public void start() {
+    }
+
+    @Override
+    public void stop() {
+
     }
 }

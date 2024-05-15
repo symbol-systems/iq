@@ -1,6 +1,7 @@
 package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.util.Properties;
  */
 public interface I_Self {
 
+        public static String CODENAME = "IQ";
         /**
          * Returns the canonical IRI representing the entity.
          *
@@ -32,8 +34,13 @@ public interface I_Self {
                 return properties.getProperty("Implementation-Version");
         }
 
+        static I_Self self() {
+            return () -> Values.iri("urn:"+System.getenv("MY_IQ").toLowerCase());
+        }
+
+
         static String name() {
-                return System.getenv("MY_IQ") == null ? "IQ" : System.getenv("MY_IQ").toUpperCase().substring(4);
+                return System.getenv("MY_IQ") == null ? "X.IQ" : System.getenv("MY_IQ").toUpperCase().substring(4);
         }
 
         static boolean trust() {
@@ -41,7 +48,7 @@ public interface I_Self {
         }
 
         static boolean trust(String name) {
-                return name.startsWith(name()) && !name.substring(name().length()).contains("#");
+                return name.length()>3 && name.startsWith(name()) && !name.substring(0, name.length()+1).contains(":") && !name.contains("{");
         }
 
         static boolean trust(I_Self self) {
