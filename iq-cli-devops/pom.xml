@@ -12,7 +12,7 @@
 <artifactId>iq-cli-pro</artifactId>
 <packaging>jar</packaging>
 
-<name>DevOps IQ</name>
+<name>IQ Code</name>
 <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
 <url>https://symbol.systems</url>
 

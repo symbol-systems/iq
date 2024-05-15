@@ -10,7 +10,7 @@
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-run-apis</artifactId>
-<name>IQ APIs</name>
+<name>IQ Runtime</name>
 <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
 <url>https://symbol.systems</url>
 

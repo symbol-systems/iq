@@ -12,7 +12,7 @@
 <artifactId>iq-rdf4j</artifactId>
 <packaging>jar</packaging>
 
-<name>RDF IQ</name>
+<name>IQ Facts</name>
 <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
 <url>https://symbol.systems</url>
 
