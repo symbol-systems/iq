@@ -1,0 +1,44 @@
+| Trade Zone  | Country | Capital   | Population | GDP (USD)|
+|---------------|---------------------|-------------------|----------------|------------------|
+| EU| Germany | Berlin| 83,191,000 | $4.42 trillion   |
+| EU| France  | Paris | 67,081,000 | $2.78 trillion   |
+| EU| Italy   | Rome  | 60,317,000 | $2.08 trillion   |
+| EU| Spain   | Madrid| 47,451,000 | $1.45 trillion   |
+| EU| Netherlands | Amsterdam | 17,282,000 | $1.02 trillion   |
+| EU| Turkey  | Ankara| 84,339,000 | $743.71 billion  |
+| USMCA | United States   | Washington, D.C.  | 331,449,000| $21.43 trillion  |
+| USMCA | Mexico  | Mexico City   | 126,191,000| $1.27 trillion   |
+| USMCA | Canada  | Ottawa| 37,798,000 | $1.84 trillion   |
+| EEU   | Russia  | Moscow| 146,171,000| $1.70 trillion   |
+| EEU   | Kazakhstan  | Nur-Sultan| 18,575,000 | $191.05 billion  |
+| EEU   | Belarus | Minsk | 9,453,000  | $63.35 billion   |
+| EEU   | Armenia | Yerevan   | 2,963,000  | $13.70 billion   |
+| EEU   | Kyrgyzstan  | Bishkek   | 6,524,000  | $8.13 billion|
+| ASEAN | Indonesia   | Jakarta   | 273,524,000| $1.12 trillion   |
+| ASEAN | Thailand| Bangkok   | 69,800,000 | $543.65 billion  |
+| ASEAN | Malaysia| Kuala Lumpur  | 32,366,000 | $336.36 billion  |
+| ASEAN | Singapore   | Singapore | 5,704,000  | $372.06 billion  |
+| ASEAN | Philippines | Manila| 109,581,000| $362.47 billion  |
+| ASEAN | Vietnam | Hanoi | 96,208,984 | $341.43 billion  |
+| ASEAN | Myanmar | Naypyidaw | 54,045,420 | $81.33 billion   |
+| ASEAN | Cambodia| Phnom Penh| 15,288,489 | $27.09 billion   |
+| ASEAN | Laos| Vientiane | 7,169,455  | $18.07 billion   |
+| ASEAN | Brunei  | Bandar Seri Begawan | 459,500  | $13.56 billion   |
+| AfCFTA| Nigeria | Abuja | 206,140,000| $442.98 billion  |
+| AfCFTA| Egypt   | Cairo | 104,258,000| $391.28 billion  |
+| GCC   | Saudi Arabia| Riyadh| 34,814,000 | $792.97 billion  |
+| GCC   | United Arab Emirates| Abu Dhabi | 9,890,402  | $421.14 billion  |
+| GCC   | Qatar   | Doha  | 2,881,053  | $166.33 billion  |
+| GCC   | Kuwait  | Kuwait City   | 4,270,571  | $120.48 billion  |
+| GCC   | Bahrain | Manama| 1,701,575  | $41.55 billion   |
+| BRICS | South Africa| Pretoria  | 59,308,000 | $668.25 billion  |
+| BRICS | Russia  | Moscow| 146,171,000| $1.70 trillion   |
+| BRICS | India   | New Delhi | 1,380,004,000  | $2.94 trillion   |
+| BRICS | China   | Beijing   | 1,439,324,000  | $14.34 trillion  |
+| BRICS | Brazil  | Brasília  | 213,993,000| $1.84 trillion   |
+| Various | Japan   | Tokyo | 126,476,000| $5.15 trillion   |
+| Various| United Kingdom  | London| 68,207,000 | $3.12 trillion   |
+| Various   | South Korea | Seoul | 51,269,000 | $1.63 trillion   |
+| Various | Australia   | Canberra  | 25,500,000 | $1.39 trillion   |
+| Various   | New Zealand | Wellington| 5,100,000  | $206.65 billion  |
+| Various   | Ukraine | Kiev  | 41,660,000 | $112.16 billion  |

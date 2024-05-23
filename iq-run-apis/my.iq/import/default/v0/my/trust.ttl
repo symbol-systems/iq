@@ -1,0 +1,147 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#>.
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+
+my:Self a skos:ConceptScheme.
+
+my:TrustFramework a skos:Concept;
+skos:prefLabel "Trust Framework";
+skos:definition "Aligning my development and deployment towards meaningful outcomes." ;
+prov:wasDerivedFrom my:Self ;
+skos:inScheme my:Self .
+
+my:Trusted a skos:Concept;
+skos:prefLabel "Trusted";
+skos:definition "A relationship based on facts, confidence, or reliability." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Trust a skos:Concept;
+skos:prefLabel "Trust";
+skos:definition "Confidence in the reliability, integrity, and ethical conduct." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Trustee a skos:Concept;
+skos:prefLabel "Trustee";
+skos:definition "Entity responsible for overseeing the operations and compliance of the Trust." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Trustor a skos:Concept;
+skos:prefLabel "Trustor";
+skos:definition "Entity placing trust in another." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:narrower my:Trusted .
+
+my:Board a skos:Concept;
+skos:prefLabel "Board of Trustees";
+skos:definition "Group governing trust activities, ensuring adherence to principles." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Duties a skos:Concept;
+skos:prefLabel "Duties of the Board";
+skos:definition "Responsibilities of the Board, including policy setting, risk management, and accountability." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Principles a skos:Concept;
+skos:prefLabel "Principles of Trust";
+skos:definition "Core values guiding trust operations, such as transparency and fairness." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:Constitution a skos:Concept;
+skos:prefLabel "Constitution";
+skos:definition "Foundational document outlining my governance." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:TrustFramework .
+
+my:EthicalAI a skos:Concept;
+skos:prefLabel "Ethical AI ";
+skos:definition "Ensuring AI aligns with ethical principles and human values." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability .
+
+my:RiskAssessment a skos:Concept;
+skos:prefLabel "Risk Assessment";
+skos:definition "Identifying and evaluating potential AI-related risks." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability .
+
+my:Stakeholder a skos:Concept;
+skos:prefLabel "Stakeholder";
+skos:definition "Relevant parties during decision-making." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability .
+
+my:DAO a skos:Concept;
+skos:prefLabel "DAO";
+skos:altLabel  "Decentralized Autonomous Organization";
+skos:definition "Organization governed by smart contracts on a decentralized blockchain." ;
+skos:inScheme my:Self .
+
+my:SmartContract a skos:Concept;
+skos:prefLabel "Smart Contract";
+skos:definition "Self-executing contracts enforcing transactions based on predefined conditions." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:GovernanceMechanism a skos:Concept;
+skos:prefLabel "Governance Mechanism";
+skos:definition "Rules and processes for token-based decision-making, voting and consensus." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:DecisionMaking a skos:Concept;
+skos:prefLabel "Decision Making";
+skos:definition "Making decisions." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:ValueToken a skos:Concept;
+skos:prefLabel "Value Token";
+skos:definition "Token used for transactions of fungible value." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:GovernanceToken a skos:Concept;
+skos:prefLabel "Governance Token";
+skos:definition "Token used for voting, governance, or decision-making within a DAO." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:TokenHolder a skos:Concept;
+skos:prefLabel "Token Holder";
+skos:definition "Individual or entity holding tokens representing ownership or voting rights." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+
+my:Wallet a skos:Concept;
+skos:prefLabel "Wallet";
+skos:definition "A digital wallet used to store, send, and receive cryptocurrencies or tokens." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:DAO .
+

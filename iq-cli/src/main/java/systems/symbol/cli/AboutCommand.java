@@ -6,6 +6,7 @@ import com.github.freva.asciitable.HorizontalAlign;
 import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import picocli.CommandLine;
+import systems.symbol.platform.I_Self;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static systems.symbol.cli.CLIContext.CODENAME;
 
-@CommandLine.Command(name = "about", description = "About this "+CODENAME)
+@CommandLine.Command(name = "about", description = "About this "+ I_Self.CODENAME)
 public class AboutCommand extends AbstractCLICommand {
 
 public AboutCommand(CLIContext context) throws IOException {

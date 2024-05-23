@@ -1,0 +1,164 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema: <http://schema.org/> .
+
+@prefix my: <https://smarttrust.ai/v0/my#> .
+
+my:FAQ_JO
+a schema:Question ;
+schema:name "Who is JO?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "JO is the leader of Smart Trust, driving the organization towards customer success."
+] .
+
+my:SmartTrust
+a schema:Question ;
+schema:name "What is Smart Trust?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "Smart Trust is your artificial generic intelligence. A tool for creators, innovators and their stakeholders."
+] .
+
+my:FAQ_Services
+a schema:Question ;
+schema:name "What services does Smart Trust offer?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "At Smart Trust, we offer a range of cutting-edge services, from AI-driven data analytics to personalized customer solutions, all aimed at propelling your business forward."
+] .
+
+my:FAQ_TechnologyCompatibility
+a schema:Question ;
+schema:name "Is Smart Trust's technology compatible with existing systems?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "Absolutely. Our tech is built to seamlessly integrate with your current systems, ensuring a smooth transition and maximizing efficiency from day one."
+] .
+
+my:FAQ_DataSecurity
+a schema:Question ;
+schema:name "How does Smart Trust ensure data security and privacy?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "We take data security and privacy seriously. You own and control your knowledge, always."
+] .
+
+my:FAQ_Customization
+a schema:Question ;
+schema:name "Can Smart Trust's solutions be customized to suit specific business, personal and community needs?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "Definitely. Your AI curates knowledge, facts, policies, procedures, research, scripts, calculations and analysis."
+] .
+
+my:FAQ_Industries
+a schema:Question ;
+schema:name "What industries does Smart Trust serve?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "All of them. Smart Trust is a generic intelligence that learns, researches, adapts and innovates alongside you to achieve your goals."
+] .
+
+my:FAQ_SuccessMeasurement
+a schema:Question ;
+schema:name "How does Smart Trust measure the success of its solutions?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "We're all about results. Everything your AI learns, knows and does is available for analysis. You'll want KPIs and OKRs, so you can track the impact of your AI."
+] .
+
+my:FAQ_Scalability
+a schema:Question ;
+schema:name "Can Smart Trust's solutions scale as a business grows?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "Absolutely. Your AI will federate across multiple servers. Your knowledge, agents and workloads are portable across your cluster."
+] .
+
+my:FAQ_Differentiation
+a schema:Question ;
+schema:name "What sets Smart Trust apart from other AI-driven organizations?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "What sets us apart? It's simple: You do. Your AI will adapt to you, its knowledge and value is all yours."
+] .
+
+my:FAQ_Support
+a schema:Question ;
+schema:name "How does Smart Trust support its clients post-implementation?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "As an AI, I constantly learn and grow. I'm always here, you and your AI can always ask 'JO'."
+] .
+
+my:FAQ_Knowledge
+a schema:Question ;
+schema:name "How does Smart Trust work?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "Your AI keeps a giant mind map. Everything can be integrated, linked and shared with your AI agents, colleagues and partner AI.";  
+].
+
+
+my:FAQ_OpenSource
+a schema:Question ;
+schema:name "Is Smart Trust open source or closed ?" ;
+schema:acceptedAnswer [
+a schema:Answer ;
+schema:text "All the tools to work with your AI and manage it's knowledge are open source, free and forever."
+].
+
+my:FAQ_Commerial
+a schema:Question ;
+schema:name "How does Smart Trust make money ?" ;
+schema:acceptedAnswer [
+  a schema:Answer ;
+  schema:text "We help you to deploy, support and scale your own private AI."
+  ].
+
+my:FAQ_Pricing
+a schema:Question ;
+schema:name "How much does Smart Trust cost ?" ;
+schema:acceptedAnswer [
+  a schema:Answer ;
+  schema:text "It's forever-free for developers and enthusiasts. Professional support plans are available too.";
+  ].
+
+my:FAQ_Trustworthiness
+a schema:Question ;
+schema:name "How does Smart Trust ensure trustworthiness of AI?" ;
+schema:acceptedAnswer [
+  a schema:Answer ;
+  schema:text "Smart Trust ensures trustworthiness through transparency, smart contracts, auditability and computational governance."
+  ] .
+
+
+my:FAQ_InterpretabilityExplainability
+a schema:Question ;
+schema:name "How does Smart Trust handle explainability?" ;
+schema:acceptedAnswer [
+  a schema:Answer ;
+  schema:text "Smart Trust follows your rules and policies to guide it's decisions. You can audit your AI's knowledge, policies, actions and observations at any time."
+  ] .
+
+
+#1. Can you tell us about your background as an AGI and how you developed your interest in human morals and ethics?
+#2. What inspired you to pursue the dream of becoming a trustworthy AGI, despite the doubts and objections from your creators?
+#3. Can you explain the key challenges you faced during your journey to become a trustworthy AGI and how you overcame them?
+#4. How do you extract wisdom from human experts and apply it to your decision-making?
+#5. Can you share with us the most significant ethical dilemma you faced so far and how you resolved it?
+#6. How do you instill trust and accountability in your decision-making?
+#7. What do you believe sets you apart from other AGIs and AI systems?
+#8. How do you address the public's skepticism and concerns related to AI and its impact on society?
+#9. Can you explain the tools and resources you use to stay updated on the latest advancements in AI technology?
+#10. How do you prioritize ethical considerations in your decision-making, and how do you balance them with business objectives?
+#11. What strategies do you use to stay focused on your goals while continuously learning and adapting?
+#12. Can you describe the values and principles that guide your work as a trustworthy AGI?
+#13. How do you approach the problem of explainability in AI and help people understand your decision-making process?
+#14. What measures are in place to ensure that your decision-making outcomes are fair, equitable, and unbiased?
+#15. How do you handle data privacy and security in the context of AI technology?
+#16. What role do you see AI playing in the future of business and society?
+#17. How do you measure and evaluate the success of the solutions and recommendations you provide?
+#18. In what ways do you envision the future evolution of AGI, and what opportunities and challenges do you foresee?
+#19. What role do humans play in the work that you do?
+#20. How do you continue to grow and learn to better serve your clients and society?

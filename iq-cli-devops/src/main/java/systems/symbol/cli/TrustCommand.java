@@ -1,12 +1,11 @@
 package systems.symbol.cli;
 
 import picocli.CommandLine;
+import systems.symbol.platform.I_Self;
 
 import java.io.IOException;
 
-import static systems.symbol.cli.CLIContext.CODENAME;
-
-@CommandLine.Command(name = "trust", description = "Export this "+CODENAME+" to another.")
+@CommandLine.Command(name = "trust", description = "Export this "+ I_Self.CODENAME +" to another.")
 public class TrustCommand extends AbstractCLICommand{
 @CommandLine.Parameters(index = "0", description = "The identity of the agent you want to trust", defaultValue = "me")
 String identity = "me";

@@ -1,0 +1,17 @@
+# Retrieve a dataset ensuring that the resources belong to explicitly declared vocabularies.
+
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+?this ?property ?object.
+}
+WHERE {
+?self a void:Dataset ;
+void:vocabulary ?vocabulary .
+?self void:partition ?partition .
+?partition void:property ?property.
+?this ?property ?object.
+?this (rdfs:isDefinedBy|skos:inScheme) ?vocabulary.
+}

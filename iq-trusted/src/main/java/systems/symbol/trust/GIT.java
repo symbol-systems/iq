@@ -1,6 +1,8 @@
-package systems.symbol.hub;
+package systems.symbol.trust;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.kohsuke.github.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,7 @@ import java.util.Date;
  *
  * See also: https://github.com/hub4j/github-api/tree/main/src/test/java/org/kohsuke/github
  */
-public class GIT extends GuardedIntent {
+public class GIT extends TrustedIntent {
 	private final Logger log = LoggerFactory.getLogger( getClass());
 
 	URL webhook;
@@ -26,10 +28,11 @@ public class GIT extends GuardedIntent {
 	String initialCommitText = "Prototype";
 	private org.kohsuke.github.GitHub github;
 
-	public GitHub()  {
+	public GIT(IRI self, Model model) {
+		super(self, model);
 	}
 
-	public GitHub withLogin(String client, String secret) throws IOException {
+	public GIT withLogin(String client, String secret) throws IOException {
 		github = new GitHubBuilder().withPassword(client, secret).build();
 		return this;
 	}
@@ -38,7 +41,7 @@ public class GIT extends GuardedIntent {
 		return github.getMyself();
 	}
 
-	public GitHub withToken(String access_token) throws IOException {
+	public GIT withToken(String access_token) throws IOException {
 		github = new GitHubBuilder().withOAuthToken(access_token).build();
 		orgName = github.getMyself().getLogin();
 		log.warn("iq.hub.withOAuth: "+orgName+" -> "+github.getMyself());

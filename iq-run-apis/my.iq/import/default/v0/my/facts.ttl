@@ -1,0 +1,66 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+
+@prefix my: <https://smarttrust.ai/v0/my#>.
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+
+my:Proposition
+skos:inScheme my:Self ;
+skos:prefLabel "Proposition";
+skos:definition "A proposition is a statement about the world that may be either true or false.".
+
+my:Existence
+skos:inScheme my:Self ;
+skos:prefLabel "Existence";
+skos:definition "Existence is the state or fact of having objective reality.".
+
+my:StatesOfAffairs
+skos:broader my:Proposition;
+skos:inScheme my:Self ;
+skos:prefLabel "States of Affairs";
+skos:definition "States of affairs are the way things are in the world at a particular time.".
+
+my:TheWorld
+skos:broader my:Proposition;
+skos:broader my:Fact ;
+skos:inScheme my:Self ;
+skos:prefLabel "The World";
+skos:definition "The world is everything that is the case.".
+
+my:Fact
+skos:broader my:Proposition;
+skos:broader my:StatesOfAffairs;
+skos:inScheme my:Self ;
+skos:prefLabel "Fact";
+skos:definition "A fact is a state of affairs that obtains in the world and has objective reality.";
+skos:narrower my:StatesOfAffairs.
+
+my:AllTheFacts
+skos:broader my:Proposition;
+skos:broader my:Fact;
+skos:inScheme my:Self ;
+skos:prefLabel "All The Facts";
+skos:definition "The world is determined by the facts, and by their being all the facts.".
+
+my:Facts
+skos:broader my:Fact;
+skos:inScheme my:Self ;
+skos:prefLabel "Facts";
+skos:definition "A fact is the existence of a state of affairs.".
+
+my:FactsExistence
+skos:broader my:Fact;
+skos:inScheme my:Self ;
+skos:prefLabel "Facts Existence";
+skos:definition "Facts exist in the actual world.".
+
+my:Facticity a skos:Concept;
+ skos:broader my:Fact;
+ skos:inScheme my:Self ;
+ skos:prefLabel "Facticity";
+ skos:definition "Facticity is the existence of states of affairs.".

@@ -13,6 +13,7 @@ import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.string.Validate;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -36,7 +37,7 @@ public class Construct extends GuardedAPI {
 @Produces("application/ld+json")
 public Response constructQuery(@PathParam("repo") String repo,
    @PathParam("query") String query,
-   @HeaderParam("Authorization") String auth) {
+   @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
 log.info("api.construct#protected");
 return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();

@@ -20,6 +20,8 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
+import java.io.IOException;
+
 @Path("index")
 public class TextIndexer extends GuardedAPI {
 
@@ -31,7 +33,7 @@ APIPlatform platform;
 @Produces(MediaType.APPLICATION_JSON)
 public Response importLocal(@PathParam("finder")String finder,
 @PathParam("repo")String repo, @PathParam("query") String query,
-@HeaderParam("Authorization") String auth) {
+@HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
 log.info("api.iq.text.indexer#protected");
 return new OopsResponse("api.iq.text#authentication-required", Response.Status.UNAUTHORIZED).asJSON();

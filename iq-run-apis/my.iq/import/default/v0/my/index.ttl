@@ -1,0 +1,239 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#>.
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+
+my:Self prov:wasGeneratedBy iq:Agent, self:, self:Aware, my:Cognition .
+my:Cognition a prov:Activity.
+
+my: a owl:Ontology, my:Ontology ;
+rdfs:label "My Ontology" ;
+rdfs:comment "My Autonomous Capabilities" ;
+owl:versionInfo "v 0.1.0" ;
+owl:imports prov: .
+
+my:Self a skos:ConceptScheme ;
+rdfs:isDefinedBy my:;
+skos:prefLabel "Smart Trust" ;
+skos:definition "Trustworthy AI for Value Creators." .
+
+my:Ontology
+a skos:Concept;
+prov:wasDerivedFrom my:Self ;
+skos:prefLabel "An Ontology";
+skos:definition "Formal definitions and semantics." ;
+skos:narrower my:Agent;
+skos:inScheme my:Self .
+
+my:Agency a skos:Concept;
+prov:wasDerivedFrom my:Self ;
+skos:prefLabel "Agency";
+skos:definition "Authorized to act on behalf of another party." ;
+skos:narrower my:Agent;
+skos:inScheme my:Self .
+
+my:Agent a skos:Concept;
+prov:wasDerivedFrom my:Self ;
+skos:inScheme my:Self ;
+skos:prefLabel "Agent";
+skos:definition "An entity or system that acts.".
+
+my:AI a skos:Concept;
+prov:wasDerivedFrom my:Self ;
+skos:prefLabel "AI";
+skos:definition "Software capable of learning, decision-making and action." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Cognition;
+skos:broader my:Agent .
+
+my:LLM a skos:Concept;
+  prov:wasDerivedFrom my:Self ;
+  skos:prefLabel "LLM";
+  skos:definition "A Large Language Model is capable of natural language." ;
+  skos:inScheme my:Self ;
+  prov:wasDerivedFrom my:Self ;
+  skos:broader my:Cognition;
+  skos:broader my:Agent .
+
+
+my:Cognition a skos:Concept;
+a prov:Activity ;
+prov:wasDerivedFrom my:Self ;
+prov:wasGeneratedBy my:Cognition ;
+skos:prefLabel "Cognition";
+skos:definition "Acquires knowledge through thought, experience, and senses." ;
+skos:inScheme my:Self .
+
+
+my:HumanAgent a skos:Concept;
+prov:wasDerivedFrom my:Self ;
+skos:prefLabel "Human Agent";
+skos:definition "A human being acting as an agent." ;
+skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Cognition;
+skos:broader my:Agent .
+
+my:Capability skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:prefLabel "Capability";
+skos:definition "Actions, Observations and Outcomes." .
+
+my:Greetings skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Greetings";
+skos:definition "Introducing user and agent." .
+
+my:Assistance skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Assistance";
+skos:definition "Providing generic help or support." ;
+skos:narrower my:TaskAutomation;
+skos:narrower my:CreativeServices .
+
+my:DataRetrieval skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Data Retrieval";
+skos:definition "Ability to retrieve data sets from various sources." ;
+skos:narrower my:KnowledgeResearch .
+
+my:KnowledgeResearch skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Knowledge Research";
+skos:definition "Seeking information or answers to questions from knowledge base." ;
+skos:narrower my:SentimentAnalysis .
+
+my:NaturalLanguage skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Natural Language";
+skos:definition "Ability to understand and generate human language." ;
+skos:narrower my:SpeechRecognition;
+skos:narrower my:EmotionRecognition .
+
+my:TaskAutomation skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Task Automation";
+skos:definition "Capability to automate repetitive tasks." .
+
+my:MachineLearning skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Machine Learning";
+skos:definition "Ability of a system to learn and improve from experience without being explicitly programmed." ;
+skos:narrower my:RecommendationSystems;
+skos:narrower my:SentimentAnalysis .
+
+my:SpeechRecognition skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:NaturalLanguage;
+skos:prefLabel "Speech Recognition";
+skos:definition "Ability of a machine to recognize and interpret spoken language." ;
+skos:narrower my:SpeechUnderstanding;
+skos:narrower my:IntentionDetection;
+skos:narrower my:SpeakerIdentification .
+
+my:SpeechUnderstanding skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechRecognition;
+skos:prefLabel "Speech Understanding";
+skos:definition "Comprehensive comprehension of spoken language, including semantic understanding and context analysis." .
+
+my:SpeechGeneration skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:NaturalLanguage;
+skos:prefLabel "Speech Generation";
+skos:definition "Ability to generate spoken language." ;
+skos:narrower my:TextToSpeech;
+skos:narrower my:DialogueGeneration .
+
+my:IntentionDetection skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechRecognition;
+skos:prefLabel "Intention Detection";
+skos:definition "Identifying specific outcomes, actions or intentions." .
+
+my:SpeakerIdentification skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechRecognition;
+skos:prefLabel "Speaker Identification";
+skos:definition "Recognizing and identifying individual speakers based on their voice patterns." .
+
+my:TextToSpeech skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechGeneration;
+skos:prefLabel "Text-to-Speech";
+skos:definition "Converting textual input into spoken language output." .
+
+my:SpeechToText skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechRecognition;
+skos:prefLabel "Speech-to-Text";
+skos:definition "Converting spoken language into text." .
+
+my:DialogueGeneration skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:SpeechGeneration;
+skos:prefLabel "Dialogue Generation";
+skos:definition "Generating natural-sounding dialogues or conversations." .
+
+my:ComputerVision skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Computer Vision";
+skos:definition "Ability of a computer to understand and interpret visual information from the real world." ;
+skos:narrower my:EmotionRecognition .
+
+my:EmotionRecognition skos:broader my:Capability;
+skos:prefLabel "Emotion Recognition";
+skos:definition "Ability of a system to identify and understand human emotions expressed in text, speech, or facial expressions." .
+
+my:SentimentAnalysis skos:broader my:Capability;
+skos:prefLabel "Sentiment Analysis";
+skos:definition "Process of computationally determining whether a piece of writing is positive, negative, or neutral." .
+
+my:RecommendationSystems skos:broader my:Capability;
+skos:prefLabel "Recommendation Systems";
+skos:definition "System that predicts the preferences or ratings that a user would give to an item." .
+
+my:AutonomousCognition skos:broader my:Capability;
+skos:prefLabel "Autonomous Cognition";
+skos:definition "Perceive, understand, learn and adapt." .
+
+my:CreativeServices skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:Capability;
+skos:prefLabel "Creative Services";
+skos:definition "Ability to generate imagery, visual, and multimedia creative content." ;
+skos:narrower my:TextGeneration;
+skos:narrower my:MusicGeneration;
+skos:narrower my:ArtGeneration .
+
+my:TextGeneration skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:CreativeServices;
+skos:prefLabel "Text Generation";
+skos:definition "Generation of textual content, including articles, stories, and poetry." .
+
+my:MusicGeneration skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:CreativeServices;
+skos:prefLabel "Music Generation";
+skos:definition "Creation of music compositions and melodies using generative AI algorithms." .
+
+my:ArtGeneration skos:inScheme my:Self ;
+prov:wasDerivedFrom my:Self ;
+skos:broader my:CreativeServices;
+skos:prefLabel "Art Generation";
+skos:definition "Generation of visual artworks, such as paintings, drawings, and digital illustrations." .

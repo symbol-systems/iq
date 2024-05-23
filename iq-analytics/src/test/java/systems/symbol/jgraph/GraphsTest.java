@@ -1,7 +1,5 @@
 package systems.symbol.jgraph;
 
-import systems.symbol.COMMONS;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -15,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import java.io.File;
 import java.io.IOException;

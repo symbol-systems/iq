@@ -1,0 +1,19 @@
+SELECT ?this ?definition (SAMPLE(?label) AS ?label) (SAMPLE(?score) AS ?score)
+WHERE {
+  {
+?this <http://www.w3.org/2004/02/skos/core#prefLabel> ?label.
+OPTIONAL { ?this <http://www.w3.org/2004/02/skos/core#definition> ?definition. }
+  }
+  UNION {
+?this <http://www.w3.org/2000/01/rdf-schema#label> ?label.
+OPTIONAL { ?this <http://www.w3.org/2000/01/rdf-schema#comment> ?definition. }
+  }
+  UNION {
+?this <http://schema.org/name> ?label.
+OPTIONAL { ?this <http://schema.org/description> ?definition. }
+  }
+  VALUES (?this ?score) { {{{these}}} }
+}
+GROUP BY ?this ?definition
+ORDER BY DESC(?score)
+LIMIT 10

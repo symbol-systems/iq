@@ -3,14 +3,13 @@ package systems.symbol.cli;
 import com.github.freva.asciitable.AsciiTable;
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.io.BootstrapLoader;
 
 import java.io.File;
 import java.io.IOException;
 
-import static systems.symbol.cli.CLIContext.CODENAME;
-
-@CommandLine.Command(name = "import", description = "Import new knowledge into "+CODENAME)
+@CommandLine.Command(name = "import", description = "Import new knowledge into "+ I_Self.CODENAME)
 public class ImportCommand extends AbstractCLICommand{
 @CommandLine.Option(names = "--from", description = "Load assets from this folder")
 File from;

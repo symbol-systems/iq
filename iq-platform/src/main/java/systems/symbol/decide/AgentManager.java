@@ -1,6 +1,8 @@
 package systems.symbol.decide;
 
 import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.StateException;
 
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 public class AgentManager implements I_Decide<Resource> {
+protected final Logger log = LoggerFactory.getLogger(getClass());
 Map<I_Agent, AgentDecision> decisions = new HashMap<>();
 
 public AgentManager() {
@@ -37,6 +40,8 @@ AgentDecision decision = decisions.get(agent);
 if (decision == null) throw new StateException("unknown", agent);
 boolean found = decision.agent.getStateMachine().getTransitions().contains(intent);
 if (!found) throw new StateException(agent.getSelf().stringValue(), intent.stringValue());
+decision.agent.getStateMachine().transition(intent);
 decision.complete(() -> intent);
+log.info("decided: {} -> {}", agent.getSelf(), agent.getStateMachine().getState());
 }
 }

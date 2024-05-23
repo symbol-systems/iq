@@ -33,19 +33,17 @@ assertTrue(keyPair.getPrivate().equals(keyPairLoaded.getPrivate()));
 void generateJWT() throws Exception {
 JWTGen jwtGen = new JWTGen();
 KeyPair keyPair = jwtGen.keys();
-System.out.println("privateKey: " + JWTGen.toPKCS8(keyPair.getPrivate()));
-System.out.println("publicKey: " + JWTGen.toPKCS8(keyPair.getPublic()) );
 
 JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, audience, 60);
 
 jwtBuilder.withClaim("hello", "world");
 String jwt = jwtGen.sign(jwtBuilder, keyPair);
-System.out.println("Generated JWT: " + jwt);
+//System.out.println("Generated JWT: " + jwt);
 
 DecodedJWT verified = jwtGen.verify(keyPair, jwt);
-System.out.println("Verified JWT: " + verified.getPayload());
+//System.out.println("Verified JWT: " + verified.getPayload());
 DecodedJWT decoded = JWT.decode(jwt);
-System.out.println("Decoded JWT: " + decoded.getPayload());
+System.out.println("JWT: " + decoded.getPayload());
 assertEquals(verified.getPayload(), decoded.getPayload());
 
 System.out.println("JWT subject: " + decoded.getSubject());

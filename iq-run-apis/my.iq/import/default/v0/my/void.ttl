@@ -1,0 +1,39 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#>.
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+
+my:self.sparql
+a void:Dataset ;
+skos:prefLabel "Shared Facts";
+skos:definition "Dataset of terms from my declared vocabularies." ;
+skos:broader my:Facts;
+void:vocabulary my: ;
+void:vocabulary iq: ;
+void:vocabulary self: ;
+void:propertyPartition [
+void:property skos:prefLabel ;
+void:distinctSubjects  true ;
+void:distinctObjects true ;
+] ;
+void:propertyPartition [
+void:property skos:definition ;
+void:distinctSubjects  true ;
+void:distinctObjects true ;
+] ;
+void:propertyPartition [
+void:property skos:altLabel ;
+void:distinctSubjects  true ;
+void:distinctObjects true ;
+] ;
+void:propertyPartition [
+void:property skos:broader ;
+void:distinctSubjects  true ;
+void:distinctObjects false ;
+] .

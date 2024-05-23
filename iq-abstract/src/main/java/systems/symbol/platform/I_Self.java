@@ -13,9 +13,9 @@ import java.util.Properties;
  */
 public interface I_Self {
 
-public static String CODENAME = "IQ";
+public static String CODENAME = "MY.IQ";
 /**
- * Returns the canonical IRI representing the entity.
+ * The canonical entity known as IRI .
  *
  * @return the canonical IRI for the entity.
  */
@@ -35,12 +35,12 @@ return properties.getProperty("Implementation-Version");
 }
 
 static I_Self self() {
-return () -> Values.iri("urn:"+System.getenv("MY_IQ").toLowerCase());
+return () -> Values.iri("urn:"+name());
 }
 
 
 static String name() {
-return System.getenv("MY_IQ") == null ? "X.IQ" : System.getenv("MY_IQ").toUpperCase().substring(4);
+return System.getenv("MY_IQ") == null ? "MY.IQ" : System.getenv("MY_IQ");
 }
 
 static boolean trust() {

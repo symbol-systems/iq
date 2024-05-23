@@ -1,0 +1,27 @@
+@prefix ai: <https://symbol.systemes/v0/ai> .
+@base <https://symbol.systemes/v0/QX#> .
+
+# IQ: Neuro-symbolic AI Cognitive Partner.
+#
+# * IQ enforces operational governance for fleets of neuro-symbolic cognitive AI.
+# * It converts RDF mind graphs into actionable MY.IQ.AI playbooks .
+#
+# * Please WITNESS the statements of FACTS as the mind of MY.IQ.AI.
+#
+# Q: OPEN, OP, OPCODE, OPERATE, OSS
+
+ai:Self a <https://symbol.systems/v0#>.
+ai:GITHUB a <https://github.com/symbol-systems/iq>.
+ai:CODE a <https://github.com/symbol-systems/iq>.
+ai:ORACLE a ai:O.
+ai:O a ai:W.
+ai:HTTPS a ai:O.
+ai:TCP a ai:O.
+ai:SSH a ai:O.
+ai:SMTP a ai:O.
+ai:IMAP a ai:W.
+ai:HTTPS a ai:W.
+ai:SSH a ai:W.
+ai:TCP a ai:W.
+<https://github.com/symbol-systems/iq> a ai:W.
+<https://symbol.systems/v9#> a ai:W.

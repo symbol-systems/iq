@@ -1,0 +1,111 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+@base <https://smarttrust.ai/v0/self#> .
+
+self:
+a owl:Ontology ;
+rdfs:label "Agent Capabilities Ontology" ;
+rdfs:comment "Executable Capabilities for Autonomous Agents" ;
+owl:versionInfo "v 0.1.0" ;
+owl:imports prov:;
+rdfs:label "Executive Agent" ;
+rdfs:comment "An autonomous, adaptive agent that is governed by structured intentions." ;
+iq:initial self:Initialized .
+
+self:Initialized
+rdfs:isDefinedBy self:;
+rdfs:label "Initialized" ;
+rdfs:comment "Agent initialized but not yet executing" ;
+iq:to self:Started .
+
+self:Started
+rdfs:isDefinedBy self:;
+rdfs:label "Started" ;
+rdfs:comment "Agent actively executing tasks." ;
+iq:to self:Cognition, self:Stopped, self:Paused, self:Oops .
+
+self:Paused
+rdfs:isDefinedBy self:;
+rdfs:label "Paused" ;
+rdfs:comment "Agent temporarily stopped executing." ;
+iq:to self:Started, self:Stopped .
+
+self:Stopped
+rdfs:isDefinedBy self:;
+rdfs:label "Stopped" ;
+rdfs:comment "Agent stopped executing tasks." ;
+iq:to self:Started .
+
+self:Oops
+rdfs:isDefinedBy self:;
+rdfs:label "Oops" ;
+rdfs:comment "Agent encountered an unexpected condition." ;
+iq:to self:Paused, self:Started, self:Error .
+
+self:Cognition
+rdfs:isDefinedBy self:;
+rdfs:label "Cognition" ;
+rdfs:comment "Agent is sensing, thinking and acting.";
+iq:to self:Oops, self:Learning, self:Adapting, self:Acting, self:Thinking, self:Consulting, self:Planning, self:Aware .
+
+self:Completed
+rdfs:isDefinedBy self:;
+rdfs:label "Completed" ;
+rdfs:comment "Agent has completed its goals." ;
+iq:to self:Stopped .
+
+self:Error
+rdfs:isDefinedBy self:;
+rdfs:label "Error" ;
+rdfs:comment "Agent encountered an unrecoverable error." ;
+iq:to self:Stopped.
+
+self:Thinking
+rdfs:isDefinedBy self:;
+rdfs:label "Thinking" ;
+rdfs:comment "Agent is thinking." ;
+iq:to self:Cognition, self:Oops .
+
+self:Consulting
+rdfs:isDefinedBy self:;
+rdfs:label "Consulting" ;
+rdfs:comment "Agent is seeking executive counsel." ;
+iq:to self:Cognition, self:Oops .
+
+self:Learning
+rdfs:isDefinedBy self:;
+rdfs:label "Learning" ;
+rdfs:comment "Agent is learning new knowledge." ;
+iq:to self:Cognition, self:Oops .
+
+self:Adapting
+rdfs:isDefinedBy self:;
+rdfs:label "Adapting" ;
+rdfs:comment "Agent is adapting to changing knowledge." ;
+iq:to self:Cognition, self:Consulting, self:Oops .
+
+self:Acting
+rdfs:isDefinedBy self:;
+rdfs:label "Acting" ;
+rdfs:comment "Agent is acting upon planned intentions." ;
+iq:to self:Cognition, self:Consulting, self:Oops .
+
+self:Planning
+rdfs:isDefinedBy self:;
+rdfs:label "Planning" ;
+rdfs:comment "Agent is planning to achieve goals." ;
+iq:to self:Cognition, self:Consulting, self:Oops .
+
+self:Aware
+rdfs:isDefinedBy self:;
+rdfs:label "Self Aware" ;
+rdfs:comment "Aware of oneself." ;
+iq:to self:Cognition, self:Consulting, self:Oops .

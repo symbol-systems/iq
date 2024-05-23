@@ -1,5 +1,7 @@
 package systems.symbol.controller.search;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.rdf4j.store.IQConnection;
@@ -19,6 +21,7 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import systems.symbol.util.Stopwatch;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,11 +29,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * RESTful endpoint for searching facts in a knowledge base then hydrating the results from the lnowledge base.
+ * RESTful endpoint for searching facts in a knowledge base then hydrating the results from the knowledge base.
  */
 @Path("search/facts")
 public class SearchFacts {
+protected final Logger log = LoggerFactory.getLogger(getClass());
 
+public SearchFacts() {}
 @Inject
 APIPlatform platform;
 
@@ -56,7 +61,16 @@ public Response search(
 @QueryParam("query") String query,
 @QueryParam("maxResults") int maxResults,
 @QueryParam("relevancy") double relevancy
-) {
+) throws IOException {
+
+Stopwatch stopwatch = new Stopwatch();
+if (Validate.isMissing(query)) {
+return new OopsResponse("api.search.facts#query-invalid", Response.Status.BAD_REQUEST).asJSON();
+}
+
+if (Validate.isMissing(sparql)) {
+return new OopsResponse("api.search.facts#hydrate-missing", Response.Status.BAD_REQUEST).asJSON();
+}
 
 // Initialize and perform sanity checks
 if (Validate.isNonAlphanumeric(finder)) {
@@ -80,6 +94,8 @@ if (!repository.isInitialized()) {
 return new OopsResponse("api.search.facts#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
 }
 
+
+log.info("timer.start: {}", stopwatch.summary());
 // Use the platform SPARQL repository
 try (RepositoryConnection connection = repository.getConnection()) {
 IQConnection iq = new IQConnection(platform.getSelf(), connection);
@@ -90,6 +106,7 @@ if (relevancy < 0.1) relevancy = 0.5;
 
 // Find matches using the text finder
 List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
+log.info("api.search.facts.matches: {} @ {}", matches.size(), stopwatch.summary());
 
 // Convert matches to a VALUES clause for SPARQL query
 StringBuilder theseMatches = new StringBuilder();
@@ -105,16 +122,17 @@ bindings.put("these", theseMatches.toString());
 // Use a query to hydrate answers
 // The query is interpolated to respect {{these}} VALUES bindings
 String hydrateQuery = library.getSPARQL(sparql, bindings);
+log.info("api.search.facts.hydrate: {} -> {} @ {}", sparql, hydrateQuery, stopwatch.summary());
 if (hydrateQuery == null || hydrateQuery.isEmpty()) {
-return new OopsResponse("api.search.facts#query-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.search.facts#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
 }
 
-System.out.println("api.search.facts.hydrate: " + hydrateQuery);
 
 // Execute SPARQL query against the repository
 TupleQuery tupleQuery = connection.prepareTupleQuery(hydrateQuery);
 try (TupleQueryResult evaluate = tupleQuery.evaluate()) {
 List<Map<String, Object>> models = SPARQLMapper.toMaps(evaluate);
+log.info("api.search.facts.done: {} @ {}", models.size(), stopwatch.summary());
 return new SimpleResponse(models).asJSON();
 } catch (QueryEvaluationException e) {
 return new OopsResponse("api.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
