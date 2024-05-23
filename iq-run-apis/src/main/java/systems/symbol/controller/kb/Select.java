@@ -16,6 +16,7 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +41,10 @@ public class Select extends GuardedAPI {
             @PathParam("repo") String repo,
             @PathParam("query") String query,
             @QueryParam("maxResults") int maxResults,
-            @HeaderParam("Authorization") String auth) {
+            @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("api.iq.select#protected");
-return new OopsResponse("api.select#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+            return new OopsResponse("api.select#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.iq.select#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

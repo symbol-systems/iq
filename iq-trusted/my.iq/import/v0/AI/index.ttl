@@ -1,0 +1,93 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix schema: <http://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+@base <urn:ai:> .
+@prefix ai: <urn:ai:>.
+@prefix my: <urn:my:>.
+@prefix iq: <urn:iq:>.
+
+
+# Concept: Entity
+ai:MindGraph a skos:Concept ;
+          rdf:value "Mind Graph" .
+
+ai:Knowledge a skos:Concept ;
+             rdf:value "Trusted Immutable Source Facts" .
+
+ai:Facts a skos:Concept ;
+             rdf:value "Trusted Facts" .
+
+ai:Fact a skos:Concept ;
+         rdf:value "Knows" .
+
+ai:Entity a skos:Concept ;
+          rdf:value "Entity" .
+
+# Concept: Fact
+ai:Fact a skos:Concept ;
+        rdf:value "Fact" .
+
+# Concept: Property
+ai:Property a skos:Concept ;
+            rdf:value "Property" .
+
+# Concept: Relationship
+ai:Relationship a skos:Concept ;
+                rdf:value "Relationship" .
+
+# Concept: Source
+ai:Source a skos:Concept ;
+          rdf:value "Source" .
+
+# Concept: Timestamp
+ai:Timestamp a skos:Concept ;
+             rdf:value "Timestamp" .
+
+# Concept: Provenance
+ai:Provenance a skos:Concept ;
+              rdf:value "Provenance" .
+
+# Concept: Schema
+ai:Schema a skos:Concept ;
+          rdf:value "Schema" ;
+          iq:knows ai:Versioning .
+
+# Concept: Versioning
+ai:Versioning a skos:Concept ;
+              rdf:value "Versioning" ;
+              iq:knows ai:Schema .
+
+# Concept: Entity as schema.org concept
+ai:Thing a schema:Class ;
+             iq:knows schema:Thing .
+
+# Concept: Property as schema.org concept
+ai:Property a schema:Class ;
+                iq:knows schema:Property .
+
+# Concept: Relationship as schema.org concept
+ai:Relationship a schema:Class ;
+                    iq:knows schema:Relationship .
+
+# Concept: Source as schema.org concept
+ai:DataDownload a schema:Class ;
+                    iq:knows schema:DataDownload .
+
+# Concept: Timestamp as schema.org concept
+ai:DateTime a schema:Class ;
+                iq:knows schema:DateTime .
+
+# Concept: Provenance as PROV concept
+ai:Entity a skos:Concept ;
+            iq:knows prov:Entity .
+
+# Concept: Schema as VoID concept
+ai:Dataset a skos:Concept ;
+             iq:knows void:Dataset .
+
+# Concept: Versioning as PROV concept
+ai:Revision a skos:Concept ;
+              iq:knows prov:Revision .

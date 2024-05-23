@@ -1,10 +1,11 @@
 package systems.symbol.cli;
 
 import picocli.CommandLine;
-import java.io.IOException;
-import static systems.symbol.cli.CLIContext.CODENAME;
+import systems.symbol.platform.I_Self;
 
-@CommandLine.Command(name = "infer", description = "Infer models from this "+CODENAME)
+import java.io.IOException;
+
+@CommandLine.Command(name = "infer", description = "Infer models from this "+ I_Self.CODENAME)
 public class InferCommand extends AbstractCLICommand {
     @CommandLine.Parameters(index = "0", description = "The path to the Insert query.")
     String script = "infer/index.sparql";

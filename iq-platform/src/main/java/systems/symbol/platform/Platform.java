@@ -26,7 +26,7 @@ import static systems.symbol.COMMONS.IQ;
 
 @Singleton
 public class Platform implements I_Self, I_StartStop {
-    private static final Logger log = LoggerFactory.getLogger(Platform.class);
+    protected static final Logger log = LoggerFactory.getLogger(Platform.class);
 
     Workspace workspace;
     LRUCache<String, TextFinder> tfCache = new LRUCache<>(4);
@@ -67,7 +67,7 @@ public class Platform implements I_Self, I_StartStop {
         }
 
 //        if (Validate.isUnGuarded())
-            System.out.printf("** DEVELOPER DEBUG ** \nexport JWT='%s'\n****\n", generateJWT());
+            System.out.printf("** OWNER TOKEN ** \nexport JWT='%s'\n****\n", generateJWT());
     }
 
     protected String generateJWT() throws Exception {
@@ -100,8 +100,8 @@ public class Platform implements I_Self, I_StartStop {
      * @param name The name of the Repository.
      * @return The Repository instance.
      */
-    public Repository getRepository(String name) {
-        return this.workspace.getRepository(name);
+    public Repository getRepository(String name) throws IOException {
+        return this.workspace.alwaysGetRepository(name);
     }
 
     /**

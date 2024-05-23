@@ -1,9 +1,9 @@
-## IQ: An operating environment for symbolic cognition
+`## IQ: An operating environment for symbolic cognition
 
 IQ enforces operational governance for fleets of neuro-symbolic cognitive AI.
 
 It converts RDF graphs into actionable playbooks .
-
+`
 ## IQ Principles
 
 | Principle    | Motivation                                                                                                 |

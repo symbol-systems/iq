@@ -1,0 +1,36 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix schema: <http://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# declare our well-known identity
+
+@base <urn:ai:> .
+@prefix ai: <urn:ai:>.
+@prefix my: <urn:my:>.
+@prefix iq: <urn:iq:>.
+
+# Define the dataset
+<http://symbol.systems/v0/ai#publications>
+    rdf:type void:Dataset ;
+    dcterms:title "Public Facts" ;
+    dcterms:description "I am the primary source of these facts." ;
+    void:uriSpace "http://symbol.systems/" .
+
+# Define the entities and properties
+<http://symbol.systems/v0/iq#publications/data>
+    rdf:type dcterms:BibliographicResource ;
+    dcterms:title "My {{ my.brand }} AI" ;
+    dcterms:creator "{{ my.brand }}" ;
+    dcterms:date "{{ today }}" .
+
+# Define VoID properties
+<http://symbol.systems/v0/ai#publications>
+    void:dataDump <http://symbol.systems/v0/ai#publications/data> ;
+    void:exampleResource <http://symbol.systems/v0/iq#publications/data> .
+
+<http://symbol.systems/v0/ai#publications/data>
+    rdf:type void:Dataset ;
+    dcterms:format "application/json" ;
+    dcterms:extent "My fact lake" .

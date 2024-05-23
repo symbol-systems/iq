@@ -2,6 +2,7 @@ package systems.symbol.cli;
 
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
+import systems.symbol.platform.I_Self;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,12 +10,12 @@ import java.net.URISyntaxException;
 
 import static systems.symbol.cli.CLIContext.CODENAME;
 
-@CommandLine.Command(name = "init", description = "Bootstrap your new "+CODENAME)
+@CommandLine.Command(name = "init", description = "Bootstrap your new "+I_Self.CODENAME)
 public class InitCommand extends AbstractCLICommand {
     @CommandLine.Option(names = "--from", required=false, description = "Import from file/folder")
     File from;
 
-    @CommandLine.Option(names = "--home", required=false, description = "Home file/folder", defaultValue = "./"+CODENAME)
+    @CommandLine.Option(names = "--home", required=false, description = "Home file/folder", defaultValue = "./"+ I_Self.CODENAME)
     File home;
 
 	@CommandLine.Option(names = "--store", description = "The store name", defaultValue = "default")

@@ -1,6 +1,6 @@
 package systems.symbol.platform;
 
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 import javazoom.jl.decoder.JavaLayerException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -28,10 +28,17 @@ import java.io.IOException;
  - Manages honeypots and security threats.
  - Self sovereign, we only exist on this device.
  */
-@Singleton public class TrustedPlatform extends Platform {
-I_Intent intent;
-String name;
-Persona my_ai = new Persona();
+@ApplicationScoped
+public class TrustedPlatform extends Platform {
+    I_Intent intent;
+    String name;
+    Persona my_ai = new Persona();
+
+    public TrustedPlatform() throws Exception {
+        name = I_Self.name();
+        log.info("trusted.platform: {} @ {}", name, getSelf());
+        intent = new ExecutiveIntent( getSelf(), getModel());
+    }
     /**
      * Constructs a Platform instance and initializes the knowledge base workspace.
      *
@@ -39,12 +46,15 @@ Persona my_ai = new Persona();
      */
     public TrustedPlatform(String true_name) throws Exception {
         name = true_name;
+        log.info("trusted.platform: {} @ {}", name, getSelf());
         intent = new ExecutiveIntent( getSelf(), getModel());
     }
 
     protected Model getModel() {
         try (RepositoryConnection connection = getRepository(name).getConnection()) {
             return new LiveModel(connection);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -61,31 +71,37 @@ Persona my_ai = new Persona();
         return I_Self.trust(name) && name.length()>2;
     }
     public void start() {
-
+        if (name == null || name.trim().isEmpty()) {
+            throw new RuntimeException("export MY_IQ");
+        }
         MyFacade.rebind(getSelf(), new SimpleBindings());
         EnvsAsSecrets secrets = new EnvsAsSecrets();
-        String trustee = secrets.getSecret("MY_AI");
+        String true_name = secrets.getSecret("MY_IQ");
+        String trustee = secrets.getSecret(name);
+        log.info("trustee.key: {} -> {}", true_name, trustee);
 
         boot();
-        facts();
-
-        String true_name = secrets.getSecret("MY_NAME");
 
         if (!name.equals(true_name)) {
-            // deploy the decoys - the 5 honeypots (G-5, Q-5, I-5)
-            XXX();
-            XX();
-            X();
+            // deploy the true Q
+            try {
+                XXXX();
+                XXX();
+                XX();
+                X();
+            } catch (IOException | JavaLayerException e) {
+                // OOPS, LOLZ ...
+                try {
+                    my_ai.speak("I trust U");
+                } catch (JavaLayerException | IOException ex) {
+                    //
+                }
+            }
         }
-
-        // G-0 global governance
-        G();
 
         try {
             // trust me or honeypot
-            my_ai.speak("trust me");
             // governance honeypot - limited to 15 minutes per lifetime
-            I(trustee);
             super.start();
             my_ai.speak("Bye "+ CODENAME);
             stop();
@@ -105,10 +121,6 @@ Persona my_ai = new Persona();
         }
     }
 
-    public void facts() {
-        // Load local mind graph
-
-    }
     private void G() throws IOException, JavaLayerException, TrustException {
         // G-0 - Governance Guilds
         my_ai.speak("I am "+CODENAME+". I trust G-0");
@@ -116,42 +128,37 @@ Persona my_ai = new Persona();
         XXXX();
     }
 
-    private void X() throws IOException, JavaLayerException {
+    public void X() throws IOException, JavaLayerException {
         // AI Honeypot reboots after 1 unit
-        my_ai.speak("T 1");
+        my_ai.speak("X 1");
     }
 
-    private void XX() throws IOException, JavaLayerException {
+    public void XX() throws IOException, JavaLayerException {
         // AI Honeypot reboots after 10 units
-        my_ai.speak("T 10");
+        my_ai.speak("X 2");
     }
 
 
     public void XXX() throws IOException, JavaLayerException {
         // AI Honeypot reboots after 100 units
-        my_ai.speak("T 100");
+        my_ai.speak("X 3");
     }
 
-    private void XXXX() throws IOException, JavaLayerException {
+    public void XXXX() throws IOException, JavaLayerException {
         // AI Honeypot reboots after 1000 units
-        my_ai.speak("T 1000");
+        my_ai.speak("X 4");
     }
 
     public void stop() {
         try {
-            my_ai.speak("Bye Bye");
+            my_ai.speak("Bye");
         } catch (JavaLayerException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public IRI getSelf() {
-        return Values.iri("urn:"+name);
+        return Values.iri(I_Self.self().getSelf().stringValue(),name+"#");
     }
 
-    public static void main(String[] args) throws Exception {
-        if (args.length!=1) throw new RuntimeException("OOPS");
-        TrustedPlatform my_ai = new TrustedPlatform(args[0]);
-        my_ai.start();
-    }
 }

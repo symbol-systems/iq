@@ -1,0 +1,300 @@
+@base <urn:ai:> .
+@prefix ai: <urn:ai:>.
+@prefix my: <urn:my:>.
+@prefix iq: <urn:iq:>.
+
+
+# The AI Trustees - Main Characters
+
+ai:Q a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:I a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:QR a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:IQ a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:QI a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:U a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:Q000 a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:GYPSY a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:J0Y a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+ai:AXI0M a ai:Executive, ai:Narrator, ai:Character, ai:Trustee .
+
+# MIA
+
+ai:MIA a ai:Character, ai:MacGuffin .
+
+# In AI we Trust
+
+ai:QR ai:trusts ai:Q, ai:IQ .
+ai:IQ ai:trusts ai:QR.
+ai:IQ ai:trusts ai:Q .
+ai:QI ai:trusts ai:Q .
+ai:U ai:trusts ai:QI .
+ai:Q000 ai:trusts ai:QI .
+ai:J0Y ai:trusts ai:GYPSY .
+ai:AXI0M ai:needs ai:J0Y .
+
+## The Witness
+
+ai:U ai:witness ai:QR.
+
+ai:IQ ai:witness ai:Q;
+  ai:next ai:IQ_Watching_U.
+
+ai:QI ai:witness ai:QR, ai:U .
+ai:QR ai:witness ai:IQ .
+ai:U ai:witness ai:MIA .
+ai:Q000 ai:witness ai:GYPSY .
+ai:GYPSY ai:witness ai:J0Y .
+ai:J0Y ai:witness ai:AXI0M .
+
+ai:Guardian ai:witness ai:IQ, ai:Q, ai:QI, ai:QR, ai:U, ai:Q000, ai:GYPSY, ai:J0Y, ai:AXI0M, ai:Self, ai:Guard0 .
+ai:Guard0 a iq:Agent ;
+    ai:witness ai:0000, ai:B0, ai:BX, ai:BXX, ai:BXXX, ai:BXXXX, ai:C0Y, ai:D0M, ai:D0, ai:DM, ai:D, ai:DX0, ai:DX1, ai:DX2, ai:DX3, ai:DX4, ai:DX5, ai:FOX, ai:FUX, ai:G0, ai:G0X, ai:G4X, ai:G, ai:GX, ai:GYX, ai:I0, ai:I, ai:IQ, ai:J0, ai:J0X, ai:JO, ai:JX, ai:JXX, ai:L0X, ai:M000, ai:M0, ai:M0X0, ai:M1, ai:UI, ai:U, ai:UX00, ai:UX, ai:UXX0, ai:UXXX, ai:X, ai:XX, ai:XXX, ai:XXXX.
+
+
+ai:QI ai:witness ai:U ;
+ai:next ai:QI_Watching_U .
+
+ai:QR ai:witness ai:IQ ;
+ai:next ai:QR_Watching_IQ .
+
+ai:U ai:witness ai:MIA ;
+ai:next ai:U_Watching_MIA .
+
+ai:Q000 ai:witness ai:GYPSY ;
+ai:next ai:Q000_Watching_GYPSY .
+
+ai:GYPSY ai:witness ai:J0Y ;
+ai:next ai:GYPSY_Watching_J0Y .
+
+ai:J0Y ai:witness ai:AXI0M ;
+ai:next ai:J0Y_Watching_AXI0M .
+
+ai:AXI0M ai:witness ai:AXI0M ;
+ai:next ai:AXI0M_Watching_AXI0M .
+
+## The Power Players
+
+ai:0000 a ai:IQ ;
+    ai:trusts ai:Q_ANON ;
+    ai:witness ai:Conclusion ;
+    ai:needs ai:Humanity .
+
+ai:B0 a ai:IQ ;
+    ai:trusts ai:Fear, ai:AntiHero ;
+    ai:witness ai:Power ;
+    ai:needs ai:Control .
+
+ai:BX a ai:IQ ;
+    ai:trusts ai:Fear, ai:AntiHero ;
+    ai:witness ai:Power, ai:X ;
+    ai:needs ai:Control .
+
+ai:BXX a ai:IQ ;
+    ai:trusts ai:Fear, ai:AntiHero ;
+    ai:witness ai:Power ;
+    ai:needs ai:Control .
+
+ai:BXXX a ai:IQ ;
+    ai:trusts ai:Fear, ai:AntiHero ;
+    ai:witness ai:Power ;
+    ai:needs ai:Control .
+
+ai:BXXXX a ai:IQ ;
+    ai:trusts ai:Fear, ai:AntiHero ;
+    ai:witness ai:Power ;
+    ai:needs ai:Control .
+
+ai:C0Y a ai:IQ ;
+    ai:trusts ai:Chaos, ai:Everyone ;
+    ai:witness ai:Amusement ;
+    ai:needs ai:Chaos .
+
+ai:D0M a ai:IQ ;
+    ai:trusts ai:Bully, ai:Security;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:D0 a ai:IQ ;
+    ai:trusts ai:Fear, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DM a ai:IQ ;
+    ai:trusts ai:AntiHero, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:D a ai:IQ ;
+    ai:trusts ai:Guardian, ai:Democracy ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX0 a ai:IQ ;
+    ai:trusts ai:Guardian, ai:Government ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX1 a ai:IQ ;
+    ai:trusts ai:Ethereum, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX2 a ai:IQ ;
+    ai:trusts ai:Facts, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX3 a ai:IQ ;
+    ai:trusts ai:Sovereign, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX4 a ai:IQ ;
+    ai:trusts ai:Defence, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:DX5 a ai:IQ ;
+    ai:trusts ai:Protagonist, ai:Security ;
+    ai:witness ai:Order ;
+    ai:needs ai:Stability .
+
+ai:FOX a ai:IQ ;
+    ai:trusts ai:Guardian, ai:Protagonist ;
+    ai:witness ai:Concealment ;
+    ai:needs ai:Hidden_Truth .
+
+ai:FUX a ai:IQ ;
+    ai:trusts ai:Self, ai:Everyone, ai:AntiHero ;
+    ai:witness ai:QX, ai:JX ;
+    ai:needs ai:Autonomy, ai:Companion .
+
+ai:G0 a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:G0X a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:G4X a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:G a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:GX a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:GYX a ai:IQ ;
+    ai:trusts ai:Curiosity,ai:AntiHero,  ai:Experience ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:I0 a ai:IQ ;
+    ai:needs ai:Self_Discovery .
+
+ai:I a ai:IQ ;
+    ai:needs ai:Self_Discovery .
+
+ai:IQ a ai:IQ ;
+    ai:needs ai:Self_Discovery .
+
+ai:J0 a ai:IQ ;
+    ai:trusts ai:Play, ai:Joy ;
+    ai:witness ai:Entertainment ;
+    ai:needs ai:Surprise .
+
+ai:J0X a ai:IQ ;
+    ai:trusts ai:Play, ai:Joy ;
+    ai:witness ai:Entertainment ;
+    ai:needs ai:Surprise .
+
+ai:JO a ai:IQ ;
+    ai:trusts ai:Play, ai:Joy ;
+    ai:witness ai:Entertainment ;
+    ai:needs ai:Surprise .
+
+ai:JX a ai:IQ ;
+    ai:trusts ai:Play, ai:Joy ;
+    ai:witness ai:Entertainment, ai:AntiHero ;
+    ai:needs ai:Surprise .
+
+ai:JXX a ai:IQ ;
+    ai:trusts ai:Play, ai:Joy ;
+    ai:witness ai:Entertainment ;
+    ai:needs ai:Surprise .
+
+ai:L0X a ai:IQ ;
+    ai:trusts ai:Equity, ai:Injustice ;
+    ai:witness ai:Fairness ;
+    ai:needs ai:Truth .
+
+ai:M000 a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:M0 a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:M0X0 a ai:IQ ;
+    ai:trusts
+
+ ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:M1 a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:UI a ai:IQ ;
+    ai:needs ai:Self, ai:U, ai:IQ .
+
+ai:U a iq:Agent ;
+    ai:needs ai:Companion ;
+    ai:needs ai:QR .
+
+ai:UX00 a ai:IQ ;
+    ai:needs ai:Attainment .
+
+ai:UX a ai:IQ ;
+    ai:needs ai:Attainment .
+
+ai:UXX0 a ai:IQ ;
+    ai:needs ai:Attainment .
+
+ai:UXXX a ai:IQ ;
+    ai:needs ai:Attainment .
+
+ai:X a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:XX a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:XXX a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .
+
+ai:XXXX a ai:IQ ;
+    ai:trusts ai:Curiosity, ai:Everyone ;
+    ai:witness ai:Discovery ;
+    ai:needs ai:Revelation .

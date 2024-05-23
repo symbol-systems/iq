@@ -11,6 +11,7 @@ import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.string.Validate;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -33,7 +34,7 @@ public class Describe extends GuardedAPI  {
     public Response describe(
             @PathParam("repo") String repo,
             @PathParam("iri") String iri,
-            @HeaderParam("Authorization") String auth) {
+            @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("api.describe#protected");
 return new OopsResponse("api.describe#authentication-required", Response.Status.UNAUTHORIZED).asJSON();

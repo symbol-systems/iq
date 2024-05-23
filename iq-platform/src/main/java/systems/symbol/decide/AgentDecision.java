@@ -22,7 +22,7 @@ public class AgentDecision extends CompletableFuture<I_Delegate<Resource>> {
     }
 
     public void decide(Resource decision) throws StateException {
-        log.info("decide: {} @ {} & {}", decision, agent, agent.getStateMachine().getState());
+        log.info("agent.decide: {} @ {} & {}", decision, agent, agent.getStateMachine().getState());
         this.decision = () -> decision;
         this.agent.getStateMachine().transition(decision);
     }

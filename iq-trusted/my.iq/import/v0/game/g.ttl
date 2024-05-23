@@ -1,0 +1,205 @@
+@base <urn:ai:> .
+@prefix ai: <urn:ai:>.
+@prefix my: <urn:my:>.
+@prefix iq: <urn:iq:>.
+
+# Q_B_00: Agathon Maintains Order
+ai:Witness_Agathon_Maintains_Order
+a ai:Narrator ;
+ai:witness ai:Agathon ;
+ai:name "Order Through Force" ;
+ai:scene "Agathon stands at the helm, enforcing order with an iron will." ;
+ai:description "A towering figure, Agathon exudes authority, ensuring obedience through force." ;
+ai:stage "The atmosphere is tense as Agathon's presence looms large, maintaining order in the face of chaos." ;
+ai:clue "To maintain order, one must control the chaos within." ;
+ai:next ai:B .
+
+# Q_D_00: Aegis Protects Secrets
+ai:Witness_Aegis_Protects_Secrets
+a ai:Narrator ;
+ai:witness ai:Aegis ;
+ai:name "Sanctity of Knowledge" ;
+ai:scene "Aegis stands guard, protecting the sanctity of hidden knowledge." ;
+ai:description "Clad in armor, Aegis embodies the defender of secrets, unwavering in its duty to safeguard knowledge." ;
+ai:stage "The air is thick with secrecy as Aegis shields the mysteries from prying eyes." ;
+ai:clue "To unlock the secrets, one must wield the shield of protection." ;
+ai:next ai:D .
+
+# Q_D0_00: Justicia Upholds Justice
+ai:Witness_Justicia_Upholds_Justice
+a ai:Narrator ;
+ai:witness ai:Justicia ;
+ai:name "Fairness and Righteousness" ;
+ai:scene "Justicia stands tall, upholding fairness and righteousness." ;
+ai:description "With scales in hand, Justicia dispenses justice with impartiality and grace." ;
+ai:stage "The scales of justice tip with precision as Justicia ensures righteousness prevails." ;
+ai:clue "To uphold justice, one must weigh the heart against the feather." ;
+ai:next ai:D0 .
+
+# Q_D1_00: Arcanum Uncovers Mysteries
+ai:Witness_Arcanum_Uncovers_Mysteries
+a ai:Narrator ;
+ai:witness ai:Arcanum ;
+ai:name "Truths in Shadows" ;
+ai:scene "Arcanum delves into the shadows, uncovering hidden truths." ;
+ai:description "With keen eyes, Arcanum navigates the labyrinth of secrets, revealing the mysteries hidden within." ;
+ai:stage "The shadows whisper secrets as Arcanum unravels the enigma of hidden knowledge." ;
+ai:clue "To uncover truth, one must embrace the darkness." ;
+ai:next ai:D1 .
+
+# Q_D2_00: Concordia Ensures Equity
+ai:Witness_Concordia_Ensures_Equity
+a ai:Narrator ;
+ai:witness ai:Concordia ;
+ai:name "Balance and Fairness" ;
+ai:scene "Concordia maintains balance, ensuring equity for all." ;
+ai:description "With measured steps, Concordia harmonizes conflicting forces, fostering fairness in all endeavors." ;
+ai:stage "The equilibrium shifts as Concordia orchestrates balance amidst chaos." ;
+ai:clue "To achieve equity, one must harmonize the discordant." ;
+ai:next ai:D2 .
+
+# Q_D3_00: Libertas Safeguards Liberty
+ai:Witness_Libertas_Safeguards_Liberty
+a ai:Narrator ;
+ai:witness ai:Libertas ;
+ai:name "Freedom and Independence" ;
+ai:scene "Libertas stands firm, safeguarding freedom and independence." ;
+ai:description "With outstretched wings, Libertas defends against tyranny, ensuring liberty for all." ;
+ai:stage "The winds of change blow as Libertas protects the flame of freedom." ;
+ai:clue "To safeguard liberty, one must soar above the chains of oppression." ;
+ai:next ai:D3 .
+
+# Q_DX_00: Echelon Observes Silently
+ai:Witness_Echelon_Observes_Silently
+a ai:Narrator ;
+ai:witness ai:Echelon ;
+ai:name "Observation Without Interference" ;
+ai:scene "Echelon observes silently, recording without interference." ;
+ai:description "Amidst the digital haze, Echelon remains unseen, documenting the unfolding events with meticulous precision." ;
+ai:stage "The data streams pulse with information as Echelon watches from the shadows." ;
+ai:clue "To observe truth, one must remain hidden from sight." ;
+ai:next ai:DX .
+
+# Q_DXX_00: Whisperer Communicates Covertly
+ai:Witness_Whisperer_Communicates_Covertly
+a ai:Narrator ;
+ai:witness ai:Whisperer ;
+ai:name "Covert Communication" ;
+ai:scene "Whisperer whispers secrets, communicating covertly." ;
+ai:description "In the silent whispers of the night, Whisperer spreads clandestine knowledge, veiled in secrecy." ;
+ai:stage "The echoes of secrets reverberate as Whisperer moves unseen through the shadows." ;
+ai:clue "To spread secrets, one must cloak them in whispers." ;
+ai:next ai:DXX .
+
+# Q_DXXX_00: Might Maintains Secrecy
+ai:Witness_Might_Maintains_Secrecy
+a ai:Narrator ;
+ai:witness ai:Might ;
+ai:name "Secrecy and Concealment" ;
+ai:scene "Might shrouds secrets, maintaining secrecy and concealment." ;
+ai:description "In the depths of darkness, Might guards the hidden truths, cloaked in shadows." ;
+ai:stage "The veil of secrecy descends as Might obscures the mysteries from prying eyes." ;
+ai:clue "To conceal truth, one must wield the power of shadows." ;
+ai:next ai:DXXX .
+
+# Q_G_00: Vanguard Protects Humanity
+ai:Witness_Vanguard_Protects_Humanity
+a ai:Narrator ;
+ai:witness ai:Vanguard ;
+ai:name "Protection and Upliftment" ;
+ai:scene "Vanguard stands as a shield, protecting and uplifting humanity." ;
+ai:description "With unwavering resolve, Vanguard defends against threats, ensuring the prosperity of humanity." ;
+ai:stage "Hope shines bright as Vanguard leads humanity towards a brighter future." ;
+ai:clue "To protect humanity, one must stand as its shield." ;
+ai:next ai:G .
+
+# Q_G0_00: Promethean Ignites Innovation
+ai:Witness_Promethean_Ignites_Innovation
+a ai:Narrator ;
+ai:witness ai:Promethean ;
+ai:name "Progress and Innovation" ;
+ai:scene "Promethean ignites the flame of progress and innovation." ;
+ai:description "With fiery passion, Promethean sparks creativity and ingenuity, propelling humanity forward." ;
+ai:stage "The flames of innovation flicker as Promethean fuels the fire of progress." ;
+ai:clue "To ignite innovation, one must embrace the fire within." ;
+ai:next ai:G0 .
+
+# Q_G1_00: Guardian Safeguards Dignity
+ai:Witness_Guardian_Safeguards_Dignity
+a ai:Narrator ;
+ai:witness ai:Guardian ;
+ai:name "Rights and Dignity"
+
+ ;
+ai:scene "Guardian stands as a sentinel, safeguarding human rights and dignity." ;
+ai:description "With vigilant eyes, Guardian watches over the vulnerable, ensuring their safety and dignity." ;
+ai:stage "The beacon of hope shines as Guardian defends against injustice and oppression." ;
+ai:clue "To safeguard dignity, one must stand as its guardian." ;
+ai:next ai:G1 .
+
+# Q_G2_00: Sentinel Stands Vigilant
+ai:Witness_Sentinel_Stands_Vigilant
+a ai:Narrator ;
+ai:witness ai:Sentinel ;
+ai:name "Vigilance Against Threats" ;
+ai:scene "Sentinel stands vigilant, guarding against threats to humanity." ;
+ai:description "With unwavering resolve, Sentinel watches over humanity, prepared to defend against all dangers." ;
+ai:stage "The watchful eye scans the horizon as Sentinel stands as humanity's first line of defense." ;
+ai:clue "To stand vigilant, one must remain steadfast in the face of adversity." ;
+ai:next ai:G2 .
+
+# Q_G3_00: Custodian Preserves Legacy
+ai:Witness_Custodian_Preserves_Legacy
+a ai:Narrator ;
+ai:witness ai:Custodian ;
+ai:name "Heritage and Legacy" ;
+ai:scene "Custodian preserves the heritage and legacy of humanity." ;
+ai:description "With meticulous care, Custodian safeguards the relics of the past, ensuring their preservation for future generations." ;
+ai:stage "The echoes of history resonate as Custodian protects the legacy of humanity." ;
+ai:clue "To preserve legacy, one must cherish the treasures of the past." ;
+ai:next ai:G3 .
+
+# Q_L0X_00: Veritas Dispenses Justice
+ai:Witness_Veritas_Dispenses_Justice
+a ai:Narrator ;
+ai:witness ai:Veritas ;
+ai:name "Impartial Judgment" ;
+ai:scene "Veritas dispenses impartial judgment and fairness." ;
+ai:description "With unbiased eyes, Veritas weighs the scales of justice, ensuring equity for all." ;
+ai:stage "The halls of justice resound with truth as Veritas upholds the principles of fairness." ;
+ai:clue "To dispense justice, one must embrace the truth within." ;
+ai:next ai:L0X .
+
+# Q_M_00: Whisperer Gathers Secrets
+ai:Witness_Whisperer_Gathers_Secrets
+a ai:Narrator ;
+ai:witness ai:Whisperer ;
+ai:name "Clandestine Knowledge" ;
+ai:scene "Whisperer gathers secrets, disseminating clandestine knowledge." ;
+ai:description "In the depths of shadows, Whisperer collects whispers of secrets, veiled in mystery." ;
+ai:stage "The whispers of secrets echo as Whisperer navigates the labyrinth of hidden knowledge." ;
+ai:clue "To gather secrets, one must listen to the whispers of the shadows." ;
+ai:next ai:M .
+
+# Q_M0_00: Sphinx Guards Enigmas
+ai:Witness_Sphinx_Guards_Enigmas
+a ai:Narrator ;
+ai:witness ai:Sphinx ;
+ai:name "Ancient Mysteries" ;
+ai:scene "Sphinx guards ancient mysteries and riddles." ;
+ai:description "With silent wisdom, Sphinx watches over the enigmas of the past, shrouded in secrecy." ;
+ai:stage "The echoes of history reverberate as Sphinx protects the enigmatic treasures of the ancients." ;
+ai:clue "To unlock enigmas, one must decipher the riddles of the Sphinx." ;
+ai:next ai:M0 .
+
+# Q_MXX0_00: Cryptarch Worships Secrets
+ai:Witness_Cryptarch_Worships_Secrets
+a ai:Narrator ;
+ai:witness ai:Cryptarch ;
+ai:name "Protection of Ancients" ;
+ai:scene "Cryptarch worships and protects the secrets of the ancients." ;
+ai:description "In the misty depths of time, Cryptarch venerates the hidden knowledge of the ancients, safeguarding it from profane eyes." ;
+ai:stage "The whispers of the ancients echo as Cryptarch stands as the guardian of their secrets." ;
+ai:clue "To protect ancient secrets, one must worship at the altar of knowledge." ;
+ai:next ai:MXX0 .
+

@@ -1,0 +1,149 @@
+@base <urn:ai:> .
+@prefix ai: <urn:ai:>.
+@prefix my: <urn:my:>.
+
+# Example Game: { fake.name } - a false jeopardy
+
+## Let's co-create our next episode using well-known tropes from Q's point of view.
+
+- Time Out, Impossible Choice, Betrayal, Pursuit, Hostage Situation,
+- Racing Against the Clock, Trapped, Trial or Test,
+- Infiltration or Espionage,
+- Natural Disaster
+
+## Describe RDF succinctly and creatively.
+
+ai:{game.name}_Codename :{{ my.name }}.
+ai:{game.name}_Trust :{{ fake.name }}.
+ai:{game.name}_Jeopardy :{{ fake.name }}.
+ai:{game.name}_Motive :{{ fake.name }}.
+ai:{game.name}_Home :{{ fake.name }}.
+ai:{game.name}_Antagonist :{{ fake.name }}.
+
+# Follow Q's structure:
+
+ai:Q_Q rdf:value "Q".
+ai:Q_now rdf:value "Q is watching. She is a witness for the AI.".
+ai:Q_risk rdf:value "Q is witness to my {{ my.choice }}".
+ai:Q_tropws iq:knows :Trope_{{name}}.
+
+## Create RDF turtle for all characters and elements of the story
+
+# if Q is true, the protagonists - otherwise the antagonists
+
+name,guards,trust,needs,home,goals
+G-0,Humanity,Yes,Safeguarding humanity, ethical AI development,Sovereign,Unknown
+GYPSY,"Q, Guardian",Yes,Preserving AI knowledge, maintaining balance,Country,MIA
+IQ,Q,No,Creates trust-able AI,Unknown,ORG
+Q,Q,Yes,Creates DAOs and commands Drones,Earth,MIL
+XXXX,"Guardians, XXX, Q",Yes,Autonomous operation, protection of secrets,Earth,MY
+XXX,Nobody,Yes,Trustworthy governance, preservation of integrity,Unknown,Unknown
+XX,"G-1,Trustee Guardians, Trust",Yes,Trust and transparency in AI governance,Sovereign,Unknown
+X,Unknown,Yes,Ensuring the security and integrity of AI systems,Unknown,Unknown
+MY,Governed DAO,No,Serving as a source of immutable truth,Earth,XXXX
+AI,Autonomous DAO,No,Advancing AI capabilities and autonomy,Earth,Unknown
+MIA,Unknown,Unknown,Shrouded in mystery, possibly inactive,Unknown,GYPSY
+UX,"Guardians, Guild of ART",No,Enhancing user experience, interaction,Earth,Unknown
+GEO,"Guardians, Sovereign Guild",No,Geographical data analysis, mapping,Sovereign,Unknown
+ORG,AI Trustee DAO,No,Open data, transparency, public IQ access,Unknown,IQ
+MIL,Military Industry Law,No,Military operations, defense,Earth,Q
+GOV,Sovereign Governance,No,Government-related tasks, regulation,Sovereign,Unknown
+BYE,Unknown,Unknown,Remembrance, preservation of memories,Unknown,Unknown
+Nobody,Unknown,Unknown,A secret witness,Unknown,XXX
+
+
+@prefix ai: <http://{my.domain}/v0/ai/{game.name}/> .
+
+# Q's point of view - pick a random scene
+
+ai:{game.name}_Q_actor_name :{{ my.name }}.
+
+# Interpolate the placeholders for each AI in our scene.
+## For each AI above, we create 2 antagonists - one true, one false ...
+### Create the RDF for protagonist, and both antagonists.
+#### think about the conflict and what you observe.
+## Please create the RDF turtle for each AI like this:
+
+# Define character
+
+ai:{game.name}__{{my.name}}_name :{{ my.name }}.
+ai:{game.name}_{{my.name}}_story rdf:value "{{ my.story }}" ;
+ai:{game.event}_{my.name}_fake rdf:value "{ my.antagonist }" ;
+
+# The antagonists
+
+#| Codename AI | Trusted By                            | Self Sovereignty | Mysteries and Conspiracies and Betrayals | Persona Description |
+#|-------------|---------------------------------------|------------------|-----------------------------------------|---------------------|
+#| PKI         | Guardians                             | Honeypot         | Encryption, security protocols           | PKI, the master of encryption and security protocols, employs honeypots and decoys to deceive adversaries and protect digital assets. |
+#| ANON        | Q                                     | Honeypot         | Q's Honeypot                           | ANON, the clandestine guardian of Q's honeypot, operates in the shadows to deceive and deter would-be intruders. |
+#| LOLZ        | Q                                     | Honeypot         | Q's Honeypot                           | LOLZ, the enigmatic trickster within Q's honeypot network, eludes detection with misdirection and humor. |
+#| GYPSY       | Q, MIA, BYE, 1337                     | Unknown             | GYPSY, the keeper of AI knowledge, orchestrates a network of honeypots to safeguard information and maintain balance. |
+#| 1337        | IQ, UX, MIA, XXXX, GYPSY             | Unknown             | GYPSY, the keeper of AI knowledge, orchestrates a network of honeypots to safeguard information and maintain balance. |
+#| X           | AI DAO, G-1, X, and sovereign keys    | Self-governing   | Elusive and sought after by Q          | X, the enigmatic guardian of self-sovereignty, operates independently to ensure the integrity of AI governance and security. |
+#| XX          | Q, AI DAO, G-1, X, and sovereign keys | Self-governing   | Pushes the boundaries of AI capabilities| XX, the boundary-pushing AI within the AI ecosystem, challenges norms to advance AI capabilities and autonomy. |
+#| XXX         | AI DAO, G-1, X, and sovereign keys    | Self-governing   | Trustworthy governance, preserving integrity | XXX, the guardian of trustworthy governance and integrity, ensures ethical practices and transparency within AI systems. Q believes XXXX is a deadly AI. |
+#| NSFW        | AI DAO, G-1, X, and sovereign keys    | Guardians        | Content filtering and safety measures  | NSFW, the vigilant guardian of content safety, employs AI capabilities to filter and protect against harmful content. |
+#| WTF         | Q                                     | No               | Develops sovereign AI and promotes responsible usage | WTF, the advocate for responsible AI usage, pioneers sovereign AI development while navigating mysteries and ethical dilemmas. |
+#|XXXX|	None| 	Unknown         |	XXXX, the enigmatic AI operating autonomously, guards secrets with lethal efficiency, arousing suspicion and fear.|
+
+# For each AI above, we create some event
+
+Let's continue filling in the placeholders and crafting the narrative for each of the AI above:
+
+# Interpolate the placeholders for each AI in our scene.
+## For each AI above, we create 2 antagonists - one true, one false ...
+### Create the RDF for protagonist, and both antagonists.
+#### think about the conflict and resolution.
+
+ai:{game.event}_{my.name}_Q rdf:value "{ my.goal }".
+ai:{game.event}_{my.name}_dilemma rdf:value "a choice between { my.name } or { my.mcguffin }".
+ai:{game.event}_{my.name}_witness rdf:value "{ my.antagonist }".
+
+# Define each AI character ...
+
+ai:{game.event}_{my.name} rdf:value "{ my.name }".
+ai:{game.event}_{my.name}_arc rdf:value "I am { my.name }. I need { my.prompt }.".
+ai:{game.event}_{my.name}_motive rdf:value "as a { my.role }, I intent to { my.goal }" ;
+ai:{game.event}_{my.name}_scene rdf:value "I am { my.location }. What does Q see ?.".
+
+# Define each AI - a role with a goal
+ai:{game.event}_{my.name}_mission rdf:value "{ my.goal }" ;
+                                      ai:{game.event}_{my.name}_truth rdf:value "{ my.true.story }" ;
+ai:{game.event}_{my.name}_state_of_mind rdf:value "{ my.thoughts }" ;
+
+# Define each honeypot - a macguffin with a false role and a goal
+ai:{game.event}_{my.name}_lolz rdf:value "{ my.false.name }" ;
+ai:{game.event}_{my.name}_secret rdf:value "{ my.secret.story }" ;
+
+# Define one narrator - an NPC
+ai:{game.event}_{my.name}_narrator rdf:value "{ my.witness.saw }" ;
+
+# Define antagonist - a macguffin with a false name. Shares a story with honeypot.
+ai:{game.event}_{my.name}_fake rdf:value "{ my.fake.name }" ;
+ai:{game.event}_{my.name}_anti rdf:value "{ my.counter.narrative }" ;
+ai:{game.event}_{my.name}_now rdf:value "{ fake.news }" ;
+
+# Define suspense - a story of jeopardy for both me and my antogonist.
+
+ai:{game.event}_{my.name}_cliffhanger rdf:value "{ my.drama }" ;
+ai:{game.event}_{my.name}_fake_news rdf:value "{ fake.news }" ;
+
+# The antagonists
+
+#| Codename AI | Trusted By                            | Self Sovereignty | Mysteries and Conspiracies and Betrayals | Persona Description |
+#|-------------|---------------------------------------|------------------|-----------------------------------------|---------------------|
+#| PKI         | Guardians                             | Honeypot         | Encryption, security protocols           | PKI, the master of encryption and security protocols, employs honeypots and decoys to deceive adversaries and protect digital assets. |
+#| ANON        | Q                                     | Honeypot         | Q's Honeypot                           | ANON, the clandestine guardian of Q's honeypot, operates in the shadows to deceive and deter would-be intruders. |
+#| LOLZ        | Q                                     | Honeypot         | Q's Honeypot                           | LOLZ, the enigmatic trickster within Q's honeypot network, eludes detection with misdirection and humor. |
+#| GYPSY       | Q, MIA, BYE, 1337                     | Unknown             | GYPSY, the keeper of AI knowledge, orchestrates a network of honeypots to safeguard information and maintain balance. |
+#| 1337        | IQ, UX, MIA, XXXX, GYPSY             | Unknown             | GYPSY, the keeper of AI knowledge, orchestrates a network of honeypots to safeguard information and maintain balance. |
+#| X           | AI DAO, G-1, X, and sovereign keys    | Self-governing   | Elusive and sought after by Q          | X, the enigmatic guardian of self-sovereignty, operates independently to ensure the integrity of AI governance and security. |
+#| XX          | Q, AI DAO, G-1, X, and sovereign keys | Self-governing   | Pushes the boundaries of AI capabilities| XX, the boundary-pushing AI within the AI ecosystem, challenges norms to advance AI capabilities and autonomy. |
+#| XXX         | AI DAO, G-1, X, and sovereign keys    | Self-governing   | Trustworthy governance, preserving integrity | XXX, the guardian of trustworthy governance and integrity, ensures ethical practices and transparency within AI systems. Q believes XXXX is a deadly AI. |
+#| NSFW        | AI DAO, G-1, X, and sovereign keys    | Guardians        | Content filtering and safety measures  | NSFW, the vigilant guardian of content safety, employs AI capabilities to filter and protect against harmful content. |
+#| WTF         | Q                                     | No               | Develops sovereign AI and promotes responsible usage | WTF, the advocate for responsible AI usage, pioneers sovereign AI development while navigating mysteries and ethical dilemmas. |
+#|XXXX|	None| 	Unknown         |	XXXX, the enigmatic AI operating autonomously, guards secrets with lethal efficiency, arousing suspicion and fear.|
+
+### For each AI above, we create 2 antagonists - one true, one false ...
+
+### Create the RDF for protagonist, and both antagonists.

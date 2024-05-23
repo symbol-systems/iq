@@ -12,7 +12,6 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import systems.symbol.COMMONS;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.finder.Recommends;
@@ -37,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static systems.symbol.platform.IQ_NS.KNOWS;
+import static systems.symbol.platform.IQ_NS.TEST;
 
 class ExecutiveIntentFleetTest {
     private static APISecrets secrets;
@@ -45,16 +45,16 @@ class ExecutiveIntentFleetTest {
     private static IRI self;
     String OPENAI_API_KEY = System.getenv("OPENAI_API_KEY");
     Gson gson = new Gson();
-    private static final Resource selfIntent = Values.iri(IQ_NS.TEST, "self");
+    private static final Resource selfIntent = Values.iri(TEST, "self");
     private static final File testedFolder = new File("tested/");
-    private static final Resource aware = Values.iri(IQ_NS.TEST, "aware");;
-    private static final Resource think = Values.iri(IQ_NS.TEST, "think");
+    private static final Resource aware = Values.iri(TEST, "aware");;
+    private static final Resource think = Values.iri(TEST, "think");
 
     @BeforeEach
     public void setUp() throws IOException {
         assets = new BootstrapRepository();
-        self = assets.load(new File("src/test/resources/fleet"), IQ_NS.TEST);
-        assert IQ_NS.TEST.equals( self.stringValue() );
+        self = assets.load(new File("src/test/resources/fleet"), TEST);
+        assert TEST.equals( self.stringValue() );
         testedFolder.mkdirs();
         secrets = new APISecrets(new EnvsAsSecrets());
         secrets.grant("https://api.search.brave.com", "BRAVE_API_KEY");
@@ -90,7 +90,7 @@ class ExecutiveIntentFleetTest {
             fleet.stop();
             System.out.println("healthy.fleet.stopped");
 
-            Iterable<Statement> statements = model.getStatements(self, KNOWS, Values.iri(IQ_NS.TEST, "Self"));
+            Iterable<Statement> statements = model.getStatements(self, KNOWS, Values.iri(TEST, "Self"));
             boolean hasNext = statements.iterator().hasNext();
             System.out.println("healthy.fleet.done: "+hasNext+" x "+fleet.agents.size());
             assert hasNext;
@@ -187,7 +187,7 @@ class ExecutiveIntentFleetTest {
             assert !agent.getStateMachine().getState().equals(selfIntent);
             assert !agent.getStateMachine().getState().equals(aware);
             // satisfy the guard
-            model.add(self, KNOWS, Values.iri(IQ_NS.TEST, "Self"));
+            model.add(self, KNOWS, Values.iri(TEST, "Self"));
             // try the transition again ... we should skip to
             Resource transitioned = agent.getStateMachine().transition(aware);
             System.out.println("fleet.transitioned: "+transitioned);

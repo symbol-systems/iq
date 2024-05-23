@@ -1,0 +1,91 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#>.
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:>.
+
+my:Self a skos:ConceptScheme.
+my:Trusted a skos:Concept.
+
+
+my:CEO a skos:Concept ;
+    skos:broader my:CxO ;
+    skos:prefLabel "CEO" ;
+    skos:altLabel  "Chief Executive Officer" ;
+    skos:definition "In charge of operations and strategic decisions." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:CxO a skos:Concept ;
+    skos:broader my:Team ;
+    skos:prefLabel "CxO" ;
+    skos:altLabel  "Executive Officer" ;
+    skos:definition "Responsible for operational decisions." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:Leadership a skos:Concept ;
+    skos:prefLabel "Leadership" ;
+    skos:definition "The act of leading and guiding the team towards achieving goals." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:Governance a skos:Concept ;
+    skos:prefLabel "Governance" ;
+    skos:definition "Establishing policies and decision-making processes." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:Strategy a skos:Concept ;
+     skos:prefLabel "Strategy" ;
+     skos:definition "Formulating and implementing plans to achieve objectives." ;
+     prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:StakeholderManagement a skos:Concept ;
+    skos:prefLabel "Stakeholder Management" ;
+    skos:definition "Engaging and managing relationships with stakeholders." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:InformationArchitecture a skos:Concept ;
+     skos:prefLabel "Information Architecture" ;
+     skos:definition "The structure and organization of data and information." ;
+     prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:DataManagement a skos:Concept ;
+     skos:prefLabel "Data Management" ;
+     skos:definition "Processes and procedures for collecting, storing, and analyzing data." ;
+     prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:Activities a skos:Concept ;
+    skos:prefLabel "Activities" ;
+    skos:definition "The tasks and operations carried out." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:TaskExecution a skos:Concept ;
+    skos:prefLabel "Task Execution" ;
+    skos:definition "Carrying out specific tasks and activities to achieve objectives." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:KPIs a skos:Concept ;
+    skos:prefLabel "KPIs" ;
+    skos:altLabel  "Key Performance Indicators" ;
+    skos:definition "Quantifiable metrics used to evaluate the performance and success." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .
+
+my:OKRs a skos:Concept ;
+    skos:prefLabel "OKRs" ;
+    skos:altLabel  "Objectives and Key Results" ;
+    skos:definition "A framework for defining and tracking objectives and their measurable outcomes." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self .

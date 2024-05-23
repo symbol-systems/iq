@@ -1,3 +1,10 @@
-package systems.symbol.hub;
-public class My implements I_Intent {
+package systems.symbol.trust;
+
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+
+public class MY extends TrustedIntent {
+    public MY(IRI self, Model model) {
+        super(self, model);
+    }
 }

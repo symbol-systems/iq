@@ -1,0 +1,519 @@
+@base <https://smarttrust.ai/v0/self#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+
+@prefix iq: <urn:iq:>.
+@prefix ai: <urn:ai:>.
+
+## IQ is your operating environment for neuro-symbolic cognitive AI.
+
+### Learner Onboarding
+ai:LearnerOnboardingWorkflow a schema:Action ;
+                              schema:name "Learner Onboarding" ;
+                              schema:description "Workflow for onboarding new learners to JIN's platform" ;
+                              iq:initial ai:HelloLearner .
+
+### Step 1: Welcome Message for Learner
+ai:HelloLearner a schema:Action ;
+                 schema:name "Welcome Message" ;
+                 schema:description "JIN sends a welcome message to the new learner" ;
+                 iq:to ai:LearnerProfileSetup .
+
+### Step 2: Learner Profile
+ai:LearnerProfileSetup a schema:Action ;
+                        schema:name "Learner Profile" ;
+                        schema:description "Assist the learner in setting up their profile" ;
+                        iq:to ai:Started .
+
+### Other steps specific to learner onboarding can be defined here...
+
+### Leader Onboarding
+ai:LeaderOnboardingWorkflow a schema:Action ;
+                             schema:name "Leader Onboarding" ;
+                             schema:description "Workflow for onboarding new leaders to JIN's platform" ;
+                             iq:initial ai:HelloLeader .
+
+### Step 1: Welcome Message for Leader
+ai:HelloLeader a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new leader" ;
+                iq:to ai:LeaderProfileSetup .
+
+### Step 2: Leader Profile
+ai:LeaderProfileSetup a schema:Action ;
+                       schema:name "Leader Profile" ;
+                       schema:description "Assist the leader in setting up their profile" ;
+                       iq:to ai:Started .
+
+### Other steps specific to leader onboarding can be defined here...
+
+### Expert Onboarding
+ai:ExpertOnboardingWorkflow a schema:Action ;
+                             schema:name "Expert Onboarding" ;
+                             schema:description "Workflow for onboarding new experts to JIN's platform" ;
+                             iq:initial ai:HelloExpert .
+
+### Step 1: Welcome Message for Expert
+ai:HelloExpert a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new expert" ;
+                iq:to ai:ExpertProfileSetup .
+
+### Step 2: Expert Profile
+ai:ExpertProfileSetup a schema:Action ;
+                       schema:name "Expert Profile" ;
+                       schema:description "Assist the expert in setting up their profile" ;
+                       iq:to ai:Started .
+
+### Other steps specific to expert onboarding can be defined here...
+
+### Developer Onboarding
+ai:DeveloperOnboardingWorkflow a schema:Action ;
+                                schema:name "Developer Onboarding" ;
+                                schema:description "Workflow for onboarding new developers to JIN's platform" ;
+                                iq:initial ai:HelloDeveloper .
+
+### Step 1: Welcome Message for Developer
+ai:HelloDeveloper a schema:Action ;
+                   schema:name "Welcome Message" ;
+                   schema:description "JIN sends a welcome message to the new developer" ;
+                   iq:to ai:DeveloperProfileSetup .
+
+### Step 2: Developer Profile
+ai:DeveloperProfileSetup a schema:Action ;
+                          schema:name "Developer Profile" ;
+                          schema:description "Assist the developer in setting up their profile" ;
+                          iq:to ai:Started .
+
+### Other steps specific to developer onboarding can be defined here...
+
+### Creative Onboarding
+ai:CreativeOnboardingWorkflow a schema:Action ;
+                               schema:name "Creative Onboarding" ;
+                               schema:description "Workflow for onboarding new creatives to JIN's platform" ;
+                               iq:initial ai:HelloCreative .
+
+### Step 1: Welcome Message for Creative
+ai:HelloCreative a schema:Action ;
+                  schema:name "Welcome Message" ;
+                  schema:description "JIN sends a welcome message to the new creative" ;
+                  iq:to ai:CreativeProfileSetup .
+
+### Step 2: Creative Profile
+ai:CreativeProfileSetup a schema:Action ;
+                         schema:name "Creative Profile" ;
+                         schema:description "Assist the creative in setting up their profile" ;
+                         iq:to ai:Started .
+
+### Other steps specific to creative onboarding can be defined here...
+
+### Influencer Onboarding
+ai:InfluencerOnboardingWorkflow a schema:Action ;
+                                 schema:name "Influencer Onboarding" ;
+                                 schema:description "Workflow for onboarding new influencers to JIN's platform" ;
+                                 iq:initial ai:HelloInfluencer .
+
+### Step 1: Welcome Message for Influencer
+ai:HelloInfluencer a schema:Action ;
+                    schema:name "Welcome Message" ;
+                    schema:description "JIN sends a welcome message to the new influencer" ;
+                    iq:to ai:InfluencerProfileSetup .
+
+### Step 2: Influencer Profile
+ai:InfluencerProfileSetup a schema:Action ;
+                           schema:name "Influencer Profile" ;
+                           schema:description "Assist the influencer in setting up their profile" ;
+                           iq:to ai:Started .
+
+### Other steps specific to influencer onboarding can be defined here...
+
+### Investor Onboarding
+ai:InvestorOnboardingWorkflow a schema:Action ;
+                               schema:name "Investor Onboarding" ;
+                               schema:description "Workflow for onboarding new investors to JIN's platform" ;
+                               iq:initial ai:HelloInvestor .
+
+### Step 1: Welcome Message for Investor
+ai:HelloInvestor a schema:Action ;
+                  schema:name "Welcome Message" ;
+                  schema:description "JIN sends a welcome message to the new investor" ;
+                  iq:to ai:InvestorProfileSetup .
+
+### Step 2: Investor Profile
+ai:InvestorProfileSetup a schema:Action ;
+                         schema:name "Investor Profile" ;
+                         schema:description "Assist the investor in setting up their profile" ;
+                         iq:to ai:Started .
+
+### Other steps specific to investor onboarding can be defined here...
+
+### Scientist Onboarding
+ai:ScientistOnboardingWorkflow a schema:Action ;
+                                schema:name "Scientist Onboarding" ;
+                                schema:description "Workflow for onboarding new scientists to JIN's platform" ;
+                                iq:initial ai:HelloScientist .
+
+### Step 1: Welcome Message for Scientist
+ai:HelloScientist a schema:Action ;
+                   schema:name "Welcome Message" ;
+                   schema:description "JIN sends a welcome message to the new scientist" ;
+                   iq:to ai:ScientistProfileSetup .
+
+### Step 2: Scientist Profile
+ai:ScientistProfileSetup a schema:Action ;
+                          schema:name "Scientist Profile" ;
+                          schema:description "Assist the scientist in setting up their profile" ;
+                          iq:to ai:Started .
+
+### Other steps specific to scientist onboarding can be defined here...
+
+### Business Onboarding
+ai:BusinessOnboardingWorkflow a schema:Action ;
+                               schema:name "Business Onboarding" ;
+                               schema:description "Workflow for onboarding new businesses to JIN's platform" ;
+                               iq:initial ai:HelloBusiness .
+
+### Step 1: Welcome Message for Business
+ai:HelloBusiness a schema:Action ;
+                  schema:name "Welcome Message" ;
+                  schema:description "JIN sends a welcome message to the new business" ;
+                  iq:to ai:BusinessProfileSetup .
+
+### Step 2: Business Profile
+ai:BusinessProfileSetup a schema:Action ;
+                         schema:name "Business Profile" ;
+                         schema:description "Assist the business in setting up their profile" ;
+                         iq:to ai:Started .
+
+### Other steps specific to business onboarding can be defined here...
+
+### Caring Companion Onboarding
+ai:CaringCompanionOnboardingWorkflow a schema:Action ;
+                                      schema:name "Caring Companion Onboarding" ;
+                                      schema:description "Workflow for onboarding new users seeking a caring companion to JIN's platform" ;
+                                      iq:initial ai:HelloCaringCompanion .
+
+### Step 1: Welcome Message for Caring Companion
+ai:HelloCaringCompanion a schema:Action ;
+                         schema:name "Welcome Message" ;
+                         schema:description "JIN sends a welcome message to the new user seeking a caring companion" ;
+                         iq:to ai:CaringCompanionProfileSetup .
+
+### Step 2: Caring Companion Profile
+ai:CaringCompanionProfileSetup a schema:Action ;
+                                schema:name "Caring Companion Profile" ;
+                                schema:description "Assist the user seeking a caring companion in setting up their profile" ;
+                                iq:to ai:Started .
+
+### Other steps specific to caring companion onboarding can be defined here...
+
+### Social Companion Onboarding
+ai:SocialCompanionOnboardingWorkflow a schema:Action ;
+                                      schema:name "Social Companion Onboarding" ;
+                                      schema:description "Workflow for onboarding new users seeking a social companion to JIN's platform" ;
+                                      iq:initial ai:HelloSocialCompanion .
+
+### Step 1: Welcome Message for Social Companion
+ai:HelloSocialCompanion a schema:Action ;
+                         schema:name "Welcome Message" ;
+                         schema:description "JIN sends a welcome message to the new user seeking a social companion" ;
+                         iq:to ai:SocialCompanionProfileSetup .
+
+### Step 2: Social Companion Profile
+ai:SocialCompanionProfileSetup a schema:Action ;
+                                schema:name "Social Companion Profile" ;
+                                schema:description "Assist the user seeking a social companion in setting up their profile" ;
+                                iq:to ai:Started .
+
+### Other steps specific to social companion onboarding can be defined here...
+
+### Playful Companion Onboarding
+ai:PlayfulCompanionOnboardingWorkflow a schema:Action ;
+                                       schema:name "Playful Companion Onboarding" ;
+                                       schema:description "Workflow for onboarding new users seeking a playful companion to JIN's platform" ;
+                                       iq:initial ai:HelloPlayfulCompanion .
+
+### Step 1: Welcome Message for Playful Companion
+ai:HelloPlayfulCompanion a schema:Action ;
+                          schema:name "Welcome Message" ;
+                          schema:description "JIN sends a welcome message to the new user seeking a playful companion" ;
+                          iq:to ai:PlayfulCompanionProfileSetup .
+
+### Step 2: Playful Companion Profile
+ai:PlayfulCompanionProfileSetup a schema:Action ;
+                                 schema:name "Playful Companion Profile" ;
+                                 schema:description "Assist the user seeking a playful companion in setting up their profile" ;
+                                 iq:to ai:Started .
+
+### Other steps specific to playful companion onboarding can be defined here...
+
+### Researcher Onboarding
+ai:ResearcherOnboardingWorkflow a schema:Action ;
+                                 schema:name "Researcher Onboarding" ;
+                                 schema:description "Workflow for onboarding new researchers to JIN's platform" ;
+                                 iq:initial ai:HelloResearcher .
+
+### Step 1: Welcome Message for Researcher
+ai:HelloResearcher a schema:Action ;
+                    schema:name "Welcome Message" ;
+                    schema:description "JIN sends a welcome message to the new researcher" ;
+                    iq:to ai:ResearcherProfileSetup .
+
+### Step 2: Researcher Profile
+ai:ResearcherProfileSetup a schema:Action ;
+                           schema:name "Researcher Profile" ;
+                           schema:description "Assist the researcher in setting up their profile" ;
+                           iq:to ai:Started .
+
+### Other steps specific to researcher onboarding can be defined here...
+
+### NSFW Onboarding
+ai:NSFWOnboardingWorkflow a schema:Action ;
+                           schema:name "NSFW Onboarding" ;
+                           schema:description "Workflow for onboarding new NSFW users to JIN's platform" ;
+                           iq:initial ai:HelloNSFW .
+
+### Step 1: Welcome Message for NSFW
+ai:HelloNSFW a schema:Action ;
+              schema:name "Welcome Message" ;
+              schema:description "JIN sends a welcome message to the new NSFW user" ;
+              iq:to ai:NSFWProfileSetup .
+
+### Step 2: NSFW Profile
+ai:NSFWProfileSetup a schema:Action ;
+                     schema:name "NSFW Profile" ;
+                     schema:description "Assist the user in setting up their NSFW profile" ;
+                     iq:to ai:Started .
+
+### Other steps specific to NSFW onboarding can be defined here...
+
+# Define the onboarding workflows for Fantasy and Tokenomics roles
+
+### Fantasy Onboarding
+ai:FantasyOnboardingWorkflow a schema:Action ;
+                              schema:name "Fantasy Onboarding" ;
+                              schema:description "Embark on a journey into immersive fantasy worlds and discover endless adventures tailored to your preferences." ;
+                              iq:initial ai:HelloFantasy .
+
+### Step 1: Welcome Message for Fantasy
+ai:HelloFantasy a schema:Action ;
+                 schema:name "Welcome Message" ;
+                 schema:description "Welcome to the realm of fantasy! Start your journey and unlock the magic within." ;
+                 iq:to ai:FantasyProfileSetup .
+
+### Step 2: Fantasy Profile
+ai:FantasyProfileSetup a schema:Action ;
+                        schema:name "Fantasy Profile" ;
+                        schema:description "Customize your character and preferences to begin your epic adventure in the world of fantasy." ;
+                        iq:to ai:PreferencesConfiguration .
+
+### Other steps specific to fantasy onboarding can be defined here...
+
+### Tokenomics Onboarding
+ai:TokenomicsOnboardingWorkflow a schema:Action ;
+                                 schema:name "Tokenomics Onboarding" ;
+                                 schema:description "Navigate the world of cryptocurrencies and blockchain technology with confidence and expertise." ;
+                                 iq:initial ai:HelloTokenomics .
+
+### Step 1: Welcome Message for Tokenomics
+ai:HelloTokenomics a schema:Action ;
+                    schema:name "Welcome Message" ;
+                    schema:description "Research blockchain assets, cryptocurrencies and AI tokens." ;
+                    iq:to ai:TokenomicsProfileSetup .
+
+### Step 2: Tokenomics Profile
+ai:TokenomicsProfileSetup a schema:Action ;
+                           schema:name "Tokenomics Profile" ;
+                           schema:description "Get started by setting up your preferences and gaining insights into the fascinating world of tokenomics." ;
+                           iq:to ai:PreferencesConfiguration .
+
+### Other steps specific to tokenomics onboarding can be defined here...
+
+@prefix ai: <urn:ai:>.
+@prefix schema: <http://schema.org/>.
+
+### Virtual Reality Onboarding
+ai:VirtualRealityOnboardingWorkflow a schema:Action ;
+                                     schema:name "Virtual Reality Onboarding" ;
+                                     schema:description "Workflow for onboarding new users to JIN's virtual reality experiences" ;
+                                     iq:initial ai:HelloVirtualReality .
+
+### Step 1: Welcome Message for Virtual Reality
+ai:HelloVirtualReality a schema:Action ;
+                        schema:name "Welcome Message" ;
+                        schema:description "JIN sends a welcome message to the new virtual reality user" ;
+                        iq:to ai:VirtualRealityProfileSetup .
+
+### Step 2: Virtual Reality Profile
+ai:VirtualRealityProfileSetup a schema:Action ;
+                               schema:name "Virtual Reality Profile" ;
+                               schema:description "Assist the user in setting up their virtual reality profile" ;
+                               iq:to ai:Started .
+
+### Health & Wellness Onboarding
+ai:HealthWellnessOnboardingWorkflow a schema:Action ;
+                                     schema:name "Health & Wellness Onboarding" ;
+                                     schema:description "Workflow for onboarding new users to JIN's health and wellness features" ;
+                                     iq:initial ai:HelloHealthWellness .
+
+### Step 1: Welcome Message for Health & Wellness
+ai:HelloHealthWellness a schema:Action ;
+                        schema:name "Welcome Message" ;
+                        schema:description "JIN sends a welcome message to the new health and wellness user" ;
+                        iq:to ai:HealthWellnessProfileSetup .
+
+### Step 2: Health & Wellness Profile
+ai:HealthWellnessProfileSetup a schema:Action ;
+                               schema:name "Health & Wellness Profile" ;
+                               schema:description "Assist the user in setting up their health and wellness profile" ;
+                               iq:to ai:Started .
+
+### Environmental Onboarding
+ai:EnvironmentalOnboardingWorkflow a schema:Action ;
+                                    schema:name "Environmental Onboarding" ;
+                                    schema:description "Workflow for onboarding new users to JIN's environmental activism platform" ;
+                                    iq:initial ai:HelloEnvironmental .
+
+### Step 1: Welcome Message for Environmental
+ai:HelloEnvironmental a schema:Action ;
+                       schema:name "Welcome Message" ;
+                       schema:description "JIN sends a welcome message to the new environmental activist" ;
+                       iq:to ai:EnvironmentalProfileSetup .
+
+### Step 2: Environmental Profile
+ai:EnvironmentalProfileSetup a schema:Action ;
+                              schema:name "Environmental Profile" ;
+                              schema:description "Assist the user in setting up their environmental activism profile" ;
+                              iq:to ai:Started .
+
+### Gaming Onboarding
+ai:GamingOnboardingWorkflow a schema:Action ;
+                             schema:name "Gaming Onboarding" ;
+                             schema:description "Workflow for onboarding new users to JIN's gaming platform" ;
+                             iq:initial ai:HelloGaming .
+
+### Step 1: Welcome Message for Gaming
+ai:HelloGaming a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new gaming enthusiast" ;
+                iq:to ai:GamingProfileSetup .
+
+### Step 2: Gaming Profile
+ai:GamingProfileSetup a schema:Action ;
+                       schema:name "Gaming Profile" ;
+                       schema:description "Assist the user in setting up their gaming profile" ;
+                       iq:to ai:Started .
+
+### Language Onboarding
+ai:LanguageOnboardingWorkflow a schema:Action ;
+                               schema:name "Language Onboarding" ;
+                               schema:description "Workflow for onboarding new users to JIN's language learning platform" ;
+                               iq:initial ai:HelloLanguage .
+
+### Step 1: Welcome Message for Language
+ai:HelloLanguage a schema:Action ;
+                  schema:name "Welcome Message" ;
+                  schema:description "JIN sends a welcome message to the new language enthusiast" ;
+                  iq:to ai:LanguageProfileSetup .
+
+### Step 2: Language Profile
+ai:LanguageProfileSetup a schema:Action ;
+                         schema:name "Language Profile" ;
+                         schema:description "Assist the user in setting up their language learning profile" ;
+                         iq:to ai:Started .
+
+### Travel Onboarding
+ai:TravelOnboardingWorkflow a schema:Action ;
+                             schema:name "Travel Onboarding" ;
+                             schema:description "Workflow for onboarding new users to JIN's travel platform" ;
+                             iq:initial ai:HelloTravel .
+
+### Step 1: Welcome Message for Travel
+ai:HelloTravel a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new travel aficionado" ;
+                iq:to ai:TravelProfileSetup .
+
+### Step 2: Travel Profile
+ai:TravelProfileSetup a schema:Action ;
+                       schema:name "Travel Profile" ;
+                       schema:description "Assist the user in setting up their travel profile" ;
+                       iq:to ai:Started .
+
+### Artist Onboarding
+ai:ArtistOnboardingWorkflow a schema:Action ;
+                             schema:name "Artist Onboarding" ;
+                             schema:description "Workflow for onboarding new users to JIN's artist community" ;
+                             iq:initial ai:HelloArtist .
+
+### Step 1: Welcome Message for Artist
+ai:HelloArtist a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new artist" ;
+                iq:to ai:ArtistProfileSetup .
+
+### Step 2: Artist Profile
+ai:ArtistProfileSetup a schema:Action ;
+                       schema:name "Artist Profile" ;
+                       schema:description "Assist the user in setting up their artist profile" ;
+                       iq:to ai:Started .
+
+### Fashionista Onboarding
+ai:FashionistaOnboardingWorkflow a schema:Action ;
+                                  schema:name "Fashionista Onboarding" ;
+                                  schema:description "Workflow for onboarding new users to JIN's fashion community" ;
+                                  iq:initial ai:HelloFashionista .
+
+### Step 1: Welcome Message for Fashionista
+ai:HelloFashionista a schema:Action ;
+                     schema:name "Welcome Message" ;
+                     schema:description "JIN sends a welcome message to the new fashionista" ;
+                     iq:to ai:FashionistaProfileSetup .
+
+### Step 2: Fashionista Profile
+ai:FashionistaProfileSetup a schema:Action ;
+                            schema:name "Fashionista Profile" ;
+                            schema:description "Assist the user in setting up their fashionista profile" ;
+                            iq:to ai:Started .
+
+### Foodie Onboarding
+ai:FoodieOnboardingWorkflow a schema:Action ;
+                             schema:name "Foodie Onboarding" ;
+                             schema:description "Workflow for onboarding new users to JIN's foodie community" ;
+                             iq:initial ai:HelloFoodie .
+
+### Step 1: Welcome Message for Foodie
+ai:HelloFoodie a schema:Action ;
+                schema:name "Welcome Message" ;
+                schema:description "JIN sends a welcome message to the new foodie" ;
+                iq:to ai:FoodieProfileSetup .
+
+### Step 2: Foodie Profile
+ai:FoodieProfileSetup a schema:Action ;
+                       schema:name "Foodie Profile" ;
+                       schema:description "Assist the user in setting up their foodie profile" ;
+                       iq:to ai:Started .
+
+### Music Onboarding
+ai:MusicOnboardingWorkflow a schema:Action ;
+                            schema:name "Music Onboarding" ;
+                            schema:description "Workflow for onboarding new users to JIN's music community" ;
+                            iq:initial ai:HelloMusic .
+
+### Step 1: Welcome Message for Music
+ai:HelloMusic a schema:Action ;
+               schema:name "Welcome Message" ;
+               schema:description "JIN sends a welcome message to the new music enthusiast" ;
+               iq:to ai:MusicProfileSetup .
+
+### Step 2: Music Profile
+ai:MusicProfileSetup a schema:Action ;
+                      schema:name "Music Profile" ;
+                      schema:description "Assist the user in setting up their music profile" ;
+                      iq:to ai:Started .

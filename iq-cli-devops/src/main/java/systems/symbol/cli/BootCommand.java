@@ -1,13 +1,12 @@
 package systems.symbol.cli;
 
-import systems.symbol.rdf4j.store.IQ;
 import picocli.CommandLine;
+import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.store.IQ;
 
 import java.io.IOException;
 
-import static systems.symbol.cli.CLIContext.CODENAME;
-
-@CommandLine.Command(name = "boot", description = "Booting "+CODENAME+" ...")
+@CommandLine.Command(name = "boot", description = "Booting "+ I_Self.CODENAME +" ...")
 public class BootCommand extends AbstractCLICommand{
 
     public BootCommand(CLIContext context) throws IOException {

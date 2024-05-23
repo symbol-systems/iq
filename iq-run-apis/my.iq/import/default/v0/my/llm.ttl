@@ -1,0 +1,83 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#> .
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:> .
+
+my:Research a prov:Activity .
+my:LLM a skos:Concept.
+
+my:OpenAI_ChatGPT a prov:Entity ;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    skos:prefLabel "ChatGPT";
+    skos:definition "A large language model developed by OpenAI, based on the GPT architecture.";
+    rdfs:seeAlso <https://openai.com/chatgpt> ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/OpenAI>;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/ChatGPT>;
+    prov:wasGeneratedBy my:Research .
+
+my:Anthropic_Claude a prov:Entity ;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Anthropic>;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Claude_(language_model)>;
+    skos:prefLabel "Claude";
+    skos:definition "A large-scale language model developed by Anthropic, designed to understand and generate human-like text." ;
+    prov:wasGeneratedBy my:Research .
+
+my:IBM_Watson a skos:Concept ;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/IBM_Watson>;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/IBM>;
+    skos:prefLabel "IBM Watson" ;
+    skos:definition "IBM Watson offers various AI-powered services, including natural language understanding and text generation." ;
+    prov:wasGeneratedBy my:Research .
+
+my:Google_Gemini a skos:Concept ;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Gemini_(chatbot)>;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Google>;
+    skos:prefLabel "Google Gemini" ;
+    skos:definition "A generative artificial intelligence chatbot developed by Google." ;
+    prov:wasGeneratedBy my:Research .
+
+my:Huggingface_Models a skos:Concept ;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Hugging_Face>;
+    skos:prefLabel "Hugging Face Models" ;
+    skos:definition "Hugging Face provides open-source NLP models and commercial services for deploying and managing language models in various applications." ;
+    prov:wasGeneratedBy my:Research .
+
+my:xAI_Grok
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    skos:prefLabel "Grok" ;
+    skos:definition "A generative artificial intelligence chatbot developed by xAI, ";
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Grok_(chatbot)>;
+    prov:wasGeneratedBy my:Research .
+
+my:Groq_Groq
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    skos:prefLabel "Groq" ;
+    skos:definition "An AI accelerator company building a Language Processing Unit (LPU)";
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Draft:Groq>;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Groq>;
+    prov:wasGeneratedBy my:Research .
+
+my:MetaAI_LLaMA
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/LLaMA>;
+    skos:inScheme my:Self;
+    skos:broader my:LLM ;
+    skos:prefLabel "LLaMA" ;
+    skos:definition "a family of large language models (LLMs) by Meta AI";
+    prov:wasGeneratedBy my:Research .
+

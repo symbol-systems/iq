@@ -14,6 +14,8 @@ import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.string.Validate;
 
+import java.io.IOException;
+
 @Path("find")
 public class Find extends GuardedAPI {
     DynamicModelFactory dmf = new DynamicModelFactory();
@@ -25,7 +27,7 @@ public class Find extends GuardedAPI {
     public Response importLocal(@PathParam("finder")String finder, @PathParam("repo")String repo,
                                 @QueryParam("query") String query,
                                 @QueryParam("score") double score, @QueryParam("max") int max,
-            @HeaderParam("Authorization") String auth) {
+            @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("api.kb.find#protected");
 return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();

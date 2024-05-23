@@ -1,0 +1,35 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix my: <https://smarttrust.ai/v0/my#> .
+@prefix self: <https://smarttrust.ai/v0/self#> .
+@prefix iq: <urn:iq:> .
+
+my:Cognition a prov:Activity ;
+    prov:wasGeneratedBy my:Self .
+
+my:Self a prov:Entity.
+my:Self a prov:Agent.
+
+self:Aware
+    skos:prefLabel "Awareness" ;
+    skos:definition "The state or ability to perceive, feel, or be conscious of events, objects, or sensory patterns." ;
+    skos:broader my:Self ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Awareness>.
+
+my:TheoryOfMind
+    skos:prefLabel "Theory of Mind" ;
+    skos:definition "The cognitive ability to attribute mental states (beliefs, intents, desires) to oneself and others, and to understand that others have beliefs, desires, and intentions that are different from one's own." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Theory_of_mind> .
+
+my:SelfAwareness
+    skos:prefLabel "Self-Awareness" ;
+    skos:definition "The capacity for introspection and the ability to recognize oneself as an individual separate from the environment and other individuals." ;
+    prov:wasDerivedFrom my:Self ;
+    skos:inScheme my:Self ;
+    rdfs:seeAlso <https://en.wikipedia.org/wiki/Artificial_intelligence#Self-awareness> .

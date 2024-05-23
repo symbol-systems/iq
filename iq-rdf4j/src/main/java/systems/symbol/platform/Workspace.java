@@ -13,7 +13,6 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryReadOnlyException;
 import org.eclipse.rdf4j.repository.config.ConfigTemplate;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
@@ -28,7 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class Workspace implements I_Self{
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -147,13 +149,15 @@ public class Workspace implements I_Self{
         try {
             this.manager.addRepositoryConfig(config);
 
-            log.info("repository.created: {} -> {}", config.getID(), config.getTitle());
+            log.info("repository.add: {} -> {}", config.getID(), config.getTitle());
         } catch (RepositoryReadOnlyException e) {
-            this.manager.addRepositoryConfig(config);
-            log.warn("repository.readonly.created");
+//            this.manager.addRepositoryConfig(config);
+            log.error("repository.readonly: {} -> {}", config.getID(), e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
+        log.info("repository.new: {}", config.getID());
         Repository repository = manager.getRepository(config.getID());
-        log.debug("repository.get: {}", repository);
+        log.info("repository.created: {} -> {}", config.getID(), repository);
         if (!repository.isInitialized())
             repository.init();
         return repository;
@@ -250,7 +254,7 @@ public class Workspace implements I_Self{
     }
 
     public Repository alwaysGetRepository(String id) throws IOException {
-        log.info("workspace.repo.all: {} -> {} -> {} --> {}", id, manager.getRepositoryIDs(), manager.hasRepositoryConfig(id), repositories.keySet());
+        log.info("workspace.repo.all: {} -> {} -> {}", id, manager.getRepositoryIDs(), repositories.keySet());
         Repository repository = getRepository(id);
         if (repository!=null) {
             log.info("workspace.repo.found: {}", id);
@@ -268,28 +272,28 @@ public class Workspace implements I_Self{
 
     public Repository getRepository(String id) {
         Repository repository = repositories.get(id);
-        if (repository!=null) {
-            log.info("workspace.repo.cached: {} -> {}", id, repository.isInitialized());
-            if (!repository.isInitialized()) {
+        if (repository == null) return null;
+        if (!repository.isInitialized()) {
                 repository.init();
-            }
-            return repository;
         }
-        try {
-            Repository m_repository = manager.getRepository(id);
-            if (m_repository == null) {
-                log.warn("workspace.repo.missing: {}", id);
-                return null;
-            }
-            log.info("workspace.repo.exists: {}", id);
-            repositories.put(id, m_repository);
-            return m_repository;
-        } catch (RepositoryConfigException e) {
-            log.error("workspace.repo.config: {} -> {}", id, e.getMessage());
-        } catch (RepositoryException e) {
-            log.error("workspace.repo.error: {} -> {}", id, e.getMessage());
-        }
-        return null;
+        return repository;
+//        File dataDir = repository.getDataDir();
+//        log.info("workspace.repo.ok: {} -> {}", id, dataDir==null?"null":dataDir.getAbsolutePath());
+//        try {
+//            Repository m_repository = manager.getRepository(id);
+//            if (m_repository == null) {
+//                log.warn("workspace.repo.missing: {}", id);
+//                return null;
+//            }
+//            log.info("workspace.repo.exists: {}", id);
+//            repositories.put(id, m_repository);
+//            return m_repository;
+//        } catch (RepositoryConfigException e) {
+//            log.error("workspace.repo.config: {} -> {}", id, e.getMessage());
+//        } catch (RepositoryException e) {
+//            log.error("workspace.repo.error: {} -> {}", id, e.getMessage());
+//        }
+//        return null;
     }
 
     public Repository getCurrentRepository() {
