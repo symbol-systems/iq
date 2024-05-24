@@ -37,8 +37,8 @@ public class Workspace implements I_Self{
     final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
     final String ACTIVE_REPO_PROP = "current.repo";
     final String STORE_PROP = "current.store";
-    final String NS_PROP = "current.ns";
-    private String DEFAULT_NS = "urn:fact:default:";
+//    final String NS_PROP = "current.ns";
+//    private String DEFAULT_NS = "urn:fact:default:";
 
     RepositoryManager manager;
     Map<String, Repository> repositories = new HashMap<>();
@@ -65,7 +65,7 @@ public class Workspace implements I_Self{
     }
 
     private void initialize() throws IOException {
-        this.DEFAULT_NS = System.getenv("MY_NS") == null?DEFAULT_NS:System.getenv("MY_NS");
+//        this.DEFAULT_NS = System.getenv("MY_NS") == null?DEFAULT_NS:System.getenv("MY_NS");
         if (!propsFile.exists()) {
             initProperties();
             save();
@@ -73,7 +73,7 @@ public class Workspace implements I_Self{
             this.alwaysGetRepository(getCurrentRepositoryName());
         }
         properties.load(new FileInputStream(propsFile));
-        this.self = SimpleValueFactory.getInstance().createIRI(properties.getProperty(NS_PROP, DEFAULT_NS));
+        this.self = I_Self.self().getSelf();
         log.info("workspace.initialized: {} -> {} @ {}", getSelf(), this.repositories, new Date());
     }
 
@@ -81,19 +81,18 @@ public class Workspace implements I_Self{
         String today = "" + System.currentTimeMillis();
         properties.put("iq.created", today);
         properties.put("iq.modified", today);
-        properties.put(NS_PROP, DEFAULT_NS);
+//        properties.put(NS_PROP, DEFAULT_NS);
         properties.put(ACTIVE_REPO_PROP, "default");
         properties.put(STORE_PROP, "default");
-        this.self = SimpleValueFactory.getInstance().createIRI(DEFAULT_NS);
     }
 
     public File getHome() {
         return home;
     }
 
-    public String getOwnerNamespace() {
-        return properties.getProperty(NS_PROP, DEFAULT_NS);
-    }
+//    public String getOwnerNamespace() {
+//        return properties.getProperty(NS_PROP, DEFAULT_NS);
+//    }
 
     public String getCurrentRepositoryName() {
         return properties.getProperty(ACTIVE_REPO_PROP);
@@ -198,7 +197,7 @@ public class Workspace implements I_Self{
             final ConfigTemplate configTemplate = new ConfigTemplate(template);
 //            log.info("repository.config.rendered: {} -> {}", template, ctx);
             final String configString = configTemplate.render(ctx);
-            log.debug("repository.config.rendered: {}", configString);
+            log.info("repository.config: {} @ {}", configString,getSelf());
             final Model graph = new LinkedHashModel();
 
             ValueFactory vf = SimpleValueFactory.getInstance();

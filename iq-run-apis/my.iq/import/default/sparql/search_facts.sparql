@@ -1,4 +1,4 @@
-SELECT ?this ?definition (SAMPLE(?label) AS ?label) (SAMPLE(?score) AS ?score)
+SELECT ?this (SAMPLE(?definition) AS ?definition) (SAMPLE(?label) AS ?label) (SAMPLE(?score) AS ?score)
 WHERE {
   {
     ?this <http://www.w3.org/2004/02/skos/core#prefLabel> ?label.
@@ -14,6 +14,6 @@ WHERE {
   }
   VALUES (?this ?score) { {{{these}}} }
 }
-GROUP BY ?this ?definition
+GROUP BY ?this
 ORDER BY DESC(?score)
 LIMIT 10

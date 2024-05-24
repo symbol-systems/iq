@@ -13,7 +13,8 @@ import java.util.Properties;
  */
 public interface I_Self {
 
-        public static String CODENAME = "MY.IQ";
+        String CODENAME = "MY.IQ";
+
         /**
          * The canonical entity known as IRI .
          *
@@ -28,36 +29,34 @@ public interface I_Self {
          * @throws IOException if an I/O error occurs while retrieving the version information.
          */
         static String version() throws IOException {
-                InputStream inputStream = I_Self.class.getResourceAsStream("/META-INF/MANIFEST.MF");
-                Properties properties = new Properties();
-                properties.load(inputStream);
-                return properties.getProperty("Implementation-Version");
+                try (InputStream inputStream = I_Self.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
+                        if (inputStream == null) {
+                                throw new IOException("MANIFEST.MF file not found: " + I_Self.class.getCanonicalName());
+                        }
+                        Properties properties = new Properties();
+                        properties.load(inputStream);
+                        properties.store(System.out, "MANIFEST.MF.TEST");
+                        return properties.getProperty("Implementation-Version");
+                }
         }
 
+
         static I_Self self() {
-            return () -> Values.iri("urn:"+name());
+            return () -> Values.iri("urn:"+name()+":");
         }
 
 
         static String name() {
-                return System.getenv("MY_IQ") == null ? "MY.IQ" : System.getenv("MY_IQ");
+                return System.getenv(CODENAME) == null ? CODENAME.toLowerCase() : System.getenv(CODENAME);
         }
 
-        static boolean trust() {
-                return trust(name());
-        }
-
-        static boolean trust(String name) {
-                return name.length()>3 && name.startsWith(name()) && !name.substring(0, name.length()+1).contains(":") && !name.contains("{");
-        }
 
         static boolean trust(I_Self self) {
-                return self.getSelf().stringValue().startsWith(name()) &&
-                        trust(self.getSelf().stringValue());
+                return trust(self.getSelf());
         }
 
         static boolean trust(IRI self) {
-                return self.stringValue().startsWith(name()) &&
-                        trust(self.stringValue());
+//System.out.println("trust.self: "+self+" --> "+self().getSelf());
+                return self.stringValue().startsWith(self().getSelf().stringValue());
         }
 }
