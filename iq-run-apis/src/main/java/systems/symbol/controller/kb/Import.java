@@ -60,7 +60,7 @@ if (!assetHome.exists()) {
 return new OopsResponse("api.import.assets.missing", Response.Status.NO_CONTENT).asJSON();
 }
 
-BootstrapLoader loader = new BootstrapLoader(platform.getWorkspace().getOwnerNamespace(), repository.getConnection());
+BootstrapLoader loader = new BootstrapLoader(platform.getWorkspace().getSelf().stringValue(), repository.getConnection());
 
 try {
 loader.deploy(assetHome);

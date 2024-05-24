@@ -2,8 +2,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<#queries> a <http://www.openrdf.org/config/repository#Repository>, config:Repository;
-  <http://www.openrdf.org/config/repository#repositoryID> "queries";
+<#v0> a <http://www.openrdf.org/config/repository#Repository>, config:Repository;
+  <http://www.openrdf.org/config/repository#repositoryID> "v0";
   <http://www.openrdf.org/config/repository#repositoryImpl> [
   <http://www.openrdf.org/config/repository#repositoryType> "openrdf:SailRepository";
   <http://www.openrdf.org/config/repository/sail#sailImpl> [

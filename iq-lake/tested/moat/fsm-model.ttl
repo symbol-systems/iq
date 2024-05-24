@@ -1,18 +1,18 @@
 @prefix iq: <urn:iq:> .
 @prefix : <urn:iq:test:> .
 
-<urn:iq:test:> a <urn:iq:Agent>;
-  <urn:iq:workflow> <urn:iq:test:workflow_0> .
+<urn:iq:test:> a iq:Agent;
+  iq:workflow :workflow_0 .
 
-<urn:iq:test:workflow_0> a <urn:iq:Workflow>;
-  <urn:iq:initial> <urn:iq:test:ideation> .
+:workflow_0 a iq:Workflow;
+  iq:initial :ideation .
 
-<urn:iq:test:ideation> <urn:iq:to> <urn:iq:test:work-in-progress> .
+:ideation iq:to :work-in-progress .
 
-<urn:iq:test:work-in-progress> <urn:iq:to> <urn:iq:test:in-review> .
+:work-in-progress iq:to :in-review .
 
-<urn:iq:test:in-review> <urn:iq:to> <urn:iq:test:revision>, <urn:iq:test:complete> .
+:in-review iq:to :revision, :complete .
 
-<urn:iq:test:revision> <urn:iq:to> <urn:iq:test:ideation>, <urn:iq:test:work-in-progress> .
+:revision iq:to :ideation, :work-in-progress .
 
-[] a <urn:iq:test:work-in-progress> .
+[] a :work-in-progress .

@@ -72,7 +72,7 @@ deployConfigured(repo);
  */
 public void deploy(String name, File from, boolean ensureRepository) throws IOException {
 if (!from.exists() || from.getName().startsWith(".")) {
-from.mkdirs();
+//from.mkdirs();
 log.warn("workspace.deploy.assets.skip: {}", from.getAbsolutePath());
 return;
 }

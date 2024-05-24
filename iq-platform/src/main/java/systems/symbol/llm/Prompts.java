@@ -167,7 +167,7 @@ public static I_Chat<String> think(IRI actor, Resource state, String intent, Mod
 I_Chat<String> thread = prompt(actor, state, model, my);
 Map<String, String> namespaces = RDFPrefixer.simple();
 namespaces.put("my", intent);
-thread.system("Reply using valid "+format.getName()+". Use only declared namespaces & remember to declare 'my:' prefix.");
+thread.system("Reply using valid "+format.getName()+". Use only declared namespaces & please remember to declare: @prefix my: <"+intent+">");
 thread.system(RDFPrefixer.toPrefix(namespaces).toString());
 return thread;
 }

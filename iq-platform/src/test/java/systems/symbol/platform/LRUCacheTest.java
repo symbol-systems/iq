@@ -1,7 +1,7 @@
 package systems.symbol.platform;
 
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class LRUCacheTest {
 

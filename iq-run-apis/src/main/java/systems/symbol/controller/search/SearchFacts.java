@@ -69,7 +69,7 @@ return new OopsResponse("api.search.facts#query-invalid", Response.Status.BAD_RE
 }
 
 if (Validate.isMissing(sparql)) {
-return new OopsResponse("api.search.facts#hydrate-missing", Response.Status.BAD_REQUEST).asJSON();
+sparql = platform.getSelf().stringValue()+"sparql/search_facts";
 }
 
 // Initialize and perform sanity checks
