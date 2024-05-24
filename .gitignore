@@ -1,5 +1,6 @@
 .secrets
 model
+my.iq
 
 .DS_Store
 .thumbs.db
