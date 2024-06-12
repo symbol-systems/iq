@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.77.2</version>
+<version>0.77.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
 <packaging>jar</packaging>
 
 <name>Aspects of IQ</name>
-<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
 <organization>
@@ -67,8 +67,7 @@
 <logback.version>1.5.3</logback.version>
 <camel.version>4.0.0-M1</camel.version>
 <handlebars.version>4.3.1</handlebars.version>
-<rdf4j.version>4.3.11</rdf4j.version>
-<groovy.version>3.0.12</groovy.version>
+<groovy.version>4.0.21</groovy.version>
 <commons-io.version>2.11.0</commons-io.version>
 <commons-codec.version>1.15</commons-codec.version>
 <commons-validator>1.8.0</commons-validator>
@@ -172,7 +171,7 @@
 <version>${groovy-eclipse-batch.version}</version>
 </dependency>
 <dependency>
-<groupId>org.codehaus.groovy</groupId>
+<groupId>org.apache.groovy</groupId>
 <artifactId>groovy-all</artifactId>
 <version>${groovy.version}</version>
 <type>pom</type>

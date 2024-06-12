@@ -1,6 +1,7 @@
 package systems.symbol.platform;
 
 import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
 import org.eclipse.rdf4j.repository.Repository;
@@ -50,11 +51,14 @@ return;
 }
 // deploy from the ./import/ folder first
 File[] files = repoImportHome.listFiles();
-for (int i = 0; i < files.length; i++) {
+if (files!=null) {
+for (File file : files) {
 // each folder represents a repository (dot files are skipped)
-if (files[i].isDirectory()) {
-deploy(files[i].getName(), files[i], ensureRepository);
+if (file.isDirectory()) {
+deploy(file.getName(), file, ensureRepository);
 }
+}
+
 }
 // second, import based on property config
 for (String repo : workspace.manager.getRepositoryIDs()) {
@@ -72,7 +76,6 @@ deployConfigured(repo);
  */
 public void deploy(String name, File from, boolean ensureRepository) throws IOException {
 if (!from.exists() || from.getName().startsWith(".")) {
-//from.mkdirs();
 log.warn("workspace.deploy.assets.skip: {}", from.getAbsolutePath());
 return;
 }
