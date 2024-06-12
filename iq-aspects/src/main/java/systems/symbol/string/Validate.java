@@ -11,15 +11,15 @@ public class Validate {
     public static boolean isUnGuarded() {
         return !isMissing(System.getenv("MY_IQ_UNGUARDED"));
     }
-    public static boolean isNonAlphanumeric(String input) {
-        if (isMissing(input)) return true;
+    public static boolean isNonAlphanumeric(String string) {
+        if (isMissing(string)) return true;
         Pattern pattern = Pattern.compile("[^\\p{Alnum}]");
-        return pattern.matcher(input).find();
+        return pattern.matcher(string).find();
     }
 
-    public static boolean isRelativePath(String pathy) {
-        if (isMissing(pathy)) return false;
-        Path path = Paths.get(pathy);
+    public static boolean isRelativePath(String thing) {
+        if (isMissing(thing)) return false;
+        Path path = Paths.get(thing);
         return !path.isAbsolute();
     }
 
@@ -37,19 +37,23 @@ public class Validate {
         }
     }
 
-    public static boolean isSameHost(String first, String second) {
+    public static boolean isSameHost(String thing1, String thing2) {
         try {
-            return isSameHost(new URI(first), new URI(second));
+            return isSameHost(new URI(thing1), new URI(thing2));
         } catch (URISyntaxException e) {
             return false;
         }
     }
-    public static boolean isSameHost(URI firstURI, URI secondURI) throws URISyntaxException {
-        if (isMissing(firstURI) || isMissing(secondURI)) return false;
-        return firstURI.getHost().equalsIgnoreCase(secondURI.getHost());
+    public static boolean isSameHost(URI thing1, URI thing2) throws URISyntaxException {
+        if (isMissing(thing1) || isMissing(thing2)) return false;
+        return thing1.getHost().equalsIgnoreCase(thing2.getHost());
     }
 
-    public static boolean isMissing(Object topic) {
-        return topic==null || topic.toString().trim().isEmpty();
+    public static boolean isMissing(Object thing) {
+        return thing==null || thing.toString().trim().isEmpty();
+    }
+
+    public static boolean isURN(String thing) {
+        return thing != null && thing.startsWith("urn:");
     }
 }

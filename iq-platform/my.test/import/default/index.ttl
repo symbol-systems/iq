@@ -1,0 +1,45 @@
+@base <urn:iq:test:>.
+
+@prefix iq: <urn:iq:>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix : <urn:iq:test:>.
+
+:   a iq:Agent;
+   iq:initial :intents.
+
+:intents iq:to :search.
+:intents iq:to :find.
+:intents iq:to :select.
+:intents iq:to :remodel.
+:intents iq:to :prompt.
+:intents iq:to :script.
+:intents iq:to :webpage.
+:intents iq:to :rdf.
+:intents iq:to :reagent.
+:intents iq:to :learn.
+
+:find
+    iq:find "{{my.prompt}}".
+:search
+    iq:search "{{my.prompt}}".
+:select
+    iq:select "{{my.prompt}}".
+:remodel
+    iq:remodel "{{my.prompt}}".
+:prompt
+    iq:prompt "{{my.prompt}}".
+:script
+    iq:script <urn:iq:test:scripts/hello>.
+:webpage
+    iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
+:rdf
+    iq:rdf <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
+:reagent
+    iq:agent :intents.
+:learn
+    iq:knows :Assistance;
+    iq:knows :DataRetrieval;
+    iq:knows :KnowledgeBase;
+    iq:knows :NaturalLanguage;
+    iq:to :intents.
+

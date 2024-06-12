@@ -7,19 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleResponse implements I_Response {
-    public Object data;
-    public Map<String, Object> meta = new HashMap<>();
-    public SimpleResponse(Object data) {
-        this.data = data;
-        if (data instanceof List) {
-            this.meta.put("count", ((List<?>)data).size());
-        }
-        this.meta.put("created", System.currentTimeMillis());
+public class JWTResponse implements I_Response {
+    public Map<String, Object> data = new HashMap<>();
+
+    public JWTResponse() {
     }
 
+    public JWTResponse(Map<String, Object> data) {
+        this.data = data;
+    }
+
+    public void set(String key, Object value) {
+        data.put(key, value);
+    }
     public Response asJSON() {
-        Response.ResponseBuilder builder = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON_TYPE).entity(this);
+        Response.ResponseBuilder builder = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON_TYPE).entity(data);
         return addCORS(builder).build();
     }
 
