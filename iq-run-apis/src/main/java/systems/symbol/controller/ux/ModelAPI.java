@@ -32,6 +32,7 @@ import java.io.IOException;
 @Path("/ux/model")
 @Tag(name = "api.ux.model.name", description = "api.ux.model.description")
 public class ModelAPI extends GuardedAPI {
+
     /**
      * Executes a SPARQL construct query on a specified RDF repository.
      *
@@ -47,10 +48,10 @@ public class ModelAPI extends GuardedAPI {
     @Path("{repo}/{query: .*}")
     @Produces("application/ld+json")
     public Response graph(@PathParam("repo") String repo,
-                                   @PathParam("query") String query,
-                                   @Context UriInfo uriInfo,
-                                   @HeaderParam("Authorization") String auth) throws IOException {
-st        log.info("ux.model: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
+                          @PathParam("query") String query,
+                          @Context UriInfo uriInfo,
+                          @HeaderParam("Authorization") String auth) throws IOException {
+        log.info("ux.model: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
 
         if (!Validate.isBearer(auth)) {
             log.info("ux.model.protected");
