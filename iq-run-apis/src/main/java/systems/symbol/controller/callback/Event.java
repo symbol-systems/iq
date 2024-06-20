@@ -29,8 +29,8 @@ public class Event extends GuardedAPI {
     public Response repositoryHealth(@PathParam("repo") String repo, @PathParam("source") String source,
                                         @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
-            log.info("api.event#protected-repository");
-            return new OopsResponse("api.event#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+            log.info("event#protected-repository");
+            return new OopsResponse("api.event#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.event#repository-missing", Response.Status.BAD_REQUEST).asJSON();

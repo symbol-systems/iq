@@ -11,6 +11,7 @@ import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.sparql.IQScripts;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
 
 import javax.script.*;
 import java.util.HashSet;
@@ -73,9 +74,9 @@ public class JSR233 extends AbstractIntent {
         try {
             Object result = executeScript(script, actor, state, my );
             done.add(actor);
-//            log.info("script.result: {} -> {}", state, result);
+            log.info("script.result: {} -> {} x {}", state, result, done.size());
         } catch (ScriptException e) {
-            log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName(), e);
+//            log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName());
             throw new StateException(e.getMessage(), state, e);
         }
         return done;
@@ -98,7 +99,17 @@ public class JSR233 extends AbstractIntent {
         if (engine == null) {
             return null;
         }
-        engine.setBindings( MyFacade.rebind(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
-        return engine.eval(script.stringValue());
+
+//        MyFacade.dump(engine.getBindings(ScriptContext.ENGINE_SCOPE), System.out);
+        try {
+            engine.setBindings( MyFacade.bind(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+            log.debug("script.eval: {} @ {}", script.stringValue(), state.stringValue() );
+            return engine.eval(script.stringValue());
+        } catch (ScriptException e) {
+//            log.error("script.error: {} @ {} x {}", e.getFileName(),e.getColumnNumber(), e.getLineNumber(), e.getCause() );
+            throw new ScriptException(e.getMessage()+" -> "+ e.getFileName() +" @" +e.getColumnNumber() +":"+ e.getLineNumber());
+        } catch (SecretsException e) {
+            throw new ScriptException(e.getMessage()+" -> "+actor);
+        }
     }
 }

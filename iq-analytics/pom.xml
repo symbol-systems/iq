@@ -4,14 +4,14 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.77.2</version>
+        <version>0.77.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>iq-analytics</artifactId>
     <name>Analytical IQ</name>
-    <description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+    <description>IQ - operating environment for cognitive AI.</description>
     <packaging>jar</packaging>
 
     <url>https://symbol.systems</url>
@@ -67,9 +67,8 @@
         <logback.version>1.5.3</logback.version>
         <camel.version>4.0.0-M1</camel.version>
         <handlebars.version>4.3.1</handlebars.version>
-        <rdf4j.version>4.3.11</rdf4j.version>
-        <groovy.version>3.0.12</groovy.version>
-        <apache-groovy.version>4.0.4</apache-groovy.version>
+        <rdf4j.version>4.3.12</rdf4j.version>
+        <groovy.version>5.0.0-alpha-8</groovy.version>
         <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
         <jgrapht.version>1.5.1</jgrapht.version>
@@ -154,30 +153,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <compilerId>groovy-eclipse-compiler</compilerId>
-                    <source>${maven.compiler.plugin.source}</source>
-                    <target>${maven.compiler.plugin.target}</target>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-compiler</artifactId>
-                        <version>${groovy-eclipse-compiler.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-eclipse-batch</artifactId>
-                        <version>${groovy-eclipse-batch.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>${groovy.version}</version>
-                        <type>pom</type>
-                    </dependency>
-
-                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -192,23 +167,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
             <version>${jgrapht.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

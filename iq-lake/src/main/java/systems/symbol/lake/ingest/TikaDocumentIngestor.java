@@ -11,7 +11,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import java.io.*;
 import java.util.function.Consumer;
 
-public class TikaDocumentIngestor<String> extends AbstractConverter<FileObject, ContentEntity<String>> {
+public class TikaDocumentIngestor extends AbstractConverter<FileObject, ContentEntity<String>> {
     Parser nativeParser = new AutoDetectParser();
     private final TikaParser tika;
 
@@ -31,7 +31,7 @@ public class TikaDocumentIngestor<String> extends AbstractConverter<FileObject, 
         InputStream in = file.getContent().getInputStream();
         tika.parse(in, toXML);
         in.close();
-        ContentEntity<String> to = new ContentEntity<>(Values.iri(file.getPublicURIString()), toXML.toString(),"");
+        ContentEntity<String> to = new ContentEntity<>(Values.iri(file.getPublicURIString()), toXML.toString(), "application/xhtml+xml");
         log.debug("tika.to: " + to.getSelf());
         return to;
     }

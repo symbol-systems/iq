@@ -69,29 +69,23 @@ public class Locksmith {
     }
 
     public static byte[] encrypt(InputStream certStream, InputStream keyStream, String message) throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException, CertificateException, IOException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        // Initialize the cipher for encryption
         Cipher cipher = Locksmith.cipher();
+        RSAPublicKey publicKey = Locksmith.loadPublicKeyFromCertificate(certStream);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey, Locksmith.secureSeed);
+        return encrypt(cipher,keyStream, message);
+    }
 
+    public static byte[] encrypt(Cipher cipher, InputStream keyStream, String message) throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException, CertificateException, IOException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         PrivateKey priv = Locksmith.loadPrivateKey(keyStream);
         System.out.println("Loaded " + priv.getAlgorithm() + " " + priv.getFormat() + " private key.");
-
         // Set plain message
         byte[] messageBytes = message.getBytes();
         System.out.println("Plain message:\n" + message + "\n" );
 
-        // Initialize the cipher for encryption
-        RSAPublicKey publicKey = Locksmith.loadPublicKeyFromCertificate(certStream);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey, Locksmith.secureSeed);
-
         // Encrypt the message
         byte[] ciphertextBytes = cipher.doFinal(messageBytes);
         System.out.println("Message encrypted with certificate file public key:\n" + new String(ciphertextBytes) + "\n");
-//
-//        // Initialize the cipher for decryption
-//        cipher.init(Cipher.DECRYPT_MODE, priv, secureRandom);
-//
-//        // Decrypt the message
-//        byte[] textBytes = cipher.doFinal(ciphertextBytes);
-//        System.out.println("Message decrypted with file private key:\n" + new String(textBytes) + "\n");
         return ciphertextBytes;
     }
 

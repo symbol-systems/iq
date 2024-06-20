@@ -34,6 +34,11 @@ public class FileFormats {
         txtFormats.put("yaml", "application/yaml");
         txtFormats.put("css", "plain/css");
         txtFormats.put("xml", "application/xml");
+        txtFormats.put("groovy", "application/x-groovy");
+        txtFormats.put("js", "application/javascript");
+        txtFormats.put("py", "application/x-python-code");
+        txtFormats.put("jy", "application/x-python-code");
+        txtFormats.put("sql", "application/sql");
 
         // identify supported scripts
         ScriptEngineManager sem = new ScriptEngineManager();

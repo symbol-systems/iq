@@ -19,18 +19,18 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-public class TextAsRDFIngestor<T> implements Consumer<FileObject> {
+public class TextAsRDFIngestor implements Consumer<FileObject> {
     private static final Logger log = LoggerFactory.getLogger(TextAsRDFIngestor.class);
     FileSystemManager vfs;
     RepositoryConnection conn;
     RDFLoader loader;
-    Consumer<ContentEntity<T>> next;
+    Consumer<ContentEntity<String>> next;
 
     public TextAsRDFIngestor(RepositoryConnection conn) throws FileSystemException {
         this(conn,null);
     }
 
-    public TextAsRDFIngestor(RepositoryConnection conn, Consumer<ContentEntity<T>> next) throws FileSystemException {
+    public TextAsRDFIngestor(RepositoryConnection conn, Consumer<ContentEntity<String>> next) throws FileSystemException {
         this.next = next;
         this.vfs = VFS.getManager();
         this.conn = conn;
@@ -56,7 +56,7 @@ public class TextAsRDFIngestor<T> implements Consumer<FileObject> {
             IRI assetIRI = this.conn.getValueFactory().createIRI(uri);
             try {
                 Literal content = loader.content(assetIRI, entity.getContent().getInputStream(), mime);
-                if (next!=null) next.accept(new ContentEntity<T>(assetIRI,content.stringValue(),null));
+                if (next!=null) next.accept(new ContentEntity<String>(assetIRI, content.stringValue(), content.getDatatype().stringValue()));
                 log.info("loaded.txt: " + mime+" @ "+assetIRI);
             } catch (RDFParseException | RepositoryException | IOException e) {
                 log.error("oops: " + e.getMessage() + " @ " + uri,e);

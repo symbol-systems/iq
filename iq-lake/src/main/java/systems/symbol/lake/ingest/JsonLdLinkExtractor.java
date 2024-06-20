@@ -24,6 +24,7 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
     private final FileSystemManager vfs;
     private final Consumer<ContentEntity<String>> next;
     Set<IRI> seen = new HashSet<>();
+    String contentType = "application/ld+json";
 
     public JsonLdLinkExtractor(FileSystemManager vfs, Consumer<ContentEntity<String>> next) throws FileSystemException {
         this.next = next;
@@ -51,7 +52,7 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
 
     public void ingestJSONLD(ContentEntity<String> source) throws IOException {
         String content = source.getContent();
-        ContentEntity<String> entity = new ContentEntity<>(source.getSelf(), content);
+        ContentEntity<String> entity = new ContentEntity<>(source.getSelf(), content, contentType);
         log.info("json.parsed: {}: {}", entity.getSelf(), content);
         extractJSON(entity.getSelf(), content);
     }
@@ -61,8 +62,7 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
 
         Document document = Jsoup.parse(html);
         seen.add(page);
-        // Strategy 1: Extract JSON-LD from script.tags with type 'application/ld+json'
-        Elements jsonLdScripts = document.select("[type=application/ld+json]");
+        Elements jsonLdScripts = document.select("[type="+contentType+"]");
         log.info("json.scripts.found: {}", jsonLdScripts);
         jsonLdScripts.forEach(script -> {
             String src = script.attr("src");
@@ -83,7 +83,7 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
                 String json = script.html();
                 if (!json.isEmpty()) {
                     log.info("json.script.inline: {}", json);
-                    next(new ContentEntity<String>(page, json));
+                    next(new ContentEntity<String>(page, json, contentType));
                 }
             }
         });

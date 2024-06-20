@@ -4,21 +4,21 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 import org.junit.jupiter.api.Test;
 import systems.symbol.realm.I_Realm;
-import systems.symbol.realm.SpaceManager;
+import systems.symbol.realm.RealmManager;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SpaceManagerTest {
+class RealmManagerTest {
 
     @Test
     void getSpace() throws Exception {
         IRI self = Values.iri(IQ_NS.TEST);
-        SpaceManager spaceManager = new SpaceManager(self, new File("my.test"));
-        I_Realm space = spaceManager.getSpace(self);
-        System.out.println("space.factory: "+space);
-        assertNotNull(space);
+        RealmManager realmManager = new RealmManager(self, new File("my.test"));
+        I_Realm realm = realmManager.getRealm(self);
+        System.out.println("realm.factory: "+realm);
+        assertNotNull(realm);
     }
 
     @Test

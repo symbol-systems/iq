@@ -15,17 +15,22 @@ import systems.symbol.finder.FactFinder;
 import systems.symbol.finder.TextFinder;
 import systems.symbol.secrets.EnvsAsSecrets;
 import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
+import systems.symbol.trust.I_Keys;
+import systems.symbol.trust.SimpleKeyStore;
 import systems.symbol.trust.generate.JWTGen;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 
 import static systems.symbol.COMMONS.IQ;
 
 @Singleton
-public class Platform implements I_Self, I_StartStop {
+public class Platform implements I_Self, I_StartStop, I_Keys {
     protected static final Logger log = LoggerFactory.getLogger(Platform.class);
 
     Workspace workspace;
@@ -33,6 +38,7 @@ public class Platform implements I_Self, I_StartStop {
     LRUCache<String, FactFinder> ffCache = new LRUCache<>(4);
     File cacheHome, importsHome, vaultHome;
     JWTGen jwtGen = new JWTGen();
+    private SimpleKeyStore keysStore;
 
     /**
      * Constructs a Platform instance and initializes the knowledge base workspace.
@@ -58,31 +64,34 @@ public class Platform implements I_Self, I_StartStop {
 
         WorkspaceProvisioner provisioner = new WorkspaceProvisioner(workspace);
         provisioner.deploy(importsHome, true);
-
-        if (!jwtGen.isProvisioned(vaultHome)) {
-            log.info("platform.vault.init: {}", vaultHome.getAbsolutePath());
-            jwtGen.save(vaultHome, jwtGen.keys());
-        } else {
-            log.info("platform.vault: {}", vaultHome.getAbsolutePath());
-        }
+        this.keysStore = new SimpleKeyStore(vaultHome);
+        log.info("platform.vault: {}", vaultHome.getAbsolutePath());
 
 //        if (Validate.isUnGuarded())
             System.out.printf("** OWNER TOKEN ** \nexport JWT='%s'\n****\n", generateJWT());
     }
 
+    public File getImportsHome() {
+        return this.importsHome;
+    }
+
     protected String generateJWT() throws Exception {
         String self = workspace.getSelf().stringValue();
         // expires in an hour
-        JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, self, 3600, I_Self.name(), new String[]{I_Self.name()});
-        return jwtGen.sign(jwtBuilder, loadKeyPair());
+        JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, new String[]{self}, 3600, I_Self.name(), new String[]{I_Self.name()});
+        return jwtGen.sign(jwtBuilder, keys());
     }
 
     public I_Secrets getSecrets() {
         return new EnvsAsSecrets();
     }
 
-    public KeyPair loadKeyPair() throws Exception {
-        return jwtGen.load(vaultHome);
+    public KeyPair keys() throws SecretsException {
+        try {
+            return keysStore.load();
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new SecretsException(e.getMessage());
+        }
     }
 
     /**
@@ -176,6 +185,6 @@ public class Platform implements I_Self, I_StartStop {
 
     @Override
     public void stop() {
-
+        workspace.shutdown();
     }
 }

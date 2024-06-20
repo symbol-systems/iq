@@ -10,9 +10,7 @@ target
 iq.api
 local
 old
-.iq
-iq
-IQ
+my.iq
 tmp
 *.class
 

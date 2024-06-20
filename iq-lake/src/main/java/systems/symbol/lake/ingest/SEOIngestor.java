@@ -14,12 +14,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class SEOIngestor<T> implements Consumer<FileObject> {
+public class SEOIngestor implements Consumer<FileObject> {
     protected static final Logger log = LoggerFactory.getLogger(SEOIngestor.class);
     protected Set<URI> seen = new HashSet<>();
-    protected Consumer<ContentEntity<T>> next;
+    protected Consumer<ContentEntity<String>> next;
     protected SEOIngestor() {}
-    public SEOIngestor(Consumer<ContentEntity<T>> next) throws FileSystemException {
+    public SEOIngestor(Consumer<ContentEntity<String>> next) throws FileSystemException {
         this.next = next;
     }
     @Override
@@ -41,7 +41,7 @@ public class SEOIngestor<T> implements Consumer<FileObject> {
         if (visited) return;
         this.seen.add(file.getURI());
         Document doc = Jsoup.parse(file.getContent().getInputStream(), "UTF-8", file.getName().getURI());
-        ContentEntity<T> content = new ContentEntity<T>(file.getURI().toString(), doc.html(), null);
+        ContentEntity<String> content = new ContentEntity<String>(file.getURI().toString(), doc.html());
         if (next !=null) next.accept(content);
     }
 

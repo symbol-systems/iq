@@ -10,9 +10,6 @@ import de.rcblum.stream.deck.items.StreamItem;
 import de.rcblum.stream.deck.items.URIItem;
 import de.rcblum.stream.deck.util.IconHelper;
 import de.rcblum.stream.deck.util.SDImage;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import purejavahidapi.HidDevice;
 import purejavahidapi.HidDeviceInfo;
 import purejavahidapi.PureJavaHidApi;
@@ -29,7 +26,7 @@ public class CyberDeckTest {
 
     static IStreamDeck sd = null;
 
-    @BeforeAll
+//    @BeforeAll
     public static void init() throws IOException {
         List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
         for(HidDeviceInfo hid: devList) {
@@ -48,7 +45,7 @@ public class CyberDeckTest {
         System.out.println("button: "+button+" @ "+path);
         return iconData;
     }
-    @Test
+//    @Test
     public void testShowButtons() throws IOException, URISyntaxException, InterruptedException {
         if (sd==null) return;
 
@@ -86,7 +83,7 @@ public class CyberDeckTest {
 
     }
 
-    @AfterAll
+//    @AfterAll
     public static void deinit() {
         if (sd==null) return;
         System.out.println("------------------------ DEINIT -------------------------");

@@ -8,9 +8,9 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
-import org.apache.ivy.util.CopyProgressEvent;
-import org.apache.ivy.util.CopyProgressListener;
-import org.apache.ivy.util.FileUtil;
+//import org.apache.ivy.util.CopyProgressEvent;
+//import org.apache.ivy.util.CopyProgressListener;
+//import org.apache.ivy.util.FileUtil;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
@@ -22,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.agent.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.rdf4j.NS;
+import systems.symbol.rdf4j.io.IOCopier;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
@@ -55,10 +57,10 @@ public class IQFacade {
      * @param self  The self identity of the facade.
      */
 
-    public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) {
+    public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) throws SecretsException {
         this.self = self;
         this.model = model;
-        this.secrets = secrets;
+        this.secrets = TrustedAPIs.trusted(model, self, secrets);
     }
 
     protected void enableVFS() throws FileSystemException {
@@ -66,17 +68,14 @@ public class IQFacade {
         log.info("api.vfs: {} ", vfs);
     }
     public RestAPI api(String url) throws SecretsException {
-        String secret = secrets.getSecret(url);
-        log.info("api.url: {} -> {}", url, secret);
-        if (secrets==null) return new RestAPI(url);
-        return new RestAPI(url, secret);
+        String secret = secrets==null?null:secrets.getSecret(url);
+        log.info("api.secret: {} -> {}", url, secret);
+        return new RestAPI(url, secrets);
     }
 
-    public RestAPI api(String url, String header) throws SecretsException {
-        log.info("api.url: {} && {}", url, header);
-        if (secrets==null) return new RestAPI(url);
-        log.info("api.secrets: {} -> {}", secrets.getSecret(url), header);
-        return new RestAPI(url, secrets.getSecret(url), header);
+    public Map<String,Object> json(Response response) throws SecretsException, IOException {
+        ResponseBody body = response.body();
+        return body==null?null:json(body);
     }
 
     public Map<String,Object> json(ResponseBody body) throws SecretsException, IOException {
@@ -143,7 +142,7 @@ public class IQFacade {
     }
 
     public FileObject download(String url) throws APIException, IOException, StateException {
-        RestAPI api = new RestAPI(url, secrets.getSecret(url));
+        RestAPI api = new RestAPI(url, secrets);
         Response response = api.get();
         assert response.body() != null;
         InputStream in = response.body().byteStream();
@@ -157,22 +156,7 @@ public class IQFacade {
             log.info("copy.save: {}", fileObject);
             fileObject.setWritable(true, true);
             OutputStream out = fileObject.getContent().getOutputStream();
-            FileUtil.copy(in, out, new CopyProgressListener() {
-                @Override
-                public void start(CopyProgressEvent copyProgressEvent) {
-                    log.info("copy.start: {}", copyProgressEvent.getTotalReadBytes());
-                }
-
-                @Override
-                public void progress(CopyProgressEvent copyProgressEvent) {
-                    log.info("copy.progress: {}", copyProgressEvent.getTotalReadBytes());
-                }
-
-                @Override
-                public void end(CopyProgressEvent copyProgressEvent) {
-                    log.info("copy.end: {}", copyProgressEvent.getTotalReadBytes());
-                }
-            }, true);
+            IOCopier.copy(in, out);
 
             return fileObject;
         } catch (IOException e) {

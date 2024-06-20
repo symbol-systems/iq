@@ -39,7 +39,8 @@ public class GenericGPT implements I_LLM<String> {
     @Override
     public void complete(I_Chat<String> chats) throws APIException, IOException {
 
-        RestAPI api = new RestAPI(config.getURL(), token);
+        RestAPI api = new RestAPI(config.getURL());
+        api.header("Authorization", "Bearer "+token);
 
         Map<String, Object> json = toPayload(null, chats.messages()); // "json_object"
 //        log.info("api.gpt.post: {}", json);

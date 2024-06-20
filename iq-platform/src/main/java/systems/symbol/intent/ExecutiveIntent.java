@@ -72,14 +72,14 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
     public IRI add(I_Intent intent) {
         if (intent == null) return null;
         Method[] methods = intent.getClass().getDeclaredMethods();
-        log.info("discover.intents: {}", this.intents);
+        log.debug("executive.intents: {}", this.intents);
         // Add annotated methods
         for (Method method : methods) {
-            log.debug("discover.method: {} -> {}", method.getName(), method.isAnnotationPresent(RDF.class));
+            log.debug("executive.method: {} -> {}", method.getName(), method.isAnnotationPresent(RDF.class));
             if (method.isAnnotationPresent(RDF.class)) {
                 RDF methodRdfAnnotation = method.getAnnotation(RDF.class);
                 IRI methodIRI = Values.iri(methodRdfAnnotation.value());
-                log.info("discover.method.rdf: {} -> {}", method.getName(), methodIRI);
+                log.info("executive.method.rdf: {} -> {}", method.getName(), methodIRI);
                 if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
                 this.intents.put(methodIRI, intent);
                 return methodIRI;
@@ -113,8 +113,8 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
      */
     protected Set<IRI> executeIntent(IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
         I_Intent intent = this.intents.get(p);
+        log.info("execute.intent: {} == {} -> {} == {}", actor, p, o, intent);
         if (intent == null) return new IRIs();
-        log.info("execute.intent: {} @ {}", p, o);
         Set<IRI> executed = intent.execute(actor, o, bindings);
         provenance(executed, actor, o);
         return executed;

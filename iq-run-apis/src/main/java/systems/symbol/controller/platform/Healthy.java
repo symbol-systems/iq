@@ -40,8 +40,8 @@ public class Healthy extends GuardedAPI{
     public Response repositoryHealth(@PathParam("repo") String repo,
                                         @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
-            log.info("api.health#protected-repository");
-return new OopsResponse("api.health#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+            log.info("health#protected-repository");
+            return new OopsResponse("api.health#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.health#repository-missing", Response.Status.BAD_REQUEST).asJSON();

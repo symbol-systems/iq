@@ -30,17 +30,18 @@ public class RDFPage extends AbstractIntent {
         boot(self, model);
         ingestRDF = new RDFModelIngestor(model, format);
         processor = new URLIngestor(ingestRDF);
-        log.info("init: {} --> {}", self, format);
+        log.info("page.init: {} --> {}", self, format);
     }
     @Override
     @RDF(IQ_NS.IQ+"rdf")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
         Set<IRI> done = new HashSet<>();
-        log.info("rdf: {} @ {}", state, actor);
+        log.info("page.rdf: {} => {} @ {}", getSelf(), state, actor);
         try {
+            processor.accept(new ContentEntity<String>((IRI) state, null, null));
             generated(model, actor, getSelf(), state, getSelf());
-            processor.accept(new ContentEntity<String>((IRI) state, null));
         } catch (Exception e) {
+            log.error("page.error: {}", e.getMessage());
             throw new RuntimeException(e);
         }
         return done;

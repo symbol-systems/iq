@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.Test;
 import systems.symbol.agent.IntentAgent;
 import systems.symbol.intent.ExecutiveIntent;
@@ -38,7 +39,7 @@ class RDFPageTest {
             Model model = new LiveModel(conn);
 
             Model memory = dmf.createEmptyModel();
-            RDFPage page2rdf = new RDFPage(self, memory);
+            RDFPage page2rdf = new RDFPage(self, memory, RDFFormat.RDFXML);
 
             ExecutiveIntent executiveIntent = new ExecutiveIntent(self, model, page2rdf);
             IntentAgent agent = new IntentAgent(self, model, executiveIntent, new SimpleBindings());

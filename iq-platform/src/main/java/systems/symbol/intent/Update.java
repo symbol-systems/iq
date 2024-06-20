@@ -4,11 +4,15 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQ;
@@ -33,11 +37,12 @@ import java.util.Set;
  * retrieve information based on their internal state, context, through interpolated queries.
  *
  * @author Symbol Systems
- * @see systems.symbol.intent.I_Intent
- * @see systems.symbol.rdf4j.sparql.IQScriptCatalog
- * @see systems.symbol.rdf4j.sparql.SPARQLMapper
+ * @see I_Intent
+ * @see IQScriptCatalog
+ * @see SPARQLMapper
  */
-public class Select implements I_Intent, I_Self {
+public class Update implements I_Intent, I_Self {
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     private final IQScriptCatalog catalog;
     private final IQ iq;
 
@@ -47,9 +52,9 @@ public class Select implements I_Intent, I_Self {
      * @param self  The self identity of the agent.
      * @param conn  The RepositoryConnection of the agent.
      */
-    public Select(IRI self, RepositoryConnection conn) {
+    public Update(IRI self, RepositoryConnection conn) {
         this.iq = new IQConnection(self, conn);
-        this.catalog = new IQScriptCatalog(iq);
+        this.catalog = new IQScriptCatalog(self, conn);
 
     }
 
@@ -63,18 +68,24 @@ public class Select implements I_Intent, I_Self {
      * @return A set of IRIs indicating the completion of execution.
      */
     @Override
-    @RDF(IQ_NS.IQ + "select")
+    @RDF(IQ_NS.IQ + "update")
     public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
         Set<IRI> done = new HashSet<>();
         try {
             Bindings bindings = MyFacade.rebind(actor, state, my);
+            log.info("sparql.execute: {} -> {}", state.stringValue(), bindings.keySet());
+            MyFacade.dump(bindings, System.out);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
-            if (sparql==null||sparql.isEmpty()) return null;
-            TupleQuery prepared = iq.getConnection().prepareTupleQuery(sparql);
-            List<Map<String, Object>> results = SPARQLMapper.toMaps(prepared.evaluate());
-            MyFacade.results(bindings, results);
+            log.info("sparql.update: {}", sparql);
+            if (sparql==null||sparql.isEmpty()) return done;
+            org.eclipse.rdf4j.query.Update updated = iq.getConnection().prepareUpdate(sparql);
+            SPARQLMapper.setBindings(updated, my);
+            updated.execute();
+            log.info("sparql.updated: {}", updated.getBindings());
+            MyFacade.dump(my, System.out);
+            RDFDump.dump(iq.getConnection(), System.out, RDFFormat.TURTLE);
             done.add((IRI) state);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return done;

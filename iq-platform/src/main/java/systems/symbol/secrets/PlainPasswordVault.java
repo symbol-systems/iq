@@ -12,10 +12,10 @@ import java.nio.file.Files;
 /**
  * Implementation of a Secrets Vault that stores secrets in plain text files.
  */
-public class BasicFileVault extends MemoryVault implements I_LoadSave {
+public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
     private File vaultHome;
 
-    protected BasicFileVault() {
+    protected PlainPasswordVault() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class BasicFileVault extends MemoryVault implements I_LoadSave {
      * @param vaultHome The directory where secrets will be stored.
      * @throws FileNotFoundException If the vault home is not a directory or cannot be created.
      */
-    public BasicFileVault(File vaultHome) throws IOException {
+    public PlainPasswordVault(File vaultHome) throws IOException {
         vaultHome.mkdirs();
         if ((!vaultHome.exists() || vaultHome.isFile())) {
             throw new FileNotFoundException("Vault home must be a folder, not a file: " + vaultHome.getAbsolutePath());

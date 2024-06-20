@@ -86,8 +86,8 @@ public class TextFinder implements I_Finder {
 			if (store!=null) return store;
 		}
 		storeHome.getParentFile().mkdirs();
-		System.out.println("finder.text.load: " + storeHome.toURI());
 		InMemoryEmbeddingStore<TextSegment> store = defaultEmbeddingStore();
+		System.out.println("finder.text.load: " + storeHome.toURI());
 		store.serializeToFile(Paths.get(storeHome.toURI()));
 		return store;
 	}

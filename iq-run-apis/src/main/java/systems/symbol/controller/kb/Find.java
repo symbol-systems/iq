@@ -24,13 +24,13 @@ public class Find extends GuardedAPI {
     @GET
     @Path("{repo}/{finder}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response importLocal(@PathParam("finder")String finder, @PathParam("repo")String repo,
+    public Response find(@PathParam("finder")String finder, @PathParam("repo")String repo,
                                 @QueryParam("query") String query,
                                 @QueryParam("score") double score, @QueryParam("max") int max,
             @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
-            log.info("api.kb.find#protected");
-return new OopsResponse("api.iq.find#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+            log.info("kb.find#protected");
+            return new OopsResponse("api.iq.find#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
             return new OopsResponse("api.iq.find.indexer#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
@@ -61,7 +61,7 @@ return new OopsResponse("api.iq.find#authentication-required", Response.Status.U
         try (RepositoryConnection connection = repository.getConnection()) {
             Model model = factFinder.search(dmf.createEmptyModel(), query, connection, max, score);
             if (model.isEmpty() && score == DEFAULT_SCORE) {
-                log.info("api.kb.find#fallback");
+                log.info("kb.find#fallback");
                 model = factFinder.search(dmf.createEmptyModel(), query, connection, max, DEFAULT_SCORE/2);
             }
             return new RDFResponse(null, model, RDFFormat.JSONLD).asJSON();
