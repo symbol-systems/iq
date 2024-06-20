@@ -36,8 +36,8 @@ public Response describe(
 @PathParam("iri") String iri,
 @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
-log.info("api.describe#protected");
-return new OopsResponse("api.describe#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+log.info("describe#protected");
+return new OopsResponse("api.describe#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.describe#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

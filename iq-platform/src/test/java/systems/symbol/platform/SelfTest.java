@@ -11,7 +11,7 @@ import static systems.symbol.COMMONS.IQ;
 /**
  *
  */
-public class I_SelfTest  {
+public class SelfTest  {
 
 @Test
 public void testVersion() throws IOException {

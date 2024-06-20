@@ -1,11 +1,18 @@
 package systems.symbol.agent.tools;
 
+import com.amazonaws.util.Base64;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import okio.Buffer;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.MyFacade;
+import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,40 +21,48 @@ import java.util.Map;
  * Implementation of the I_API interface using OkHttp for REST API calls.
  */
 public class RestAPI implements I_API<Response> {
-private static final String BEARER_AUTH_HEADER = "Authorization";
 private final Logger log = LoggerFactory.getLogger(getClass());
 private final OkHttpClient client;
 private final ObjectMapper objectMapper = new ObjectMapper();
 private final String baseURL;
-private final String authToken;
 private final HttpUrl httpUrl;
-private String authHeader;
 private final Map<String,String> headers = new HashMap<>();
+private final I_Secrets secrets;
 
 /**
  * Creates a new instance of the RestAPI class.
  *
  * @param baseURL   The base URL of the API.
- * @param authToken The authentication token for API requests.
  */
-public RestAPI(String baseURL, String authToken, String authHeader) {
+public RestAPI(String baseURL) {
+this(baseURL,null);
+}
+
+/**
+ * Creates a new instance of the RestAPI class.
+ *
+ * @param baseURL   The base URL of the API.
+ */
+public RestAPI(String baseURL, I_Secrets secrets) {
 OkHttpClient.Builder builder = new OkHttpClient.Builder();
+builder.addInterceptor(new LoggingInterceptor());
 builder.connectTimeout(Duration.ofSeconds(30));
 builder.callTimeout(Duration.ofSeconds(30));
 this.client = builder.build();
 this.baseURL = baseURL;
-this.authToken = authToken;
-this.authHeader = authHeader;
+//this.authToken = authToken;
+//this.authHeader = authHeader;
 this.httpUrl = HttpUrl.parse(getURL());
+this.secrets = secrets;
 }
 
-public RestAPI(String baseURL, String authToken) {
-this(baseURL, authToken, BEARER_AUTH_HEADER);
-}
-
-public RestAPI(String baseURL) {
-this(baseURL, null, null);
-}
+//public RestAPI(String baseURL, String authToken) {
+//this(baseURL, authToken, BEARER_AUTH_HEADER);
+//}
+//
+//public RestAPI(String baseURL) {
+//this(baseURL, null, null);
+//}
 
 /**
  * Gets the base URL of the API.
@@ -59,13 +74,33 @@ public String getURL() {
 return baseURL;
 }
 
-public RestAPI authenticate(String header) {
-this.authHeader = header;
+public RestAPI bearer() throws SecretsException {
+if (this.secrets==null) throw new SecretsException("missing.bearer.secrets");
+String authToken = this.secrets.getSecret(getURL());
+return header("Authorization", "Bearer "+authToken);
+}
+
+public RestAPI bearer(String authToken) throws SecretsException {
+return header("Authorization", "Bearer "+authToken);
+}
+
+public RestAPI authorization() throws SecretsException {
+if (this.secrets==null) throw new SecretsException("missing.auth.secrets");
+String authToken = this.secrets.getSecret(getURL());
+return header("Authorization", authToken);
+}
+
+public RestAPI basic() throws SecretsException {
+if (this.secrets==null) throw new SecretsException("missing.basic.secrets");
+String credentials = this.secrets.getSecret(getURL());
+String encoded = Base64.encodeAsString(credentials.getBytes(StandardCharsets.UTF_8));
+log.info("api.basic.auth: {} -> {}", credentials, encoded);
+header("Authorization", "Basic " + encoded);
 return this;
 }
 
 public RestAPI header(String name, String value) {
-this.headers.put(name, value);
+if (value!=null) this.headers.put(name, value);
 return this;
 }
 
@@ -77,6 +112,7 @@ return this;
 public static Map<String, Object> newParams() {
 return new HashMap<>();
 }
+
 
 /**
  * Makes a HEAD request to the API with optional query parameters.
@@ -141,6 +177,14 @@ Request request = createRequestBuilder().url(urlBuilder.build()).delete().build(
 return executeRequest(request);
 }
 
+public FormBody.Builder form(Map<String, Object> queryParams) {
+FormBody.Builder formBody = new FormBody.Builder();
+for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+formBody.add(entry.getKey(), String.valueOf(entry.getValue()));
+}
+return formBody;
+}
+
 /**
  * Makes a POST request to the API with a JSON body.
  *
@@ -152,11 +196,23 @@ return executeRequest(request);
 @Override
 public Response post(Map<String, Object> json) throws IOException, APIException {
 String jsonBody = convertObjectToJsonString(json);
-RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse("application/json"));
-log.info("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
+String contentType = headers.get("Content-Type");
+if (contentType==null||contentType.isEmpty()) contentType = "application/json";
+if (contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
+log.info("api.form: {}", getURL());
+MyFacade.dump(json, System.out);
+Request.Builder builder = createRequestBuilder().url(getURL());
+FormBody formBody = form(json).build();
+builder.post(formBody);
+return executeRequest(builder.build());
+} else {
+RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
+log.info("api.post: {} -> {} / {} & {}", getURL(), requestBody.contentType(), requestBody.contentLength(), headers);
+MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 builder.post(requestBody);
 return executeRequest(builder.build());
+}
 }
 
 /**
@@ -200,14 +256,6 @@ Request.Builder builder = new Request.Builder();
 for(String n: headers.keySet()) {
 builder.header(n, headers.get(n));
 }
-if (null!= authToken && null != authHeader && !authToken.isEmpty()) {
-if (authHeader.equalsIgnoreCase(BEARER_AUTH_HEADER)) {
-builder.header(authHeader, "Bearer " + authToken);
-} else {
-builder.header(authHeader, authToken);
-}
-log.info("api.bearer: {} -> {}", authHeader, authToken);
-}
 
 return builder;
 }
@@ -221,7 +269,7 @@ return builder;
  */
 private Response executeRequest(Request request) throws IOException {
 try {
-log.info("api.request: {}", request );
+log.info("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet() );
 return client.newCall(request).execute();
 } catch (java.net.SocketTimeoutException e) {
 // retry
@@ -239,5 +287,23 @@ return client.newCall(request).execute();
  */
 private String convertObjectToJsonString(Object object) throws IOException {
 return objectMapper.writeValueAsString(object);
+}
+}
+
+class LoggingInterceptor implements Interceptor {
+@Override
+public @NotNull Response intercept(Chain chain) throws IOException {
+Request request = chain.request();
+
+// Clone the request to log its body
+Request copy = request.newBuilder().build();
+if (copy.body() != null) {
+Buffer buffer = new Buffer();
+copy.body().writeTo(buffer);
+String requestBodyString = buffer.readUtf8();
+System.out.println("Request Body: " + requestBodyString);
+}
+
+return chain.proceed(request);
 }
 }

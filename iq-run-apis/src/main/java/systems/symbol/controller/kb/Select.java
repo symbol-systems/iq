@@ -1,11 +1,11 @@
 package systems.symbol.controller.kb;
 
 import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.string.Validate;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -43,8 +43,8 @@ public Response query(
 @QueryParam("maxResults") int maxResults,
 @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
-log.info("api.iq.select#protected");
-return new OopsResponse("api.select#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+log.info("iq.select#protected");
+return new OopsResponse("api.select#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.iq.select#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
@@ -78,7 +78,7 @@ TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
 try (TupleQueryResult result = tupleQuery.evaluate()) {
 // Convert SPARQL results to a list of maps
 List<Map<String, Object>> models = SPARQLMapper.toMaps(result);
-return new SimpleResponse(models).asJSON();
+return new DataResponse(models).asJSON();
 } catch (QueryEvaluationException e) {
 // Return an error response if SPARQL query execution fails
 return new OopsResponse("api.iq.select#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();

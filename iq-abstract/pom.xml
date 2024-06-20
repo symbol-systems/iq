@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.77.2</version>
+<version>0.77.4</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
 <packaging>jar</packaging>
 
 <name>Abstract IQ</name>
-<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
 <organization>
@@ -61,7 +61,7 @@
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 <maven.compiler.plugin.source>11</maven.compiler.plugin.source>
 <maven.compiler.plugin.target>11</maven.compiler.plugin.target>
-<groovy.version>3.0.12</groovy.version>
+<groovy.version>5.0.0-alpha-8</groovy.version>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
 
@@ -148,29 +148,6 @@
 </goals>
 </execution>
 </executions>
-<configuration>
-<compilerId>groovy-eclipse-compiler</compilerId>
-<source>${maven.compiler.plugin.source}</source>
-<target>${maven.compiler.plugin.target}</target>
-</configuration>
-<dependencies>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-compiler</artifactId>
-<version>${groovy-eclipse-compiler.version}</version>
-</dependency>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-batch</artifactId>
-<version>${groovy-eclipse-batch.version}</version>
-</dependency>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-all</artifactId>
-<version>${groovy.version}</version>
-<type>pom</type>
-</dependency>
-</dependencies>
 </plugin>
 </plugins>
 </build>

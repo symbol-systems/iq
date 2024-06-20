@@ -25,7 +25,9 @@ IRI hasCurrentState = Values.iri(IQ, "state");
 IRI doBoot = Values.iri(IQ, "boot");
 IRI KNOWS = Values.iri(IQ, "knows");
 IRI FORGOT = Values.iri(IQ_NS.IQ+"forgot");
+IRI TRUSTS = Values.iri(IQ, "trusts");;
 IRI PROMPT = Values.iri(IQ, "prompt");
+IRI NAME = Values.iri(IQ, "name");;
 
 // Miscellaneous IRIs
 IRI nop = Values.iri(IQ, "nop");

@@ -41,10 +41,11 @@ model.add(wip, RDF.VALUE, scriptBody);
 void testExecution() throws Exception {
 ScriptAgent agent = new ScriptAgent(self, model);
 Set<IRI> executed = agent.execute(self, wip, new SimpleBindings());
-System.out.println("agent.script.executed: "+executed);
+System.out.println("agent.script.executed: "+self+" --> "+executed);
 RDFDump.dump(model);
 
 Optional<Literal> propertyLiteral = Models.getPropertyLiteral(model, self, helloProperty);
+System.out.println("agent.script.hello: "+self+" --> "+helloProperty+" == "+propertyLiteral.isPresent());
 assert propertyLiteral.isPresent();
 assert propertyLiteral.get().stringValue().equals("world");
 }

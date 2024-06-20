@@ -35,7 +35,7 @@ throw new IOException("MANIFEST.MF file not found: " + I_Self.class.getCanonical
 }
 Properties properties = new Properties();
 properties.load(inputStream);
-properties.store(System.out, "MANIFEST.MF.TEST");
+properties.store(System.out, "MANIFEST.MF");
 return properties.getProperty("Implementation-Version");
 }
 }

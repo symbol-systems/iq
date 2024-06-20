@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.77.2</version>
+<version>0.77.4</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
 <packaging>jar</packaging>
 
 <name>Open IQ</name>
-<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
 <organization>
@@ -69,8 +69,8 @@
 <logback.version>1.5.3</logback.version>
 <camel.version>4.0.0-M1</camel.version>
 <handlebars.version>4.3.1</handlebars.version>
-<rdf4j.version>4.3.11</rdf4j.version>
-<groovy.version>3.0.12</groovy.version>
+<rdf4j.version>4.3.12</rdf4j.version>
+<groovy.version>5.0.0-alpha-8</groovy.version>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
 <kotlin.version>1.9.23</kotlin.version>
@@ -187,29 +187,6 @@
 </goals>
 </execution>
 </executions>
-<configuration>
-<compilerId>groovy-eclipse-compiler</compilerId>
-<source>${maven.compiler.plugin.source}</source>
-<target>${maven.compiler.plugin.target}</target>
-</configuration>
-<dependencies>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-compiler</artifactId>
-<version>${groovy-eclipse-compiler.version}</version>
-</dependency>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-batch</artifactId>
-<version>${groovy-eclipse-batch.version}</version>
-</dependency>
-<dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-all</artifactId>
-<version>${groovy.version}</version>
-<type>pom</type>
-</dependency>
-</dependencies>
 </plugin>
 </plugins>
 </build>
@@ -262,6 +239,16 @@
 <artifactId>kotlin-test</artifactId>
 <version>${kotlin.version}</version>
 <scope>test</scope>
+</dependency>
+<dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-platform</artifactId>
+<version>0.77.4</version>
+<scope>compile</scope>
+</dependency>
+<dependency>
+<groupId>org.eclipse.rdf4j</groupId>
+<artifactId>rdf4j-repository-api</artifactId>
 </dependency>
 
 </dependencies>

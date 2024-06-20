@@ -12,7 +12,7 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.platform.TrustedPlatform;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;

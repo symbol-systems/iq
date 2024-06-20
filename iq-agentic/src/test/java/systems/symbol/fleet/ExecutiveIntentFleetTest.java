@@ -10,8 +10,9 @@ import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.testng.annotations.Test;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.finder.Recommends;
@@ -50,8 +51,8 @@ private static final File testedFolder = new File("tested/");
 private static final Resource aware = Values.iri(TEST, "aware");;
 private static final Resource think = Values.iri(TEST, "think");
 
-@BeforeEach
-public void setUp() throws IOException {
+@BeforeAll
+public static void setUp() throws IOException {
 assets = new BootstrapRepository();
 self = assets.load(new File("src/test/resources/fleet"), TEST);
 assert TEST.equals( self.stringValue() );

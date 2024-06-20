@@ -4,6 +4,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.fsm.StateException;
@@ -38,6 +40,7 @@ import java.util.Set;
  * @see systems.symbol.rdf4j.sparql.SPARQLMapper
  */
 public class Select implements I_Intent, I_Self {
+protected final Logger log = LoggerFactory.getLogger(getClass());
 private final IQScriptCatalog catalog;
 private final IQ iq;
 
@@ -69,6 +72,7 @@ Set<IRI> done = new HashSet<>();
 try {
 Bindings bindings = MyFacade.rebind(actor, state, my);
 String sparql = catalog.getSPARQL(state.stringValue(), bindings);
+log.info("sparql.select: {}", sparql);
 if (sparql==null||sparql.isEmpty()) return null;
 TupleQuery prepared = iq.getConnection().prepareTupleQuery(sparql);
 List<Map<String, Object>> results = SPARQLMapper.toMaps(prepared.evaluate());

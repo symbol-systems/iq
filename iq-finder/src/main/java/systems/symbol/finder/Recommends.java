@@ -15,7 +15,7 @@ import systems.symbol.platform.IQ_NS;
 import java.util.*;
 
 public class Recommends {
-private final static Logger log = LoggerFactory.getLogger(Recommends.class);
+//private final static Logger log = LoggerFactory.getLogger(Recommends.class);
 
 //public static Map<Resource, float[]> index(Model model, IRI predicate) {
 //return index(model, predicate, new AllMiniLmL6V2EmbeddingModel());

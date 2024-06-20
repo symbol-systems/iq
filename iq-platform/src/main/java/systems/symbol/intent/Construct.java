@@ -2,8 +2,13 @@ package systems.symbol.intent;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.query.GraphQuery;
+import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.jsonld.JSONLDWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.RDF;
@@ -18,9 +23,8 @@ import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -39,7 +43,7 @@ import java.util.Set;
  * @see IQScriptCatalog
  * @see SPARQLMapper
  */
-public class Update implements I_Intent, I_Self {
+public class Construct implements I_Intent, I_Self {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 private final IQScriptCatalog catalog;
 private final IQ iq;
@@ -50,7 +54,7 @@ private final IQ iq;
  * @param self  The self identity of the agent.
  * @param conn  The RepositoryConnection of the agent.
  */
-public Update(IRI self, RepositoryConnection conn) {
+public Construct(IRI self, RepositoryConnection conn) {
 this.iq = new IQConnection(self, conn);
 this.catalog = new IQScriptCatalog(iq);
 
@@ -66,18 +70,31 @@ this.catalog = new IQScriptCatalog(iq);
  * @return A set of IRIs indicating the completion of execution.
  */
 @Override
-@RDF(IQ_NS.IQ + "update")
+@RDF(IQ_NS.IQ + "construct")
 public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
 Set<IRI> done = new HashSet<>();
 try {
 Bindings bindings = MyFacade.rebind(actor, state, my);
 String sparql = catalog.getSPARQL(state.stringValue(), bindings);
 MyFacade.dump(my, System.out);
-log.info("sparql.update: {}", sparql);
+log.info("sparql.construct: {}", sparql);
 MyFacade.dump(bindings, System.out);
 if (sparql==null||sparql.isEmpty()) return done;
-org.eclipse.rdf4j.query.Update updated = iq.getConnection().prepareUpdate(sparql);
-updated.execute();
+GraphQuery updated = iq.getConnection().prepareGraphQuery(sparql);
+
+StringWriter writer = new StringWriter();
+try (GraphQueryResult result = updated.evaluate()) {
+RDFWriter json = new JSONLDWriter(writer);
+json.startRDF();
+while (result.hasNext()) {
+Statement s = result.next();
+json.handleStatement(s);
+}
+json.endRDF();
+} catch (RDFHandlerException e) {
+throw new StateException(e.getMessage(), state);
+}
+bindings.put(MyFacade.RESULTS, writer.toString());
 done.add((IRI) state);
 } catch (IOException e) {
 throw new RuntimeException(e);

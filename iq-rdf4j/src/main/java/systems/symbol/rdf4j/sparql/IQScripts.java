@@ -40,9 +40,8 @@ return script!=null?script.stringValue():null;
  * @return The SPARQL script as a string.
  */
 public static Literal findScript(RepositoryConnection connection, Resource script, IRI mimetype, IRI context) {
-log.debug("findScript.conn: {} -> {} -> {}", script, mimetype, context);
-
-try (RepositoryResult<Statement> result = connection.getStatements(script, HAS_CONTENT, null, context)) {
+log.info("findScript.conn: {} -> {} -> {}", script, mimetype, context);
+try (RepositoryResult<Statement> result = context==null?connection.getStatements(script, HAS_CONTENT, null):connection.getStatements(script, HAS_CONTENT, null, context)) {
 return findScript(result.iterator(), script, mimetype);
 }
 }

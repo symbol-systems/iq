@@ -1,4 +1,4 @@
-## IQ is your operating environment for neuro-symbolic cognitive AI
+## IQ - operating environment for cognitive AI
 
 IQ provides the infrastructure and tools necessary for the development, deployment, and operation of AI systems that integrate neural and symbolic reasoning. 
 

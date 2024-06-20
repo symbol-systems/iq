@@ -4,7 +4,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.controller.responses.DataResponse;
 
 import java.io.InputStream;
 
@@ -17,6 +17,6 @@ public class Upload extends GuardedAPI {
 public Response uploadFile(@PathParam("repo") String repo, @FormParam("file") InputStream in) {
 
 
-return new SimpleResponse("ok").asJSON();
+return new DataResponse("ok").asJSON();
 }
 }

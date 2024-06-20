@@ -32,12 +32,15 @@ for(String ns: namespaces.keySet()) {
 writer.handleNamespace(ns, namespaces.get(ns));
 }
 if (iri!=null&&!iri.isEmpty()) writer.handleNamespace("", iri);
+long copied = 0;
 try (GraphQueryResult result = query.evaluate()) {
 for (Statement statement : result) {
 writer.handleStatement(statement);
-//log.info(statement.toString());
+copied++;
 }
 }
+log.info("found {} triples @ {}", copied, iri);
+writer.handleComment("found "+copied+" triples @ "+iri);
 writer.endRDF();
 }
 
@@ -71,7 +74,7 @@ public static WriterConfig getWriterConfig() {
 WriterConfig config = RDFDump.getWriterConfig();
 config.set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 config.set(JSONLDSettings.HIERARCHICAL_VIEW, Boolean.TRUE);
-config.set(JSONLDSettings.OPTIMIZE, Boolean.TRUE);
+//config.set(JSONLDSettings.OPTIMIZE, Boolean.TRUE);
 return config;
 }
 }

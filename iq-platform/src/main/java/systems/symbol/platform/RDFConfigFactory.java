@@ -25,9 +25,9 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RepoFactory {
-private final Logger log = LoggerFactory.getLogger(getClass());
-final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
+public class RDFConfigFactory {
+private static final Logger log = LoggerFactory.getLogger(RDFConfigFactory.class);
+static final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
 
 /**
  * Create a new repository based on a template
@@ -35,7 +35,7 @@ final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repos
  * @param template the TTL template for repository
  * @param ctx  the key/values for template interpolation
  */
-public RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format) throws IOException {
+public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format) throws IOException {
 final ConfigTemplate configTemplate = new ConfigTemplate(template);
 final String configString = configTemplate.render(ctx);
 log.info("repository.config: {} -> {}", self.stringValue(), configString);
@@ -60,19 +60,19 @@ return repConfig;
 /**
  * Create a new RepositoryConfig based on a template and parameters
  *
- * @param storeType Name of a TTL template in ./resources/kbms/
+ * @param storeType Name of a TTL template in ./resources/rdf4j/
  * @param ctx  the key/values for template interpolation
  */
-protected RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx) throws IOException {
+static public RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx) throws IOException {
 String resourcePath = "rdf4j/" + storeType + ".ttl";
 log.info("repository.type: {}", resourcePath);
 InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
 return toConfig(self, IOCopier.toString(inputStream), ctx, RDFFormat.TURTLE);
 }
 
-public RepositoryConfig toConfig(IRI self, String storeType) throws IOException {
+static public RepositoryConfig toConfig(IRI self, String id, String storeType) throws IOException {
 Map<String, String> ctx = new HashMap<>();
-ctx.put("id", self.stringValue());
+ctx.put("id", id);
 return toConfig(self, storeType, ctx);
 }  
 

@@ -1,7 +1,8 @@
 package systems.symbol;
 
 import javazoom.jl.decoder.JavaLayerException;
-import org.junit.jupiter.api.Test;
+
+import org.testng.annotations.Test;
 import systems.symbol.persona.Persona;
 
 import java.io.IOException;

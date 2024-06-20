@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ORIGINAL: (c) Symbol Systems, 2009-2015.
+ * (c) Symbol Systems, 2009-2015.
  *
  * symbol.systems (c) 2011-2013
  * Module: systems.symbol.util
@@ -105,4 +105,11 @@ public class RDFPrefixer {
 		return names$;
 	}
 
+	public static String toSPARQL(RepositoryConnection connection, String sparql) {
+		if (sparql==null) return null;
+		if (!sparql.contains("PREFIX ") && !sparql.contains("prefix ")) {
+			return RDFPrefixer.getSPARQLPrefix(connection) + sparql;
+		}
+		return sparql;
+	}
 }

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.Test;
+import systems.symbol.trust.SimpleKeyStore;
 
 import java.io.File;
 import java.security.KeyPair;
@@ -20,10 +21,11 @@ File secretsFolder = new File("tested/tmp/secrets");
 @Test
 void testKeySaveLoad() throws Exception {
 JWTGen jwtGen = new JWTGen();
-KeyPair keyPair = jwtGen.keys();
-jwtGen.save(secretsFolder, keyPair);
+SimpleKeyStore keyStore = new SimpleKeyStore(secretsFolder);
+KeyPair keyPair = keyStore.keys();
+keyStore.save(keyPair);
 System.out.println("JWT saved: " + secretsFolder.getAbsolutePath());
-KeyPair keyPairLoaded = jwtGen.load(secretsFolder);
+KeyPair keyPairLoaded = keyStore.load();
 
 assertTrue(keyPair.getPublic().equals(keyPairLoaded.getPublic()));
 assertTrue(keyPair.getPrivate().equals(keyPairLoaded.getPrivate()));
@@ -32,9 +34,10 @@ assertTrue(keyPair.getPrivate().equals(keyPairLoaded.getPrivate()));
 @Test
 void generateJWT() throws Exception {
 JWTGen jwtGen = new JWTGen();
-KeyPair keyPair = jwtGen.keys();
+SimpleKeyStore keyStore = new SimpleKeyStore(secretsFolder);
+KeyPair keyPair = keyStore.keys();
 
-JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, audience, 60);
+JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, new String[]{audience}, 60);
 
 jwtBuilder.withClaim("hello", "world");
 String jwt = jwtGen.sign(jwtBuilder, keyPair);

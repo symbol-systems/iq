@@ -21,22 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RSSIngestor<T> extends AbstractIngestor<ContentEntity<T>> {
+public class RSSIngestor extends AbstractIngestor<ContentEntity<String>> {
 private final Model model;
 private final IRI clzzIRI = Values.iri("urn:" + getClass().getCanonicalName());
-Consumer<ContentEntity<T>> next;
+Consumer<ContentEntity<String>> next;
 
 public RSSIngestor(Model model) {
 this.model = model;
 }
 
-public RSSIngestor(Model model, Consumer<ContentEntity<T>> next) {
+public RSSIngestor(Model model, Consumer<ContentEntity<String>> next) {
 this.model = model;
 this.next = next;
 }
 
 @Override
-public void accept(ContentEntity<T> page) {
+public void accept(ContentEntity<String> page) {
 try {
 parseRSS(page);
 } catch (Exception e) {
@@ -44,7 +44,7 @@ log.error("rss.failed: {}", page.getSelf(), e);
 }
 }
 
-public void parseRSS(ContentEntity<T> page) throws Exception {
+public void parseRSS(ContentEntity<String> page) throws Exception {
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 DocumentBuilder builder = factory.newDocumentBuilder();
 String content = page.getContent().toString();
@@ -109,7 +109,7 @@ model.add(itemIRI, RDF.TYPE, clzzIRI, channel);
 add(itemIRI, toDCPredicate("title"), title, channel);
 add(itemIRI, toDCPredicate("description"), description, channel);
 add(itemIRI, toDCPredicate("link"), link, channel);
-if (next !=null) next.accept( new ContentEntity<T>(itemIRI, title, description));
+if (next !=null) next.accept( new ContentEntity<String>(itemIRI, title+"\n"+description, "text/plain"));
 return itemIRI;
 }
 

@@ -6,27 +6,28 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.77.2</version>
+<version>0.77.4</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-platform</artifactId>
 <name>IQ Platform </name>
-<description>IQ is your operating environment for neuro-symbolic cognitive AI.</description>
+<description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-<version>0.77.2</version>
+<version>0.77.4</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 <maven.compiler.plugin.source>11</maven.compiler.plugin.source>
 <maven.compiler.plugin.target>11</maven.compiler.plugin.target>
 
-<quarkus.version>3.7.1</quarkus.version>
+<!--<quarkus.version>3.11.1</quarkus.version>-->
+<graalvm.version>24.0.1</graalvm.version>
+<groovy.version>5.0.0-alpha-8</groovy.version>
 
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 <cloudevents.version>2.4.0</cloudevents.version>
-
 
 <skipITs>true</skipITs>
 <surefire.plugin.version>3.2.5</surefire.plugin.version>
@@ -49,10 +50,17 @@
 <version>${project.version}</version>
 </dependency>
 
-<!--<dependency>-->
-<!--<groupId>dev.langchain4j</groupId>-->
-<!--<artifactId>langchain4j-open-ai</artifactId>-->
-<!--</dependency>-->
+<dependency>
+<groupId>org.apache.groovy</groupId>
+<artifactId>groovy-all</artifactId>
+<type>pom</type>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
+<dependency>
+<groupId>org.openjdk.nashorn</groupId>
+<artifactId>nashorn-core</artifactId>
+<version>15.4</version>
+</dependency>
 
 <dependency>
 <groupId>jakarta.ws.rs</groupId>
@@ -72,16 +80,11 @@
 <!--  <groupId>io.quarkus</groupId>-->
 <!--  <artifactId>quarkus-smallrye-openapi</artifactId>-->
 <!--</dependency>-->
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-resteasy-reactive-jackson</artifactId>
-<version>${quarkus.version}</version>
-</dependency>
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-resteasy-reactive</artifactId>
-<version>${quarkus.version}</version>
-</dependency>
+<!--<dependency>-->
+<!--<groupId>io.quarkus</groupId>-->
+<!--<artifactId>quarkus-rest-jackson</artifactId>-->
+<!--<version>${quarkus.version}</version>-->
+<!--</dependency>-->
 <dependency>
 <groupId>io.quarkus</groupId>
 <artifactId>quarkus-arc</artifactId>

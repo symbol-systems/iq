@@ -19,28 +19,31 @@ import java.util.***REMOVED***.Pattern;
 public class RDFModelIngestor extends AbstractIngestor<ContentEntity<String>> {
 private static final Logger log = LoggerFactory.getLogger(RDFModelIngestor.class);
 private final ParserConfig config = new ParserConfig();
-RDFFormat format;
+RDFFormat fallback;
 Model model;
 Pattern extractBody = Pattern.compile("```(\\w+\n)\\s*(.*?)\n```", Pattern.DOTALL);
 
-public RDFModelIngestor(Model model, RDFFormat format, Consumer<ContentEntity<String>> next) {
+public RDFModelIngestor(Model model, RDFFormat fallback, Consumer<ContentEntity<String>> next) {
 super(next);
 this.model = model;
-this.format = format;
+this.fallback = fallback;
 }
 
-public RDFModelIngestor(Model model, RDFFormat format) {
+public RDFModelIngestor(Model model, RDFFormat fallback) {
 this.model = model;
-this.format = format;
+this.fallback = fallback;
 }
 
 public void parse(ContentEntity<String> rdf) throws IOException {
+
+RDFFormat format = Rio.getParserFormatForMIMEType(rdf.getContentType()).orElse(fallback);
+log.debug("rdf.model.parse: {} -> {} ==> {} ==> {}", rdf.getSelf(), rdf.getContent(), rdf.getContentType(), format);
+
 RDFParser rdfParser = Rio.createParser(format);
 rdfParser.setParserConfig(config);
 rdfParser.setRDFHandler(new StatementCollector(model));
 
 String content = hackItToWork(rdf.getContent());
-log.debug("rdf.model.parse: {} -> {}", rdf.getSelf(), content);
 StringReader reader = new StringReader(content);
 rdfParser.parse(reader, rdf.getSelf().stringValue());
 }

@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class Workspace implements I_Self{
+public class Workspace implements I_Self {
 private final Logger log = LoggerFactory.getLogger(getClass());
 final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
 final String ACTIVE_REPO_PROP = "current.repo";
@@ -44,7 +44,7 @@ RepositoryManager manager;
 Map<String, Repository> repositories = new HashMap<>();
 File home, propsFile;
 Properties properties = new Properties();
-String repoTemplatePath = "kbms/";
+String repoTemplatePath = "rdf4j/";
 IRI self;
 /**
  * Constructs a Workspace with the specified home directory.

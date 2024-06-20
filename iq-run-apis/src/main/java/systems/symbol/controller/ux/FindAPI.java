@@ -1,0 +1,183 @@
+package systems.symbol.controller.ux;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.store.embedding.EmbeddingMatch;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.responses.DataResponse;
+import systems.symbol.controller.responses.OopsException;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.finder.FactFinder;
+import systems.symbol.platform.APIPlatform;
+import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.rdf4j.sparql.SPARQLMapper;
+import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.string.Validate;
+import systems.symbol.util.Stopwatch;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * RESTful endpoint for searching facts in a knowledge base then hydrating the results from the knowledge base.
+ */
+@Path("ux/find")
+@Tag(name = "api.ux.find.name", description = "api.ux.find.description")
+public class FindAPI extends GuardedAPI {
+
+/**
+ * Searches for facts in a knowledge base using a specified text finder and SPARQL query.
+ * Hydrates the found items using the specified SPARQL query and returns as JSON
+ *
+ * @param repo   The name of the text finder.
+ * @param model  The name of the SPARQL query.
+ * @param query  The search query.
+ * @param maxResults The maximum number of results to retrieve.
+ * @param relevancy  The relevancy threshold for search results.
+ * @return Response containing the search results in JSON format.
+ */
+@GET
+@Operation(
+summary = "api.ux.find.get.summary",
+description = "api.ux.find.get.description"
+)
+@Path("{repo}/{model: .*}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response search(
+@PathParam("repo") String repo,
+@PathParam("model") String model,
+@QueryParam("query") String query,
+@QueryParam("maxResults") int maxResults,
+@QueryParam("relevancy") double relevancy,
+@Context UriInfo uriInfo,
+@HeaderParam("Authorization") String auth) throws IOException {
+return doSearch(repo, model, query, maxResults, relevancy, uriInfo, auth);
+}
+
+@POST
+@Operation(
+summary = "api.ux.find.post.summary",
+description = "api.ux.find.post.description"
+)
+@Path("{repo}/{model: .*}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response searchModel(
+@PathParam("repo") String repo,
+@PathParam("model") String model,
+@QueryParam("query") String query,
+@QueryParam("maxResults") int maxResults,
+@QueryParam("relevancy") double relevancy,
+@Context UriInfo uriInfo,
+@HeaderParam("Authorization") String auth) throws IOException {
+return doSearch(repo, model, query, maxResults, relevancy, uriInfo, auth);
+}
+
+public Response doSearch(
+String repo,
+String model,
+String query,
+int maxResults,
+double relevancy,
+UriInfo uriInfo,
+String auth) throws IOException {
+
+Stopwatch stopwatch = new Stopwatch();
+log.info("ux.find: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
+
+DecodedJWT jwt;
+try {
+jwt = authenticate(auth);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+}
+if (Validate.isNonAlphanumeric(repo)) {
+return new OopsResponse("api.ux.find#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
+}
+if (!Validate.isURN(model)) {
+model = model.isEmpty() ?platform.getSelf()+"ux/find":platform.getSelf()+model;
+}
+log.info("ux.find.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
+
+// Get the text finder instance from the platform
+FactFinder searcher = platform.getFactFinder(repo);
+if (searcher == null) {
+return new OopsResponse("api.ux.find#finder-missing", Response.Status.NOT_FOUND).asJSON();
+}
+
+// Get the RDF repository instance from the platform
+Repository repository = platform.getRepository(repo);
+if (repository == null) {
+return new OopsResponse("api.ux.find#repository-missing", Response.Status.NOT_FOUND).asJSON();
+}
+
+// Check if the repository is initialized
+if (!repository.isInitialized()) {
+return new OopsResponse("api.ux.find#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+}
+
+log.info("timer.start: {}", stopwatch.summary());
+// Use the platform SPARQL repository
+try (RepositoryConnection connection = repository.getConnection()) {
+IQConnection iq = new IQConnection(platform.getSelf(), connection);
+IQScriptCatalog library = new IQScriptCatalog(iq);
+
+// Set a default relevancy threshold if not provided
+if (relevancy < 0.1) relevancy = 0.5;
+
+// Find matches using the text finder
+List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
+log.info("ux.find.matches: {} @ {}", matches.size(), stopwatch.summary());
+
+StringBuilder theseMatches = new StringBuilder();
+// Convert matches to a VALUES clause for SPARQL query
+for (EmbeddingMatch<TextSegment> match : matches) {
+theseMatches.append("(")
+.append("<").append(match.embeddingId()).append("> ")
+.append(match.score())
+.append(")");
+}
+Map<String, Object> bindings = new HashMap<>();
+bindings.put("these", theseMatches.toString());
+
+// The query is interpolated to respect {{these}} VALUES bindings
+String hydrateQuery = library.getSPARQL(model, bindings);
+log.info("ux.find.hydrate: {} -> {} @ {}", model, hydrateQuery, stopwatch.summary());
+if (hydrateQuery == null || hydrateQuery.isEmpty()) {
+return new OopsResponse("api.ux.find#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
+}
+
+// Use model to synthesize an answer model
+TupleQuery tupleQuery = connection.prepareTupleQuery(hydrateQuery);
+try (TupleQueryResult evaluate = tupleQuery.evaluate()) {
+List<Map<String, Object>> models = SPARQLMapper.toMaps(evaluate);
+log.info("ux.find.done: {} @ {}", models.size(), stopwatch.summary());
+DataResponse response = new DataResponse(models);
+response.set("found", models.size());
+response.set("elapsed", stopwatch.elapsed());
+return response.asJSON();
+} catch (QueryEvaluationException e) {
+return new OopsResponse("api.ux.find#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+}
+} catch (IOException e) {
+return new OopsResponse("api.ux.find#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+}
+}
+
+}

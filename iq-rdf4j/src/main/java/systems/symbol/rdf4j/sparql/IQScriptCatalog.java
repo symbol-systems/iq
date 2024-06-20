@@ -8,6 +8,7 @@ package systems.symbol.rdf4j.sparql;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import systems.symbol.COMMONS;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.render.HBSRenderer;
 
 import java.io.IOException;
@@ -49,7 +51,7 @@ this.iq = new IQConnection(self, connection);
 public String getSPARQL(String queryPath) {
 Literal content;
 if (!queryPath.contains(":")) content= getContent(iq.toIRI(queryPath), SPARQL_MIME);
-else content = getContent(IQ.vf.createIRI(queryPath), SPARQL_MIME);
+else content = getContent(Values.iri(queryPath), SPARQL_MIME);
 return content==null?null:content.stringValue();
 }
 
@@ -86,7 +88,8 @@ return content==null?null:content.stringValue();
  */
 @Override
 public Literal getContent(Resource query, IRI mimetype) {
-return IQScripts.findScript(iq.getConnection(), query, mimetype, iq.getSelf());
+log.info("sparql.getContent: {} -> {}", query, mimetype);
+return IQScripts.findScript(iq.getConnection(), query, mimetype,null);
 }
 
 }

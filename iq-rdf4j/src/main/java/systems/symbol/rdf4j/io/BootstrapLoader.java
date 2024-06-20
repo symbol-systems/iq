@@ -102,7 +102,8 @@ init(context,connection);
 	protected void findAllFiles(File home, File dir, boolean recurse) throws IOException {
 		File[] files = dir.listFiles();
 		if(files==null) throw new IOException("Directory listing failed: "+dir.getAbsolutePath());
-		if (VERBOSE) log.debug("deploy.scan: "+dir.getAbsolutePath() + ", files: " + files.length);
+//		if (VERBOSE)
+		log.info("deploy.folder: "+dir.getAbsolutePath() + " & files: x" + files.length);
 
 		// files first
 for (File file : files) {
@@ -117,14 +118,15 @@ for (File file : files) {
 if (file.isFile() || file.getName().startsWith(".")) {
 // ignore .dot files
 } else if (file.isDirectory() && recurse) {
-findAllFiles(home, file, true);
+findAllFiles(home, file, recurse);
 }
 }
 	}
 
 	private void deployFile(File home, File file) throws IOException {
 		if (!isChanged(file)) {
-			if (VERBOSE) log.debug("not-modified: "+file.getAbsolutePath());
+			//if (VERBOSE)
+			 log.info("not-modified: {}", file.getAbsolutePath());
 			return;
 		}
 		String name = file.getName();
@@ -144,7 +146,8 @@ findAllFiles(home, file, true);
 			format = null;
 		}
 
-		log.debug("deploy.file: {} @ {} -> {} ", mediatype==null?format:mediatype, iri, file.length());
+		log.info("deploy.file: {} @ {} -> {} --> {}", mediatype==null?format:mediatype, iri, file.getAbsolutePath(), file.length());
+		log.info("deploy.file: {} @ {} -> {} --> {}", mediatype==null?format:mediatype, iri, file.getAbsolutePath(), file.length());
 
 		FileInputStream inStream = new FileInputStream(file);
 		deploy(iri, inStream, mediatype, format);

@@ -8,7 +8,7 @@ import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.string.Validate;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -106,7 +106,7 @@ if (relevancy < 0.1) relevancy = 0.5;
 
 // Find matches using the text finder
 List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
-log.info("api.search.facts.matches: {} @ {}", matches.size(), stopwatch.summary());
+log.info("search.facts.matches: {} @ {}", matches.size(), stopwatch.summary());
 
 // Convert matches to a VALUES clause for SPARQL query
 StringBuilder theseMatches = new StringBuilder();
@@ -122,7 +122,7 @@ bindings.put("these", theseMatches.toString());
 // Use a query to hydrate answers
 // The query is interpolated to respect {{these}} VALUES bindings
 String hydrateQuery = library.getSPARQL(sparql, bindings);
-log.info("api.search.facts.hydrate: {} -> {} @ {}", sparql, hydrateQuery, stopwatch.summary());
+log.info("search.facts.hydrate: {} -> {} @ {}", sparql, hydrateQuery, stopwatch.summary());
 if (hydrateQuery == null || hydrateQuery.isEmpty()) {
 return new OopsResponse("api.search.facts#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
 }
@@ -132,8 +132,8 @@ return new OopsResponse("api.search.facts#hydrate-not-found", Response.Status.NO
 TupleQuery tupleQuery = connection.prepareTupleQuery(hydrateQuery);
 try (TupleQueryResult evaluate = tupleQuery.evaluate()) {
 List<Map<String, Object>> models = SPARQLMapper.toMaps(evaluate);
-log.info("api.search.facts.done: {} @ {}", models.size(), stopwatch.summary());
-return new SimpleResponse(models).asJSON();
+log.info("search.facts.done: {} @ {}", models.size(), stopwatch.summary());
+return new DataResponse(models).asJSON();
 } catch (QueryEvaluationException e) {
 return new OopsResponse("api.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 }

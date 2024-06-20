@@ -9,8 +9,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.repository.Repository;
 import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -33,8 +33,8 @@ public Response initRepository(@PathParam("type") String type,
    @PathParam("repo") String repo,
    @HeaderParam("Authorization") String auth) {
 if (!Validate.isBearer(auth)) {
-log.info("api.kb.find#protected");
-return new OopsResponse("api.init#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+log.info("kb.find#protected");
+return new OopsResponse("api.init#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.init#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
@@ -53,6 +53,6 @@ if (repository == null || !repository.isInitialized()) {
 return new OopsResponse("api.init.broken", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 }
 
-return new SimpleResponse("api.init.ok").asJSON();
+return new DataResponse("api.init.ok").asJSON();
 }
 }

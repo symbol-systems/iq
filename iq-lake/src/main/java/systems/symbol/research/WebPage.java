@@ -51,7 +51,7 @@ Set<IRI> done = new HashSet<>();
 log.info("read: {} @ {}", state, actor);
 try {
 generated(model, actor, getSelf(), state, getSelf());
-processor.accept(new ContentEntity<String>((IRI) state, null));
+processor.accept(new ContentEntity<String>((IRI) state, null, "application/xhtml+xml"));
 } catch (Exception e) {
 throw new RuntimeException(e);
 }

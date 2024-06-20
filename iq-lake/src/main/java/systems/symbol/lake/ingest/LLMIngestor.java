@@ -32,7 +32,7 @@ this.llm.complete(thread);
 I_LLMessage<?> latest = thread.latest();
 String reply = latest.getContent().toString();
 log.debug("llm.reply: {} -> {}", latest.getType(), reply);
-return new ContentEntity<String>(content.getSelf(), reply);
+return new ContentEntity<String>(content.getSelf(), reply, "text/plain");
 }
 
 @Override

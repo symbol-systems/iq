@@ -39,8 +39,8 @@ public Response constructQuery(@PathParam("repo") String repo,
    @PathParam("query") String query,
    @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
-log.info("api.construct#protected");
-return new OopsResponse("api.llm.openai#authentication-required", Response.Status.UNAUTHORIZED).asJSON();
+log.info("construct#protected");
+return new OopsResponse("api.llm.openai#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
 return new OopsResponse("api.construct#repository-invalid", Response.Status.BAD_REQUEST).asJSON();

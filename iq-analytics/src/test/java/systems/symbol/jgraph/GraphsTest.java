@@ -11,8 +11,6 @@ import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 
@@ -20,19 +18,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class GraphsTest {
 private static final Logger log = LoggerFactory.getLogger( GraphsTest.class );
 
-BootstrapRepository repository;
-IRI ctx, alice, bob, charlie, delta, knows;
+static BootstrapRepository repository;
+static IRI ctx, alice, bob, charlie, delta, knows;
 //TripleSource triples;
 
-@BeforeTest
-void bootstrap() throws IOException {
+@BeforeAll
+static void bootstrap() throws IOException {
 repository = new BootstrapRepository();
 ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
 assert ctx!=null;
+log.info("iq.graph.loaded:" +ctx);
 alice = repository.getValueFactory().createIRI("urn:iq:test:Alice");
 bob = repository.getValueFactory().createIRI("urn:iq:test:Bob");
 charlie = repository.getValueFactory().createIRI("urn:iq:test:Charlie");

@@ -30,7 +30,7 @@ public class Prompts {
 protected static final Logger log = LoggerFactory.getLogger(Prompts.class);
 public static final String INTENT = "intent";
 public static final String CONTENT = "content";
-private static final String SYSTEM_JSON_INTENT = "\nOnly answer in valid JSON: { \""+CONTENT+"\": \"{explanation}\", \""+INTENT+"\": \"{user_intent_uri}\" }";
+private static final String SYSTEM_JSON_INTENT = "\nOnly answer in valid JSON: { \""+CONTENT+"\": \"{explanation}\", \""+INTENT+"\": \"{user_intent_IRI}\" }";
 private static final String CHOOSE_INTENT = "\n|available-intent|user instruction|";
 
 /**
@@ -108,18 +108,21 @@ return prompt(new Conversation(), actor,current, model, my);
  */
 public static I_Chat<String> prompt(Conversation chat, IRI actor, Resource current, Model model, Bindings my) throws IOException {
 Set<Literal> selfPrompts = RDFHelper.values(model, actor);
-log.info("prompt.actor: {} -> {}", actor, selfPrompts);
+log.info("prompt.actor: {} -> {} -> {}", actor, selfPrompts, current);
 for(Literal p: selfPrompts) {
 String template = HBSRenderer.template(p.stringValue(), my);
 chat.system(template);
 }
 // state prompt
+if (current!=null) {
 Set<Literal> statePrompts = RDFHelper.values(model, current);
 for(Literal p: statePrompts) {
 String template = HBSRenderer.template(p.stringValue(), my);
 chat.system(template);
 }
 log.info("prompt.state: {} -> {}", current, statePrompts);
+}
+
 return chat;
 }
 

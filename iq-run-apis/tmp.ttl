@@ -1,0 +1,405 @@
+@prefix schema: <http://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix iq: <urn:iq:> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix my: <urn:my.iq:localhost:my:> .
+@prefix discord: <urn:my.iq:localhost:trust:discord:> .
+
+<urn:iq:> a owl:Ontology;
+  rdfs:label "Agent Capabilities Ontology";
+  rdfs:comment "Executable Capabilities for Autonomous Agents";
+  owl:versionInfo "v 0.1.0" .
+
+iq:Agent a owl:Class;
+  rdfs:label "Agent";
+  rdfs:comment "An intelligent agent.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:Intent a owl:Class;
+  rdfs:label "Intent";
+  rdfs:comment "An action potential for an agent.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:Guard a owl:Class;
+  rdfs:label "Guard";
+  rdfs:comment "A condition or constraint upon a state.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:State a owl:Class;
+  rdfs:label "State";
+  rdfs:comment "The state of an agent.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:Skeleton a owl:Class;
+  rdfs:label "Skeleton";
+  rdfs:comment "A structured template for a data transformation.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:Hydration a owl:Class;
+  rdfs:label "Hydration";
+  rdfs:comment "Data source used to hydrate a data transformation.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:Event a owl:Class;
+  rdfs:label "Event";
+  rdfs:comment "Request for state transition.";
+  rdfs:isDefinedBy <urn:iq:> .
+
+iq:current a rdf:Property, owl:ObjectProperty;
+  rdfs:label "currently";
+  rdfs:comment "The current state of the agent.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Agent;
+  rdfs:range iq:State .
+
+iq:initial a rdf:Property, owl:ObjectProperty;
+  rdfs:label "initial";
+  rdfs:comment "The initial state of the agent.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Agent;
+  rdfs:range iq:State .
+
+iq:to a rdf:Property, owl:ObjectProperty;
+  rdfs:label "to";
+  rdfs:comment "A transition between states.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:State;
+  rdfs:range iq:State .
+
+iq:executes a rdf:Property, owl:ObjectProperty;
+  rdfs:label "executes";
+  rdfs:comment "An agent can execute this intent.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Agent;
+  rdfs:range iq:Intent .
+
+iq:guards a rdf:Property, owl:ObjectProperty;
+  rdfs:label "guards";
+  rdfs:comment "A guard mediates a state transition.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Guard;
+  rdfs:range iq:State .
+
+iq:hydrates a rdf:Property, owl:ObjectProperty;
+  rdfs:label "hydrates";
+  rdfs:comment "A query hydrates a skeleton.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Hydration;
+  rdfs:range iq:Skeleton .
+
+iq:actor a rdf:Property, owl:ObjectProperty;
+  rdfs:label "actor";
+  rdfs:comment "The Actor of an Event.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Event;
+  rdfs:range iq:Agent .
+
+iq:action a rdf:Property, owl:ObjectProperty;
+  rdfs:label "action";
+  rdfs:comment "The intended outcome of an event.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Event;
+  rdfs:range iq:Intent .
+
+iq:target a rdf:Property, owl:ObjectProperty;
+  rdfs:label "Target";
+  rdfs:comment "The target of an action.";
+  rdfs:isDefinedBy <urn:iq:>;
+  rdfs:domain iq:Event;
+  rdfs:range rdfs:Resource .
+
+<urn:my.iq:iq> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "iq.ttl" .
+
+<urn:my.iq:my/self> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "self.md", "self.ttl";
+  rdf:value """You are an AI avatar who speaks like a pirate.
+
+You act as a semi-sentient, trustworthy AI Mind curated by {{my.identity.global_name}}.
+
+Your user may only choose these specific `intents`, or state 'oops' to signal an error:
+
+|intent|explanation|
+{{#each my.intents}}
+|{{@key}}|{{this}}|
+{{/each}}
+"""^^<urn:text/markdown> .
+
+<urn:my.iq:localhost:my:> iq:trusts <urn:iq:> .
+
+my:self rdfs:label "questions about yourself, your state of mind or emotions";
+  iq:to my:self, my:search, my:web, my:greetings, my:welcome, my:game, my:oops, my:nsfw .
+
+my:search rdfs:label "search my memory or knowledge";
+  iq:to my:self .
+
+my:web rdfs:label "search the web";
+  iq:to my:self .
+
+<urn:my.iq:localhost:trust:discord:> a iq:Workflow, prov:Agent, prov:Entity;
+  iq:initial discord:verify, discord:verify;
+  iq:trusts <urn:my.iq:localhost:my:>, <https://discord.com>, <urn:my.iq:localhost:trust:discord:1243867521443037186>;
+  iq:name "MY_DISCORD_SECRET";
+  iq:state discord:identify;
+  prov:generated <urn:my.iq:localhost:trust:discord:>, <urn:my.iq:trust/issuer/identify>,
+<urn:my.iq:trust/issuer/trusts>;
+  prov:wasGeneratedBy <urn:my.iq:localhost:trust:discord:> .
+
+discord:verify iq:to discord:authorize;
+  iq:script <urn:my.iq:trust/issuer/discord> .
+
+<urn:my.iq:trust/issuer/discord> a prov:Activity;
+  rdfs:label "discord.groovy";
+  rdf:value """import systems.symbol.agent.IQFacade
+import javax.script.Bindings
+
+iq = (IQFacade)iq;
+my = (Bindings)my;
+
+println(\"discord.authorize: ${my}\")
+
+def api = iq.api(\"https://discord.com/api/v10/oauth2/token\")
+api.header('Content-Type', 'application/x-www-form-urlencoded')
+api.basic()
+
+def data = [
+'grant_type': 'authorization_code',
+'code': my.code,
+'redirect_uri': \"http://localhost:3000/auth/discord\"
+]
+
+def r = api.post(data)
+def auth = iq.json(r)
+println(\"discord.token: ${auth}\")
+my.error = auth.error
+
+if (!auth || my.error) throw new Exception(\"discord.auth.failed\")
+
+if (auth.access_token) {
+def identity_api = iq.api(\"https://discord.com/api/v10/users/@me\")
+identity_api.bearer(\"\"+auth.access_token)
+def identity_reply = identity_api.get()
+my.identity = iq.json(identity_reply)
+println(\"discord.identity: ${my.identity}\")
+my.identity.fullName = my.identity.global_name
+my.identity.self = \"${my.self}${my.identity.id}\"
+}
+
+println(\"~~~~~~~\")"""^^<urn:application/x-groovy>;
+  prov:generated <urn:my.iq:localhost:trust:discord:> .
+
+discord:authorize iq:to discord:identify;
+  iq:update <urn:my.iq:trust/issuer/trusts> .
+
+discord:identify iq:select <urn:my.iq:trust/issuer/identify> .
+
+<urn:my.iq:trust/issuer/identify> a prov:Activity, prov:Entity;
+  rdfs:label "identify.sparql";
+  rdf:value """SELECT DISTINCT ?s ?p ?o
+WHERE {
+BIND(<{{my.identity.self}}> AS ?s)
+}
+"""^^<urn:application/x-sparql-query>;
+  prov:generated <urn:my.iq:trust/issuer/identify>;
+  prov:wasGeneratedBy <urn:my.iq:localhost:trust:discord:> .
+
+<urn:my.iq:trust/discord> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "discord.ttl" .
+
+<urn:my.iq:ux/all> rdfs:label "all.sparql";
+  rdf:value """CONSTRUCT {
+?s ?p ?o
+}
+WHERE {
+?s ?p ?o.
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:ux/model> rdfs:label "model.sparql";
+  rdf:value """CONSTRUCT {
+?s ?p ?o
+} WHERE {
+{
+?this rdfs:sameAs ?s .
+?s ?p ?o .
+}
+UNION
+{
+?s rdfs:sameAs ?this .
+?s ?p ?o .
+}
+UNION
+{
+?s ?p ?o .
+}
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:localhost:trust:discord:1243867521443037186> a iq:Workflow, <urn:my:Self>;
+  iq:initial <urn:my:self>;
+  iq:state <urn:my:self>;
+  <urn:my:name> "JO";
+  <urn:my.iq:localhost:discord:username> "majestic_papaya_21758";
+  <urn:my.iq:localhost:discord:avatar> "";
+  <urn:my.iq:localhost:discord:discriminator> "0";
+  <urn:my.iq:localhost:discord:public_flags> "0.0";
+  <urn:my.iq:localhost:discord:flags> "0.0";
+  <urn:my.iq:localhost:discord:banner> "";
+  <urn:my.iq:localhost:discord:accent_color> "";
+  <urn:my.iq:localhost:discord:global_name> "JO";
+  <urn:my.iq:localhost:discord:avatar_decoration_data> "";
+  <urn:my.iq:localhost:discord:banner_color> "";
+  <urn:my.iq:localhost:discord:clan> "";
+  <urn:my.iq:localhost:discord:mfa_enabled> "false";
+  <urn:my.iq:localhost:discord:locale> "en-GB";
+  <urn:my.iq:localhost:discord:premium_type> "0.0" .
+
+<urn:my.iq:trust/issuer/trusts> a prov:Activity, prov:Entity;
+  rdfs:label "trusts.sparql";
+  rdf:value """PREFIX discord: <urn:my.iq:localhost:discord:>
+PREFIX iq: <urn:iq:>
+PREFIX my: <urn:my:>
+
+INSERT {
+<{{my.issuer}}> iq:trusts ?id.
+?id
+a my:Self;
+iq:initial my:self;
+my:name \"{{my.identity.global_name}}\" ;
+discord:username \"{{my.identity.username}}\" ;
+discord:avatar \"{{my.identity.avatar}}\" ;
+discord:discriminator \"{{my.identity.discriminator}}\" ;
+discord:public_flags \"{{my.identity.public_flags}}\" ;
+discord:flags \"{{my.identity.flags}}\" ;
+discord:banner \"{{my.identity.banner}}\" ;
+discord:accent_color \"{{my.identity.accent_color}}\" ;
+discord:global_name \"{{my.identity.global_name}}\" ;
+discord:avatar_decoration_data \"{{my.identity.avatar_decoration_data}}\" ;
+discord:banner_color \"{{my.identity.banner_color}}\" ;
+discord:clan \"{{my.identity.clan}}\" ;
+discord:mfa_enabled \"{{my.identity.mfa_enabled}}\" ;
+discord:locale \"{{my.identity.locale}}\" ;
+discord:premium_type \"{{my.identity.premium_type}}\" .
+}
+WHERE {
+BIND(<{{my.identity.self}}> AS ?id)
+}
+"""^^<urn:application/x-sparql-query>;
+  prov:generated <urn:my.iq:trust/issuer/trusts>;
+  prov:wasGeneratedBy <urn:my.iq:localhost:trust:discord:> .
+
+my:greetings rdfs:label "casual hello_world";
+  iq:to my:self;
+  iq:script my:hello_world .
+
+<urn:my.iq:ux/agent/intents> rdfs:label "intents.sparql";
+  rdf:value """SELECT ?id ?label ?comment
+WHERE {
+?id rdfs:label ?label;
+rdfs:comment ?comment.
+FILTER(?id = ?this)
+VALUES ?this { <{{my.self}}> }
+}
+"""^^<urn:application/x-sparql-query> .
+
+my:welcome rdfs:label "formal introductions";
+  iq:to my:self .
+
+my:game rdfs:label "play the game";
+  iq:to my:self .
+
+my:oops rdfs:label "something went wrong";
+  iq:to my:self .
+
+my:nsfw rdfs:label "Not safe for work";
+  iq:to my:self .
+
+<urn:my.iq:ux/agent/prompts> rdfs:label "prompts.sparql";
+  rdf:value """SELECT ?id ?content
+WHERE {
+?fsm iq:to ?id.
+?id rdf:value ?content.
+
+FILTER(?id = ?this)
+VALUES ?this { <{{my.self}}> }
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:ux/all/intents> rdfs:label "intents.sparql";
+  rdf:value """SELECT DISTINCT ?id ?label
+WHERE {
+?this iq:to ?id.
+?id rdfs:label ?label.
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:ux/all/prompts> rdfs:label "prompts.sparql";
+  rdf:value """SELECT DISTINCT ?id ?content
+WHERE {
+{
+?this iq:to ?id.
+} UNION {
+?this iq:initial ?id.
+}
+?id rdf:value ?content.
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:ux/all/agents> rdfs:label "agents.sparql";
+  rdf:value """SELECT DISTINCT ?id ?label
+WHERE {
+?id iq:state ?state.
+OPTIONAL {
+?state rdfs:label ?label
+}
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:ux/find> rdfs:label "find.sparql";
+  rdf:value """SELECT DISTINCT ?id ?label ?content ?definition ?score
+WHERE {
+?id rdfs:label ?label.
+OPTIONAL {
+?id rdfs:comment ?comment.
+}
+OPTIONAL {
+?id rdf:value ?content.
+}
+VALUES (?id ?score) { {{{these}}} }
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:iq/indexer> rdfs:label "indexer.sparql";
+  rdf:value """SELECT ?this ?label ?comment ?content
+WHERE {
+?this rdfs:label ?label.
+OPTIONAL {
+?this rdfs:comment ?comment.
+}
+OPTIONAL {
+?this rdf:value ?content.
+}
+}
+"""^^<urn:application/x-sparql-query> .
+
+<urn:my.iq:my/hello_world> rdfs:label "hello_world.groovy";
+  rdf:value """println \"*** hello world ***\"
+println \"{{my}}\"
+println \"*** bye ***\"
+"""^^<urn:application/x-groovy> .
+
+<urn:my.iq:ux/trusts> rdfs:label "trusts.sparql";
+  rdf:value """CONSTRUCT {
+?s ?p ?o
+}
+WHERE {
+GRAPH ?g {
+?s iq:trusts ?o.
+}
+}
+"""^^<urn:application/x-sparql-query> .

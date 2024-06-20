@@ -19,6 +19,6 @@ protected ContentEntity<String> convert(ContentEntity<String> request) throws IO
 URL page = new URL(request.getSelf().stringValue());
 log.info("page.url: {}" , page.toExternalForm());
 String content = IOCopier.toString(page.openConnection().getInputStream());
-return new ContentEntity<>(Values.iri(page.toExternalForm()), content);
+return new ContentEntity<>(Values.iri(page.toExternalForm()), content, "text/html");
 }
 }

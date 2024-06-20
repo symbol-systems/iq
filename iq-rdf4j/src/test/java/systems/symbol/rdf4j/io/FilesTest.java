@@ -5,9 +5,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import org.testng.annotations.Test;
 
 class FilesTest {
 
@@ -22,7 +20,7 @@ File file = new File("/path/to/home/resource/file.txt");
 IRI result = Files.toIRI(vf, baseIRI, parentFile, file);
 assert result != null;
 
-assertEquals("http://example.org/ns/resource/file", result.stringValue());
+assert ("http://example.org/ns/resource/file".equals(result.stringValue()));
 }
 
 @Test
@@ -31,6 +29,6 @@ File parentFile = new File("/path/to/home");
 File file = new File("/other/path/resource/file.txt");
 
 IRI result = Files.toIRI(vf, baseIRI, parentFile, file);
-assertNull(result);
+assert (null == result);
 }
 }

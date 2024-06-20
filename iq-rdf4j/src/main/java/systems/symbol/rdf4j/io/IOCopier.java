@@ -47,7 +47,11 @@ public class IOCopier {
 		return copied;
 	}
 
-	public void process(InputStream input, OutputStream output) throws IOException {
+	public static int copy(File from, File to) throws IOException {
+		return copy(new FileInputStream(from), new FileOutputStream(to));
+	}
+
+public void process(InputStream input, OutputStream output) throws IOException {
 		IOUtils.copy(input, output);
 		output.flush();
 	}

@@ -5,7 +5,10 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.junit.jupiter.api.Test;
+
+import org.testng.annotations.Test;
+//import org.junit.jupiter.api.Test;
+
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.rdf4j.store.LiveModel;

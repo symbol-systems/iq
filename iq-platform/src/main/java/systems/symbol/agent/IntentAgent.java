@@ -60,7 +60,7 @@ return false;
 @Override
 @RDF(IQ_NS.IQ + "agent")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
-log.info("agent.execute: {} -> {}", actor, state);
+log.info("agent.execute: {} -> {} -> {}", intent, actor, state);
 if (state instanceof IRI)
 return intent.execute(actor, state, bindings);
 Set<IRI> iris = new HashSet<>();

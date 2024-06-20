@@ -2,7 +2,7 @@ package systems.symbol.controller.search;
 
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.string.Validate;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -22,7 +22,7 @@ public Response search(@PathParam("provider") String provider, @QueryParam("quer
 if (Validate.isNonAlphanumeric(provider)) {
 return new OopsResponse("api.search.web#provider-invalid", Response.Status.BAD_REQUEST).asJSON();
 }
-return new SimpleResponse("api.search.web:"+provider+"?query="+query).asJSON();
+return new DataResponse("api.search.web:"+provider+"?query="+query).asJSON();
 }
 }
 

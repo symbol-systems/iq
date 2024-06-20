@@ -46,17 +46,14 @@ model.setNamespace(ns.getPrefix(), ns.getName());
 
 public static Model dump(RepositoryConnection conn, File to_file, RDFFormat format) throws Exception {
 FileOutputStream out = new FileOutputStream(to_file);
-Model model = dump(conn, out, format, null);
+Model model = dump(conn, out, format);
 out.close();
 return model;
 }
 
-public static Model dump(RepositoryConnection from, OutputStream out, RDFFormat format, IRI baseIRI) throws Exception {
+public static Model dump(RepositoryConnection from, OutputStream out, RDFFormat format) throws Exception {
 Model model = dmf.createEmptyModel();
 copyNamespaces(from, model);
-if (baseIRI != null) {
-model.setNamespace("", baseIRI.stringValue());
-}
 from.export(new StatementCollector(model, new HashMap<>()));
 
 WriterConfig config = getWriterConfig();

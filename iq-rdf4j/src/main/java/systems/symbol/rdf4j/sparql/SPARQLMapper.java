@@ -1,5 +1,6 @@
 package systems.symbol.rdf4j.sparql;
 
+import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.util.RDFPrefixer;
@@ -189,7 +190,7 @@ args.put(KEY_SELF, iq.getSelf()); // @self for self-referential
 // special treatment of values - var is for ***REMOVED***s, @var is for IRIs
 TupleQuery tupleQuery = iq.getConnection().prepareTupleQuery(sparql_select);
 if (args!=null) {
-setBindings(iq.getConnection().getValueFactory(), tupleQuery, args);
+setBindings(tupleQuery, args);
 }
 tupleQuery.setIncludeInferred(inferred);
 tupleQuery.setMaxExecutionTime(maxExecutionTime);
@@ -209,7 +210,7 @@ sparql = prefixed(sparql);
 
 
 BooleanQuery query = iq.getConnection().prepareBooleanQuery(QueryLanguage.SPARQL, sparql);
-setBindings(iq.getConnection().getValueFactory(), query, args);
+setBindings(query, args);
 query.setIncludeInferred(inferred);
 if (maxExecutionTime>0) query.setMaxExecutionTime(maxExecutionTime);
 return query.evaluate();
@@ -221,7 +222,7 @@ if (!uc_query.contains("DESCRIBE") || !uc_query.contains("CONSTRUCT")) return nu
 sparql = prefixed(sparql);
 
 GraphQuery query = iq.getConnection().prepareGraphQuery(QueryLanguage.SPARQL, sparql);
-setBindings(iq.getConnection().getValueFactory(), query, args);
+setBindings(query, args);
 query.setIncludeInferred(inferred);
 if (maxExecutionTime>0) query.setMaxExecutionTime(maxExecutionTime);
 return query.evaluate();
@@ -233,28 +234,27 @@ return RDFPrefixer.getSPARQLPrefix(iq.getConnection()) + sparql;
 return sparql;
 }
 
-public static void setBindings(ValueFactory vf, Query query, Map<String,Object>  args) {
-setBindings(vf, query,args,true);
-}
-
-public static void setBindings(ValueFactory vf, Query query, Map<String,Object>  args, boolean safeIRIs) {
+public static void setBindings(Operation operation, Map<String,Object>  args) {
 if (args==null || args.isEmpty()) return;
 for (String key : args.keySet()) {
 Object value = args.get(key);
 if (value!=null) {
-String toString = value.toString();
-boolean maybeURL = maybeURL(toString);
+String value$ = value.toString();
+boolean maybeURL = maybeURL(value$);
 // this, _id and @ prefixes are cast to IRIs
 if ( (key.startsWith("@") || key.startsWith("_")) && maybeURL) {
-log.debug("iq.queries.bind.iri: " + key + " = " + toString);
-query.setBinding(key.substring(1), vf.createIRI(toString));
+log.debug("iq.queries.bind.iri: {} == {}" , key, value$);
+operation.setBinding(key.substring(1), Values.iri(value$));
 } else if ( key.equals("this") && maybeURL) {
-log.debug("iq.queries.bind.this: " + key + " = " + toString);
-query.setBinding(key, vf.createIRI(toString));
+log.debug("iq.queries.bind.this: {} == {}" , key, value$);
+operation.setBinding(key, Values.iri(value$));
+} else if ( value$.startsWith("urn:")) {
+log.debug("iq.queries.bind.urn: {} == {}" , key, value$);
+operation.setBinding(key, Values.iri(value$));
 } else {
 // everything else is a ***REMOVED***
-log.debug("iq.queries.bind.$: " + key + " == " + toString);
-query.setBinding(key, vf.createLiteral(toString));
+log.debug("iq.queries.bind.$: {} == {}" , key, value$);
+operation.setBinding(key, Values.***REMOVED***(value$));
 }
 }
 }

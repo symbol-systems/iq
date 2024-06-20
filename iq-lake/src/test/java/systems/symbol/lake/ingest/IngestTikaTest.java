@@ -24,7 +24,7 @@ void testIngest() throws RepositoryException, IOException {
 boolean[] done = {false};
 try (FileSystemManager vfs = VFS.getManager()) {
 FileObject fileObject = vfs.resolveFile(new File(from, "Example.pdf").toURI());
-TikaDocumentIngestor<Object> tika = new TikaDocumentIngestor<>();
+TikaDocumentIngestor tika = new TikaDocumentIngestor();
 Object content = tika.convert(fileObject).getContent();
 assert content != null;
 assert content.toString().contains("Simple");

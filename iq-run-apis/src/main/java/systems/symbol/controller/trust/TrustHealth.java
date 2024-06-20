@@ -1,7 +1,9 @@
 package systems.symbol.controller.trust;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.HealthCheck;
+import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,10 +23,12 @@ public class TrustHealth extends GuardedAPI {
 @Path("health")
 @GET
 @Produces(MediaType.APPLICATION_JSON)
-public Response trustedHealth(@HeaderParam("Authorization") String bearer) {
-com.auth0.jwt.interfaces.DecodedJWT jwt = authenticate(bearer);
-if (jwt==null) {
-return new OopsResponse("api.trust.issuer#token-invalid", Response.Status.FORBIDDEN).asJSON();
+public Response trustedHealth(@HeaderParam("Authorization") String auth) {
+DecodedJWT jwt;
+try {
+jwt = authenticate(auth);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
 }
 return new HealthCheck("valid", jwt.getSubject()).asJSON();
 }

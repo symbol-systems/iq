@@ -20,22 +20,25 @@ import systems.symbol.platform.RDFConfigFactory;
 import systems.symbol.rdf4j.io.BootstrapLoader;
 import systems.symbol.secrets.*;
 import systems.symbol.string.PrettyString;
+import systems.symbol.trust.I_KeyStore;
+import systems.symbol.trust.SimpleKeyStore;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.security.NoSuchAlgorithmException;
 
-public class SpaceManager implements RepositoryResolver, I_StartStop {
+public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
 private final Logger log = LoggerFactory.getLogger(getClass());
 private final RepositoryManager manager;
+private final I_KeyStore keys;
+private final File keysHome;
 FileSystemManager vfs;
 File home, repoHome, logHome, importsHome, vaultHome, indexHome;
 I_SecretsStore secrets;
 DynamicModelFactory dmf = new DynamicModelFactory();
 String bootType = "memory", defaultType = "default";
 
-public SpaceManager(File home) throws IOException {
+public RealmManager(File home) throws Exception {
 this.home = home;
 this.logHome = new File(home, "log");
 this.importsHome = new File(home, "import");
@@ -49,10 +52,15 @@ this.indexHome.mkdirs();
 this.repoHome.mkdirs();
 this.vfs = VFS.getManager();
 this.manager = new LocalRepositoryManager(repoHome);
-this.secrets = new BasicFileVault(vaultHome);
+keysHome = new File(vaultHome,"keys");
+keysHome.mkdirs();
+this.keys = new SimpleKeyStore(keysHome);
+File secretsHome = new File(vaultHome,"secrets");
+secretsHome.mkdirs();
+this.secrets = new PlainPasswordVault(secretsHome);
 }
 
-public SpaceManager(IRI self, File home) throws Exception {
+public RealmManager(IRI self, File home) throws Exception {
 this(home);
 boot(self, this.importsHome);
 }
@@ -63,7 +71,7 @@ if (files != null) {
 for (File file : files) {
 if (file.isDirectory() && !file.getName().startsWith(".")) {
 String space = self.stringValue() + "_" + file.getName();
-log.info("space.boot: {} -> {} @ {}", space, bootType, file.getAbsolutePath());
+log.info("realm.boot: {} -> {} @ {}", space, bootType, file.getAbsolutePath());
 Repository repository = addRepository(self, PrettyString.sanitize(space), bootType);
 try (RepositoryConnection connection = repository.getConnection()) {
 BootstrapLoader loader = new BootstrapLoader(space, connection, true, true, true, true);
@@ -75,35 +83,27 @@ loader.deploy(file);
 start();
 }
 
-public I_Realm getSpace(IRI self, Model model) throws SecretsException {
-Map<IRI, FactFinder> finders = new HashMap<>();
+public I_Realm getRealm(IRI self, Model model) throws SecretsException {
 Repository repo = getRepository(self.stringValue());
 
 String id = PrettyString.sanitize(self.stringValue());
 File finderFile = new File(indexHome, id);
 FactFinder finder = new FactFinder(repo, finderFile, null, 10, 0.7);
+log.info("realm.finder: {} = {}", self, finder);
 
-File[] finderFiles = indexHome.listFiles();
-if (finderFiles!=null && finderFiles.length==0) {
-addFactFinder(self, id, repo, finders);
-} else if (finderFiles!=null) {
-for(File index : finderFiles) {
-addFactFinder(self, index.getName(), repo, finders);
-}
-}
+try {
+File keysFolder = new File(keysHome, id);
+SimpleKeyStore keyStore = new SimpleKeyStore(keysFolder);
 I_Secrets secrets = this.secrets.getSecrets(self);
 
-log.info("space.new: {} = {}", self, model.size());
-return new Realm(self, model, this.manager.getRepository(id), finder, secrets, this.vfs);
+log.info("realm.models: {} = {}", self, model.size());
+return new Realm(self, model, this.manager.getRepository(id), finder, secrets, this.vfs, keyStore.keys());
+} catch (Exception e) {
+throw new SecretsException(e.getMessage());
+}
 }
 
-public FactFinder addFactFinder(IRI self, String id, Repository repo, Map<IRI, FactFinder> finders) {
-FactFinder finder = new FactFinder(repo, finderFile, null, 10, 0.7);
-finders.put(self, finder);
-return finder;
-}
-
-public I_Realm getSpace(IRI self) throws SecretsException, IOException {
+public I_Realm getRealm(IRI self) throws SecretsException {
 Repository repo = getRepository(self.stringValue());
 
 // hydrate  model as a repo cache
@@ -114,8 +114,8 @@ for (Statement s : statements) {
 model.add(s);
 }
 }
-log.info("space.model: {} -> {}", self, model.size());
-return getSpace(self, model);
+log.info("realm.model: {} -> {}", self, model.size());
+return getRealm(self, model);
 }
 
 @Override
@@ -128,7 +128,7 @@ Repository repo = this.manager.getRepository(id);
 if (repo!=null) return repo;
 try {
 RepositoryConfig config = RDFConfigFactory.toConfig(self, id, type);
-log.info("space.add: {} -> {} -> {} --> {}", self, type, config.getID(), config.getTitle());
+log.info("realm.add: {} -> {} -> {} --> {}", self, type, config.getID(), config.getTitle());
 this.manager.addRepositoryConfig(config);
 repo = this.manager.getRepository(id);
 repo.init();
