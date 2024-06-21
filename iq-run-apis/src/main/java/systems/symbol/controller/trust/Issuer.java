@@ -40,10 +40,10 @@ protected final Logger log = LoggerFactory.getLogger(getClass());
 APIPlatform platform;
 
 @OPTIONS
-@Path("{path : .*}")
+@Path("issuer/{path : .*}")
 @Produces(MediaType.APPLICATION_JSON)
-public Response preflight(@PathParam("path") String path) {
-log.warn("preflight: {}", path);
+public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
+log.warn("preflight.trust?: {} @ {}", path, info.getBaseUri());
 return new DataResponse(null).asJSON();
 }
 

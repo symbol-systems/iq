@@ -39,11 +39,13 @@ return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
 File home = new File(platform.getWorkspace().getHome(), "vfs");
 File file = new File(home, fingerprint + "/file");
 
+log.info("ipfs.download: {} @ {} == {}", fingerprint, file, file.exists() );
 if (!file.exists()) {
 return Response.status(Response.Status.NOT_FOUND)
 .entity(new SimpleResponse("error", "File not found").asJSON())
 .build();
 }
+
 
 return Response.ok(file)
 .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")

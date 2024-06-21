@@ -1,7 +1,0 @@
-SELECT DISTINCT ?conceptScheme ?label
-WHERE {
-  ?conceptScheme a <http://www.w3.org/2004/02/skos/core#ConceptScheme> .
-  OPTIONAL {
-?conceptScheme <http://www.w3.org/2004/02/skos/core#prefLabel> ?label .
-  }
-}

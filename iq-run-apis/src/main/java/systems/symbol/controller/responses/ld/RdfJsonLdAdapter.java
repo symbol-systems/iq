@@ -23,8 +23,9 @@ StatementCollector collector = new StatementCollector(statements);
 query.evaluate(collector);
 
 // Serialize statements to JSON-LD format
+// Caused by: jakarta.json.stream.JsonParsingException: JsonParser#getObject() or JsonParser#getObjectStream() is valid only for START_OBJECT parser state. But current parser state is START_ARRAY
 try (StringWriter rdfWriter = new StringWriter()) {
-Rio.write(statements, rdfWriter, RDFFormat.JSONLD);
+Rio.write(statements, rdfWriter, RDFFormat.TURTLE);
 
 // Convert the RDF JSON-LD data to a JsonObject
 try (JsonReader jsonReader = Json.createReader(new StringReader(rdfWriter.toString()))) {

@@ -1,43 +1,40 @@
 package systems.symbol.controller.responses;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.rdf4j.query.GraphQuery;
+import systems.symbol.agent.MyFacade;
+import systems.symbol.controller.responses.ld.LDAdapter;
 import systems.symbol.controller.responses.ld.RdfJsonLdAdapter;
 
-import java.io.StringWriter;
+import javax.script.Bindings;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class LDResponse implements I_Response {
-private StringWriter $rdf;
 
-private final RdfJsonLdAdapter rdfJsonLdAdapter = new RdfJsonLdAdapter();
-
+GraphQuery query;
 public LDResponse(GraphQuery query) throws Exception {
-convertToLD(query);
+this.query = query;
 }
 
 public void convertToLD(GraphQuery query) throws Exception {
-JsonObject jsonLd = rdfJsonLdAdapter.convertRdfToJsonLd(query);
-try (StringWriter jsonWriter = new StringWriter();
- jakarta.json.JsonWriter writer = Json.createWriter(jsonWriter)) {
-writer.writeObject(jsonLd);
-$rdf = new StringWriter();
-$rdf.write(jsonWriter.toString());
-}
 }
 
 public Response asJSON() {
+Bindings jsonld = LDAdapter.toJSONLD(this.query.evaluate());
 Response.ResponseBuilder builder;
-if ($rdf != null) {
-builder = Response.ok($rdf.toString(), "application/ld+json");
-builder = addCORS(builder);
-} else {
-builder = Response.status(Response.Status.NO_CONTENT);
-}
 
-// Build and return the response
+Gson gson = new Gson();
+String json = gson.toJson(jsonld);
+
+builder = Response.ok(json, "application/json");
+builder = addCORS(builder);
 return builder.build();
 }
 
