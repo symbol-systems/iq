@@ -24,7 +24,9 @@ import systems.symbol.controller.responses.*;
 import systems.symbol.decide.LLMDecision;
 import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.llm.Conversation;
+import systems.symbol.llm.I_Chat;
 import systems.symbol.llm.I_LLM;
+import systems.symbol.llm.Prompts;
 import systems.symbol.llm.gpt.GenericGPT;
 import systems.symbol.platform.AgentService;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
@@ -44,6 +46,34 @@ import java.util.Map;
 @Tag(name = "api.ux.agent.name", description = "api.ux.agent.description")
 @Path("ux/agent")
 public class AgentAPI extends GuardedAPI {
+//
+//    @GET
+//    @Operation(
+//            summary = "api.ux.agent.get.summary",
+//            description = "api.ux.agent.get.description"
+//    )
+//    @Produces("application/ld+json")
+//    @Path("{repo}/{actor: .*}")
+//    public Response about(@PathParam("repo") String repo,@PathParam("actor") String _agent, @HeaderParam("Authorization") String auth) throws Exception {
+//        DecodedJWT jwt;
+//        try {
+//            jwt = authenticate(auth);
+//        } catch (OopsException e) {
+//            return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+//        }
+//        if (!Validate.isURN(_agent)) {
+//            return new OopsResponse("api.ux.about#invalid", Response.Status.BAD_REQUEST).asJSON();
+//        }
+//        log.info("ux.about.agent: {} -> {}", _agent, jwt.getSubject());
+//
+//        IRI actor = Values.iri(_agent);
+//        Repository repository = platform.getRepository(repo);
+//        try (RepositoryConnection connection = repository.getConnection()) {
+//            String sparql = RDFPrefixer.toSPARQL(connection, "DESCRIBE <" + actor + ">");
+//            GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
+//            return new LDResponse(graphQuery).asJSON();
+//        }
+//    }
 
     @GET
     @Operation(
@@ -52,7 +82,8 @@ public class AgentAPI extends GuardedAPI {
     )
     @Produces("application/ld+json")
     @Path("{repo}/{actor: .*}")
-    public Response about(@PathParam("repo") String repo,@PathParam("actor") String _agent, @HeaderParam("Authorization") String auth) throws Exception {
+    public Response hello(@PathParam("repo") String repo,@PathParam("actor") String _agent, @HeaderParam("Authorization") String auth) throws Exception, APIException {
+        Stopwatch stopwatch = new Stopwatch();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth);
@@ -60,17 +91,27 @@ public class AgentAPI extends GuardedAPI {
             return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
         }
         if (!Validate.isURN(_agent)) {
-            return new OopsResponse("api.ux.about#invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.ux.hello#invalid", Response.Status.BAD_REQUEST).asJSON();
         }
-        log.info("ux.about.agent: {} -> {}", _agent, jwt.getSubject());
 
+        I_Secrets secrets = platform.getSecrets();
+        String llmToken = secrets.getSecret("MY_OPENAI_API_KEY");
+        if (Validate.isMissing(llmToken)) {
+            return new OopsResponse("api.ux.hello#disabled", Response.Status.BAD_REQUEST).asJSON();
+        }
         IRI actor = Values.iri(_agent);
         Repository repository = platform.getRepository(repo);
         try (RepositoryConnection connection = repository.getConnection()) {
-            String sparql = RDFPrefixer.toSPARQL(connection, "DESCRIBE <" + actor + ">");
-            GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
-            RDFResponse rdfResponse = new RDFResponse(_agent, graphQuery, RDFFormat.JSONLD);
-            return rdfResponse.asJSONLD();
+            Bindings my = MyFacade.rebind(actor, new SimpleBindings(), jwt);
+
+            GenericGPT llm = new GenericGPT(llmToken, 1000);
+            AgentService service = new AgentService(actor, connection, secrets, my);
+            Resource state = service.getAgent().getStateMachine().getState();
+            log.info("ux.hello.state: {} -> {} @ {}", repo, _agent, state);
+            I_Chat<String> chat = Prompts.prompt(actor, state, new LiveModel(connection), my);
+            llm.complete(chat);
+            log.info("ux.hello.reply: {} -> {} @ {}", actor, chat.messages().size(), stopwatch);
+            return new ChatResponse(chat).asJSON();
         }
     }
 

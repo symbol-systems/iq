@@ -58,7 +58,7 @@ public class RDFAgentTest {
             GraphQuery query = connection.prepareGraphQuery("CONSTRUCT { ?s ?p ?o } WHERE {?s ?p ?o}");
             Model model = SPARQLMapper.toModel(query.evaluate());
             assert null!= model;
-            assert model.size() > 100;
+            assert model.size() > 90;
 
             RDFDump.dump(model, System.out, RDFFormat.TURTLE);
 

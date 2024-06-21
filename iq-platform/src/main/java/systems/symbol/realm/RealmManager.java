@@ -15,6 +15,7 @@ import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.finder.FactFinder;
+import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.platform.I_StartStop;
 import systems.symbol.platform.RDFConfigFactory;
 import systems.symbol.rdf4j.io.BootstrapLoader;
@@ -23,9 +24,17 @@ import systems.symbol.string.PrettyString;
 import systems.symbol.trust.I_KeyStore;
 import systems.symbol.trust.SimpleKeyStore;
 
+import javax.xml.crypto.Data;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -92,15 +101,34 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         log.info("realm.finder: {} = {}", self, finder);
 
         try {
+            Properties properties = getProperties(id);
             File keysFolder = new File(keysHome, id);
             SimpleKeyStore keyStore = new SimpleKeyStore(keysFolder);
             I_Secrets secrets = this.secrets.getSecrets(self);
 
             log.info("realm.models: {} = {}", self, model.size());
-            return new Realm(self, model, this.manager.getRepository(id), finder, secrets, this.vfs, keyStore.keys());
-        } catch (Exception e) {
+            return new Realm(self, model, this.manager.getRepository(id), properties, finder, secrets, this.vfs, keyStore.keys());
+        } catch (SecretsException e) {
             throw new SecretsException(e.getMessage());
+        } catch (IOException e) {
+            log.error("realm.load",e);
+        } catch (Exception e) {
+            log.error("realm.error",e);
+            throw new RuntimeException(e);
         }
+        return null;
+    }
+
+    private Properties getProperties(String self) throws IOException {
+        File propsFile = new File(home, self + ".properties");
+        Properties properties = new Properties();
+        if (!propsFile.exists()) {
+            properties.store(Files.newOutputStream(propsFile.toPath()), "# "+new Date());
+        } else {
+            properties.load(new FileInputStream(propsFile));
+        }
+
+        return properties;
     }
 
     public I_Realm getRealm(IRI self) throws SecretsException {
@@ -138,10 +166,6 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         return repo;
     }
 
-    public void fedex() {
-        //FedXFactory.newFederation();
-
-    }
 
     @Override
     public void start() throws Exception {

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.util.RDFHelper;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.render.HBSRenderer;
@@ -107,6 +108,12 @@ public class Prompts {
      * @throws IOException If an I/O error occurs during prompt generation.
      */
     public static I_Chat<String> prompt(Conversation chat, IRI actor, Resource current, Model model, Bindings my) throws IOException {
+        try {
+            RDFDump.dump(model);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Set<Literal> selfPrompts = RDFHelper.values(model, actor);
         log.info("prompt.actor: {} -> {} -> {}", actor, selfPrompts, current);
         for(Literal p: selfPrompts) {

@@ -76,19 +76,17 @@ public class ModelAPI extends GuardedAPI {
             return new OopsResponse("api.ux.model#repository-missing", Response.Status.NOT_FOUND).asJSON();
         }
         try (RepositoryConnection connection = repository.getConnection()) {
-
             IQConnection iq = new IQConnection(platform.getSelf(), connection);
             IQScriptCatalog catalog = new IQScriptCatalog(iq);
             Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
             IRI self = Values.iri(jwt.getSubject());
             Bindings my = MyFacade.rebind(self, params, jwt);
-            log.info("ux.model.bind: {}", my.keySet());
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
+            log.info("ux.model.sparql: {} -> {}", my.keySet(), sparql);
             if (Validate.isMissing(sparql)) {
                 return new OopsResponse("api.ux.model#query-missing", Response.Status.NOT_FOUND).asJSON();
             }
-            log.info("ux.model.query: {} -> {} --> {}", repo, query, sparql);
             GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
             LDResponse response = new LDResponse(graphQuery);
             return response.asJSON();

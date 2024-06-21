@@ -151,7 +151,6 @@ public class BootstrapLoader implements I_Self {
 
 		FileInputStream inStream = new FileInputStream(file);
 		deploy(iri, inStream, mediatype, format);
-		label(iri, name);
 		inStream.close();
 	}
 

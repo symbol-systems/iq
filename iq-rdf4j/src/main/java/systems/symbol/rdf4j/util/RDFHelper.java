@@ -81,14 +81,14 @@ public class RDFHelper {
 		return values.iterator().next();
 	}
 
-//	public static Literal value(Model model, Value find) {
-//		if (find.isLiteral()) return (Literal)find;
-//		Set<Literal> values = values(model, (Resource) find);
-//		if (values.isEmpty()) return null;
-//		return values.iterator().next();
-//	}
-//
-//	public static Set<Literal> values(HashMap<String, Object> model, Statement self) {
-//		return Models.getPropertyLiterals(model, self, RDF.VALUE);
-//	}
+	public static Literal value(Model model, Value find) {
+		if (find.isLiteral()) return (Literal)find;
+		Set<Literal> values = values(model, (Resource) find);
+		if (values.isEmpty()) return null;
+		return values.iterator().next();
+	}
+
+	public static Set<Literal> values(Model model, Resource self) {
+		return Models.getPropertyLiterals(model, self, RDF.VALUE);
+	}
 }
