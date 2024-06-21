@@ -6,18 +6,25 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.repository.Repository;
 import systems.symbol.finder.FactFinder;
+import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.platform.I_Self;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.trust.I_Keys;
 
 import java.net.URISyntaxException;
 import java.security.KeyPair;
+import java.util.Properties;
 
 public interface I_Realm extends I_Self, I_Keys {
 Model getModel();
 Repository getRepository();
 FactFinder getFinder();
+
+Properties getProperties();
+
 FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException;
 I_Secrets getSecrets();
 KeyPair keys();
+
+I_LLMConfig getLLM(String name);
 }

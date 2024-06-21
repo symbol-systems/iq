@@ -151,7 +151,6 @@ findAllFiles(home, file, recurse);
 
 		FileInputStream inStream = new FileInputStream(file);
 		deploy(iri, inStream, mediatype, format);
-		label(iri, name);
 		inStream.close();
 	}
 
