@@ -8,12 +8,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>systems.symbol</groupId>
+<!--    <groupId>systems.symbol</groupId>-->
     <artifactId>iq-dao</artifactId>
     <version>0.76.0</version>
     <packaging>jar</packaging>
 
-    <name>Tokenomic IQ</name>
+    <name>IQ Tokenomics</name>
     <description>IQ - operating environment for cognitive AI.</description>
 
     <organization>
