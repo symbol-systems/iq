@@ -39,21 +39,21 @@ import static systems.symbol.agent.MyFacade.INTENT;
  * The rendered content is then passed to a conversational agent for further processing.
  */
 
-public class Think extends AbstractIntent {
+public class Prompt extends AbstractIntent {
 
 IRI fallbackMime;
 I_Contents contents;
 I_LLM<String> llm;
 Pattern extractBody = Pattern.compile("```(\\w+\n)\\s*(.*?)\n```", Pattern.DOTALL);
 
-public Think(IRI self, Model model, I_Contents contents, I_LLM<String> llm) {
+public Prompt(IRI self, Model model, I_Contents contents, I_LLM<String> llm) {
 boot(self, model);
 this.fallbackMime = null;
 this.contents = contents;
 this.llm = llm;
 }
 
-protected Think(IRI self, Model model, IRI fallbackMime, I_Contents contents, I_LLM<String> llm) {
+protected Prompt(IRI self, Model model, IRI fallbackMime, I_Contents contents, I_LLM<String> llm) {
 boot(self, model);
 this.fallbackMime = fallbackMime;
 this.contents = contents;
@@ -70,7 +70,7 @@ this.llm = llm;
 public Set<IRI> thinks(IRI actor, Resource state, Bindings bindings) throws IOException, APIException {
 Set<IRI> done = new HashSet<>();
 Literal hbs = contents.getContent(state, fallbackMime);
-log.info("thinks: {} @ {} - {}", actor, state, hbs!=null);
+log.info("prompts: {} @ {} - {}", actor, state, hbs!=null);
 if (hbs == null) return done;
 done.addAll( thinks(actor, state, hbs, bindings, model) );
    return done;
@@ -97,27 +97,26 @@ protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings 
 Bindings bindings = MyFacade.rebind(actor, state, my);
 String intent = my.containsKey(INTENT)?my.get(INTENT).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
-log.info("think.bindings: {} -> {} -> {}", template.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
+log.info("prompt.bindings: {} -> {} -> {}", template.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
 String mime = FileFormats.toMime(fallbackMime);
-
-// Determine the RDF format based on the datatype of the template ***REMOVED***, or TURTLE.
+// Determine the RDF format based on the datatype of the template ***REMOVED***, falling/failing gracefully.
 RDFFormat format = Rio.getWriterFormatForMIMEType(template.getDatatype().stringValue())
 .orElseGet(() -> Rio.getWriterFormatForMIMEType(mime).orElse(RDFFormat.TURTLE));
 
 String remodelled = HBSRenderer.template(template.stringValue(), bindings);
-log.info("think.raw: {} -> {}", format, remodelled);
+log.info("prompt.raw: {} -> {}", format, remodelled);
 
 I_Assist<String> thought = Prompts.think(actor, state, intent, model, my, format);
 thought.user(remodelled);
-log.info("think.prompt: {}", thought);
+log.info("prompt.prompt: {}", thought);
 llm.complete(thought);
-String rdf = hackItToWork(thought.latest().getContent());
-log.info("think.thoughts: {}", rdf);
+String reply = hackItToWork(thought.latest().getContent());
+log.info("prompt.answer: {}", reply);
 
 ParserConfig config = new ParserConfig();
 config.set(FAIL_ON_INVALID_LINES, false);
 
-Model parsed = Rio.parse(new StringReader(rdf), intent, format);
+Model parsed = Rio.parse(new StringReader(reply), actor.stringValue(), format);
 model.addAll(parsed);
 return Models.subjectIRIs(parsed);
 }
@@ -129,7 +128,7 @@ return matcher.group(2);
 }
 
 @Override
-@RDF(IQ_NS.IQ+"think")
+@RDF(IQ_NS.IQ+"prompt")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 try {
 return thinks(actor, state, bindings);

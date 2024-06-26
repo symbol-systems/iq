@@ -1,6 +1,5 @@
 package systems.symbol.controller.ux;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +18,7 @@ import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.llm.Conversation;
-import systems.symbol.llm.I_Chat;
+import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.Prompts;
 import systems.symbol.platform.AgentService;
 import systems.symbol.rdf4j.store.LiveModel;
@@ -65,9 +64,9 @@ Bindings my = MyFacade.rebind(focus, new SimpleBindings(), jwt);
 LiveModel model = new LiveModel(connection);
 Agentic<String, Resource> agentic = new Agentic<>(my, new Conversation());
 AgentService service = new AgentService(focus, connection, null, my);
-I_Chat<String> decisions = Prompts.decision(service.getAgent(), agentic);
+I_Assist<String> decisions = Prompts.decision(service.getAgent(), agentic);
 my.put("decisions", decisions);
-I_Chat<String> chats = Prompts.prompt(focus, service.getAgent().getStateMachine().getState(), model, my);
+I_Assist<String> chats = Prompts.prompt(focus, service.getAgent().getStateMachine().getState(), model, my);
 my.put("chats", chats);
 SimpleBindings claims = new SimpleBindings();
 my.put("claims", claims);

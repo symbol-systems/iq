@@ -5,7 +5,6 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -16,14 +15,11 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.finder.FactFinder;
-import systems.symbol.platform.APIPlatform;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQConnection;
@@ -142,7 +138,7 @@ IQScriptCatalog library = new IQScriptCatalog(iq);
 if (relevancy < 0.1) relevancy = 0.5;
 
 // Find matches using the text finder
-List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
+List<EmbeddingMatch<TextSegment>> matches = searcher.search(query, maxResults, relevancy);
 log.info("ux.find.matches: {} @ {}", matches.size(), stopwatch.summary());
 
 StringBuilder theseMatches = new StringBuilder();

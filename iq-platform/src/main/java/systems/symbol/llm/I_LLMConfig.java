@@ -20,6 +20,9 @@ String getURL();
  */
 String getName();
 
+
+String getSecretName();
+
 /**
  * Retrieves the frequency penalty applied during text generation.
  * Higher values penalize frequent tokens, encouraging diversity in generated text.

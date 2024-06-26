@@ -6,8 +6,10 @@ import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
@@ -36,8 +38,8 @@ protected Platform platform;
 @OPTIONS
 @Path("{path : .*}")
 @Produces(MediaType.APPLICATION_JSON)
-public Response preflight(@PathParam("path") String path) {
-log.info("preflight: {}", path);
+public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
+log.info("preflight: {}", info.getRequestUri());
 return new DataResponse(null).asJSON();
 }
 
@@ -78,8 +80,11 @@ return jwt;
  * @return HealthCheck response indicating the platform's health status.
  */
 public static DecodedJWT decode(String bearer, I_Keys keys) throws OopsException {
-log.info("jwt.header: {}", bearer);
-if (!Validate.isBearer(bearer)) {
+if (bearer==null ||bearer.isEmpty())
+throw new OopsException("api.trust.missing", Response.Status.UNAUTHORIZED);
+boolean isValid = Validate.isBearer(bearer);
+log.info("jwt.header: {}", bearer.substring(0,4), isValid);
+if (!isValid) {
 throw new OopsException("api.trust.required", Response.Status.UNAUTHORIZED);
 }
 JWTGen jwtGen = new JWTGen();

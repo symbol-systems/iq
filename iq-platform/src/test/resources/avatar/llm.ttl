@@ -1,0 +1,17 @@
+@base <urn:iq:test:>.
+
+@prefix iq: <urn:iq:>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix : <urn:iq:test:>.
+
+:OpenAI_Chat_gpt_35_turbo
+iq:url "https://api.openai.com/v1/chat/completions";
+iq:modelName "gpt-3.5-turbo-0125";
+iq:secret "MY_OPENAI_API_KEY".
+
+:Groq_Chat_llama3_8b_8192
+iq:url "https://api.groq.com/openai/v1/chat/completions";
+iq:modelName "llama3-8b-8192";
+iq:secret "MY_GROQ_API_KEY".
+

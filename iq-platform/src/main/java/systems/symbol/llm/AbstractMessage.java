@@ -21,6 +21,11 @@ this.role = RoleType.valueOf(role.toLowerCase());
 this.content = content;
 }
 
+public AbstractMessage(RoleType r, T s) {
+this.role = r;
+this.content = s;
+}
+
 @Override
 public MessageType getType() {
 return type;

@@ -16,7 +16,7 @@ import org.eclipse.rdf4j.model.Model;
  * Implementations of this interface are expected to return a Model containing the
  * results of the search, representing the facts found based on the semantic query.
  **/
-public interface I_FactFinder {
+public interface I_FactFinder extends I_Find<Model> {
 
 /**
  * Searches for facts (RDF statements) based a semantic query.
@@ -24,5 +24,5 @@ public interface I_FactFinder {
  * @param semantic_prompt the semantic query used to search for facts.
  * @return a Model containing the result graph of the search.
  */
-Model search(String semantic_prompt);
+Model find(String semantic_prompt);
 }

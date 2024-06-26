@@ -1,9 +1,6 @@
 package systems.symbol.intent;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
@@ -26,15 +23,17 @@ import static systems.symbol.platform.IQ_NS.KNOWS;
  */
 public class Search extends AbstractIntent {
 private final I_FactFinder finder;
+private final Model ground;
 
 /**
  * Constructs a new SPARQL intent with the provided Connection and self identity.
  *
  * @param self  The self identity of the agent.
  */
-public Search(IRI self, Model model, I_FactFinder finder) {
+public Search(IRI self, Model model, I_FactFinder finder, Model ground) {
 boot(self, model);
 this.finder = finder;
+this.ground = ground;
 }
 
 /**
@@ -54,15 +53,24 @@ if (prompt==null || prompt.stringValue().isEmpty()) return new IRIs();
 try {
 Bindings bindings = MyFacade.rebind(actor, ctx);
 String query = HBSRenderer.template(prompt.stringValue(), bindings);
-Model found = finder.search(query);
+Model found = finder.find(query);
 Set<IRI> iris = Models.subjectIRIs(found);
 for(IRI iri:iris) {
-model.add(actor, KNOWS, iri);
+learn(actor, iri);
 }
 return iris;
 } catch (IOException e) {
 throw new StateException(e.getMessage(), state, e);
 }
+}
+
+private void learn(IRI actor, IRI fact) {
+Iterable<Statement> facts = ground.getStatements(fact, null, null);
+facts.forEach( (f) -> {
+model.add(f);
+model.add(actor, KNOWS, f.getSubject());
+});
+model.add(actor, KNOWS, fact);
 }
 
 @Override

@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
 
 public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, Runnable {
 private final I_LLM<String> llm;
-private final Map<IRI, I_Agentic<String, Resource>> contexts = new HashMap<>();
+private final Map<IRI, I_Agentic<String>> contexts = new HashMap<>();
 private final Map<IRI, CompletableFuture<I_Delegate<Resource>>> pending = new HashMap<>();
 private boolean isRunning = false;
 private long sleepTime = 100;
@@ -39,7 +39,7 @@ this.intents.add( new JSR233(self, fleet, secrets) );
 log.info("fleet.intents: {}", intents.getIntents());
 }
 
-public I_Agentic<String, Resource> getContext(IRI agent) {
+public I_Agentic<String> getContext(IRI agent) {
 return contexts.get(agent);
 }
 
@@ -97,7 +97,7 @@ log.error("decision.failed: {} -> {}", actor, e.getMessage(), e);
 
 }
 
-protected Future<I_Delegate<Resource>> delegate(I_Agent agent, I_Agentic<String, Resource> context) throws StateException {
+protected Future<I_Delegate<Resource>> delegate(I_Agent agent, I_Agentic<String> context) throws StateException {
 LLMDecision decision = new LLMDecision(llm, agent, context);
 
 IRI decided = decision.decide();
@@ -115,7 +115,7 @@ return futureDecision;
  */
 public I_Agent deploy(IRI actor) throws StateException {
 if (this.agents.containsKey(actor)) return agents.get(actor);
-I_Agentic<String, Resource> context = new Agentic<>(new SimpleBindings(), new Conversation());
+I_Agentic<String> context = new Agentic<>(new SimpleBindings(), new Conversation());
 contexts.put(actor, context);
 ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, this, context.getBindings());
 agents.put(actor,agent);

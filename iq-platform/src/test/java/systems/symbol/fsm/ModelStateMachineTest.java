@@ -18,14 +18,14 @@ public static IRI useGuardRule = RDF.TYPE;
 public static IRI useGuardMatch = Values.iri(IQ_NS.TEST,"SignOff");
 
 public static ModelStateMachine newMSM(Model model, IRI iri) {
-ModelStateMachine msm = new ModelStateMachine(model, iri);
+ModelStateMachine msm = new ModelStateMachine(iri, model);
 return (ModelStateMachine)SimpleStateMachineTest.addFSM(msm);
 }
 
 @Test
 void initStateModel() throws StateException {
 Model model = dmf.createEmptyModel();
-ModelStateMachine msm = new ModelStateMachine(model, self);
+ModelStateMachine msm = new ModelStateMachine(self, model);
 assert null == msm.getState();
 msm.add(ideation, wip);
 assert ideation.equals(msm.getState());

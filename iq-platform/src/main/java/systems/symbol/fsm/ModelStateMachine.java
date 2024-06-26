@@ -33,26 +33,32 @@ protected IRI self;
  * @param model RDF4J Model containing state machine information.
  * @param self  IRI representing the self-reference of the state machine.
  */
-public ModelStateMachine(Model model, IRI self) {
-this.model = model;
+public ModelStateMachine(IRI self, Model model) {
 this.self = self;
-this.initialize();
+this.model = model;
+this.initialize(self, model);
 }
 
 /**
  * Hydrate the initial / current state of the state machine.
  *
  */
-public void initialize() {
-Iterator<Resource> found_initial = find(self, initialStep).iterator();
+public void initialize(IRI self, Model model) {
+Iterator<Resource> found_initial = find(self, model, initialStep).iterator();
 if (found_initial.hasNext()) {
 setInitial(found_initial.next());
 }
-Iterator<Resource> found_current = find(self, hasCurrentState).iterator();
+Iterator<Resource> found_current = find(self, model, hasCurrentState).iterator();
 if (found_current.hasNext()) {
 setCurrentState(found_current.next());
 }
+this.initialize();
 log.info("initialized: {} -> {} @ {}", initialState, getState(), self);
+}
+
+@Override
+public void initialize() {
+
 }
 
 @Override
@@ -79,7 +85,7 @@ return isAllowedByGuard(self, target); // Ask the guards ...
 }
 
 public boolean isGuarded(Resource state) {
-return !find(state, hasGuard).isEmpty();
+return !find(state, model, hasGuard).isEmpty();
 }
 
 /**
@@ -90,7 +96,7 @@ return !find(state, hasGuard).isEmpty();
  * @return true if the transition is allowed, false otherwise.
  */
 public boolean isAllowedByGuard(Resource subject, Resource target) {
-Collection<Resource> guards = find(target, hasGuard);
+Collection<Resource> guards = find(target, model, hasGuard);
 Iterator<Resource> iGuards = guards.iterator();
 log.info("guards: {} -> {} -> {}", subject, target, iGuards.hasNext());
 if (!iGuards.hasNext()) return true; // No guards, we're good
@@ -132,7 +138,7 @@ model.add(self, hasCurrentState, target);
 @Override
 protected Collection<Resource> getTransitions(Resource state) {
 // Get transitions for the given state
-Collection<Resource> transitions = find(state, nextStep);
+Collection<Resource> transitions = find(state, model, nextStep);
 
 if (!isGuarded(state)) return transitions;
 
@@ -179,17 +185,18 @@ model.add(guard, predicate, object);
  * @return True if the state is final (no transitions), false otherwise.
  */
 public boolean isFinal(Resource state) {
-return find(state, nextStep).isEmpty();
+return find(state, model, nextStep).isEmpty();
 }
 
 /**
  * Find resources related to a given subject with a specific predicate.
  *
  * @param state The subject resource.
+ * @param model
  * @param predicate The predicate IRI.
  * @return A collection of related resources.
  */
-private Collection<Resource> find(Resource state, IRI predicate) {
+private Collection<Resource> find(Resource state, Model model, IRI predicate) {
 Collection<Resource> found = new HashSet<>();
 
 for (Statement next : model.getStatements(state, predicate, null)) {

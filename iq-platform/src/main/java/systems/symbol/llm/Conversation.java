@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
 @JsonDeserialize
-public class Conversation implements I_Chat<String> {
+public class Conversation implements I_Assist<String> {
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public List<I_LLMessage<String>> messages = new ArrayList<>();
@@ -18,7 +18,7 @@ public List<I_LLMessage<String>> messages = new ArrayList<>();
 public Conversation() {
 }
 
-public Conversation(I_Chat<String> thread) {
+public Conversation(I_Assist<String> thread) {
 messages.addAll(thread.messages());
 }
 
@@ -37,7 +37,7 @@ public I_LLMessage<String> latest() {
 return messages.isEmpty()?null:messages.get(messages.size()-1);
 }
 
-public I_Chat<String> add(String role, String content) {
+public I_Assist<String> add(String role, String content) {
 if (content==null) return this;
 this.messages.add(new TextMessage(role, content));
 return this;

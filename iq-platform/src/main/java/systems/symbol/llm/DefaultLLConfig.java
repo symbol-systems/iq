@@ -2,24 +2,17 @@ package systems.symbol.llm;
 
 public class DefaultLLConfig implements I_LLMConfig {
 
-private final String url;
-private final String modelName;
-private final float frequencyPenalty;
-private final float temperature;
-private final int maxTokens;
-private final float topP;
-private final int n, seed;
+public String url;
+public String modelName;
+public float frequencyPenalty;
+public float temperature;
+public int maxTokens;
+public float topP;
+public int n, seed;
+public String secret;
 
-// Constructor
-public DefaultLLConfig(String url, String modelName, int maxTokens, float frequencyPenalty, float temperature, float topP, int n) {
-this.url = url;
-this.modelName = modelName;
-this.temperature = temperature;
-this.frequencyPenalty = frequencyPenalty;
+public DefaultLLConfig(int maxTokens) {
 this.maxTokens = maxTokens;
-this.topP = topP;
-this.n = n;
-this.seed = 0;
 }
 
 public DefaultLLConfig(String url, String modelName, int maxTokens) {
@@ -33,7 +26,18 @@ this.n = 1;
 this.seed = 0;
 }
 
-@Override
+public DefaultLLConfig(String url, String modelName, int maxTokens, String secretName) {
+this.url = url;
+this.modelName = modelName;
+this.temperature = 0;
+this.frequencyPenalty = 0;
+this.maxTokens = maxTokens;
+this.topP = 1;
+this.n = 1;
+this.seed = 0;
+this.secret = secretName;
+}
+
 public String getURL() {
 return url;
 }
@@ -41,6 +45,11 @@ return url;
 @Override
 public String getName() {
 return modelName;
+}
+
+@Override
+public String getSecretName() {
+return secret;
 }
 
 @Override

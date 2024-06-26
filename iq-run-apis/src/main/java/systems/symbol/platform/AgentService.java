@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
+import systems.symbol.decide.I_Decide;
+import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.*;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
@@ -14,6 +16,8 @@ import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
 
 import javax.script.Bindings;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class AgentService {
 ExecutiveIntent intent;
@@ -41,9 +45,9 @@ this.intent.add(new Select(self, connection));
 this.intent.add(new Update(self, connection));
 this.intent.add(new Remodel(self, this.model, scripts));
 this.intent.add(new Construct(self, connection));
-this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
 this.scripts = new IQScriptCatalog(this.self, connection);
 this.state = state;
+this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
 }
 
 public Resource next(Resource state) throws StateException {
@@ -61,4 +65,5 @@ return model;
 public I_Agent getAgent() {
 return agent;
 }
+
 }

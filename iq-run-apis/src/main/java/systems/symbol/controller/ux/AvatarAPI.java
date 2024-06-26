@@ -11,18 +11,20 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.Agentic;
+import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.controller.responses.*;
-import systems.symbol.decide.LLMDecision;
+import systems.symbol.controller.responses.ChatResponse;
+import systems.symbol.controller.responses.OopsException;
+import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.intent.Avatar;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;
-import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.Prompts;
 import systems.symbol.llm.gpt.GenericGPT;
 import systems.symbol.platform.AgentService;
+import systems.symbol.platform.AvatarBuilder;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.string.Validate;
@@ -31,42 +33,14 @@ import systems.symbol.util.Stopwatch;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
-@Tag(name = "api.ux.agent.name", description = "api.ux.agent.description")
-@Path("ux/agent")
-public class AgentAPI extends GuardedAPI {
-//
-//@GET
-//@Operation(
-//summary = "api.ux.agent.get.summary",
-//description = "api.ux.agent.get.description"
-//)
-//@Produces("application/ld+json")
-//@Path("{repo}/{actor: .*}")
-//public Response about(@PathParam("repo") String repo,@PathParam("actor") String _agent, @HeaderParam("Authorization") String auth) throws Exception {
-//DecodedJWT jwt;
-//try {
-//jwt = authenticate(auth);
-//} catch (OopsException e) {
-//return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
-//}
-//if (!Validate.isURN(_agent)) {
-//return new OopsResponse("api.ux.about#invalid", Response.Status.BAD_REQUEST).asJSON();
-//}
-//log.info("ux.about.agent: {} -> {}", _agent, jwt.getSubject());
-//
-//IRI actor = Values.iri(_agent);
-//Repository repository = platform.getRepository(repo);
-//try (RepositoryConnection connection = repository.getConnection()) {
-//String sparql = RDFPrefixer.toSPARQL(connection, "DESCRIBE <" + actor + ">");
-//GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
-//return new LDResponse(graphQuery).asJSON();
-//}
-//}
+@Tag(name = "api.ux.avatar.name", description = "api.ux.avatar.description")
+@Path("ux/avatar")
+public class AvatarAPI extends GuardedAPI {
 
 @GET
 @Operation(
-summary = "api.ux.agent.get.summary",
-description = "api.ux.agent.get.description"
+summary = "api.ux.avatar.get.summary",
+description = "api.ux.avatar.get.description"
 )
 @Produces("application/ld+json")
 @Path("{repo}/{agent: .*}")
@@ -105,14 +79,14 @@ return new ChatResponse(chat).asJSON();
 
 @POST
 @Operation(
-summary = "api.ux.agent.post.summary",
-description = "api.ux.agent.post.description"
+summary = "api.ux.avatar.post.summary",
+description = "api.ux.avatar.post.description"
 )
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces("application/ld+json")
 @Path("{repo}/{agent: .*}")
-public Response ask(@PathParam("repo") String repo,@PathParam("agent") String _agent, @HeaderParam("Authorization") String auth, Conversation chat) throws Exception {
-log.info("ux.agent.ask: {} -> {} -> {}", repo, _agent, chat);
+public Response ask(@PathParam("repo") String repo,@PathParam("agent") String _actor, @HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
+log.info("ux.avatar.ask: {} -> {} -> {}", repo, _actor, chat);
 Stopwatch stopwatch = new Stopwatch();
 DecodedJWT jwt;
 try {
@@ -120,44 +94,34 @@ jwt = authenticate(auth);
 } catch (OopsException e) {
 return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
 }
-if (!Validate.isURN(_agent)) {
-return new OopsResponse("api.ux.agent#invalid", Response.Status.BAD_REQUEST).asJSON();
+if (Validate.isMissing(_actor)) {
+return new OopsResponse("api.ux.avatar#missing", Response.Status.BAD_REQUEST).asJSON();
 }
-
-I_Secrets secrets = platform.getSecrets();
-String llmToken = secrets.getSecret("MY_OPENAI_API_KEY");
-if (Validate.isMissing(llmToken)) {
-return new OopsResponse("api.ux.agent#disabled", Response.Status.BAD_REQUEST).asJSON();
-}
-IRI actor = Values.iri(_agent);
+IRI actor = Values.iri(_actor);
 Repository repository = platform.getRepository(repo);
 if (repository == null) {
-return new OopsResponse("api.ux.agent#repository-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.avatar#repository-missing", Response.Status.NOT_FOUND).asJSON();
 }
 try (RepositoryConnection connection = repository.getConnection()) {
 Bindings my = MyFacade.rebind(actor, new SimpleBindings(), jwt);
-
-AgentService service = new AgentService(actor, connection, secrets, my);
-
-I_LLM<String> llm = new GenericGPT(llmToken, 1000);
-IRI self = Values.iri(jwt.getSubject());
-log.info("ux.agent.self: {}", self);
-// stateful LLM decision making
-Agentic<String, Resource> agentic = new Agentic<>(my, chat);
-LLMDecision manager = new LLMDecision(llm, service.getAgent(), agentic);
-IRI decided = manager.decide();
-if (Validate.isMissing(decided)) {
-return new OopsResponse("api.ux.agent#decision", Response.Status.BAD_REQUEST).asJSON();
+AvatarBuilder builder = new AvatarBuilder(actor, 1000, my, platform.getSecrets());
+builder.setGround(new LiveModel(connection));
+builder.executive().remodel().search(platform.getFactFinder(repo)).sparql(connection);
+Avatar avatar = builder.build();
+ExecutiveAgent agent = new ExecutiveAgent(avatar.getSelf(), avatar.getThoughts(), avatar, avatar, my);
+agent.boot(avatar.getSelf(), avatar.getGround());
+Resource state = agent.getStateMachine().getState();
+if (state==null) {
+return new OopsResponse("api.ux.avatar#state", Response.Status.NOT_IMPLEMENTED).asJSON();
 }
-
-// FSM transition
-Resource state = service.getAgent().getStateMachine().transition(decided);
-log.info("ux.agent.decided: {} -> {}", decided, state);
-if (Validate.isMissing(state)) {
-return new OopsResponse("api.ux.agent#state", Response.Status.BAD_REQUEST).asJSON();
+log.info("ux.avatar.llm: {} @ {}", actor, state);
+avatar.complete(chat, agent, my);
+log.info("ux.avatar.complete: {} => {} facts", agent.getStateMachine().getState(), avatar.getThoughts().size());
+Repository myRepo = platform.getRepository(jwt.getSubject());
+try ( RepositoryConnection myRepoConnection = myRepo.getConnection() ) {
+avatar.memorize(myRepoConnection);
 }
-
-log.info("ux.agent.done: {} -> {} @ {}", actor, state, stopwatch);
+log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(), stopwatch);
 return new ChatResponse(chat).asJSON();
 }
 }

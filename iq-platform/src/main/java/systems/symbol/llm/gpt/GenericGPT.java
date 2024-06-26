@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.fsm.GuardedStateMachine;
 import systems.symbol.llm.*;
 import systems.symbol.string.Validate;
 
@@ -19,15 +20,18 @@ protected final Logger log = LoggerFactory.getLogger(getClass());
 ObjectMapper objectMapper = new ObjectMapper();
 String token;
 I_LLMConfig config;
+private List<GPTResponse> history;
 
 public GenericGPT(String token, I_LLMConfig config) {
 this.token = token;
 this.config = config;
+this.history = new ArrayList<>();
 }
 
 public GenericGPT(String token, int tokens) {
 this.token = token;
 this.config = CommonLLM.newGPT3_5_Turbo(tokens);
+this.history = new ArrayList<>();
 }
 
 
@@ -37,8 +41,8 @@ return config;
 }
 
 @Override
-public void complete(I_Chat<String> chats) throws APIException, IOException {
-
+public void complete(I_Assist<String> chats) throws APIException, IOException {
+log.info("api.gpt.url: {} -> {}", config.getName(), config.getURL());
 RestAPI api = new RestAPI(config.getURL());
 api.header("Authorization", "Bearer "+token);
 
@@ -53,12 +57,13 @@ log.info("api.gpt.response: {} -> {}", response.code(), response.message());
 ResponseBody responseBody = response.body();
 if (responseBody != null) {
 body = responseBody.string();
-log.info("api.gpt.body: {}", body);
+//log.info("api.gpt.body: {}", body);
 GPTResponse completion = objectMapper.readValue(body, GPTResponse.class);
-if (completion!=null) {
+if (completion!=null && completion.choices!=null && !completion.choices.isEmpty()) {
 GPTResponse.Message message = completion.choices.get(0).message;
-log.info("api.gpt.completion: {} -> {}", completion.choices, message);
 chats.add(new TextMessage(message.role, message.content));
+history.add(completion);
+log.info("api.gpt.done: {} -> {}", message.content, message.role);
 }
 } else throw new IOException();
 }
@@ -98,4 +103,7 @@ message.put("content", chat.getContent());
 return message;
 }
 
+public List<GPTResponse> getHistory() {
+return history;
+}
 }

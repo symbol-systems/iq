@@ -33,22 +33,16 @@ protected IRI self;
  * @param memo The RDF4J model to be associated with the agent.
  */
 public AbstractAgent(IRI self, @NotNull Model memo) throws StateException {
+this.self = self;
+this.memo = memo;
 boot(self, memo);
 }
 
 @Override
 public void boot(IRI self, Model model) throws StateException {
-this.self = self;
-setMemo(model);
-}
-
-/**
- * Sets the RDF4J model for the agent.
- * @param memo The RDF4J model to be set.
- */
-protected void setMemo(@NotNull  Model memo) throws StateException {
-this.memo = memo;
-setFSM(new ModelStateMachine(memo, this.getSelf()));
+ModelStateMachine fsm = new ModelStateMachine(self, model);
+log.info("fsm.boot: {} @ {}", getSelf(), fsm.getState());
+setFSM(fsm);
 }
 
 @Override

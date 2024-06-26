@@ -42,14 +42,14 @@ private static final String CHOOSE_INTENT = "\n|available-intent|user instructio
  * @return A chat thread containing the decision prompt.
  * @throws IOException If an I/O error occurs during prompt generation.
  */
-public static I_Chat<String> decision(I_Agent agent, I_Agentic<String, Resource> context) throws IOException {
+public static I_Assist<String> decision(I_Agent agent, I_Agentic<String> context) throws IOException {
 IRI actor = agent.getSelf();
 Model model = agent.getMemo();
 Bindings my = context.getBindings();
 I_StateMachine<Resource> fsm = agent.getStateMachine();
 Resource current = fsm.getState();
 // actor/state prompt
-I_Chat<String> thread = prompt(actor, current, model, my);
+I_Assist<String> thread = prompt(actor, current, model, my);
 // intents prompt
 Collection<Resource> transitions = fsm.getTransitions();
 log.info("prompt.transitions: {}", transitions);
@@ -92,7 +92,7 @@ return thread;
  * @return A chat thread containing the prompt.
  * @throws IOException If an I/O error occurs during prompt generation.
  */
-public static I_Chat<String> prompt(IRI actor, Resource current, Model model, Bindings my) throws IOException {
+public static I_Assist<String> prompt(IRI actor, Resource current, Model model, Bindings my) throws IOException {
 return prompt(new Conversation(), actor,current, model, my);
 }
 
@@ -107,7 +107,7 @@ return prompt(new Conversation(), actor,current, model, my);
  * @return The updated chat thread containing the prompt.
  * @throws IOException If an I/O error occurs during prompt generation.
  */
-public static I_Chat<String> prompt(Conversation chat, IRI actor, Resource current, Model model, Bindings my) throws IOException {
+public static I_Assist<String> prompt(Conversation chat, IRI actor, Resource current, Model model, Bindings my) throws IOException {
 try {
 RDFDump.dump(model);
 } catch (Exception e) {
@@ -139,7 +139,7 @@ return chat;
  * @param thread The chat thread.
  * @return The user prompt.
  */
-public static String user(I_Chat<String> thread) {
+public static String user(I_Assist<String> thread) {
 return prompt(thread, I_LLMessage.RoleType.user);
 }
 
@@ -150,7 +150,7 @@ return prompt(thread, I_LLMessage.RoleType.user);
  * @param role   The role type of the prompts to extract.
  * @return The prompts of the specified role type.
  */
-public static String prompt(I_Chat<String> thread, I_LLMessage.RoleType role) {
+public static String prompt(I_Assist<String> thread, I_LLMessage.RoleType role) {
 StringBuilder prompt = new StringBuilder();
 for(I_LLMessage<String> message: thread.messages()) {
 if (message.getRole()==role) {
@@ -173,8 +173,8 @@ return prompt.toString();
  * @return A chat thread containing the think prompt.
  * @throws IOException If an I/O error occurs during prompt generation.
  */
-public static I_Chat<String> think(IRI actor, Resource state, String intent, Model model, Bindings my, RDFFormat format) throws IOException {
-I_Chat<String> thread = prompt(actor, state, model, my);
+public static I_Assist<String> think(IRI actor, Resource state, String intent, Model model, Bindings my, RDFFormat format) throws IOException {
+I_Assist<String> thread = prompt(actor, state, model, my);
 Map<String, String> namespaces = RDFPrefixer.simple();
 namespaces.put("my", intent);
 thread.system("Reply using valid "+format.getName()+". Use only declared namespaces & please remember to declare: @prefix my: <"+intent+">");

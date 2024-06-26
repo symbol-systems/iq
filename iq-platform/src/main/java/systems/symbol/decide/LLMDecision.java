@@ -11,7 +11,7 @@ import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
-import systems.symbol.llm.I_Chat;
+import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.Prompts;
 import systems.symbol.string.Validate;
@@ -33,14 +33,14 @@ private final Gson gson = new Gson();
 private List<Map<String, Object>> history = new ArrayList<>();
 
 I_Agent agent;
-I_Agentic<String,Resource> context;
+I_Agentic<String> context;
 /*
  * Constructor for an ExecutiveDecision strategy
  * @param llm The LLM used for decision-making.
  * @param agent The agent requesting a decision.
  * @param agent The FSM associated with the decision.
  */
-public LLMDecision(I_LLM<String> llm, I_Agent agent, I_Agentic<String,Resource> context) {
+public LLMDecision(I_LLM<String> llm, I_Agent agent, I_Agentic<String> context) {
 this.llm = llm;
 this.agent = agent;
 this.context = context;
@@ -56,7 +56,7 @@ this.context = context;
  */
 public IRI decide() throws StateException {
 try {
-I_Chat<String> situation = Prompts.decision(agent, context);
+I_Assist<String> situation = Prompts.decision(agent, context);
 llm.complete(situation);
 
 String decision = situation.latest().getContent();

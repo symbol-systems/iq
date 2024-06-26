@@ -105,7 +105,7 @@ IQScriptCatalog library = new IQScriptCatalog(iq);
 if (relevancy < 0.1) relevancy = 0.5;
 
 // Find matches using the text finder
-List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
+List<EmbeddingMatch<TextSegment>> matches = searcher.search(query, maxResults, relevancy);
 log.info("search.facts.matches: {} @ {}", matches.size(), stopwatch.summary());
 
 // Convert matches to a VALUES clause for SPARQL query

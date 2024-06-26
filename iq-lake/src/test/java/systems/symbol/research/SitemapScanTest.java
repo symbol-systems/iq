@@ -5,7 +5,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
 
-class ResearchSitemapTest {
+class SitemapScanTest {
 ValueFactory vf = SimpleValueFactory.getInstance();
 
 @Test

@@ -57,7 +57,7 @@ return model.embed(segment).content();
 		return embedding;
 	}
 
-	public List<EmbeddingMatch<TextSegment>> find(Embedding embedding, int maxResults, double relevancy) {
+	public List<EmbeddingMatch<TextSegment>> search(Embedding embedding, int maxResults, double relevancy) {
 		if (maxResults < 1) maxResults = this.maxResults;
 		if (relevancy < 0.1) relevancy = this.relevancy;
 		maxResults = clamp(maxResults, 1, this.maxResults);
@@ -65,14 +65,14 @@ return model.embed(segment).content();
 		log.info("find.embeddings: "+maxResults+" -> "+relevancy);
 		return store.findRelevant(embedding, maxResults, relevancy);
 	}
-	public List<EmbeddingMatch<TextSegment>> find(String text) {
+	public List<EmbeddingMatch<TextSegment>> search(String text) {
 
-		return find(embed(text), maxResults, relevancy);
+		return search(embed(text), maxResults, relevancy);
 	}
 
-	public List<EmbeddingMatch<TextSegment>> find(String text, int maxResults, double minScore) {
+	public List<EmbeddingMatch<TextSegment>> search(String text, int maxResults, double minScore) {
 		log.info("find.text: {} -> x{} @ {}", text, maxResults, minScore);
-		return find(embed(text), maxResults, minScore);
+		return search(embed(text), maxResults, minScore);
 	}
 
 	private static <T extends Comparable<T>> T clamp(T value, T min, T max) {

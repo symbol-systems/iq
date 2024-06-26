@@ -170,7 +170,7 @@ return repository;
  */
 protected RepositoryConfig newRepoConfig(final String storeType, Map<String, String> ctx) throws IOException {
 String resourcePath = repoTemplatePath + storeType + ".ttl";
-log.info("repository.config: {}", resourcePath);
+log.debug("repository.config: {}", resourcePath);
 InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
 return toRepoConfig(inputStream, ctx);
 }
@@ -197,7 +197,7 @@ try {
 final ConfigTemplate configTemplate = new ConfigTemplate(template);
 //log.info("repository.config.rendered: {} -> {}", template, ctx);
 final String configString = configTemplate.render(ctx);
-log.info("repository.config: {} @ {}", configString,getSelf());
+log.debug("repository.config: {} @ {}", configString,getSelf());
 final Model graph = new LinkedHashModel();
 
 ValueFactory vf = SimpleValueFactory.getInstance();
