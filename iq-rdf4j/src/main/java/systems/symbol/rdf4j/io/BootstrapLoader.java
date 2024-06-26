@@ -180,16 +180,16 @@ public class BootstrapLoader implements I_Self {
 				if (VERBOSE) log.debug("deploy.rdf.done: "+format.getStandardURI()+": "+scriptIRI+" in: "+ context +" ("+inStream.available()+")");
 			}
 			else {
-				if (VERBOSE) log.debug("deploy.rdf.skip: <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
+				if (VERBOSE) log.debug("deploy.rdf.skip:  <"+scriptIRI+"> a <"+type+"> <"+ context+">.");
 			}
 		} catch(RDFParseException e) {
 			total_errors++;
-			log.error("deploy.rdf.broken: "+e.getMessage()+" @ "+scriptIRI);
-			if (fastFail) throw new IOException(e.getMessage(),e);
+			log.error("deploy.rdf.broken: {} @ {}",e.getMessage(), scriptIRI);
+			if (fastFail) throw new IOException(e.getMessage()+" @ "+scriptIRI,e);
 		} catch(UnsupportedRDFormatException e) {
 			total_errors++;
-			log.error("deploy.rdf.invalid: "+e.getMessage()+" @ "+scriptIRI);
-			if (fastFail) throw new IOException(e.getMessage(),e);
+			log.error("deploy.rdf.invalid: {} @ {}",e.getMessage(), scriptIRI);
+			if (fastFail) throw new IOException(e.getMessage()+" @ "+scriptIRI,e);
 		}
 		getConnection().commit();
 	}

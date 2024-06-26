@@ -37,6 +37,7 @@ public class GPTResponse {
         public float completion_time;
         public float total_time;
     }
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Error {
         String message, type, param, code;
     }

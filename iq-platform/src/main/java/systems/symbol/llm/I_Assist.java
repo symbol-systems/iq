@@ -3,8 +3,8 @@ package systems.symbol.llm;
 
 import java.util.List;
 
-public interface I_Chat<T> {
-    public I_Chat<T> add(I_LLMessage<T> msg);
+public interface I_Assist<T> {
+    public I_Assist<T> add(I_LLMessage<T> msg);
     public List<I_LLMessage<T>> messages();
     I_LLMessage<T> latest();
 

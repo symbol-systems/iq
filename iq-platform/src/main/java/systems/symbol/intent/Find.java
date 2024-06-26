@@ -73,7 +73,7 @@ public class Find implements I_Intent, I_Self {
         try {
             Bindings bindings = MyFacade.rebind(actor, ctx);
             String query = HBSRenderer.template(prompt.stringValue(), bindings);
-            Model found = finder.search(query);
+            Model found = finder.find(query);
             Set<IRI> iris = Models.subjectIRIs(found);
             for (IRI iri : iris) {
                 model.add(actor, this.knows, iri);

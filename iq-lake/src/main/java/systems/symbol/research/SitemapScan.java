@@ -27,11 +27,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ResearchSitemap extends IQIntent {
+public class SitemapScan extends IQIntent {
     private final DefaultFileSystemManager vfs;
     Pattern sitemapPattern = Pattern.compile("^\\s*Sitemap:\\s*(.+)$", Pattern.CASE_INSENSITIVE);
 
-    public ResearchSitemap(DefaultFileSystemManager vfs) {
+    public SitemapScan(DefaultFileSystemManager vfs) {
         this.vfs = vfs;
     }
     public void parseSite(FileObject domain, Set<IRI> done) throws IOException, ParserConfigurationException, SAXException, URISyntaxException {
@@ -86,7 +86,7 @@ public class ResearchSitemap extends IQIntent {
 
 
     @Override
-    @RDF(IQ_NS.IQ+"research-sitemap")
+    @RDF(IQ_NS.IQ+"sitemap")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
         Set<IRI> done = new HashSet<>();
         try {

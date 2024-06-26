@@ -54,7 +54,6 @@ public class ModelAPI extends GuardedAPI {
         log.info("ux.model: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
 
         if (!Validate.isBearer(auth)) {
-            log.info("ux.model.protected");
             return new OopsResponse("api.ux.model#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         DecodedJWT jwt;
@@ -83,7 +82,7 @@ public class ModelAPI extends GuardedAPI {
             Bindings my = MyFacade.rebind(self, params, jwt);
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
-            log.info("ux.model.sparql: {} -> {}", my.keySet(), sparql);
+            log.info("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
             if (Validate.isMissing(sparql)) {
                 return new OopsResponse("api.ux.model#query-missing", Response.Status.NOT_FOUND).asJSON();
             }

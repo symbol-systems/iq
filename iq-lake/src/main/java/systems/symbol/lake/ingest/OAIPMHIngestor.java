@@ -29,7 +29,7 @@ public class OAIPMHIngestor implements Consumer<FileObject> {
     protected static final Logger log = LoggerFactory.getLogger(OAIPMHIngestor.class);
     Model model;
     ValueFactory vf = SimpleValueFactory.getInstance();
-    IRI clzz = vf.createIRI("urn:" + getClass().getCanonicalName());
+    IRI clzz = vf.createIRI("class:" + getClass().getCanonicalName());
 
     protected OAIPMHIngestor() {
     }

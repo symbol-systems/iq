@@ -21,6 +21,11 @@ public class AbstractMessage<T> implements I_LLMessage<T> {
         this.content = content;
     }
 
+    public AbstractMessage(RoleType r, T s) {
+        this.role = r;
+        this.content = s;
+    }
+
     @Override
     public MessageType getType() {
         return type;

@@ -50,7 +50,7 @@ public class MyFacade {
     public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {
         Bindings bindings = rebind(self, my);
         my.put(INTENT, IdentityHelper.uuid(self+"#"));
-        my.put(STATE, state.stringValue());
+        if (state!=null) my.put(STATE, state.stringValue());
         return bindings;
     }
 
@@ -65,7 +65,7 @@ public class MyFacade {
             bindings.put(MY, my);
             log.info("my.bind: {}", my.keySet());
         }
-        MyFacade.dump(bindings, System.out);
+//        MyFacade.dump(bindings, System.out);
 
         my.put(TIME, dateFormat.format(new Date()));
         my.put(SELF, self.stringValue());

@@ -43,7 +43,7 @@ public class FactFinderTest {
             System.out.println("find.indexed: "+ indexed);
             assert indexed > 2;
 
-            List<EmbeddingMatch<TextSegment>> found = finder.find("hello");
+            List<EmbeddingMatch<TextSegment>> found = finder.search("hello");
             assert !found.isEmpty();
             for(EmbeddingMatch<TextSegment> match : found) {
                 System.out.println("fact.matched: " + match.embeddingId()+" --" + match.embedded()+" = " + match.score());

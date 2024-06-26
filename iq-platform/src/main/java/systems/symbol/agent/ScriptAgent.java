@@ -26,4 +26,8 @@ public class ScriptAgent extends IntentAgent {
     public ScriptAgent(@NotNull IRI self, @NotNull Model model) throws StateException {
         super(self, model, new JSR233(self, model), new SimpleBindings());
     }
+
+    public ScriptAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts) throws StateException {
+        super(self, ground, new JSR233(self, thoughts), new SimpleBindings());
+    }
 }

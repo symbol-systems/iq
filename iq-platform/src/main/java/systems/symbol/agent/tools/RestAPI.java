@@ -208,7 +208,7 @@ public class RestAPI implements I_API<Response> {
         } else {
             RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
             log.info("api.post: {} -> {} / {} & {}", getURL(), requestBody.contentType(), requestBody.contentLength(), headers);
-            MyFacade.dump(json, System.out);
+//            MyFacade.dump(json, System.out);
             Request.Builder builder = createRequestBuilder().url(getURL());
             builder.post(requestBody);
             return executeRequest(builder.build());

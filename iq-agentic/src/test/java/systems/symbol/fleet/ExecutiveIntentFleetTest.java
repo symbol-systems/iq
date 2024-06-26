@@ -79,7 +79,7 @@ class ExecutiveIntentFleetTest {
             fleet.deploy();
             assert !fleet.agents.isEmpty();
 
-            I_Agentic<String, Resource> context = fleet.getContext(self);
+            I_Agentic<String> context = fleet.getContext(self);
             assert null != context;
             Bindings my = context.getBindings();
 
@@ -121,7 +121,7 @@ class ExecutiveIntentFleetTest {
             fleet.deploy();
             assert !fleet.agents.isEmpty();
 
-            I_Agentic<String,Resource> context = fleet.getContext(self);
+            I_Agentic<String> context = fleet.getContext(self);
             assert null != context;
             I_Agent agent = fleet.getAgent(self);
             assert null != agent;
@@ -219,7 +219,7 @@ class ExecutiveIntentFleetTest {
             fleet.deploy();
             assert !fleet.agents.isEmpty();
 
-            I_Agentic<String,Resource> context = fleet.getContext(self);
+            I_Agentic<String> context = fleet.getContext(self);
             assert null != context;
             I_Agent agent = fleet.getAgent(self);
             assert null != agent;

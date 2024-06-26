@@ -20,4 +20,10 @@ public class TextMessage extends AbstractMessage<String> {
         this.role = RoleType.valueOf(role);
         this.content = content;
     }
+
+    public TextMessage(RoleType roleType, String prompt) {
+        this.type = MessageType.text;
+        this.role = roleType;
+        this.content = prompt;
+    }
 }

@@ -1,19 +1,19 @@
 package systems.symbol.agent;
 
-import systems.symbol.llm.I_Chat;
+import systems.symbol.llm.I_Assist;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
-public class Agentic<T, R> implements I_Agentic<T, R> {
+public class Agentic<T, R> implements I_Agentic<T> {
     Bindings bindings;
-    I_Chat<T> chat;
+    I_Assist<T> chat;
 
-    public Agentic(I_Chat<T> chat) {
+    public Agentic(I_Assist<T> chat) {
         this.bindings = new SimpleBindings();
         this.chat = chat;
     }
-    public Agentic(Bindings bindings, I_Chat<T> chat) {
+    public Agentic(Bindings bindings, I_Assist<T> chat) {
         this.bindings = bindings;
         this.chat = chat;
     }
@@ -23,7 +23,7 @@ public class Agentic<T, R> implements I_Agentic<T, R> {
     }
 
     @Override
-    public I_Chat<T> getConversation() {
+    public I_Assist<T> getConversation() {
         return chat;
     }
 

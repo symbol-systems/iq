@@ -26,7 +26,7 @@ import java.util.Set;
  * The {@code FactFinder} class extends {@link TextFinder} and provides additional methods
  * for searching facts in a RDF repository based on text embeddings.
  */
-public class FactFinder extends TextFinder {
+public class FactFinder extends TextFinder implements I_FactFinder {
     private static final Logger log = LoggerFactory.getLogger(FactFinder.class);
     DynamicModelFactory dmf = new DynamicModelFactory();
     Repository repository;
@@ -103,7 +103,7 @@ public class FactFinder extends TextFinder {
      * @return A RDF {@link Model} containing the found facts.
      */
     public Model search(Model model, String text, GraphQuery query, int maxResults, double minScore) {
-        List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
+        List<EmbeddingMatch<TextSegment>>  found = search(embed(text), maxResults, minScore);
         if (found.isEmpty()) return model;
 
         for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
@@ -132,7 +132,7 @@ public class FactFinder extends TextFinder {
      * @return A RDF {@link Model} containing the found facts.
      */
     public Model search(Model model, String text, RepositoryConnection connection, int maxResults, double minScore) {
-        List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
+        List<EmbeddingMatch<TextSegment>>  found = search(embed(text), maxResults, minScore);
         if (found.isEmpty()) return model;
         Set<String> dupes = new HashSet<>();
         for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
@@ -150,4 +150,8 @@ public class FactFinder extends TextFinder {
         return model;
     }
 
+    @Override
+    public Model find(String semantic_prompt) {
+        return null;
+    }
 }

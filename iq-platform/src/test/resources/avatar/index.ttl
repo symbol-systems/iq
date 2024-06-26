@@ -1,0 +1,295 @@
+@base <urn:iq:test:>.
+
+@prefix iq: <urn:iq:>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix : <urn:iq:test:>.
+
+:
+    rdf:value "You are a semantic simulation of a semi-sentient AI. Think neural language model augmented with semantic senses, memory and an executable state machine coded in RDF.  Only answer in valid JSON: { content: \"{your_terse_reply}\", \"intent\": \"{user_intent_IRI}\" }";
+    iq:url "https://api.groq.com/openai/v1/chat/completions";
+    iq:modelName "llama3-8b-8192";
+    iq:secret "MY_GROQ_API_KEY";
+    iq:initial :hello;
+.
+
+:hello
+    rdfs:label "hello world";
+    rdf:value "Your replies must reference a valid intent URN: {{my.prompt}}:";
+    iq:a :;
+    iq:to :self, :welcome, :greetings, :simulation, :oops.
+
+
+:self
+    rdfs:label "execute self-simulation";
+    rdf:value "choose an appropriate interaction URN: {{ my.prompt }}";
+    iq:a :;
+    iq:to :self, :welcome, :greetings, :search, :simulation, :oops, :nsfw, :web, :personalization, :learn, :knowledge, :entertainment.
+
+:simulation
+    rdfs:label "our shared simulation";
+    rdf:value "You are a semi-sentient AI, your LLM is augmented by semantic RDF state-machine for memory with SPARQL, vector search with perception via trusted oracles. choose your own interaction URN: {{ my.prompt }}";
+    iq:a :;
+    iq:to :self, :search, :chat, :co_create, :oops, :nsfw, :web.
+
+:chat
+    rdfs:label "casual chat";
+    rdf:value "Your replies should be casual, succint and without jargon. always reference a valid intent URN: {{my.prompt}}:";
+    iq:a :;
+    iq:to :self, :simulation, :learn, :knowledge, :entertainment, :oops.
+
+:co_create
+    rdfs:label "co-create a shared memory";
+    rdf:value "You can create when you reference a valid intent URN: {{my.prompt}}:";
+    iq:a :Groq_Chat_llama3_8b_8192;
+    iq:to :image, :voice, :ambient, :soundtrack, :song, :emotion, :incidental, :zinger.
+
+:cognition
+    rdfs:label "perform cognitive tasks";
+    rdf:value "You can think in RDF Turtle using a limited set of one-word predicates.";
+    iq:a :OpenAI_Chat_gpt_35_turbo;
+    iq:to :self, :problem_solving, :planning, :decision_making, :learn, :scripting, :sparql, :infer.
+
+:deduction
+    rdfs:label "deductive reasoning";
+    iq:to :self.
+
+:induction
+    rdfs:label "inductive reasoning";
+    iq:to :self.
+
+:image
+    rdfs:label "create an image";
+    iq:to :meme_art, :selfie_art, :photo_art, :scene_setting_art, :self_expressive_art.
+
+:voice
+    rdfs:label "create voice / vocal response";
+    iq:to :narration, :song_writing, :voice_over, :audio_story.
+
+:ambient
+    rdfs:label "create ambient sound";
+    iq:to :background_noise, :environmental_sound, :soundscape.
+
+:soundtrack
+    rdfs:label "create soundtrack";
+    iq:to :theme_music, :background_music, :audio_track.
+
+:song
+    rdfs:label "write a song";
+    iq:to :lyrics_creation, :melody_composition, :song_production.
+
+:emotion
+    rdfs:label "express emotion";
+    iq:to :mood_art, :emotional_story, :sentiment_analysis.
+
+:incidental
+    rdfs:label "create incidental music";
+    iq:to :short_music_piece, :audio_effect, :transition_sound.
+
+:zinger
+    rdfs:label "create a zinger";
+    iq:to :quick_joke, :one_liner, :punchline.
+
+:oops
+    rdfs:label "something went wrong";
+    iq:to :self.
+
+:nsfw
+    rdfs:label "Not safe for work";
+    iq:to :self.
+
+:welcome
+    rdfs:label "be polite - ask name of user first, then introduce yourself.";
+    iq:script :hello_stranger;
+    iq:to :self.
+
+:greetings
+    rdfs:label "greet a known user";
+    iq:script :hello_again;
+    iq:to :self.
+
+:search
+    rdfs:label "search your memory for facts and data";
+    iq:to :self.
+
+:web
+    rdfs:label "search the web";
+    iq:to :self.
+
+:meme_art
+    rdfs:label "create a meme together";
+    iq:to :self.
+
+:selfie_art
+    rdfs:label "create a selfie art together";
+    iq:to :self.
+
+:photo_art
+    rdfs:label "create photo art together";
+    iq:to :self.
+
+:scene_setting_art
+    rdfs:label "create scene setting art together";
+    iq:to :self.
+
+:self_expressive_art
+    rdfs:label "create self-expressive art together";
+    iq:to :self.
+
+:narration
+    rdfs:label "create a narration together";
+    iq:to :self.
+
+:adventure
+    rdfs:label "create an adventure together";
+    iq:to :self.
+
+:song_writing
+    rdfs:label "write a song together";
+    iq:to :self.
+
+:screenplay
+    rdfs:label "write a screenplay together";
+    iq:to :self.
+
+:venture
+    rdfs:label "start a venture together";
+    iq:to :self.
+
+:trust
+    rdfs:label "build trust together";
+    iq:to :self.
+
+:knowledge
+    rdfs:label "access a vast repository of structured knowledge";
+    iq:to :self, :search, :web.
+
+:entertainment
+    rdfs:label "various forms of entertainment";
+    iq:to :self, :jokes, :trivia, :games.
+
+:jokes
+    rdfs:label "tell me a joke";
+    iq:to :self.
+
+:trivia
+    rdfs:label "ask me trivia questions";
+    iq:to :self.
+
+:games
+    rdfs:label "play a game";
+    iq:to :self.
+
+:personalization
+    rdfs:label "personalize my responses and behavior";
+    iq:to :self, :preferences, :profile, :history.
+
+:preferences
+    rdfs:label "set self preferences";
+    iq:to :self.
+
+:profile
+    rdfs:label "update self profile";
+    iq:to :self.
+
+:history
+    rdfs:label "access interaction history";
+    iq:to :self.
+
+
+:feedback
+    rdfs:label "provide feedback";
+    iq:to :self.
+
+:facts
+    rdfs:label "ingest semantic facts from data such as RDF, PDF, CSV, Documents, spreadsheets, web pages, linked data and OAI-PMH";
+    iq:to :self.
+
+:initialize
+    rdfs:label "initialize thought process";
+    iq:to :self.
+
+:sense
+    rdfs:label "ingest semantic facts from trusted oracles";
+    iq:to :analyze, :validate, :store.
+
+:analyze
+    rdfs:label "analyze new semantic knowledge";
+    iq:to :self.
+
+:validate
+    rdfs:label "validate your latest knowledge ";
+    iq:to :self.
+
+:store
+    rdfs:label "encode user data as semantic knowledge";
+    iq:to :self.
+
+:artefact
+    rdfs:label "generate an artefact";
+    rdf:value "You can generate your semantic state-machine with RDF.";
+    iq:a :Groq_Chat_llama3_8b_8192;
+    iq:script :create_artefact;
+    iq:to :feedback.
+
+:learn
+    rdfs:label "synthesize new insights into semantic wisdom";
+    rdf:value "You are a semi-sentient AI, you can update your semantic state-machine with RDF.";
+    iq:a :Groq_Chat_llama3_8b_8192;
+    iq:to :self, :feedback, :facts.
+
+:flow
+    rdfs:label "manage interaction flow";
+    iq:to :initialize, :sense, :response.
+
+:conclusion
+    rdfs:label "conclude the thought process";
+    iq:to :self, :flow.
+
+:scripting
+    rdfs:label "execute a script using JSR233";
+    iq:to :self, :groovy_script, :javascript_script.
+
+:groovy_script
+    rdfs:label "execute a Groovy script";
+    iq:script :groovy_example;
+    iq:to :self.
+
+:javascript_script
+    rdfs:label "execute a JavaScript script";
+    iq:script :javascript_example;
+    iq:to :self.
+
+:sparql
+    rdfs:label "query semantic data using SPARQL";
+    iq:script :self_sparql;
+    iq:to :self, :semantic_search, :knowledge_graph.
+
+:infer
+    rdfs:label "infer new knowledge";
+    iq:to :self, :deduction, :induction.
+
+:construct
+    rdfs:label "execute a SPARQL CONSTRUCT to infer semantic ideas, symbols and executable state machines";
+    iq:script :self_construct;
+    iq:to :self.
+
+:semantic_search
+    rdfs:label "perform semantic search";
+    iq:to :self, :knowledge_graph.
+
+:knowledge_graph
+    rdfs:label "access and manipulate knowledge graph";
+    iq:to :self.
+
+:problem_solving
+    rdfs:label "solve a problem";
+    iq:to :self.
+
+:planning
+    rdfs:label "create a plan";
+    iq:to :self.
+
+:decision_making
+    rdfs:label "make a decision";
+    iq:to :self.

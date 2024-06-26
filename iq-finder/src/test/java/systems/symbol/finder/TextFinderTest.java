@@ -27,7 +27,7 @@ public class TextFinderTest {
         finder.store("simple", "This is an simple sentence");
         finder.store("unrelated", "This is unrelated");
 
-        List<EmbeddingMatch<TextSegment>> found = finder.find("sentence");
+        List<EmbeddingMatch<TextSegment>> found = finder.search("sentence");
         assert !found.isEmpty();
         for (EmbeddingMatch<TextSegment> match : found) {
             System.out.println("match:" + match.embeddingId() + " --" + match.embedded() + " = " + match.score());
@@ -45,7 +45,7 @@ public class TextFinderTest {
 
         TextFinder finder2 = new TextFinder(storePath);
 
-        List<EmbeddingMatch<TextSegment>> found = finder2.find("sentence");
+        List<EmbeddingMatch<TextSegment>> found = finder2.search("sentence");
         assert !found.isEmpty();
         for (EmbeddingMatch<TextSegment> match : found) {
             System.out.println("hydrated:" + match.embeddingId() + " --" + match.embedded() + " = " + match.score());

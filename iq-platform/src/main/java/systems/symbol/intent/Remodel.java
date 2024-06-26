@@ -126,8 +126,8 @@ public class Remodel extends AbstractIntent {
     }
 
     /**
-     * Protected Method: remodel
      * Description: Remodels RDF data based on the provided template and bindings.
+     * The template uses Handlebars to interpolate RDF
      *
      * @param actor     The actor/agent who is executing the intent.
      * @param state     The current state of the actor/agent.
@@ -137,11 +137,10 @@ public class Remodel extends AbstractIntent {
      * @return The set of learned facts.
      * @throws IOException if an I/O error occurs while performing the remodeling operation.
      */
-    protected Set<IRI> remodel(IRI actor, Resource state, Literal rdfString, Bindings my, Model model) throws IOException {
+    public Set<IRI> remodel(IRI actor, Resource state, Literal rdfString, Bindings my, Model model) throws IOException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
         log.info("remodel.rdf: {} -> {} -> {}", rdfString.getDatatype(), bindings.keySet(), ((Map<?, ?>) bindings.get("my")).keySet());
 
-        // The template uses Handlebars to interpolate RDF
         String remodelled = HBSRenderer.template(rdfString.stringValue(), bindings);
 
         String mime = FileFormats.toMime(templateMime);
