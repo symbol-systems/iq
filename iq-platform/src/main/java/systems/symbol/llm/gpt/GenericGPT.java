@@ -1,77 +1,126 @@
 package systems.symbol.llm.gpt;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
-import systems.symbol.fsm.GuardedStateMachine;
 import systems.symbol.llm.*;
 import systems.symbol.string.Validate;
 
+import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GenericGPT implements I_LLM<String> {
+    private static final String MD_BLOCKS_REGEX = "```(?:([a-zA-Z0-9_]+))?\\n([\\s\\S]*?)\\n```";
+    private static final String JSON_BLOCKS_REGEX = "\\{[^{}]*\\}";
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper om = new ObjectMapper();
     String token;
     I_LLMConfig config;
-    private List<GPTResponse> history;
+    private final List<GPTResponse> history;
 
     public GenericGPT(String token, I_LLMConfig config) {
         this.token = token;
         this.config = config;
         this.history = new ArrayList<>();
+        init();
     }
 
-    public GenericGPT(String token, int tokens) {
+    public GenericGPT(String token, int contextLength) {
         this.token = token;
-        this.config = CommonLLM.newGPT3_5_Turbo(tokens);
+        this.config = CommonLLM.GPT3_5_Turbo(contextLength);
         this.history = new ArrayList<>();
+        init();
+    }
+
+    private void init() {
+        om.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
 
 
-    @Override
     public I_LLMConfig getConfig() {
         return config;
     }
 
     @Override
-    public void complete(I_Assist<String> chats) throws APIException, IOException {
-        log.info("api.gpt.url: {} -> {}", config.getName(), config.getURL());
+    public I_Assist<String> complete(I_Assist<String> chats) throws APIException, IOException {
+        log.debug("llm.gpt.url: {} -> {}", config.getName(), config.getURL());
         RestAPI api = new RestAPI(config.getURL());
         api.header("Authorization", "Bearer "+token);
 
         Map<String, Object> json = toPayload(null, chats.messages()); // "json_object"
-//        log.info("api.gpt.post: {}", json);
+//        log.info("llm.gpt.post: {}", json);
 
         String body;
         try (okhttp3.Response response = api.post(json)) {
-            log.info("api.gpt.response: {} -> {}", response.code(), response.message());
+            log.debug("llm.gpt.response: {} -> {}", response.code(), response.message());
 
             // to BODY into `JSON`
             ResponseBody responseBody = response.body();
             if (responseBody != null) {
                 body = responseBody.string();
-//                log.info("api.gpt.body: {}", body);
-                GPTResponse completion = objectMapper.readValue(body, GPTResponse.class);
+                GPTResponse completion = om.readValue(body, GPTResponse.class);
+                log.info("llm.gpt.status: {} x {} tokens", response.code(), completion.usage.total_tokens);
                 if (completion!=null && completion.choices!=null && !completion.choices.isEmpty()) {
-                    GPTResponse.Message message = completion.choices.get(0).message;
-                    chats.add(new TextMessage(message.role, message.content));
+                    for (int c = 0; c<completion.choices.size();c++) {
+                        GPTResponse.Choice choice = completion.choices.get(c);
+                        processMessage(chats, choice.message);
+                    }
                     history.add(completion);
-                    log.info("api.gpt.done: {} -> {}", message.content, message.role);
+                    log.info("llm.gpt.complete: {}", chats.messages().size());
                 }
-            } else throw new IOException();
+            }
+        } catch (Exception e) {
+            log.info("llm.gpt.error: {}", e.getMessage());
         }
+        return chats;
     }
 
-    @Override
-    public boolean isOnline() {
-        return !Validate.isMissing(token);
+    private void processMessage(I_Assist<String> chat, GPTResponse.Message message) throws JsonProcessingException {
+        I_LLMessage.RoleType role = I_LLMessage.RoleType.assistant;
+        Pattern pattern = Pattern.compile(JSON_BLOCKS_REGEX + "|" + MD_BLOCKS_REGEX);
+        Matcher blocks = pattern.matcher(message.content);
+        boolean matchFound = false;
+
+        while (blocks.find()) {
+            String block = blocks.group();
+
+            if (block.matches(JSON_BLOCKS_REGEX)) {
+                try {
+                    SimpleBindings decision = om.readValue(block, SimpleBindings.class);
+                    String content = String.valueOf(decision.get("content"));
+                    String intent = String.valueOf(decision.get("intent"));
+                    log.info("llm.gpt.intent: {} => {}", intent, content);
+                    if (intent != null && intent.indexOf(":")>0) {
+                        chat.add(new IntentMessage(intent, role, content));
+                    } else {
+                        chat.add(new TextMessage(role, block));
+                    }
+                } catch (JsonProcessingException e) {
+                    log.error("llm.gpt.error: {}", block, e);
+                    chat.add(new TextMessage(role, block));
+                }
+            } else {
+                log.info("llm.gpt.message: {} => {}" ,message.content , block);
+                chat.add(new TextMessage(role, block));
+            }
+            matchFound = true;
+        }
+
+        if (!matchFound) {
+            log.info("llm.gpt.message: {}" , message.content);
+            chat.add(new TextMessage(role, message.content));
+        }
     }
 
     private Map<String, Object> toPayload(String response_format_type, List<I_LLMessage<String>> msgs) {
@@ -105,5 +154,9 @@ public class GenericGPT implements I_LLM<String> {
 
     public List<GPTResponse> getHistory() {
         return history;
+    }
+
+    public String toString() {
+        return getConfig().getName();
     }
 }

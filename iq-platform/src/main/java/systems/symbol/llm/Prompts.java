@@ -44,7 +44,7 @@ public class Prompts {
      */
     public static I_Assist<String> decision(I_Agent agent, I_Agentic<String> context) throws IOException {
         IRI actor = agent.getSelf();
-        Model model = agent.getMemo();
+        Model model = agent.getThoughts();
         Bindings my = context.getBindings();
         I_StateMachine<Resource> fsm = agent.getStateMachine();
         Resource current = fsm.getState();

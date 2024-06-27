@@ -6,10 +6,13 @@ public class DefaultLLConfig implements I_LLMConfig {
     public String modelName;
     public float frequencyPenalty;
     public float temperature;
-    public int maxTokens;
+    public int maxTokens = 2048;
     public float topP;
     public int n, seed;
     public String secret;
+
+    public DefaultLLConfig() {
+    }
 
     public DefaultLLConfig(int maxTokens) {
         this.maxTokens = maxTokens;
@@ -24,18 +27,6 @@ public class DefaultLLConfig implements I_LLMConfig {
         this.topP = 1;
         this.n = 1;
         this.seed = 0;
-    }
-
-    public DefaultLLConfig(String url, String modelName, int maxTokens, String secretName) {
-        this.url = url;
-        this.modelName = modelName;
-        this.temperature = 0;
-        this.frequencyPenalty = 0;
-        this.maxTokens = maxTokens;
-        this.topP = 1;
-        this.n = 1;
-        this.seed = 0;
-        this.secret = secretName;
     }
 
     public String getURL() {

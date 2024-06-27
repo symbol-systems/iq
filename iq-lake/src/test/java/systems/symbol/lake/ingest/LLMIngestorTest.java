@@ -24,7 +24,7 @@ class LLMIngestorTest {
                 LLMIngestor ingest = new LLMIngestor(ai, llmPrompt, content -> {
                     done[0] = true;
                     System.out.println("test.ingest.LLM: " + content.getSelf() + " ==> " + content.getContent());
-                });
+                }, 1000);
                 VFSCrawler crawler = new VFSCrawler(new FileContentConverter(new XHTMLChunkIngestor(new ThrottleIngestor<>(1, ingest))));
                 crawler.crawl(from.toURI());
                 assert done[0];

@@ -13,6 +13,8 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.agent.AvatarBuilder;
+import systems.symbol.agent.I_Agent;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
@@ -20,6 +22,7 @@ import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.platform.APIPlatform;
 import systems.symbol.platform.AgentService;
+import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.trust.I_Keys;
@@ -30,7 +33,6 @@ import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.security.KeyPair;
-import java.util.Collection;
 import java.util.Map;
 
 @Path("trust")
@@ -60,11 +62,8 @@ public class Issuer {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("issuer/{repo}/{provider}")
-    public Response issue(@PathParam("repo") String repoName,
-                             @PathParam("provider") String provider
-            , SimpleBindings params) throws IOException {
-        log.info("trust.issuer: {} -> {} @ {}", repoName, provider, params.keySet());
-
+    public Response login(@PathParam("repo") String repoName, @PathParam("provider") String provider, SimpleBindings params) throws IOException {
+        log.info("trust.login: {} -> {} @ {}", repoName, provider, params.keySet());
         if (provider == null || provider.length() < 4) {
             return new OopsResponse("api.trust.issuer.subject-missing", Response.Status.BAD_REQUEST).asJSON();
         }
@@ -81,33 +80,35 @@ public class Issuer {
         try (RepositoryConnection connection = repo.getConnection()) {
 
             IRI issuer = Values.iri(platform.getSelf().stringValue(), repoName + ":trust:" + provider+":");
-            IRI state = Values.iri(issuer.stringValue(), "verify");
-            log.info("trust.intent: {} -> {}", issuer, state);
-//            MyFacade.dump(params, System.out);
+            log.info("trust.issuer: {}", issuer);
 
             Bindings bindings = new SimpleBindings(params);
             bindings.put("issuer", issuer);
             bindings.put("provider", provider);
 
-            AgentService service = new AgentService(issuer, connection, platform.getSecrets(), bindings);
-
-            if (service.getAgent().getStateMachine().getState() == null) {
-                return new OopsResponse("api.trust.issuer.state-unknown-" + repoName, Response.Status.NOT_FOUND).asJSON();
+            AvatarBuilder builder = new AvatarBuilder(issuer, 1024, bindings, platform.getSecrets());
+            builder.setGround(connection);//.setThoughts(new LiveModel(connection));
+            builder.executive().sparql(connection);
+            I_Agent agent = builder.build();
+            Resource state = agent.getStateMachine().getState();
+            log.info("trust.agent: {} -> {}", agent.getSelf(), state);
+            if (state == null) {
+                return new OopsResponse("api.trust.issuer.state-unknown", Response.Status.NOT_FOUND).asJSON();
             }
-            log.info("trust.issuers: {} -> {} @ {}", issuer, state, service.getAgent().getStateMachine().getState());
-
-            Resource done = service.next(state);
+            Resource done = agent.getStateMachine().transition(state);
             Map<?, Object> identity = (Map<?, Object>) bindings.getOrDefault("identity", null);
-            log.info("trust.identity: {} -> {} == {}", identity, !state.equals(done), service.getAgent().getStateMachine().getState());
+            log.info("trust.identity: {} -> {} == {}", identity, !state.equals(done), state);
 
 //            RDFDump.dump(new LiveModel(connection));
             if (done == null || identity == null) {
                 return new OopsResponse("api.trust.issuer.denied-" + repoName, Response.Status.FORBIDDEN).asJSON();
             }
-
             String self = identity.getOrDefault("self", "urn:my:anonymous:" + provider).toString();
             String name = identity.getOrDefault("name", "stranger").toString();
             log.info("trust.tokenize: {} -> {}", identity, self);
+
+            Repository myRepo = platform.getWorkspace().alwaysGetRepository(self);
+
             String signedToken = tokenize(issuer, provider, self, name, new String[]{self, repoName, provider}, platform);
             SimpleResponse response = new SimpleResponse("access_token", signedToken);
             return response.asJSON();

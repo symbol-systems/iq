@@ -41,7 +41,7 @@ class RDFPageTest {
             Model memory = dmf.createEmptyModel();
             RDFPage page2rdf = new RDFPage(self, memory, RDFFormat.RDFXML);
 
-            ExecutiveIntent executiveIntent = new ExecutiveIntent(self, model, page2rdf);
+            ExecutiveIntent executiveIntent = new ExecutiveIntent(self, model, model, page2rdf);
             IntentAgent agent = new IntentAgent(self, model, executiveIntent, new SimpleBindings());
 
             agent.getStateMachine().transition(i_rdf);

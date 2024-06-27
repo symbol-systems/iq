@@ -6,8 +6,8 @@ import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
+import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.intent.I_Intent;
 
 import javax.script.Bindings;
@@ -24,19 +24,30 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     /**
      * The ExecutiveAgent makes simple decisions and delegates other to manager.
      * @param self The identity of the agent
-     * @param memo The working memory of the agent as an RDF4J Model.
+     * @param thoughts The working memory of the agent as an RDF4J Model.
      */
-    public ExecutiveAgent(@NotNull IRI self, @NotNull Model memo, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
-        super(self, memo, intent, bindings);
+    public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
+        super(self, thoughts, intent, bindings);
         this.manager = manager;
+        setFSM(new ModelStateMachine(self, thoughts, thoughts));
+    }
+
+    public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
+        super(self, thoughts, intent, bindings);
+        this.manager = manager;
+        setFSM(new ModelStateMachine(self, ground, thoughts));
+    }
+
+    @Override
+    public void boot(IRI self, Model ground) {
     }
 
     public void resume() {
         this.seen.clear();
     }
 
-    public ExecutiveIntent getExecutive() {
-        return (ExecutiveIntent) this.intent;
+    public void setManager(I_Decide<Resource> manager) {
+        this.manager = manager;
     }
 
     /**
@@ -48,12 +59,13 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      */
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
-        log.info("onTransition: {} -> {} --> {}", self, to, bindings);
+        log.info("exec.onTransition: {} -> {} --> {}", self, to, bindings);
         Set<IRI> executed = execute(getSelf(), to, bindings);
         Resource next = decide();
-        log.info("decided: {} <-> {} --> {}", next, seen, executed);
-        if (next==null) return true; // don't veto, we may try again
+        log.info("exec.decided: {} <-> {} --> {}", next, seen, executed);
+        if (next==null) return false; // don't veto, we may try again
         if (seen.contains(next)) return false; // veto to prevent cycles
+        if (getStateMachine().getState().equals(next)) return false;
         seen.add(next);
         getStateMachine().transition(next);
         return true;
@@ -70,7 +82,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public Resource decide() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
-        log.info("delegating: {} -> {}", choices, manager==null?"solo":manager);
+        log.info("exec.deciding: {} -> {}", manager==null?"solo":manager.getClass().getSimpleName(), choices);
         if (choices.isEmpty()) return null;
         if (choices.size()==1) return choices.iterator().next();
         if (manager == null) return null;

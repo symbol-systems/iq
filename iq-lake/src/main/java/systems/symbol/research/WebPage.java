@@ -39,7 +39,7 @@ public class WebPage extends AbstractIntent {
     }
     public void init(I_LLM<String> llm, String prompt, RDFFormat format) throws IOException {
         if (llm!=null)
-            llm2RDF = new LLMIngestor(llm, "Reply only using valid "+ format.getName()+" RDF: "+prompt, ingestRDF);
+            llm2RDF = new LLMIngestor(llm, "Reply only using valid "+ format.getName()+" RDF: "+prompt, ingestRDF, 1000);
         ingestRDF = new RDFModelIngestor(model, format);
         processor = new WebpageIngestor(new XHTMLChunkIngestor(llm2RDF==null?ingestRDF:llm2RDF));
         log.info("init: {} --> {}", self, prompt);

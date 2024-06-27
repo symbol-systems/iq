@@ -25,24 +25,29 @@ import java.util.Set;
 public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_Intent, I_StateListener<Resource> {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected I_StateMachine<Resource> fsm;
-    protected Model memo;
+    protected Model thoughts;
     protected IRI self;
 
     /**
      * Parameterized constructor allowing initialization with a pre-existing RDF4J model.
-     * @param memo The RDF4J model to be associated with the agent.
+     * @param thoughts The RDF4J model to be associated with the agent.
      */
-    public AbstractAgent(IRI self, @NotNull Model memo) throws StateException {
+    public AbstractAgent(IRI self, @NotNull Model thoughts) throws StateException {
         this.self = self;
-        this.memo = memo;
-        boot(self, memo);
+        this.thoughts = thoughts;
+        boot(self, thoughts);
     }
 
     @Override
     public void boot(IRI self, Model model) throws StateException {
-        ModelStateMachine fsm = new ModelStateMachine(self, model);
-        log.info("fsm.boot: {} @ {}", getSelf(), fsm.getState());
-        setFSM(fsm);
+        if (fsm==null) {
+            ModelStateMachine fsm = new ModelStateMachine(self, model);
+            setFSM(fsm);
+            log.info("fsm.boot: {} @ {}", getSelf(), fsm.getState());
+        } else if (fsm instanceof ModelStateMachine) {
+            ((ModelStateMachine) fsm).initialize(self, model, model);
+            log.info("fsm.reboot: {} @ {}", getSelf(), fsm.getState());
+        }
     }
 
     @Override
@@ -61,8 +66,8 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_I
      * @return The RDF4J model.
      */
     @Override
-    public Model getMemo() {
-        return memo;
+    public Model getThoughts() {
+        return thoughts;
     }
 
     /**
@@ -83,7 +88,7 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_I
     protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
         this.fsm = fsm;
         fsm.listen((from, to) -> {
-            log.info("agent.intent: {} @ {} <- {}", to, getSelf(), from);
+            log.info("agent.onIntent: {} ==> {} @ {}", from, to, getSelf() );
             try {
                 return onTransition(from, to);
             } catch(Exception e) {

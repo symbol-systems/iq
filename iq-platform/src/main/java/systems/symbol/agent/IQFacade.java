@@ -60,7 +60,7 @@ public class IQFacade {
     public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) throws SecretsException {
         this.self = self;
         this.model = model;
-        this.secrets = TrustedAPIs.trusted(model, self, secrets);
+        this.secrets = secrets;
     }
 
     protected void enableVFS() throws FileSystemException {

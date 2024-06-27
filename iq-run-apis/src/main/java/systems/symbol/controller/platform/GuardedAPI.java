@@ -83,16 +83,16 @@ public class GuardedAPI {
         if (bearer==null ||bearer.isEmpty())
             throw new OopsException("api.trust.missing", Response.Status.UNAUTHORIZED);
         boolean isValid = Validate.isBearer(bearer);
-        log.info("jwt.header: {}", bearer.substring(0,4), isValid);
         if (!isValid) {
             throw new OopsException("api.trust.required", Response.Status.UNAUTHORIZED);
         }
-        JWTGen jwtGen = new JWTGen();
         String token = bearer.substring("BEARER ".length());
+//        log.info("jwt.header: {} -> {}", isValid?bearer.substring(8,16):"", isValid);
+        JWTGen jwtGen = new JWTGen();
         try {
             return jwtGen.verify(keys.keys(), token);
         } catch (Exception e) {
-//            log.error("jwt.reject: {} -> {}", token, e.getMessage());
+            log.info("jwt.reject: {} -> {}", token.substring(8,16), e.getMessage());
             throw new OopsException("api.trust.reject", Response.Status.FORBIDDEN);
         }
     }

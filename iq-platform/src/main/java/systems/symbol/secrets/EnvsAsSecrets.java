@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 public class EnvsAsSecrets implements I_Secrets {
     private final Logger log = LoggerFactory.getLogger(getClass());
     public String getSecret(String key) {
-
-        log.info("env.getSecret: {} == {} @ {} ", key, System.getenv(key), System.getenv().keySet());
-        if (!System.getenv().containsKey(key)) return null;
-        return System.getenv(key);
+        String v = System.getenv(key);
+        log.info("env.getSecret: {} == {}", key, v);
+        return v;
     }
 }

@@ -21,7 +21,7 @@ import java.util.Map;
  * Implementation of the I_API interface using OkHttp for REST API calls.
  */
 public class RestAPI implements I_API<Response> {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(RestAPI.class);
     private final OkHttpClient client;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseURL;
@@ -50,20 +50,9 @@ public class RestAPI implements I_API<Response> {
         builder.callTimeout(Duration.ofSeconds(30));
         this.client = builder.build();
         this.baseURL = baseURL;
-//        this.authToken = authToken;
-//        this.authHeader = authHeader;
         this.httpUrl = HttpUrl.parse(getURL());
         this.secrets = secrets;
     }
-
-//    public RestAPI(String baseURL, String authToken) {
-//        this(baseURL, authToken, BEARER_AUTH_HEADER);
-//    }
-//
-//    public RestAPI(String baseURL) {
-//        this(baseURL, null, null);
-//    }
-
     /**
      * Gets the base URL of the API.
      *
@@ -207,7 +196,7 @@ public class RestAPI implements I_API<Response> {
             return executeRequest(builder.build());
         } else {
             RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
-            log.info("api.post: {} -> {} / {} & {}", getURL(), requestBody.contentType(), requestBody.contentLength(), headers);
+            log.debug("api.post: {} -> {} / {} & {}", getURL(), requestBody.contentType(), requestBody.contentLength(), headers);
 //            MyFacade.dump(json, System.out);
             Request.Builder builder = createRequestBuilder().url(getURL());
             builder.post(requestBody);
@@ -269,7 +258,7 @@ public class RestAPI implements I_API<Response> {
      */
     private Response executeRequest(Request request) throws IOException {
         try {
-            log.info("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet() );
+            log.debug("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet() );
             return client.newCall(request).execute();
         } catch (java.net.SocketTimeoutException e) {
             // retry
@@ -294,14 +283,13 @@ class LoggingInterceptor implements Interceptor {
     @Override
     public @NotNull Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-
         // Clone the request to log its body
         Request copy = request.newBuilder().build();
         if (copy.body() != null) {
             Buffer buffer = new Buffer();
             copy.body().writeTo(buffer);
             String requestBodyString = buffer.readUtf8();
-            System.out.println("Request Body: " + requestBodyString);
+            System.out.println("api.debug: " + requestBodyString);
         }
 
         return chain.proceed(request);

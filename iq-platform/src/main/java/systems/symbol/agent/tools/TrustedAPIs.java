@@ -31,6 +31,7 @@ public class TrustedAPIs {
         for (Statement st : trusted) {
             Value url = st.getObject();
             secrets.grant(url.stringValue(), key);
+            log.info("secret.grant: {} -> {}", key, url.stringValue());
         }
         return secrets;
     }

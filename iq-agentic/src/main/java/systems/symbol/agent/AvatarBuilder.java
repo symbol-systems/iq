@@ -1,4 +1,4 @@
-package systems.symbol.platform;
+package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -10,11 +10,10 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.finder.I_FactFinder;
+import systems.symbol.fsm.StateException;
 import systems.symbol.intent.*;
-import systems.symbol.llm.DefaultLLConfig;
-import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_LLMConfig;
-import systems.symbol.llm.gpt.GenericGPT;
+import systems.symbol.llm.I_Assist;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
@@ -32,6 +31,7 @@ public class AvatarBuilder implements I_Self {
     private I_Secrets secrets;
     private I_Intents intents;
     private final DynamicModelFactory dmf = new DynamicModelFactory();
+//    private Conversation chat;
 
     public AvatarBuilder(IRI self, int contextLength, Bindings bindings, I_Secrets secrets) {
         this.self = self;
@@ -56,7 +56,6 @@ public class AvatarBuilder implements I_Self {
 
     public void setGround(GraphQueryResult result) {
         meld(result, ground);
-
     }
 
     public static void meld(GraphQueryResult result, Model model) {
@@ -85,23 +84,18 @@ public class AvatarBuilder implements I_Self {
         meld(facts, thoughts);
     }
 
-    public AvatarBuilder executive() {
-//        log.info("executive: {}", getSelf());
-//        Iterable<Statement> statements = getGround().getStatements(getSelf(), null, null);
-//        statements.forEach( (s) -> {
-//            log.info("\t{} -> {}", s.getPredicate(), s.getObject());
-//        });
-        this.intents = new ExecutiveIntent(self, getGround(), new JSR233(self, getThoughts(), getSecrets()));
+    public AvatarBuilder remodel() {
+        intents.add(new Remodel(self, getThoughts(), new ModelScriptCatalog(getGround())));
         return this;
     }
 
-    public AvatarBuilder remodel() {
-        intents.add(new Remodel(self, getThoughts(), new ModelScriptCatalog(getGround()) ));
-        return this;
-    }
+//    public AvatarBuilder avatar() {
+//        intents.add(new Avatar(self, getGround(), getThoughts(), contextLength, getBindings(), getSecrets() ));
+//        return this;
+//    }
 
     public AvatarBuilder search(I_FactFinder finder) {
-        intents.add(new Search(self, getThoughts(), finder, getGround() ));
+        intents.add(new Search(self, getThoughts(), finder, getGround()));
         return this;
     }
 
@@ -112,48 +106,56 @@ public class AvatarBuilder implements I_Self {
         return this;
     }
 
-    public I_LLMConfig configure() {
-        DefaultLLConfig config = new DefaultLLConfig(contextLength);
-        try {
-            Poke.poke(getSelf(), getGround(), config);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        return config;
-    }
+//    public Bindings getBindings() {
+//        return bindings;
+//    }
 
-    public I_LLM<String> llm() throws SecretsException {
-        I_LLMConfig config = configure();
-        String secretName = config.getSecretName();
-        log.info("llm.secrets: {} @ {} -> {} -> {}", self, secretName, config.getName(), config.getURL());
-        if (secretName==null||secretName.isEmpty()) throw new SecretsException("secret.missing: "+config.getName());
-        String token = secrets.getSecret(secretName);
-        if (token==null) throw new SecretsException("missing: "+secretName);
-        return new GenericGPT(token, config);
-    }
-
-    public Bindings getBindings() {
-        return bindings;
-    }
-
-    public void setBindings(Bindings my) {
+    public AvatarBuilder setBindings(Bindings my) {
         this.bindings = my;
+        return this;
     }
 
-    public I_Secrets getSecrets() {
-        return secrets;
-    }
+//    public I_Secrets getSecrets() {
+//        return secrets;
+//    }
 
-    public void setSecrets(I_Secrets secrets) {
+    public AvatarBuilder setSecrets(I_Secrets secrets) {
         this.secrets = secrets;
+        return this;
     }
 
     public void set(String name, Object value) {
         bindings.put(name, value);
     }
 
-    public Avatar build() throws SecretsException {
-        return new Avatar(getSelf(), getGround(), getThoughts(), llm(), getBindings(), getSecrets());
+    public AvatarBuilder executive() throws SecretsException {
+        this.intents = new ExecutiveIntent(self, getGround(), getThoughts(), new JSR233(self, getGround(), getThoughts(), secrets, new ModelScriptCatalog(getGround())));
+        return this;
     }
 
+    public I_Agent build() throws SecretsException, StateException {
+        return new ExecutiveAgent(self, getGround(), getThoughts(), intents, null, bindings);
+    }
+
+    public I_Agent build(I_Assist<String> chat) throws SecretsException, StateException {
+        log.info("builder.thoughts: {} -> {}", self, chat.latest());
+        Agentic<String, Object> agentic = new Agentic<>(()->self, bindings, chat);
+//        AgenticDecision manager = new AgenticDecision(agentic, gpt, getGround());
+
+        ExecutiveAgent agent = new ExecutiveAgent(self, getGround(), getThoughts(), intents, null, agentic.getBindings());
+        intents.add(new Avatar(agent, chat, getGround(), secrets));
+
+        log.info("builder.self: {} -> {}", agent.getSelf(), agent.getStateMachine().getState());
+        return agent;
+    }
+
+    public AvatarBuilder setGround(RepositoryConnection connection) {
+        this.ground = new LiveModel(connection);
+        return this;
+    }
+
+    public AvatarBuilder setThoughts(RepositoryConnection connection) {
+        this.thoughts = new LiveModel(connection);
+        return this;
+    }
 }

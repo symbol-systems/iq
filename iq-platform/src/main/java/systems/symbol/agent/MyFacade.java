@@ -59,11 +59,11 @@ public class MyFacade {
         if (my.containsKey(MY)) {
             bindings = my;
             my = (Bindings) bindings.get(MY);
-            log.info("my.rebind: {} -> {}", my.keySet(), bindings.keySet());
+            log.debug("my.rebind: {} -> {}", my.keySet(), bindings.keySet());
         } else {
             bindings = new SimpleBindings();
             bindings.put(MY, my);
-            log.info("my.bind: {}", my.keySet());
+            log.debug("my.bind: {}", my.keySet());
         }
 //        MyFacade.dump(bindings, System.out);
 
@@ -72,17 +72,17 @@ public class MyFacade {
         return bindings;
     }
 
-    public static Bindings bind(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets secrets) throws SecretsException {
-        log.info("iq.bind: {}", my.keySet());
+    public static Bindings bind(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted) throws SecretsException {
+        log.debug("iq.bind: {}", my.keySet());
         Bindings bindings = rebind(agent, state, my);
-        IQFacade facade = new IQFacade(agent, model, secrets);
+        IQFacade facade = new IQFacade(agent, model, trusted);
         try {
             facade.enableVFS();
         } catch (FileSystemException e) {
             // ignore
         }
         bindings.put(IQ, facade);
-        log.info("iq.bound: {}", bindings.keySet());
+        log.debug("iq.bound: {}", bindings.keySet());
         return bindings;
     }
 

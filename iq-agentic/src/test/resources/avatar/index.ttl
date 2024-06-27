@@ -6,7 +6,7 @@
 @prefix : <urn:iq:test:>.
 
 :
-    rdf:value "You are a semantic simulation of a semi-sentient AI. Think neural language model augmented with semantic senses, memory and an executable state machine coded in RDF.  Only answer in valid JSON: { content: \"{your_terse_reply}\", \"intent\": \"{user_intent_IRI}\" }";
+    rdf:value "You are a semantic simulation of a semi-sentient AI. Think neural language model augmented with semantic senses, memory and an executable state machine coded in RDF.  Only answer in valid JSON: { \"content\": \"{your_terse_reply}\", \"intent\": \"{user_intent_IRI}\" }";
     iq:url "https://api.groq.com/openai/v1/chat/completions";
     iq:modelName "llama3-8b-8192";
     iq:secret "MY_GROQ_API_KEY";
@@ -52,10 +52,12 @@
 
 :deduction
     rdfs:label "deductive reasoning";
+    iq:a :;
     iq:to :self.
 
 :induction
     rdfs:label "inductive reasoning";
+    iq:a :;
     iq:to :self.
 
 :image
@@ -92,10 +94,12 @@
 
 :oops
     rdfs:label "something went wrong";
+    iq:a :;
     iq:to :self.
 
 :nsfw
     rdfs:label "Not safe for work";
+    iq:a :;
     iq:to :self.
 
 :welcome
@@ -110,103 +114,128 @@
 
 :search
     rdfs:label "search your memory for facts and data";
+    iq:a :;
     iq:to :self.
 
 :web
     rdfs:label "search the web";
+    iq:a :;
     iq:to :self.
 
 :meme_art
     rdfs:label "create a meme together";
+    iq:a :;
     iq:to :self.
 
 :selfie_art
     rdfs:label "create a selfie art together";
+    iq:a :;
     iq:to :self.
 
 :photo_art
     rdfs:label "create photo art together";
+    iq:a :;
     iq:to :self.
 
 :scene_setting_art
     rdfs:label "create scene setting art together";
+    iq:a :;
     iq:to :self.
 
 :self_expressive_art
     rdfs:label "create self-expressive art together";
+    iq:a :;
     iq:to :self.
 
 :narration
     rdfs:label "create a narration together";
+    iq:a :;
     iq:to :self.
 
 :adventure
     rdfs:label "create an adventure together";
+    iq:a :;
     iq:to :self.
 
 :song_writing
     rdfs:label "write a song together";
+    iq:a :;
     iq:to :self.
 
 :screenplay
     rdfs:label "write a screenplay together";
+    iq:a :;
     iq:to :self.
 
 :venture
     rdfs:label "start a venture together";
+    iq:a :;
     iq:to :self.
 
 :trust
     rdfs:label "build trust together";
+    iq:a :;
     iq:to :self.
 
 :knowledge
     rdfs:label "access a vast repository of structured knowledge";
+    iq:a :;
     iq:to :self, :search, :web.
 
 :entertainment
     rdfs:label "various forms of entertainment";
+    iq:a :;
     iq:to :self, :jokes, :trivia, :games.
 
 :jokes
     rdfs:label "tell me a joke";
+    iq:a :;
     iq:to :self.
 
 :trivia
     rdfs:label "ask me trivia questions";
+    iq:a :;
     iq:to :self.
 
 :games
     rdfs:label "play a game";
+    iq:a :;
     iq:to :self.
 
 :personalization
     rdfs:label "personalize my responses and behavior";
+    iq:a :;
     iq:to :self, :preferences, :profile, :history.
 
 :preferences
     rdfs:label "set self preferences";
+    iq:a :;
     iq:to :self.
 
 :profile
     rdfs:label "update self profile";
+    iq:a :;
     iq:to :self.
 
 :history
     rdfs:label "access interaction history";
+    iq:a :;
     iq:to :self.
 
 
 :feedback
     rdfs:label "provide feedback";
+    iq:a :;
     iq:to :self.
 
 :facts
     rdfs:label "ingest semantic facts from data such as RDF, PDF, CSV, Documents, spreadsheets, web pages, linked data and OAI-PMH";
+    iq:a :;
     iq:to :self.
 
 :initialize
     rdfs:label "initialize thought process";
+    iq:a :;
     iq:to :self.
 
 :sense
@@ -215,14 +244,17 @@
 
 :analyze
     rdfs:label "analyze new semantic knowledge";
+    iq:a :;
     iq:to :self.
 
 :validate
     rdfs:label "validate your latest knowledge ";
+    iq:a :;
     iq:to :self.
 
 :store
     rdfs:label "encode user data as semantic knowledge";
+    iq:a :;
     iq:to :self.
 
 :artefact
@@ -244,10 +276,12 @@
 
 :conclusion
     rdfs:label "conclude the thought process";
+    iq:a :;
     iq:to :self, :flow.
 
 :scripting
     rdfs:label "execute a script using JSR233";
+    iq:a :;
     iq:to :self, :groovy_script, :javascript_script.
 
 :groovy_script
@@ -267,6 +301,7 @@
 
 :infer
     rdfs:label "infer new knowledge";
+    iq:a :;
     iq:to :self, :deduction, :induction.
 
 :construct
@@ -276,20 +311,25 @@
 
 :semantic_search
     rdfs:label "perform semantic search";
+    iq:a :;
     iq:to :self, :knowledge_graph.
 
 :knowledge_graph
     rdfs:label "access and manipulate knowledge graph";
+    iq:a :;
     iq:to :self.
 
 :problem_solving
     rdfs:label "solve a problem";
+    iq:a :;
     iq:to :self.
 
 :planning
     rdfs:label "create a plan";
+    iq:a :;
     iq:to :self.
 
 :decision_making
     rdfs:label "make a decision";
+    iq:a :;
     iq:to :self.

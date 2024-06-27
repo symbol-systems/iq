@@ -60,7 +60,7 @@ public class ChatAPI extends GuardedAPI {
         if (Validate.isMissing(token)) {
             return new OopsResponse("api.ux.chat#disabled", Response.Status.SERVICE_UNAVAILABLE).asJSON();
         }
-        GenericGPT gpt = new GenericGPT(token, CommonLLM.newGROQ_Llama3_7b(1000));
+        GenericGPT gpt = new GenericGPT(token, CommonLLM.GROQ_Llama3_7b(1000));
         gpt.complete(chat);
 
         log.info("ux.chat.reply: {} @ {}", chat.messages(), stopwatch.toString());

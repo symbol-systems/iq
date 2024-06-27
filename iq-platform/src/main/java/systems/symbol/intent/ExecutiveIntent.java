@@ -29,37 +29,38 @@ import static systems.symbol.platform.Provenance.generated;
  * It has the capability to learn or forget facts and execute scripts and/or other intents in other states through indirection.
  */
 public class ExecutiveIntent extends AbstractIntent implements I_Intents {
-//    private final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Intent> intents = new HashMap<>();
-
+    Model facts;
     /**
      * An executive represents a set of I_Intents. During execution, matching intents are executed.
      * All Executives have the ability to learn/forget facts and `execute` Intents in other states (indirection).
      *
      * @param self The IRI identifier for the Executive itself.
      */
-    public ExecutiveIntent(IRI self, Model model) {
-        boot(self, model);
-        log.info("booted: {} -> {}", self, intents.keySet());
+    public ExecutiveIntent(IRI self, Model facts) {
+        boot(self, facts);
+        this.facts = facts;
+        log.info("exec.facts: {} -> {}", self, facts.size());
     }
 
     /**
      * An executive able to execute specified intents, and follow next-steps.
      * @param self The IRI identifier for the Executive itself.
-     * @param model The working memory
+     * @param thoughts The working memory
      * @param intent The I_Intent to perform we undergo a state transitions
      */
-    public ExecutiveIntent(IRI self, Model model, I_Intent intent) {
-        boot(self, model);
+    public ExecutiveIntent(IRI self, Model facts, Model thoughts, I_Intent intent) {
+        boot(self, thoughts);
+        this.facts = facts;
         add(intent);
-        log.info("booted: {} -> {}", self, intents.keySet());
+        log.info("exec.thoughts: {} -> {} & {}-> {}", self, facts.size(), thoughts.size(), intents.keySet());
     }
 
     public void boot(@NotNull IRI self, Model model) {
+        add(this);
         super.boot(self, model);
         add(new Learn(self, model));
         add(new Forget(self, model));
-        add(this);
     }
 
     /**
@@ -79,8 +80,8 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
             if (method.isAnnotationPresent(RDF.class)) {
                 RDF methodRdfAnnotation = method.getAnnotation(RDF.class);
                 IRI methodIRI = Values.iri(methodRdfAnnotation.value());
-                log.info("executive.method.rdf: {} -> {}", method.getName(), methodIRI);
-                if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
+                log.debug("executive.method.rdf: {} -> {}", method.getName(), methodIRI);
+//                if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
                 this.intents.put(methodIRI, intent);
                 return methodIRI;
             }
@@ -113,11 +114,9 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
      */
     protected Set<IRI> executeIntent(IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
         I_Intent intent = this.intents.get(p);
-        log.info("execute.intent: {} == {} -> {} == {}", actor, p, o, intent);
         if (intent == null) return new IRIs();
-        Set<IRI> executed = intent.execute(actor, o, bindings);
-        provenance(executed, actor, o);
-        return executed;
+        log.info("execute.intent: {} == {} -> {} == {}", actor, p, o, intent.getClass().getSimpleName());
+        return intent.execute(actor, o, bindings);
     }
 
     /**
@@ -133,21 +132,20 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
                 done.addAll( executeIntent(actor, p, (Resource) o, bindings) );
             }
         }
-        log.info("execute.done: {}", done);
     }
 
-    void provenance(Set<IRI> done, IRI actor, Resource state) {
-        done.forEach(result -> {
-            generated(model, actor, state, result, getSelf());
-        });
-    }
     @Override
-    @RDF(IQ_NS.IQ + "execute")
+    @RDF(IQ_NS.IQ + "do")
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         IRIs done = new IRIs();
-        Iterable<Statement> statements = model.getStatements(state, null, null);
-        log.info("execute.state: {} -> {} -> {}", state, statements.iterator().hasNext(), intents.keySet());
+        log.info("execute.intents: {}", intents.keySet());
+        Iterable<Statement> statements = facts.getStatements(state, null, null);
         executeMatchingIntents(actor, statements, done, bindings);
+        if (model!=facts) {
+            statements = model.getStatements(state, null, null);
+            executeMatchingIntents(actor, statements, done, bindings);
+        }
+        log.info("execute.done: {}", done);
         return done;
     }
 }

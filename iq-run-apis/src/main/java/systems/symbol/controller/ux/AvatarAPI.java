@@ -11,20 +11,20 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.ExecutiveAgent;
-import systems.symbol.agent.MyFacade;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import systems.symbol.agent.*;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.intent.Avatar;
+import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.Prompts;
 import systems.symbol.llm.gpt.GenericGPT;
 import systems.symbol.platform.AgentService;
-import systems.symbol.platform.AvatarBuilder;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.string.Validate;
@@ -86,7 +86,6 @@ public class AvatarAPI extends GuardedAPI {
     @Produces("application/ld+json")
     @Path("{repo}/{agent: .*}")
     public Response ask(@PathParam("repo") String repo,@PathParam("agent") String _actor, @HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
-        log.info("ux.avatar.ask: {} -> {} -> {}", repo, _actor, chat);
         Stopwatch stopwatch = new Stopwatch();
         DecodedJWT jwt;
         try {
@@ -98,31 +97,29 @@ public class AvatarAPI extends GuardedAPI {
             return new OopsResponse("api.ux.avatar#missing", Response.Status.BAD_REQUEST).asJSON();
         }
         IRI actor = Values.iri(_actor);
+        Bindings my = MyFacade.rebind(actor, new SimpleBindings(), jwt);
         Repository repository = platform.getRepository(repo);
+        log.info("ux.avatar.ask: {} -> {} -> {}", repo, _actor, chat);
         if (repository == null) {
             return new OopsResponse("api.ux.avatar#repository-missing", Response.Status.NOT_FOUND).asJSON();
         }
+        Repository myRepo = platform.getWorkspace().alwaysGetRepository(jwt.getSubject());
         try (RepositoryConnection connection = repository.getConnection()) {
-            Bindings my = MyFacade.rebind(actor, new SimpleBindings(), jwt);
-            AvatarBuilder builder = new AvatarBuilder(actor, 1000, my, platform.getSecrets());
-            builder.setGround(new LiveModel(connection));
-            builder.executive().remodel().search(platform.getFactFinder(repo)).sparql(connection);
-            Avatar avatar = builder.build();
-            ExecutiveAgent agent = new ExecutiveAgent(avatar.getSelf(), avatar.getThoughts(), avatar, avatar, my);
-            agent.boot(avatar.getSelf(), avatar.getGround());
-            Resource state = agent.getStateMachine().getState();
-            if (state==null) {
-                return new OopsResponse("api.ux.avatar#state", Response.Status.NOT_IMPLEMENTED).asJSON();
+            try (RepositoryConnection connection2 = myRepo.getConnection()) {
+                AvatarBuilder builder = new AvatarBuilder(actor, 1000, my, platform.getSecrets());
+                builder.setGround(connection);
+                builder.setThoughts(connection2);
+                builder.executive().remodel().search(platform.getFactFinder(repo)).sparql(connection);
+//                RDFDump.dump(builder.getThoughts());
+                I_Agent avatar = builder.build(chat);
+                log.info("ux.avatar.start: {} @ {}", actor, avatar.getStateMachine().getState());
+//                RDFDump.dump(avatar.getThoughts());
+                avatar.start();
+                log.info("ux.avatar.done: {} x {} facts", avatar.getStateMachine().getState(), avatar.getThoughts().size());
+//                avatar.memorize(connection2);
+                log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(), stopwatch);
+                return new ChatResponse(chat).asJSON();
             }
-            log.info("ux.avatar.llm: {} @ {}", actor, state);
-            avatar.complete(chat, agent, my);
-            log.info("ux.avatar.complete: {} => {} facts", agent.getStateMachine().getState(), avatar.getThoughts().size());
-            Repository myRepo = platform.getRepository(jwt.getSubject());
-            try ( RepositoryConnection myRepoConnection = myRepo.getConnection() ) {
-                avatar.memorize(myRepoConnection);
-            }
-            log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(), stopwatch);
-            return new ChatResponse(chat).asJSON();
         }
     }
 }
