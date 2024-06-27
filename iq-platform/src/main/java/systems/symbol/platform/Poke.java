@@ -1,9 +1,6 @@
 package systems.symbol.platform;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +9,7 @@ import java.lang.reflect.Field;
 public class Poke {
 protected static final Logger log = LoggerFactory.getLogger(Poke.class);
 
-public static void poke(IRI self, Model model, Object todo) throws IllegalAccessException {
+public static void poke(Resource self, Model model, Object todo) throws IllegalAccessException {
 Iterable<Statement> statements = model.filter(self, null, null);
 poke(statements, todo);
 }
@@ -20,14 +17,14 @@ poke(statements, todo);
 public static void poke(Iterable<Statement> statements, Object todo) throws IllegalAccessException {
 for (Statement stmt : statements) {
 String fieldName = stmt.getPredicate().getLocalName();
-log.info("\tpeek: {} ", fieldName);
+log.debug("\tpeek: {} ", fieldName);
 try {
 Field field  = todo.getClass().getDeclaredField(fieldName);
 poke(field, stmt, todo);
 } catch (NoSuchFieldException ignored) {
 }
 }
-log.info("peeked: {} ", todo);
+log.debug("peeked: {} ", todo);
 }
 
 private static void poke(Field field, Statement stmt, Object config) throws IllegalAccessException {
@@ -36,7 +33,7 @@ field.setAccessible(true);
 Object value = stmt.getObject();
 Class<?> fieldType = field.getType();
 
-log.info("poke: {} -> {} / {}", field.getName(), value, fieldType);
+log.debug("poke: {} -> {} / {}", field.getName(), value, fieldType);
 if (fieldType == String.class) {
 if (value instanceof Literal) {
 field.set(config, ((Literal) value).stringValue());

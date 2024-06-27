@@ -25,6 +25,7 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.string.PrettyString;
 
 import java.io.*;
 import java.util.Date;
@@ -253,7 +254,8 @@ return templateStream;
 }
 
 public Repository alwaysGetRepository(String id) throws IOException {
-log.info("workspace.repo.all: {} -> {} -> {}", id, manager.getRepositoryIDs(), repositories.keySet());
+//log.info("workspace.repo.all: {} -> {} -> {}", id, manager.getRepositoryIDs(), repositories.keySet());
+id = PrettyString.sanitize(id);
 Repository repository = getRepository(id);
 if (repository!=null) {
 log.info("workspace.repo.found: {}", id);

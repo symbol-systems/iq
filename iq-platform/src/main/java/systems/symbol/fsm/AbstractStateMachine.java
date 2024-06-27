@@ -27,7 +27,7 @@ private final Set<I_StateListener<T>> listeners = new HashSet<>();
 @Override
 public I_StateMachine<T> setInitial(T initialState) {
 setCurrentState(this.initialState = initialState);
-assert this.initialState == this.currentState;
+assert initialState!=null && this.initialState == this.currentState;
 return this;
 }
 
@@ -62,13 +62,13 @@ listeners.add(listener);
 public T transition(T targetState) throws StateException {
 if (targetState == null) return getState();
 boolean allowed = isAllowed(targetState);
-log.info("allowed: {} @ {} => {}", allowed, getState(), targetState);
+log.debug("allowed: {} @ {} => {}", allowed, getState(), targetState);
 if (allowed) {
 T fromState = currentState;
 setCurrentState(targetState);
 boolean ok = notifyListeners(fromState, targetState);
 if (!ok) {
-log.info("veto: {} - {}", getState(), targetState);
+log.warn("veto: {} -> {}", getState(), targetState);
 setCurrentState(fromState);
 }
 return getState();

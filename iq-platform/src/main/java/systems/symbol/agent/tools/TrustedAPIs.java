@@ -31,6 +31,7 @@ Iterable<Statement> trusted = model.getStatements(agent, IQ_NS.TRUSTS, null);
 for (Statement st : trusted) {
 Value url = st.getObject();
 secrets.grant(url.stringValue(), key);
+log.info("secret.grant: {} -> {}", key, url.stringValue());
 }
 return secrets;
 }

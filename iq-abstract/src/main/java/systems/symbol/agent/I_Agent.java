@@ -42,7 +42,7 @@ public interface I_Agent extends I_Self, I_StartStop {
  *
  * @return The RDF4J model representing the working memory.
  */
-Model getMemo();
+Model getThoughts();
 
 
 /**

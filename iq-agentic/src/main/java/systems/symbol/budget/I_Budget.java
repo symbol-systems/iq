@@ -1,4 +1,4 @@
-package systems.symbol.agent;
+package systems.symbol.budget;
 
 import org.eclipse.rdf4j.model.IRI;
 

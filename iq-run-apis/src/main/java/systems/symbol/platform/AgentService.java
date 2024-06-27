@@ -14,6 +14,7 @@ import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
 
 import javax.script.Bindings;
 import java.util.concurrent.CompletableFuture;
@@ -27,25 +28,25 @@ Model model;
 Bindings state;
 I_Contents scripts;
 
-public AgentService(Platform platform, IRI self, Model model, I_Secrets secrets, Bindings state) throws StateException {
-this.self = self;
-this.model = model;
-this.intent = new ExecutiveIntent(self, model,new JSR233(self, model, secrets));
-this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
-//this.intent.add(new Find(self, this.model, platform.getFactFinder()));
-this.state = state;
-this.scripts = new ModelScriptCatalog(this.model);
-}
+//public AgentService(Platform platform, IRI self, Model model, I_Secrets secrets, Bindings state) throws StateException {
+//this.self = self;
+//this.model = model;
+//this.intent = new ExecutiveIntent(self, model, model,new JSR233(self, model, secrets));
+//this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
+////this.intent.add(new Find(self, this.model, platform.getFactFinder()));
+//this.state = state;
+//this.scripts = new ModelScriptCatalog(this.model);
+//}
 
-public AgentService(IRI self, RepositoryConnection connection, I_Secrets secrets, Bindings state) throws StateException {
+public AgentService(IRI self, RepositoryConnection connection, I_Secrets secrets, Bindings state) throws StateException, SecretsException {
 this.self = self;
 this.model = new LiveModel(connection);
-this.intent = new ExecutiveIntent(self, model,new JSR233(self, model, secrets));
+this.scripts = new IQScriptCatalog(this.self, connection);
+this.intent = new ExecutiveIntent(self, model, model,new JSR233(self, model, model, secrets, scripts));
 this.intent.add(new Select(self, connection));
 this.intent.add(new Update(self, connection));
 this.intent.add(new Remodel(self, this.model, scripts));
 this.intent.add(new Construct(self, connection));
-this.scripts = new IQScriptCatalog(this.self, connection);
 this.state = state;
 this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
 }

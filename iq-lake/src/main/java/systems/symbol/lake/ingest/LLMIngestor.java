@@ -17,11 +17,11 @@ I_LLM<String> llm;
 private String systemPrompt = "";
 private int max_tokens = 512;
 
-public LLMIngestor(I_LLM<String> llm, String systemPrompt, Consumer<ContentEntity<String>> next) throws FileSystemException {
+public LLMIngestor(I_LLM<String> llm, String systemPrompt, Consumer<ContentEntity<String>> next, int max_tokens) throws FileSystemException {
 super(next);
 this.llm = llm;
 this.systemPrompt = systemPrompt;
-this.max_tokens = llm.getConfig().getMaxTokens();
+this.max_tokens = max_tokens;
 }
 
 protected ContentEntity<String> transform (ContentEntity<?> content) throws IOException, APIException {

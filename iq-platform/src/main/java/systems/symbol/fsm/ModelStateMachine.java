@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.io.RDFDump;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ import static systems.symbol.platform.IQ_NS.*;
  *
  */
 public class ModelStateMachine extends AbstractStateMachine<Resource> implements I_Self {
-private final Model model;
+private final Model model, state;
 protected IRI self;
 
 /**
@@ -36,37 +37,47 @@ protected IRI self;
 public ModelStateMachine(IRI self, Model model) {
 this.self = self;
 this.model = model;
-this.initialize(self, model);
+this.state = model;
+this.initialize(self, model, model);
+}
+
+public ModelStateMachine(IRI self, Model model, Model state) {
+this.self = self;
+this.model = model;
+this.state = state;
+this.initialize(self, model, state);
 }
 
 /**
  * Hydrate the initial / current state of the state machine.
  *
  */
-public void initialize(IRI self, Model model) {
+public void initialize(IRI self, Model model, Model state) {
 Iterator<Resource> found_initial = find(self, model, initialStep).iterator();
 if (found_initial.hasNext()) {
 setInitial(found_initial.next());
 }
-Iterator<Resource> found_current = find(self, model, hasCurrentState).iterator();
+
+Iterator<Resource> found_current = find(self, state, hasCurrentState).iterator();
 if (found_current.hasNext()) {
-setCurrentState(found_current.next());
+Resource next = found_current.next();
+log.info("msm.current: {}", next);
+setCurrentState(next);
 }
-this.initialize();
-log.info("initialized: {} -> {} @ {}", initialState, getState(), self);
+}
+
+protected void sync() {
+state.remove(self, initialStep, null);
+state.remove(self, hasCurrentState, null);
+
+state.add(self, initialStep, initialState);
+state.add(self, hasCurrentState, getState());
+log.info("msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
 }
 
 @Override
 public void initialize() {
-
-}
-
-@Override
-public I_StateMachine<Resource> setInitial(Resource initialState) {
-model.remove(getSelf(), initialStep, null);
-model.add(getSelf(), initialStep, initialState);
-model.add(getSelf(), RDF.TYPE, A_WORKFLOW);
-return super.setInitial(initialState);
+sync();
 }
 
 @Override
@@ -130,19 +141,16 @@ return true; // All rules must have matched
  */
 @Override
 public void setCurrentState(Resource target) {
-this.currentState = target;
-model.remove(self, hasCurrentState, null);
-model.add(self, hasCurrentState, target);
+boolean initialized = getState()!=null;
+super.setCurrentState(target);
+if (initialized) sync();
 }
 
 @Override
 protected Collection<Resource> getTransitions(Resource state) {
-// Get transitions for the given state
 Collection<Resource> transitions = find(state, model, nextStep);
-
 if (!isGuarded(state)) return transitions;
 
-// Filter transitions based on guard conditions
 return transitions.stream()
 .filter(transition -> isAllowedByGuard(self, transition))
 .collect(Collectors.toList());

@@ -16,7 +16,9 @@ import systems.symbol.intent.ExecutiveIntent;
 import systems.symbol.intent.JSR233;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_LLM;
+import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.secrets.I_Secrets;
+import systems.symbol.secrets.SecretsException;
 
 import javax.script.SimpleBindings;
 import java.util.HashMap;
@@ -32,10 +34,10 @@ private final Map<IRI, CompletableFuture<I_Delegate<Resource>>> pending = new Ha
 private boolean isRunning = false;
 private long sleepTime = 100;
 
-public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm) throws StateException {
+public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm) throws StateException, SecretsException {
 super(self, fleet, new ExecutiveIntent(self, fleet), secrets);
 this.llm = llm;
-this.intents.add( new JSR233(self, fleet, secrets) );
+this.intents.add( new JSR233(self, fleet, fleet, secrets, new ModelScriptCatalog(fleet)) );
 log.info("fleet.intents: {}", intents.getIntents());
 }
 
@@ -115,7 +117,7 @@ return futureDecision;
  */
 public I_Agent deploy(IRI actor) throws StateException {
 if (this.agents.containsKey(actor)) return agents.get(actor);
-I_Agentic<String> context = new Agentic<>(new SimpleBindings(), new Conversation());
+I_Agentic<String> context = new Agentic<>(()->actor,new SimpleBindings(), new Conversation());
 contexts.put(actor, context);
 ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, this, context.getBindings());
 agents.put(actor,agent);

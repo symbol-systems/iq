@@ -62,7 +62,7 @@ IRI focus = Values.iri(_focus);
 Bindings my = MyFacade.rebind(focus, new SimpleBindings(), jwt);
 
 LiveModel model = new LiveModel(connection);
-Agentic<String, Resource> agentic = new Agentic<>(my, new Conversation());
+Agentic<String, Resource> agentic = new Agentic<>(()->focus, my, new Conversation());
 AgentService service = new AgentService(focus, connection, null, my);
 I_Assist<String> decisions = Prompts.decision(service.getAgent(), agentic);
 my.put("decisions", decisions);

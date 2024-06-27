@@ -23,6 +23,7 @@ import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.Prompts;
 import systems.symbol.llm.gpt.GenericGPT;
 import systems.symbol.platform.AgentService;
+import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.string.Validate;
@@ -142,8 +143,7 @@ AgentService service = new AgentService(actor, connection, secrets, my);
 I_LLM<String> llm = new GenericGPT(llmToken, 1000);
 IRI self = Values.iri(jwt.getSubject());
 log.info("ux.agent.self: {}", self);
-// stateful LLM decision making
-Agentic<String, Resource> agentic = new Agentic<>(my, chat);
+Agentic<String, Resource> agentic = new Agentic<>(() -> self, my, chat);
 LLMDecision manager = new LLMDecision(llm, service.getAgent(), agentic);
 IRI decided = manager.decide();
 if (Validate.isMissing(decided)) {

@@ -6,9 +6,12 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
+import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.sparql.IQScripts;
+import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
@@ -36,6 +39,7 @@ public class JSR233 extends AbstractIntent {
 
 private final ScriptEngineManager engineManager = new ScriptEngineManager();
 private final I_Secrets secrets;
+private final I_Contents scripts;
 
 /**
  * Constructs a new JSR233 intent with the provided RDF4J model and self identity.
@@ -46,6 +50,7 @@ private final I_Secrets secrets;
 public JSR233(IRI self, Model model) {
 boot(self, model);
 this.secrets = null;
+this.scripts = new ModelScriptCatalog(model);
 }
 
 /**
@@ -54,9 +59,10 @@ this.secrets = null;
  * @param model The RDF4J model associated with the intent.
  * @param self  The self identity of the intent.
  */
-public JSR233(IRI self, Model model, I_Secrets secrets) {
-boot(self, model);
-this.secrets = secrets;
+public JSR233(IRI self, Model model, Model thoughts, I_Secrets secrets, I_Contents scripts) throws SecretsException {
+boot(self, thoughts);
+this.scripts = scripts;
+this.secrets = TrustedAPIs.trusted(model, self, secrets);
 }
 /**
  * Executes the JSR-233 script based on the provided actor and resource.
@@ -69,14 +75,15 @@ this.secrets = secrets;
 @RDF(IQ_NS.IQ + "script")
 public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
 Set<IRI> done = new HashSet<>();
-Literal script = IQScripts.findScript(model, state, null, null);
+Literal script = scripts.getContent(state, null);
+//Literal script = IQScripts.findScript(model, state, null, null);
 if (script == null) return done;
 try {
 Object result = executeScript(script, actor, state, my );
 done.add(actor);
 log.info("script.result: {} -> {} x {}", state, result, done.size());
 } catch (ScriptException e) {
-//log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName());
+log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName());
 throw new StateException(e.getMessage(), state, e);
 }
 return done;
@@ -93,16 +100,15 @@ return done;
  */
 Object executeScript(Literal script, IRI actor, Resource state, Bindings my) throws ScriptException {
 String mime = SupportedScripts.toMimeType(script.getDatatype());
-//log.info("script.execute: {} -> {}", script, mime);
 if (mime == null) return null;
 ScriptEngine engine = engineManager.getEngineByMimeType(mime);
 if (engine == null) {
 return null;
 }
 
-//MyFacade.dump(engine.getBindings(ScriptContext.ENGINE_SCOPE), System.out);
 try {
 engine.setBindings( MyFacade.bind(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+
 log.debug("script.eval: {} @ {}", script.stringValue(), state.stringValue() );
 return engine.eval(script.stringValue());
 } catch (ScriptException e) {

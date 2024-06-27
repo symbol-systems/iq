@@ -60,11 +60,12 @@ return false;
 @Override
 @RDF(IQ_NS.IQ + "agent")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
-log.info("agent.execute: {} -> {} -> {}", intent, actor, state);
-if (state instanceof IRI)
+if (state instanceof IRI) {
+log.info("agent.execute: {} -> {} -> {}", intent.getClass().getSimpleName(), actor, state);
 return intent.execute(actor, state, bindings);
+}
 Set<IRI> iris = new HashSet<>();
-Collection<Statement> found = RDFCollections.getCollection(memo, state, new HashSet<>());
+Collection<Statement> found = RDFCollections.getCollection(thoughts, state, new HashSet<>());
 for (Statement statement : found) {
 Value v = statement.getObject();
 if (v instanceof Resource) {
