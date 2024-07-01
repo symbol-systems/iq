@@ -27,8 +27,7 @@ public AgentPrompt() {
 }
 
 public String bind(String prompt, Bindings bindings) throws IOException {
-log.info("prompt.bind: {}", prompt);
-MyFacade.dump((Map<?, ?>) bindings.get("my"), System.out);
+log.info("prompt.bind: {} -> {}", prompt, bindings.keySet());
 return hbs.compileInline(prompt).apply(bindings);
 }
 
@@ -36,11 +35,19 @@ public String prompt(IRI self, Resource state, Model facts) {
 return prompt(self, facts)+prompt(state, facts);
 }
 
+public String prompt(Resource state, Model facts) {
+if (state==null) return "";
+Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
+return groundS.orElse(Values.***REMOVED***("")).stringValue();
+}
+
 public String choices(Model facts, Collection<Resource> choices) throws IOException {
 log.info("prompt.choices: {}", choices);
+
 if (choices.isEmpty()) {
 return "";
 }
+
 StringBuilder intent$ = new StringBuilder();
 choices.forEach( c -> {
 Iterable<Statement> options = facts.getStatements(c, RDFS.LABEL, null);
@@ -50,13 +57,6 @@ intent$.append("\n- ").append(o.getSubject().stringValue()).append(" = ").append
 });
 return intent$.toString();
 }
-
-public String prompt(Resource state, Model facts) {
-if (state==null) return "";
-Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
-return groundS.orElse(Values.***REMOVED***("")).stringValue();
-}
-
 
 void connect(RepositoryConnection connection) {
 hbs.registerDecorator("sparql", new Decorator() {

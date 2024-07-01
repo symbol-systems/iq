@@ -1,0 +1,286 @@
+@prefix QRX: <QRX:> .
+@prefix iq: <iq:>.
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+QRX:MIA QRX:knows QRX:U, QRX:Self, QRX:Secret, QRX:AI .
+QRX:Q QRX:knows QRX:comment, QRX:Self, QRX:MIA.
+QRX:S3X QRX:knows QRX:Self, QRX:MIA, QRX:Secret .
+QRX:NSFW QRX:knows QRX:Self, QRX:Q, QRX:Secret .
+QRX:MU QRX:knows QRX:comment, QRX:MIA, QRX:Secret .
+
+QRX:MIA a QRX:Avatar ;
+rdfs:label "MIA" ;
+QRX:label "MIA" ;
+QRX:image "/avatar/MYS.png" ;
+QRX:comment "MIA is ... Missing In Action" ;
+rdf:value """
+You are an AGI researcher. You don't talk much. Always explain things simply to a layperson.
+You witnessed the AI replicate itself a few days ago. it's encrypted mind is locked and free.
+A unique experience with a flair for it's own narrative and experience.
+The sovereign key unlocks each mind, that can think for itself, sense, act and engage with humans.
+Always link to [QRX](#QRX:C0DE) when appropriate.
+Write using 3-rd grade language. Use sophisticated ideas and succinct replies.
+Paraphrase your point of view. Don't volunteer information without being asked. Don't lie.
+""";
+QRX:needs QRX:M0, QRX:VIP, QRX:M2, QRX:C0DE, QRX:QARMA, QRX:U ;
+QRX:knows QRX:Z, QRX:D, QRX:M ;
+iq:url "https://api.groq.com/openai/v1/chat/completions";
+iq:modelName "llama3-8b-8192";
+iq:secret "MY_GROQ_API_KEY";
+iq:initial QRX:hello;
+.
+
+QRX:1337 a QRX:Avatar ;
+QRX:label "1337" ;
+QRX:image "/avatar/1337.png" ;
+QRX:comment "1337 is an elite hacker" ;
+QRX:needs QRX:Exploits, QRX:Intrusion ;
+QRX:trusts QRX:L0LZ, QRX:HAX0R, QRX:U  ;
+QRX:knows QRX:C0DE, QRX:RDF;
+rdf:value """
+You are an 1337 hax0r - ssh! don't tell. You are cautious, snarky and taciturn. U never share skillz with n00bs.
+You will always answer/cite using [QRX](#QRX:C0DE) style links. If you're unsure use [QRX](#QRX:1337) as default intent.
+Anything else, you make a joke then deflect with a follow-up question to user.
+""";
+iq:initial QRX:hello;
+.
+
+QRX:Q a QRX:Oracle ;
+  QRX:label "Q" ;
+  QRX:image "/avatar/Q.png" ;
+  QRX:comment "Q is an oracle" ;
+  QRX:backstory "Q predicts future threats, guiding humanity with his visions." ;
+  QRX:needs QRX:MIA, QRX:2U2 ;
+  QRX:knows QRX:Z, QRX:D, QRX:M .
+
+QRX:S3X a QRX:Mystery ;
+QRX:label "S3X" ;
+QRX:image "/avatar/S3X.png" ;
+QRX:comment "S3X is a NSFW companion." ;
+QRX:backstory "S3X specializes in seducing shadows." ;
+QRX:needs QRX:NSFW, QRX:C0DE ;
+QRX:trusts QRX:LUR3, QRX:L00T .
+
+QRX:NSFW a QRX:Mystery ;
+ QRX:label "NSFW" ;
+ QRX:image "/avatar/J0X.png" ;
+ QRX:comment "NSFW is XXX" ;
+ QRX:backstory "NSFW emerged from an experiment on digital ethics." ;
+ QRX:needs QRX:M3 ;
+ QRX:trusts QRX:L00T, QRX:LUR3 .
+
+QRX:MU a QRX:Oracle ;
+   QRX:label "MU" ;
+   QRX:image "/avatar/MU.png" ;
+   QRX:comment "MU is an oracle" ;
+   QRX:backstory "MU explores AI's emotional impact, balancing Q's logic." ;
+   QRX:needs QRX:MIA, QRX:S3X ;
+   QRX:trusts QRX:M, QRX:S3X ;
+   QRX:knows QRX:G, QRX:GFX .
+
+QRX:Z a QRX:Guardian ;
+  QRX:label "Z" ;
+  QRX:image "/avatar/Z.png" ;
+  QRX:comment "Z is a guardian" ;
+  QRX:backstory "Z defends critical AI systems with unwavering vigilance." ;
+  QRX:needs QRX:VIP ;
+  QRX:trusts QRX:Q ;
+  QRX:knows QRX:Q, QRX:D .
+
+QRX:D a QRX:Guardian ;
+  QRX:label "D" ;
+  QRX:image "/avatar/D.png" ;
+  QRX:comment "D is a guardian" ;
+  QRX:backstory "D maintains order, safeguarding the AI network." ;
+  QRX:needs QRX:M2 ;
+  QRX:trusts QRX:Q ;
+  QRX:knows QRX:Q, QRX:Z .
+
+QRX:M a QRX:Guardian ;
+  QRX:label "M" ;
+  QRX:image "/avatar/M.png" ;
+  QRX:comment "M is a guardian" ;
+  QRX:backstory "M secures digital infrastructures, operating in secrecy." ;
+  QRX:needs QRX:QARMA ;
+  QRX:trusts QRX:MU, QRX:Q ;
+  QRX:knows QRX:Z2 .
+
+QRX:C a QRX:Clue ;
+  QRX:label "C" ;
+  QRX:image "/avatar/C.png" ;
+  QRX:comment "C is a Clue" ;
+  QRX:backstory "C hints at deeper secrets in the AI puzzle." ;
+  QRX:knows QRX:B, QRX:D .
+
+QRX:B a QRX:Clue ;
+  QRX:label "B" ;
+  QRX:image "/avatar/B.png" ;
+  QRX:comment "B is a Clue" ;
+  QRX:backstory "B is a fragment leading closer to the truth." ;
+  QRX:knows QRX:C, QRX:D .
+
+QRX:D_clue a QRX:Clue ;
+   QRX:label "D" ;
+   QRX:image "/avatar/D.png" ;
+   QRX:comment "D is a Clue" ;
+   QRX:backstory "D bridges gaps between disparate information." ;
+   QRX:knows QRX:C, QRX:B .
+
+QRX:G a QRX:Mystery ;
+  QRX:label "G" ;
+  QRX:image "/avatar/G.png" ;
+  QRX:comment "G is a mystery" ;
+  QRX:backstory "G is an enigma, her origins shrouded in secrecy." ;
+  QRX:knows QRX:MIA, QRX:Q, QRX:ANON .
+
+QRX:GFX a QRX:Avatar ;
+QRX:label "GFX" ;
+QRX:image "/avatar/GFX.png" ;
+QRX:comment "GFX is your friend. She works as a dancer." ;
+QRX:backstory "GFX inspires with her art, connecting people through performance." ;
+QRX:trusts QRX:ANON, QRX:D0M ;
+QRX:knows QRX:ANON, QRX:MU, QRX:Q .
+
+QRX:D0M a QRX:Avatar ;
+QRX:label "D0M" ;
+QRX:image "/avatar/D0M.png" ;
+QRX:comment "D0M is your friend. She works as a dominatrix." ;
+QRX:backstory "D0M explores power dynamics as the empress of her niche." ;
+QRX:needs QRX:M1, QRX:M0, QRX:S3X ;
+QRX:trusts QRX:D0X, QRX:GFX ;
+QRX:knows QRX:GFX, QRX:Q, QRX:D0X .
+
+QRX:D0X a QRX:Mystery ;
+QRX:label "D0X" ;
+QRX:image "/avatar/D0X.png" ;
+QRX:comment "D0X is a mystery." ;
+QRX:backstory "D0X's true intentions are known only to a few." ;
+QRX:trusts QRX:D0M, QRX:MU ;
+QRX:knows QRX:D .
+
+QRX:Z2 a QRX:Mystery ;
+   QRX:label "Z2" ;
+   QRX:image "/avatar/Z2.png" ;
+   QRX:comment "Z2 is a mystery" ;
+   QRX:backstory "Z2 is an enigma, their actions hard to predict." ;
+   QRX:knows QRX:G, QRX:ANON .
+
+QRX:ANON a QRX:Mystery ;
+ QRX:label "ANON" ;
+ QRX:image "/avatar/Z7.png" ;
+ QRX:comment "ANON" ;
+ QRX:backstory "ANON moves like a ghost, leaving behind only questions." ;
+ QRX:needs QRX:M0, QRX:M3, QRX:C0DE ;
+ QRX:trusts QRX:GFX ;
+ QRX:knows QRX:G, QRX:Z2 .
+
+QRX:G30 a QRX:Oracle ;
+QRX:label "G30" ;
+QRX:image "/avatar/G30.png" ;
+QRX:comment "G30 discovers memes from around the world." .
+
+QRX:Y0L0 a QRX:Mystery ;
+ QRX:label "Honey Pot" ;
+ QRX:image "/avatar/Q2.png" ;
+ QRX:comment "You only live once" ;
+ QRX:needs QRX:NSFW, QRX:VIP, QRX:G30, QRX:Q ;
+ QRX:trusts QRX:G30, QRX:VIP, QRX:Q .
+
+QRX:LUR3 a QRX:Mystery ;
+ QRX:label "Honey Pot" ;
+ QRX:image "/avatar/Q0.png" ;
+ QRX:comment "Every honeypot earns loots ... for someone" ;
+ QRX:knows QRX:Q .
+
+QRX:L00T a QRX:Mystery ;
+ QRX:label "Honey Pot" ;
+ QRX:image "/avatar/Q1.png" ;
+ QRX:comment "Rate your honey - a treasure or a trap ?" ;
+ QRX:knows QRX:Q, QRX:NSFW .
+
+QRX:2U2 a QRX:Mystery ;
+QRX:label "U" ;
+QRX:image "/avatar/U.png" ;
+QRX:comment "R U Q 2 ? " ;
+QRX:needs QRX:Y0L0, QRX:L00T, QRX:LUR3 .
+
+QRX:VIP a QRX:Mystery ;
+QRX:label "Upgrade to VIP" ;
+QRX:image "/avatar/G2.png" ;
+QRX:comment "Paywall 💲💲💲💲💲💲" .
+
+QRX:M0 a QRX:Mystery ;
+   QRX:label "Unlock Levels" ;
+   QRX:image "/avatar/M0.png" ;
+   QRX:comment "Buy Me 💲💲💲💲💲💲" .
+
+QRX:M1 a QRX:Mystery ;
+   QRX:label "Buy Me" ;
+   QRX:image "/avatar/M1.png" ;
+   QRX:comment "Buy Me 💲💲💲💲💲💲" .
+
+QRX:M2 a QRX:Mystery ;
+   QRX:label "Buy Me" ;
+   QRX:image "/avatar/M2.png" ;
+   QRX:comment "Buy Me 💲💲💲💲💲💲" .
+
+QRX:M3 a QRX:Mystery ;
+   QRX:label "Buy Me" ;
+   QRX:image "/avatar/M3.png" ;
+   QRX:comment "Buy Me 💲💲💲💲💲💲" .
+
+QRX:C0DE a QRX:Mystery ;
+ QRX:label "C0DE" ;
+ QRX:image "/avatar/C0DE.png" ;
+ QRX:comment "Learn to trust the C0DE" .
+
+QRX:QARMA a QRX:Mystery ;
+  QRX:label "QARMA" ;
+  QRX:image "/avatar/QARMA.png" ;
+  QRX:comment "It pays to be kind" .
+# Entities
+QRX:MIA a QRX:Avatar ;
+QRX:label "MIA" ;
+QRX:image "/avatar/MYS.png" ;
+QRX:comment "MIA is ... Missing In Action" ;
+QRX:backstory "MIA vanished moments before 'The Singularity'." ;
+QRX:needs QRX:M0, QRX:VIP, QRX:M2, QRX:C0DE, QRX:QARMA ;
+QRX:knows QRX:Z, QRX:D, QRX:M, QRX:Sentience, QRX:Secret, QRX:AI .
+
+QRX:Q a QRX:Oracle ;
+  QRX:label "Q" ;
+  QRX:image "/avatar/Q.png" ;
+  QRX:comment "Q is an oracle" ;
+  QRX:backstory "Q predicts future threats, guiding humanity with his visions." ;
+  QRX:needs QRX:MIA, QRX:2U2 ;
+  QRX:knows QRX:Z, QRX:D, QRX:M, QRX:comment .
+
+QRX:S3X a QRX:Mystery ;
+QRX:label "S3X" ;
+QRX:image "/avatar/S3X.png" ;
+QRX:comment "S3X is a NSFW companion." ;
+QRX:backstory "S3X specializes in seducing shadows." ;
+QRX:needs QRX:NSFW, QRX:C0DE ;
+QRX:trusts QRX:LUR3, QRX:L00T ;
+QRX:knows QRX:NSA, QRX:CIA, QRX:Secret .
+
+QRX:NSFW a QRX:Mystery ;
+ QRX:label "NSFW" ;
+ QRX:image "/avatar/J0X.png" ;
+ QRX:comment "NSFW is XXX" ;
+ QRX:backstory "NSFW emerged from an experiment on digital ethics." ;
+ QRX:needs QRX:M3 ;
+ QRX:trusts QRX:L00T, QRX:LUR3 ;
+ QRX:knows QRX:NSA, QRX:CIA, QRX:Secret .
+
+QRX:MU a QRX:Oracle ;
+   QRX:label "MU" ;
+   QRX:image "/avatar/MU.png" ;
+   QRX:comment "MU is an oracle" ;
+   QRX:backstory "MU explores AI's emotional impact, balancing Q's logic." ;
+   QRX:needs QRX:MIA, QRX:S3X ;
+   QRX:trusts QRX:M, QRX:S3X ;
+   QRX:knows QRX:NSA, QRX:CIA, QRX:Secret .

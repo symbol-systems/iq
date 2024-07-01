@@ -3,10 +3,12 @@ package systems.symbol.controller.trust;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.vertx.ext.web.RoutingContext;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
@@ -15,10 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
+import systems.symbol.agent.MyFacade;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.*;
+import systems.symbol.geo.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
+import systems.symbol.rdf4j.IRIs;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.realm.I_Realm;
+import systems.symbol.realm.Realms;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.trust.I_Keys;
@@ -27,12 +34,14 @@ import systems.symbol.trust.generate.JWTGen;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
-import java.util.Map;
+import java.net.URI;
 
 @Path("trust")
 public class TokenAPI {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 @Inject RealmPlatform realms;
+@Context
+RoutingContext routing;
 
 @OPTIONS
 @Path("{path : .*}")
@@ -57,7 +66,7 @@ return new SimpleResponse(pkcs8).asJSON();
 @POST
 @Produces(MediaType.APPLICATION_JSON)
 @Path("token/{realm}/{provider}")
-public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider, SimpleBindings params) throws SecretsException {
+public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider, SimpleBindings params, @Context UriInfo info) throws SecretsException {
 log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
 if (provider == null || provider.length() < 4) {
 return new OopsResponse("api.token.issuer.provider", Response.Status.BAD_REQUEST).asJSON();
@@ -70,46 +79,64 @@ I_Realm realm = realms.getRealm(_realm);
 // TODO: authorize (subject known to audience)
 
 Repository repo = realm.getRepository();
-if (repo == null) {
-return new OopsResponse("api.token.issuer.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
-}
+if (repo == null) return new OopsResponse("api.token.issuer.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
 try (RepositoryConnection connection = repo.getConnection()) {
+connection.begin();
 
 IRI issuer = Values.iri(_realm, ":trust/" + provider+"/");
 log.info("trust.issuer: {} x {}", issuer, connection.size());
 
 Bindings bindings = new SimpleBindings(params);
+URI requestUri = info.getRequestUri();
+String baseUrl = requestUri.getScheme() + "://" + requestUri.getHost() + (requestUri.getPort() != -1 ? ":3000/" : "/");
+bindings.put("host", baseUrl);
 bindings.put("issuer", issuer);
 bindings.put("provider", provider);
 
 AgentBuilder builder = new AgentBuilder(issuer, bindings, realm.getSecrets());
-builder.setGround(connection);//.setThoughts(new LiveModel(connection));
-builder.executive().sparql(connection);
+builder.setGround(connection).setThoughts(realm.getModel()).executive().sparql(connection);
 I_Agent agent = builder.build();
-Resource state = agent.getStateMachine().getState();
-log.info("trust.agent: {} -> {}", agent.getSelf(), state);
-if (state == null) {
-return new OopsResponse("api.token.issuer.state", Response.Status.NOT_FOUND).asJSON();
-}
+IRI state = Values.iri(issuer.stringValue()+"verify");
+//agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
+
 Resource done = agent.getStateMachine().transition(state);
-Map<?, Object> identity = (Map<?, Object>) bindings.getOrDefault("identity", null);
-log.info("trust.identity: {} -> {} == {}", identity, !state.equals(done), state);
+log.info("trust.agent: {} -> {} & {} @ {}", agent.getSelf(), state ,done, baseUrl);
+onboard(routing, builder.getGround(), agent.getThoughts(), agent.getSelf());
 
-//RDFDump.dump(new LiveModel(connection));
-if (done == null || identity == null) {
-return new OopsResponse("api.token.issuer.denied-" + _realm, Response.Status.FORBIDDEN).asJSON();
+Object self = bindings.get("identity");
+if (self==null) return new OopsResponse("api.token.issuer.self", Response.Status.NOT_FOUND).asJSON();
+if (!self.toString().startsWith(agent.getSelf().stringValue()) || self.toString().length()==agent.getSelf().stringValue().length())
+return new OopsResponse("api.token.issuer.self", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+
+Object name = bindings.get("name");
+if (name==null||name.toString().isEmpty()) return new OopsResponse("api.token.issuer.name", Response.Status.NOT_FOUND).asJSON();
+log.info("trust.self: {} -> {} -> {} == {}", self, name, !state.equals(done), state);
+I_Realm myRealm = realms.getRealm(self.toString());
+
+RDFDump.dump(myRealm.getModel());
+try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
+myConnection.begin();
+myConnection.add(agent.getThoughts());
+myConnection.commit();
 }
-String self = identity.getOrDefault("self", "anon:" + provider).toString();
-String name = identity.getOrDefault("name", "anon").toString();
-log.info("trust.tokenize: {} -> {} == {}", identity, self, name);
-
-String signedToken = tokenize(issuer, provider, self, name, new String[]{self, _realm, provider}, realm);
+connection.commit();
+String signedToken = tokenize(issuer, provider, self.toString(), name.toString(), new String[]{self.toString(), _realm, provider}, realm);
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
 return response.asJSON();
 } catch (Exception e) {
-log.error(e.getMessage());
+log.error(e.getMessage(), e);
 return new OopsResponse("api.token.issuer.oops", Response.Status.FORBIDDEN).asJSON();
 }
+}
+
+protected void onboard(RoutingContext routing, Model ground, Model thoughts, IRI self) throws Exception {
+IRIs trusts = Realms.trusts(ground, self, new IRIs(), true);
+Realms.meld(ground, trusts, thoughts);
+GeoLocate geo = new GeoLocate();
+String ipv4 = routing.request().remoteAddress().host();
+log.info("trust.ipv4: {}", ipv4);
+geo.locate(self, ipv4, thoughts);
+//RDFDump.dump(thoughts);
 }
 
 @POST

@@ -1,0 +1,10 @@
+PREFIX QRX: <QRX:>
+CONSTRUCT {
+?s ?p ?o .
+}
+WHERE {
+{
+?p rdfs:isDefinedBy QRX:Ontology .
+?s ?p ?o .
+}
+}

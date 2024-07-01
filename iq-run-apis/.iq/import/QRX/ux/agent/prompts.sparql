@@ -1,0 +1,8 @@
+SELECT ?id ?content
+WHERE {
+?fsm iq:to ?id.
+?id rdf:value ?content.
+
+FILTER(?id = ?this)
+VALUES ?this { <{{my.self}}> }
+}

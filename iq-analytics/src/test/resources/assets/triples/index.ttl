@@ -1,5 +1,5 @@
-@prefix: <urn:iq:test:>.
-@prefix test: <urn:iq:test:>.
+@prefix: <iq:test:>.
+@prefix test: <iq:test:>.
 
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix cnt: <http://www.w3.org/2011/content#>.

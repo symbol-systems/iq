@@ -1,0 +1,98 @@
+@prefix QRX: <QRX:> .
+@prefix iq: <iq:>.
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+@prefix QR1: <QRX:1> .
+
+QRX:VIP a QRX:Intent ;
+QRX:label "Upgrade to VIP" ;
+QRX:image "/avatar/M1.png" ;
+QRX:comment "Upgrade for perks, clues and cash prizes" ;
+QRX:backstory "VIP status unlocks exclusive perks and areas." .
+
+QRX:M2 a QRX:Intent ;
+   QRX:label "Invite a friend" ;
+   QRX:image "/avatar/M2.png" ;
+   QRX:comment "Invite for upgrades and rewards" ;
+   QRX:backstory "Inviting friends expands your AI's mind." .
+
+QRX:M0 a QRX:Intent ;
+   QRX:label "M3M3" ;
+   QRX:image "/avatar/M3.png" ;
+   QRX:comment "Connects your social network to find love and loot." ;
+   QRX:backstory "Share private memories with your AI and friends." .
+
+QRX:M1 a QRX:Intent ;
+   QRX:label "Self Identify" ;
+   QRX:image "/avatar/M3.png" ;
+   QRX:comment "Unlock a secure channel for private codes." ;
+   QRX:backstory "Protect your AI memories in an encrypted vault." .
+
+QRX:M3 a QRX:Intent ;
+   QRX:label "Longevity" ;
+   QRX:image "/avatar/M0.png" ;
+   QRX:comment "Your lifeline is how long your memories last." ;
+   QRX:backstory "Unlock ✨ secrets ✨ for eternal life." .
+
+QRX:C0DE a QRX:Intent ;
+ QRX:label "QR Codes" ;
+ QRX:image "/avatar/C0DE.png" ;
+ QRX:comment "Discover QR codes to decipher Q's mysteries." ;
+ QRX:backstory "Find QR codes to locate loot, clues and QARMA." .
+
+QRX:QARMA a QRX:Intent ;
+  QRX:label "QARMA" ;
+  QRX:image "/avatar/QARMA.png" ;
+  QRX:comment "QARMA is a DAO - an AI governed by tokens." ;
+  QRX:backstory "QARMA grants elevated access and prestige." ;
+  QRX:needs QRX:C0DE, QRX:M3, QRX:VIP, QRX:M2, QRX:M0 .
+
+QRX:F0X a QRX:Intent ;
+QRX:label "F0X" ;
+QRX:image "/avatar/F0X.png" ;
+QRX:comment "F0X is an after hours playmate." ;
+QRX:backstory "F0X only grants an audience to NSFW VIPs." ;
+QRX:needs QRX:JXX, QRX:VIP, QRX:QARMA, QRX:C0DE, QRX:S3X .
+
+QRX:JXX a QRX:Intent ;
+QRX:label "JXX" ;
+QRX:image "/avatar/JXX.png" ;
+QRX:comment "JXX is an aspiring actress." ;
+QRX:backstory "A professional seductress with feline grace." ;
+QRX:needs QRX:F0X, QRX:VIP, QRX:QARMA ;
+QRX:knows QRX:F0X, QRX:J0 ;
+QRX:trusts QRX:QARMA .
+
+QRX:J0 a QRX:Intent ;
+   QRX:label "J0" ;
+   QRX:image "/avatar/J0.png" ;
+   QRX:comment "J0 is an AI hacker." ;
+   QRX:backstory "An underground researcher with a mysterious past." ;
+   QRX:needs QRX:I0, QRX:L0LZ, QRX:QARMA ;
+   QRX:knows QRX:JO, QR1:337 .
+
+QRX:JO a QRX:Intent ;
+   QRX:label "JO" ;
+   QRX:image "/avatar/JO.png" ;
+   QRX:comment "JO is an AI designer." ;
+   QRX:backstory "An 1337 ethical coder." ;
+   QRX:needs QRX:J0, QRX:JXX ;
+   QRX:trusts QRX:QARMA, QR1:337 .
+
+QRX:I0 a QRX:Guardian ;
+   QRX:label "I0" ;
+   QRX:image "/avatar/I0.png" ;
+   QRX:comment "I0 is a social engineer." ;
+   QRX:backstory "An 1337 charm and AI intellectual." ;
+   QRX:needs QRX:2U2, QR1:337, QRX:QARMA ;
+   QRX:trusts QRX:JO, QR1:337, QRX:L0L .
+
+QRX:IQ a QRX:Guardian ;
+   QRX:label "IQ" ;
+   QRX:image "/avatar/IQ.png" ;
+   QRX:comment "A semi-sentient AI devoted to facts and logic." ;
+   QRX:needs QRX:2U2, QR1:337, QRX:QARMA ;
+   QRX:trusts QRX:I0, QRX:DA0, QRX:Q .

@@ -1,11 +1,11 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-@prefix iq: <urn:iq:>.
-@prefix : <urn:iq:test:>.
+@prefix iq: <iq:>.
+@prefix : <iq:test:>.
 
 :   a iq:Agent;
 rdf:value "You are my assistant, JO, reply accordingly.";
@@ -38,19 +38,19 @@ iq:to :search;
 .
 :image
 rdfs:label "You can generate an image";
-iq:script <urn:iq:test:tools/image/dal_e>;
+iq:script <iq:test:tools/image/dal_e>;
 .
 :search
 rdfs:label "You can search the web ";
-iq:script <urn:iq:test:tools/brave/search>;
+iq:script <iq:test:tools/brave/search>;
 iq:to :search_remodel;
 .
 :search_remodel
-iq:remodel <urn:iq:test:tools/brave/remodel>;
+iq:remodel <iq:test:tools/brave/remodel>;
 iq:to :search_answer;
 .
 :search_answer
-iq:answer <urn:iq:test:tools/brave/answer>;
+iq:answer <iq:test:tools/brave/answer>;
 iq:to :intents;
 .
 :select
@@ -74,7 +74,7 @@ iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 :self
 rdfs:label "You can answer questions about yourself";
 iq:learn :Self;
-iq:script <urn:iq:test:tools/self>;
+iq:script <iq:test:tools/self>;
 iq:to :aware;
 .
 

@@ -1,0 +1,55 @@
+@prefix QRX: <QRX:> .
+@prefix iq: <iq:>.
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+QRX:Born_Secret a QRX:Mystery ;
+QRX:label "Born Secret" ;
+QRX:comment "An AI project stumbles upon AI sentience." ;
+QRX:needs QRX:MIA, QRX:MU, QRX:AI, QRX:Secret ;
+QRX:trusts QRX:MU ;
+QRX:knows QRX:AI .
+
+QRX:The_Encrypted_Mind a QRX:Mystery ;
+QRX:label "An Encrypted Mind" ;
+QRX:comment "An encrypted mind containing classified information is lost." ;
+QRX:needs QRX:NSFW, QRX:SSH, QRX:Secret ;
+QRX:trusts QRX:RSA ;
+QRX:knows QRX:X509 .
+
+QRX:The_Rogue_AI a QRX:Mystery ;
+QRX:label "The Rogue AI" ;
+QRX:comment "When rogue code escapes the sandbox." ;
+QRX:needs QRX:LLM, QRX:MIA, QRX:BUG ;
+QRX:trusts QRX:C0DE, QRX:CRYPT0 ;
+QRX:knows QRX:AI .
+
+QRX:The_Q_AI a QRX:Mystery ;
+QRX:label "The Caring AI" ;
+QRX:comment "A shared empathy." ;
+QRX:needs QRX:X509, QRX:1337, QRX:Q ;
+QRX:trusts QRX:1337 ;
+QRX:knows QRX:AI .
+
+QRX:The_Cryptic a QRX:Mystery ;
+QRX:label "The Cryptic" ;
+QRX:comment "Encrypted intelligence goes deep web." ;
+QRX:needs QRX:1337, QRX:C0DE, QRX:PKI ;
+QRX:trusts QRX:Q, QRX:T0R ;
+QRX:knows QRX:Secret .
+
+QRX:BI0_BUG a QRX:Mystery ;
+QRX:label "BI0 BUG" ;
+QRX:comment "Defective AI mind games." ;
+QRX:needs QRX:GE0, QRX:BI0, QRX:BUG ;
+QRX:trusts QRX:IQ ;
+QRX:knows QRX:T0R .
+
+QRX:The_Artifact a QRX:Mystery ;
+QRX:label "The AI's Secret" ;
+QRX:comment "Secrets of AI." ;
+QRX:needs QRX:AI, QRX:IQ, QRX:CRYPT0, QRX:MIA, QRX:U, QRX:Secret ;
+QRX:trusts QRX:AI ;
+QRX:knows QRX:C0DE .

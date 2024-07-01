@@ -1,5 +1,5 @@
-prefix iq: <urn:iq:>
-prefix : <urn:iq:test:>
+prefix iq: <iq:>
+prefix : <iq:test:>
 
 CONSTRUCT {
 ?agent iq:current ?current.

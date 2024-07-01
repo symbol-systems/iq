@@ -1,7 +1,7 @@
-@prefix iq: <urn:iq:> .
-@prefix : <urn:iq:test:> .
+@prefix iq: <iq:> .
+@prefix : <iq:test:> .
 
-<urn:iq:test:> a iq:Agent;
+<iq:test:> a iq:Agent;
   iq:workflow :workflow_0 .
 
 :workflow_0 a iq:Workflow;

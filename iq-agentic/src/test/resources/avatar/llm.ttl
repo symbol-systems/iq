@@ -1,9 +1,9 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 
 :OpenAI_Chat_gpt_35_turbo
 iq:url "https://api.openai.com/v1/chat/completions";

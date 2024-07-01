@@ -61,7 +61,7 @@ realms.stop();
 }
 
 public I_Realm getRealm(String self) throws SecretsException {
-log.info("realm.getRealm: {} -> {}", self, realms.getRealms());
+log.debug("realm.getRealm: {} -> {}", self, realms.getRealms());
 return realms.getRealm(self);
 }
 

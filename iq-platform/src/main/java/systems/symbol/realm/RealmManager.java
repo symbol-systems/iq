@@ -38,7 +38,7 @@ protected I_SecretsStore secrets;
 protected Map<IRI, Realm> realms = new HashMap<>();
 
 public RealmManager() throws Exception {
-this(new File(IQ.toLowerCase()));
+this(new File("."+IQ.toLowerCase()));
 }
 
 public RealmManager(File home) throws Exception {
@@ -71,7 +71,7 @@ return getRealm(Values.iri(self.contains(":")?self:self+":"));
 
 public I_Realm getRealm(IRI self) throws SecretsException {
 Realm realm = realms.get(self);
-log.info("realm.found: {} -> {}", realms.keySet(), realm!=null);
+log.debug("realm.found: {} -> {}", realms.keySet(), realm!=null);
 if (realm!=null) return realm;
 Repository repo = getRepository(self.stringValue());
 

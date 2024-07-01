@@ -20,7 +20,7 @@ Within these namespaces, concepts are assigned well-known, immutable IRIs (Inter
 
 | Prefix | Namespace   |
 |--------|-----------------------------|
-| iq | <urn:iq:>   |
+| iq | <iq:>   |
 | ai | <urn:ai:>   |
 | my | <urn:my:{uuid}:>|
 

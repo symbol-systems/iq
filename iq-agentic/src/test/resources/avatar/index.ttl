@@ -1,12 +1,12 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 
 @prefix ai: <urn:ai:>.
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 :
 rdf:value """Select the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
 iq:url "https://api.groq.com/openai/v1/chat/completions";
@@ -44,7 +44,7 @@ iq:to :self, :personalization, :learn, :knowledge.
 :self
 rdfs:label "about you, AI, yourself, your feelings or state of mind.";
 rdf:value "Now is {{my.time}}. AI status is {{my.status}}. Rephrase the user question into a suitable instruction for the next step, or ask them for clarification. Be specific.";
-iq:script <urn:my.iq:iq/self>;
+iq:script <my:iq/self>;
 iq:learn :Avatar;
 iq:to :self, :chat, :co_create, :game, :time, :location, :personalization, :learn, :knowledge, :entertainment, :nsfw, :oops.
 
@@ -157,7 +157,7 @@ iq:to :self, :web, :memory.
 
 :web
 rdfs:label "search the web for something specific";
-iq:script <urn:my.iq:iq/search_web>;
+iq:script <my:iq/search_web>;
 iq:a :;
 iq:to :web_results.
 

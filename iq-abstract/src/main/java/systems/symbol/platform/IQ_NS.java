@@ -9,10 +9,10 @@ import org.eclipse.rdf4j.model.util.Values;
  * steps, guards, states, actions and LLM prompts.
  */
 public interface IQ_NS {
-String IQ = "urn:iq:"; // reserved for internal use
+String IQ = "iq:"; // reserved for internal use
 String AI = "urn:ai:"; // runtime foundational knowledge
 //String MY = "urn:my:"; // domain knowledge
-String TEST = "urn:iq:test:"; // reserved for testing
+String TEST = "iq:test:"; // reserved for testing
 
 // Workflow-related IRIs
 IRI A_WORKFLOW = Values.iri(IQ, "Workflow");

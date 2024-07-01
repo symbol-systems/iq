@@ -15,10 +15,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.WGS84;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -27,7 +24,7 @@ public class GeoLocate {
 private DatabaseReader reader;
 
 public GeoLocate() throws IOException {
-load(new File("db/GeoLite2-City.mmdb"));
+load();
 }
 
 public GeoLocate(File db) throws IOException {
@@ -36,6 +33,11 @@ load(db);
 
 protected void load(File database) throws IOException {
 reader = new DatabaseReader.Builder(database).build();
+}
+
+protected void load() throws IOException {
+InputStream db = getClass().getClassLoader().getResourceAsStream("GeoLite2-City.mmdb");
+reader = new DatabaseReader.Builder(db).build();
 }
 
 public static String getPublicIP() throws IOException {
@@ -69,11 +71,14 @@ return response.getCity().toString()+", "+response.getMostSpecificSubdivision().
 public Model locate() throws IOException, GeoIp2Exception {
 String ip = getPublicIP();
 DynamicModelFactory dmf = new DynamicModelFactory();
-return locate(Values.iri("urn:ip:"+ip), ip, dmf.createEmptyModel());
+return locate(Values.iri("ipv4:"+ip), ip, dmf.createEmptyModel());
 }
 
 public Model locate(IRI self, String ip, Model model) throws IOException, GeoIp2Exception {
 InetAddress ipAddress = InetAddress.getByName(ip);
+if (ipAddress.isAnyLocalAddress() || ipAddress.isLoopbackAddress()) {
+ipAddress = InetAddress.getByName(getPublicIP());
+}
 CityResponse response = reader.city(ipAddress);
 
 ModelBuilder modelBuilder = new ModelBuilder(model);

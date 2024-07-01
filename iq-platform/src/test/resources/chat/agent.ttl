@@ -1,8 +1,8 @@
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix schema: <http://schema.org/>.
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 
 : a iq:Agent;
    rdfs:label """

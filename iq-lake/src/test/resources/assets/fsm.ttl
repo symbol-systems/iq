@@ -1,7 +1,7 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
-@prefix iq: <urn:iq:>.
-@prefix : <urn:iq:test:>.
+@prefix iq: <iq:>.
+@prefix : <iq:test:>.
 
 :
 a iq:Agent;

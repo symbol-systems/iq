@@ -20,7 +20,7 @@ public IntentMessage(
    @JsonProperty("role") String role,
    @JsonProperty("content") String content) {
 this.type = MessageType.text;
-this.intent = intent;
+this.intent = intent.startsWith("#")?intent.substring(1):intent;
 this.role = RoleType.valueOf(role);
 this.content = content;
 }
@@ -30,7 +30,7 @@ public IntentMessage(
 @JsonProperty("role") I_LLMessage.RoleType role,
 @JsonProperty("content") String content) {
 this.type = MessageType.text;
-this.intent = intent;
+this.intent = intent.startsWith("#")?intent.substring(1):intent;
 this.role = role;
 this.content = content;
 }

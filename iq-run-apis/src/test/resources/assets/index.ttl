@@ -1,4 +1,4 @@
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 
 # Canonical Vocabularies (e.g. W3C standards)
 

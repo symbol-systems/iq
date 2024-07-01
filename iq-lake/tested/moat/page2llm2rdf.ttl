@@ -3,7 +3,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
-@prefix iq: <urn:iq:> .
+@prefix iq: <iq:> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix schema: <http://schema.org/> .
 @prefix cnt: <http://www.w3.org/2011/content#> .
@@ -12,15 +12,15 @@
 @prefix my: <urn:my:> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
-@prefix : <urn:iq:test:> .
+@prefix : <iq:test:> .
 
-<urn:iq:test:> a <urn:iq:Agent>;
-  <urn:iq:test:workflow_0> <urn:iq:test:ideation>;
-  <urn:iq:research-rss> <https://www.w3.org/blog/feed/>;
-  <urn:iq:research-page> <https://exmaple.com/> .
+<iq:test:> a <iq:Agent>;
+  <iq:test:workflow_0> <iq:test:ideation>;
+  <iq:research-rss> <https://www.w3.org/blog/feed/>;
+  <iq:research-page> <https://exmaple.com/> .
 
-<urn:iq:test:workflow_0> a <urn:iq:Workflow>;
-  <urn:iq:initial> <urn:iq:test:ideation> .
+<iq:test:workflow_0> a <iq:Workflow>;
+  <iq:initial> <iq:test:ideation> .
 
-<urn:iq:test:agent> a <http://www.w3.org/ns/formats/Turtle>;
+<iq:test:agent> a <http://www.w3.org/ns/formats/Turtle>;
   rdfs:label "agent.ttl" .
