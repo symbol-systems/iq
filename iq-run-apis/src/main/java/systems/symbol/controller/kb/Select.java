@@ -6,6 +6,8 @@ import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -41,46 +43,37 @@ public class Select extends GuardedAPI {
             @PathParam("repo") String repo,
             @PathParam("query") String query,
             @QueryParam("maxResults") int maxResults,
-            @HeaderParam("Authorization") String auth) throws IOException {
+            @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         if (!Validate.isBearer(auth)) {
             log.info("iq.select#protected");
-            return new OopsResponse("api.select#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+            return new OopsResponse("api.select.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.iq.select#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.iq.select.repository", Response.Status.BAD_REQUEST).asJSON();
         }
         if (Validate.isMissing(query)) {
-            return new OopsResponse("api.iq.select#query-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.iq.select.query-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
 
         if (maxResults<0) maxResults = 10000;
-        // Get the repository instance from the platform
-        Repository repository = platform.getRepository(repo);
-        if (repository == null) {
-            // Return an error response if the repository is not found
-            return new OopsResponse("api.iq.select#repository-missing", Response.Status.NOT_FOUND).asJSON();
-        }
+        I_Realm realm = platform.getRealm(repo);
+        if (realm==null) return new OopsResponse("api.select.realm", Response.Status.NOT_FOUND).asJSON();
+        Repository repository = realm.getRepository();
+        if (repository == null) return new OopsResponse("api.select.repository", Response.Status.NOT_FOUND).asJSON();
 
         try (RepositoryConnection connection = repository.getConnection()) {
-            // Lookup SPARQL query in the platform repository
-            IQConnection iq = new IQConnection(platform.getSelf(), connection);
+            IQConnection iq = new IQConnection(realm.getSelf(), connection);
             IQScriptCatalog library = new IQScriptCatalog(iq);
             String sparql = library.getSPARQL(query);
 
-            // Check for non-null and non-empty SPARQL query
             if (sparql == null || sparql.isEmpty()) {
-                return new OopsResponse("api.iq.select#query-missing", Response.Status.NOT_FOUND).asJSON();
+                return new OopsResponse("api.iq.select.query-missing", Response.Status.NOT_FOUND).asJSON();
             }
-
-            // Execute SPARQL query against the repository
             TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
-
             try (TupleQueryResult result = tupleQuery.evaluate()) {
-                // Convert SPARQL results to a list of maps
                 List<Map<String, Object>> models = SPARQLMapper.toMaps(result);
                 return new DataResponse(models).asJSON();
             } catch (QueryEvaluationException e) {
-                // Return an error response if SPARQL query execution fails
                 return new OopsResponse("api.iq.select#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
             }
         }

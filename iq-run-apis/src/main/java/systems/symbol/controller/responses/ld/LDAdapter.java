@@ -26,7 +26,7 @@ public class LDAdapter {
         List<Bindings> graph = new ArrayList<>();
         root.put("@graph", graph);
         Map<Resource, Bindings> nodes = new HashMap<>();
-        log.debug("@graph: ... ");
+        log.info("@graph: ... ");
         while (result.hasNext()) {
             Statement next = result.next();
             Resource subject = next.getSubject();
@@ -42,8 +42,8 @@ public class LDAdapter {
             }
             nodes.put(subject, node);
         }
-        log.debug("\t@graph = {}", graph.size());
-        log.debug("\t{}", graph);
+        log.info("\t@size: {}", graph.size());
+//        log.debug("\t{}", graph);
         return root;
     }
 

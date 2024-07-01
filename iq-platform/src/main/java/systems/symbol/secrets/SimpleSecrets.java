@@ -43,6 +43,6 @@ public class SimpleSecrets implements I_Secrets, Serializable {
      */
     @Override
     public String toString() {
-        return "Secrets: " + secretStore.keySet();
+        return "secrets:" + secretStore.keySet();
     }
 }

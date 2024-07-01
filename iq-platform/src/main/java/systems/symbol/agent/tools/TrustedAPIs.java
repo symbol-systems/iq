@@ -2,13 +2,17 @@ package systems.symbol.agent.tools;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.platform.IQ_NS;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.secrets.APISecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Optional;
 
 public class TrustedAPIs {
@@ -17,6 +21,16 @@ public class TrustedAPIs {
     public static I_Secrets trusted(Model model, IRI agent, I_Secrets _secrets) throws SecretsException {
         APISecrets secrets = new APISecrets(_secrets);
         Optional<Literal> name = Models.getPropertyLiteral(model, agent, IQ_NS.NAME);
+//        log.warn("trusted.name: {} -> {} == {}", agent, IQ_NS.NAME, name);
+//        Iterable<Statement> statements = model.getStatements(agent, IQ_NS.NAME, null);
+//        for (Statement statement : statements) {
+//            log.warn("\t: {} = {}", statement.getPredicate(), statement.getObject());
+//        }
+//        try {
+//            RDFDump.dump(model, Files.newOutputStream(new File("dump-trusted.ttl").toPath()), RDFFormat.N3);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
         if (!name.isPresent()) {
             log.warn("missing secret name: {}", agent);
             return secrets;
@@ -24,7 +38,7 @@ public class TrustedAPIs {
         String key = name.get().stringValue();
         String secret = _secrets.getSecret(key);
         if (secret == null) {
-            throw new SecretsException("missing secret: "+key);
+            throw new SecretsException("missing secret: "+key+" @ "+agent);
         }
 
         Iterable<Statement> trusted = model.getStatements(agent, IQ_NS.TRUSTS, null);

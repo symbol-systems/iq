@@ -1,6 +1,8 @@
 package systems.symbol.llm;
 
 
+import systems.symbol.agent.I_Agentic;
+
 import java.util.List;
 
 public interface I_Assist<T> {

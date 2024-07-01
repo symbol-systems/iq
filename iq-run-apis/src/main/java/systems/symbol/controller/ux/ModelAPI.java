@@ -20,6 +20,8 @@ import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import javax.script.Bindings;
@@ -36,7 +38,7 @@ public class ModelAPI extends GuardedAPI {
     /**
      * Executes a SPARQL construct query on a specified RDF repository.
      *
-     * @param repo       The name of the RDF repository.
+     * @param _realm       The name of the RDF repository.
      * @param query       The query of a SPARQL construct query.
      * @return Response containing the results of the SPARQL query in JSON format.
      */
@@ -45,37 +47,31 @@ public class ModelAPI extends GuardedAPI {
             summary = "api.ux.model.post.summary",
             description = "api.ux.model.post.description"
     )
-    @Path("{repo}/{query: .*}")
+    @Path("{realm}/{query: .*}")
     @Produces("application/ld+json")
-    public Response graph(@PathParam("repo") String repo,
+    public Response graph(@PathParam("realm") String _realm,
                           @PathParam("query") String query,
                           @Context UriInfo uriInfo,
-                          @HeaderParam("Authorization") String auth) throws IOException {
-        log.info("ux.model: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
+                          @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+        log.info("ux.model: {} --> {} -> {}", _realm, query, uriInfo.getQueryParameters().keySet());
 
-        if (!Validate.isBearer(auth)) {
-            return new OopsResponse("api.ux.model#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
-        }
+        if (!Validate.isBearer(auth))  return new OopsResponse("api.ux.model#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+        I_Realm realm = platform.getRealm(_realm);
+        if (realm==null) return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
         DecodedJWT jwt;
-        try {
-            jwt = authenticate(auth);
-        } catch (OopsException e) {
-            return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
-        }
-        if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.ux.model#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
-        }
+        try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+
         if (!Validate.isURN(query)) {
-            query = query.isEmpty() ?platform.getSelf()+"ux/model":platform.getSelf()+query;
+            query = query.isEmpty() ?realm.getSelf()+"ux/model":realm.getSelf()+query;
         }
         log.info("ux.model.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
-        Repository repository = platform.getRepository(repo);
+        Repository repository = realm.getRepository();
         if (repository == null) {
-            return new OopsResponse("api.ux.model#repository-missing", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("api.ux.model#repository", Response.Status.NOT_FOUND).asJSON();
         }
         try (RepositoryConnection connection = repository.getConnection()) {
-            IQConnection iq = new IQConnection(platform.getSelf(), connection);
+            IQConnection iq = new IQConnection(realm.getSelf(), connection);
             IQScriptCatalog catalog = new IQScriptCatalog(iq);
             Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
             IRI self = Values.iri(jwt.getSubject());

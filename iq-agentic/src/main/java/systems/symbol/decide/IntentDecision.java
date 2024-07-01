@@ -1,0 +1,59 @@
+package systems.symbol.decide;
+
+import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.agent.I_Agent;
+import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.llm.I_Assist;
+import systems.symbol.llm.I_LLMessage;
+import systems.symbol.llm.IntentMessage;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
+public class IntentDecision implements I_Decide<Resource>, I_Delegate<Resource> {
+    private static final Logger log = LoggerFactory.getLogger(IntentDecision.class);
+    Set<Resource> seen = new HashSet<>();
+    I_Assist<String> chat;
+
+    public IntentDecision(I_Assist<String> chat) {
+        this.chat = chat;
+    }
+
+    @Override
+    /**
+     * Act as a manager
+     * @param agent
+     * @return
+     */
+    public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
+        I_StateMachine<Resource> fsm = agent.getStateMachine();
+        CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
+        try {
+            Resource decided = decide();
+            if (decided!=null && !seen.contains(decided)) {
+                log.info("intent.decided: {} -> {} == {}", fsm.getState(), decided, seen);
+                future.complete(()->decided);
+                seen.add(decided);
+                return future;
+            }
+            seen.add(fsm.getState());
+            future.complete(()->agent.getStateMachine().getState());
+        } catch (Exception e) {
+            CompletableFuture.failedFuture(e);
+        }
+        return future;
+    }
+
+    @Override
+    public Resource decide() {
+        I_LLMessage<String> latest = chat.latest();
+        if (latest instanceof IntentMessage) {
+            return ((IntentMessage) latest).getSelf();
+        }
+        return null;
+    }
+}

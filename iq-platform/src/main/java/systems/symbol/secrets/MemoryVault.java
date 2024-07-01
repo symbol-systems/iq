@@ -25,4 +25,9 @@ public class MemoryVault implements I_SecretsStore {
     public void setSecrets(IRI agent, I_Secrets secrets) {
         store.put(agent, secrets);
     }
+
+    @Override
+    public String toString() {
+        return "vaults:" + store.keySet();
+    }
 }

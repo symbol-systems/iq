@@ -19,7 +19,7 @@ import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
     I_Decide<Resource> manager;
-    Set<Resource> seen = new HashSet<>();
+//    Set<Resource> seen = new HashSet<>();
 
     /**
      * The ExecutiveAgent makes simple decisions and delegates other to manager.
@@ -43,7 +43,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     }
 
     public void resume() {
-        this.seen.clear();
+//        this.seen.clear();
     }
 
     public void setManager(I_Decide<Resource> manager) {
@@ -59,14 +59,12 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      */
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
-        log.info("exec.onTransition: {} -> {} --> {}", self, to, bindings);
+        log.info("agent.onTransition: {} @ {} ==> {} --> {}", self, getStateMachine().getState(), from, to);
         Set<IRI> executed = execute(getSelf(), to, bindings);
         Resource next = decide();
-        log.info("exec.decided: {} <-> {} --> {}", next, seen, executed);
+        log.info("agent.decided: {} <-> {} && {} -> {} --> {}", from, to, getStateMachine().getState(), next, executed);
         if (next==null) return false; // don't veto, we may try again
-        if (seen.contains(next)) return false; // veto to prevent cycles
         if (getStateMachine().getState().equals(next)) return false;
-        seen.add(next);
         getStateMachine().transition(next);
         return true;
     }
@@ -82,7 +80,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public Resource decide() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
-        log.info("exec.deciding: {} -> {}", manager==null?"solo":manager.getClass().getSimpleName(), choices);
+        log.info("agent.deciding: {} -> {}", manager==null?"solo":manager.getClass().getSimpleName(), choices);
         if (choices.isEmpty()) return null;
         if (choices.size()==1) return choices.iterator().next();
         if (manager == null) return null;

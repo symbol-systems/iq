@@ -7,32 +7,36 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class TextFinder implements I_Finder {
-	private final Logger log = LoggerFactory.getLogger(getClass());
+public class TextFinder implements I_Finder, I_Search<IRI> {
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	protected EmbeddingStore<TextSegment> store;
 	protected EmbeddingModel model;
 	protected int maxResults = 10;
-	protected double relevancy = 0.8;
+	protected double minScore = 0.8;
 	File storePath;
 
 	public TextFinder() {
-		init(new InMemoryEmbeddingStore<>(), maxResults, relevancy);
+		init(new InMemoryEmbeddingStore<>(), maxResults, minScore);
 	}
 	public TextFinder(File storePath) {
-		init(load(storePath), maxResults, relevancy);
+		init(load(storePath), maxResults, minScore);
 		this.storePath = storePath;
 	}
 
-	public TextFinder(EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults, double relevancy) {
-		if (model!=null) init(store,model,maxResults, relevancy);
-		else init(store,maxResults, relevancy);
+	public TextFinder(EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults, double minScore) {
+		if (model!=null) init(store,model,maxResults, minScore);
+		else init(store,maxResults, minScore);
 	}
 
 	public void init(EmbeddingStore<TextSegment> store, int maxResults, double minScore) {
@@ -43,7 +47,7 @@ public class TextFinder implements I_Finder {
 		this.store = store;
 		this.model = model;
 		this.maxResults = clamp(maxResults, 1, 1000);
-		this.relevancy = clamp(minScore, 0.0, 1.0);
+		this.minScore = clamp(minScore, 0.0, 1.0);
 	}
 
 	public Embedding embed(String text) {
@@ -57,22 +61,22 @@ public class TextFinder implements I_Finder {
 		return embedding;
 	}
 
-	public List<EmbeddingMatch<TextSegment>> search(Embedding embedding, int maxResults, double relevancy) {
+	public List<EmbeddingMatch<TextSegment>> find(Embedding embedding, int maxResults, double relevancy) {
 		if (maxResults < 1) maxResults = this.maxResults;
-		if (relevancy < 0.1) relevancy = this.relevancy;
+		if (relevancy < 0.1) relevancy = this.minScore;
 		maxResults = clamp(maxResults, 1, this.maxResults);
 		relevancy = clamp(relevancy, 0.1, 1.0);
-		log.info("find.embeddings: "+maxResults+" -> "+relevancy);
+		log.info("find.embedding: {} / {} ", maxResults,relevancy);
 		return store.findRelevant(embedding, maxResults, relevancy);
 	}
-	public List<EmbeddingMatch<TextSegment>> search(String text) {
+	public List<EmbeddingMatch<TextSegment>> find(String text) {
 
-		return search(embed(text), maxResults, relevancy);
+		return find(embed(text), maxResults, minScore);
 	}
 
-	public List<EmbeddingMatch<TextSegment>> search(String text, int maxResults, double minScore) {
+	public List<EmbeddingMatch<TextSegment>> find(String text, int maxResults, double minScore) {
 		log.info("find.text: {} -> x{} @ {}", text, maxResults, minScore);
-		return search(embed(text), maxResults, minScore);
+		return find(embed(text), maxResults, minScore);
 	}
 
 	private static <T extends Comparable<T>> T clamp(T value, T min, T max) {
@@ -119,5 +123,15 @@ public class TextFinder implements I_Finder {
 			log.info("finder.text.save: {}", storeHome);
 			saveStore.serializeToFile(Paths.get(storeHome.toURI()));
 		}
+	}
+
+	@Override
+	public Collection<IRI> search(String text, int maxResults, double minScore) {
+		List<EmbeddingMatch<TextSegment>> embeddingMatches = find(embed(text), maxResults, minScore);
+		List<IRI> results = new ArrayList<>();
+		for(EmbeddingMatch<TextSegment> embeddingMatch: embeddingMatches) {
+			results.add(Values.iri(embeddingMatch.embeddingId()));
+		}
+		return results;
 	}
 }

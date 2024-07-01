@@ -11,6 +11,8 @@ import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -37,25 +39,18 @@ public class Construct extends GuardedAPI {
     @Produces("application/ld+json")
     public Response constructQuery(@PathParam("repo") String repo,
                                    @PathParam("query") String query,
-                                   @HeaderParam("Authorization") String auth) throws IOException {
-        if (!Validate.isBearer(auth)) {
-            log.info("construct#protected");
-            return new OopsResponse("api.llm.openai#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
-        }
-        if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.construct#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
-        }
-        if (Validate.isMissing(query)) {
-            return new OopsResponse("api.construct#query-invalid", Response.Status.BAD_REQUEST).asJSON();
-        }
+                                   @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+        if (!Validate.isBearer(auth)) return new OopsResponse("api.llm.openai#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+        if (Validate.isNonAlphanumeric(repo)) return new OopsResponse("api.construct#repository", Response.Status.BAD_REQUEST).asJSON();
+        if (Validate.isMissing(query)) return new OopsResponse("api.construct#query-invalid", Response.Status.BAD_REQUEST).asJSON();
+        I_Realm realm = platform.getRealm(repo);
+        if (realm==null) return new OopsResponse("api.construct.realm", Response.Status.NOT_FOUND).asJSON();
+        Repository repository = realm.getRepository();
+        if (repository == null) return new OopsResponse("api.construct#repository", Response.Status.NOT_FOUND).asJSON();
 
-        Repository repository = platform.getRepository(repo);
-        if (repository == null) {
-            return new OopsResponse("api.construct#repository-missing", Response.Status.NOT_FOUND).asJSON();
-        }
         try (RepositoryConnection connection = repository.getConnection()) {
 
-            IQConnection iq = new IQConnection(platform.getSelf(), connection);
+            IQConnection iq = new IQConnection(realm.getSelf(), connection);
             IQScriptCatalog catalog = new IQScriptCatalog(iq);
             String sparql = catalog.getSPARQL(query);
 

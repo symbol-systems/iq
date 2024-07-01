@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.repository.Repository;
 import systems.symbol.controller.responses.HealthCheck;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class Healthy extends GuardedAPI{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public HealthCheck platformHealth() {
-        return new HealthCheck(platform.isHealthy() ? "ok" : "api.offline");
+        return new HealthCheck("ok");
 
     }
 
@@ -38,15 +40,17 @@ public class Healthy extends GuardedAPI{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response repositoryHealth(@PathParam("repo") String repo,
-                                        @HeaderParam("Authorization") String auth) throws IOException {
+                                        @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         if (!Validate.isBearer(auth)) {
             log.info("health#protected-repository");
             return new OopsResponse("api.health#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.health#repository-missing", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.health#repository", Response.Status.BAD_REQUEST).asJSON();
         }
-        Repository repository = this.platform.getRepository(repo);
+        I_Realm realm = platform.getRealm(repo);
+        if (realm==null) return new OopsResponse("api.health.realm", Response.Status.NOT_FOUND).asJSON();
+        Repository repository = realm.getRepository();
         boolean healthy = (repository != null && repository.isInitialized());
         log.info("healthy.repo: {}", (healthy?repository.getDataDir():"n/a"));
         return new HealthCheck(healthy ? "ok" : "api.health#repository-offline").asJSON();

@@ -4,6 +4,8 @@ package systems.symbol.llm;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import systems.symbol.agent.I_Agentic;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

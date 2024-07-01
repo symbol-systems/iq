@@ -34,6 +34,13 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
     }
 
 
+    @Override
+    public I_Secrets getSecrets(IRI agent) {
+        I_Secrets iSecrets = store.get(agent);
+        if (iSecrets!=null) return iSecrets;
+        return new EnvsAsSecrets();
+    }
+
     /**
      * Save all secrets to plain text files.
      *
@@ -41,12 +48,9 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
      */
     public void save() throws IOException {
         checkVaultHome();
-
         for (IRI agent : this.store.keySet()) {
             I_Secrets iSecrets = store.get(agent);
-            if (iSecrets != null) {
-                save(agent, iSecrets);
-            }
+            save(agent, iSecrets);
         }
     }
 

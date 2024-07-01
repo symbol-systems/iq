@@ -28,6 +28,7 @@ public class RDFResponse implements I_Response {
         writer.setWriterConfig(getWriterConfig());
         writer.startRDF();
         Map<String, String> namespaces = RDFPrefixer.defaults();
+        writer.handleNamespace("my", iri);
         for(String ns: namespaces.keySet()) {
             writer.handleNamespace(ns, namespaces.get(ns));
         }
@@ -49,6 +50,7 @@ public class RDFResponse implements I_Response {
         writer.setWriterConfig(getWriterConfig());
         writer.startRDF();
         Map<String, String> namespaces = RDFPrefixer.defaults();
+        writer.handleNamespace("my", iri);
         for(String ns: namespaces.keySet()) {
             writer.handleNamespace(ns, namespaces.get(ns));
         }

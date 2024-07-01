@@ -20,11 +20,8 @@ public interface I_Realm extends I_Self, I_Keys {
     Repository getRepository();
     FactFinder getFinder();
 
-    Properties getProperties();
-
     FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException;
     I_Secrets getSecrets();
     KeyPair keys();
 
-    I_LLMConfig getLLM(String name);
 }

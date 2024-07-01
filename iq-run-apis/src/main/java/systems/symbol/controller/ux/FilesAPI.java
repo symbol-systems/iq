@@ -10,12 +10,13 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
-import systems.symbol.util.Stopwatch;
 
 import java.io.File;
 
-@Path("/ux/files")
+@Path("/ux/ipfs")
 @Tag(name = "api.ux.files.name", description = "api.ux.files.description")
 public class FilesAPI extends GuardedAPI {
 
@@ -24,29 +25,26 @@ public class FilesAPI extends GuardedAPI {
             summary = "api.ux.files.get.summary",
             description = "api.ux.files.get.description"
     )
-    @Path("{fingerprint:.*}")
+    @Path("{realm}/{ipfs:.*}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response download(@PathParam("fingerprint") String fingerprint,   @HeaderParam("Authorization") String auth) {
-        Stopwatch stopwatch = new Stopwatch();
-        log.info("ux.files: {} ", fingerprint);
-        DecodedJWT jwt;
-        try {
-            jwt = authenticate(auth);
-        } catch (OopsException e) {
-            return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+    public Response download(@PathParam("realm") String _realm, @PathParam("ipfs") String ipfs,@HeaderParam("Authorization") String auth) throws SecretsException {
+        if (Validate.isMissing(ipfs)) {
+            return new OopsResponse("api.ipfs#missing", Response.Status.BAD_REQUEST).asJSON();
         }
+        I_Realm realm = platform.getRealm(_realm);
+        if (realm==null) return new OopsResponse("api.ipfs.realm", Response.Status.NOT_FOUND).asJSON();
+        DecodedJWT jwt;
+        try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+        log.info("api.ipfs: {} -> {}", ipfs, jwt.getSubject());
 
-        File home = new File(platform.getWorkspace().getHome(), "vfs");
-        File file = new File(home, fingerprint + "/file");
-
-        log.info("ipfs.download: {} @ {} == {}", fingerprint, file, file.exists() );
+        File home = new File(platform.getInstance().getHome(), "vfs");
+        File file = new File(home, ipfs );
+        log.info("ipfs.download: {} @ {} == {}", ipfs, file, file.exists() );
         if (!file.exists()) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new SimpleResponse("error", "File not found").asJSON())
                     .build();
         }
-
-
         return Response.ok(file)
                 .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
                 .build();
@@ -67,7 +65,7 @@ public class FilesAPI extends GuardedAPI {
 //    public Response upload(@FormDataParam("file") List<InputStream> uploadedInputStreams,
 //                           @FormDataParam("file") List<FormDataContentDisposition> fileDetails) {
 //        File home = new File(platform.getWorkspace().getHome(), "vfs");
-//        StringBuilder fingerprints = new StringBuilder();
+//        StringBuilder ipfss = new StringBuilder();
 //
 //        List<FormDataBodyPart> parts = formParams.getFields("file");
 //        for (FormDataBodyPart part : parts) {
@@ -85,16 +83,16 @@ public class FilesAPI extends GuardedAPI {
 //                    IOUtils.copy(uploadedInputStream, out);
 //                }
 //
-//                // Generate the fingerprint
-//                String fingerprint = Fingerprint.identify(tempFile);
-//                if (Validate.isMissing(fingerprint)) {
+//                // Generate the ipfs
+//                String ipfs = Fingerprint.identify(tempFile);
+//                if (Validate.isMissing(ipfs)) {
 //                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 //                            .entity(new SimpleResponse("error", "File upload failed").asJSON())
 //                            .build();
 //                }
 //
 //                // Create the target directory
-//                File to = new File(home, fingerprint);
+//                File to = new File(home, ipfs);
 //                if (!to.exists() && !to.mkdirs()) {
 //                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 //                            .entity(new SimpleResponse("error", "Directory creation failed").asJSON())
@@ -105,10 +103,10 @@ public class FilesAPI extends GuardedAPI {
 //                File targetFile = new File(to, fileDetail.getFileName());
 //                Files.move(tempFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 //
-//                if (fingerprints.length() > 0) {
-//                    fingerprints.append(", ");
+//                if (ipfss.length() > 0) {
+//                    ipfss.append(", ");
 //                }
-//                fingerprints.append(fingerprint);
+//                ipfss.append(ipfs);
 //
 //            } catch (IOException e) {
 //                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -117,6 +115,6 @@ public class FilesAPI extends GuardedAPI {
 //            }
 //        }
 //
-//        return new SimpleResponse("ipfs", fingerprints.toString()).asJSON();
+//        return new SimpleResponse("ipfs", ipfss.toString()).asJSON();
 //    }
 }

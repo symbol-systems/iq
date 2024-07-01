@@ -1,0 +1,108 @@
+package systems.symbol.controller.platform;
+
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.OPTIONS;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import org.eclipse.rdf4j.model.IRI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import systems.symbol.controller.responses.DataResponse;
+import systems.symbol.controller.responses.OopsException;
+import systems.symbol.platform.RealmPlatform;
+import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.Validate;
+import systems.symbol.trust.I_Keys;
+import systems.symbol.trust.generate.JWTGen;
+
+import java.util.Arrays;
+
+/**
+ * Abstract endpoint for realm-based APIs
+ */
+public abstract class RealmAPI {
+    protected final static Logger log = LoggerFactory.getLogger(RealmAPI.class);
+    @Inject protected RealmPlatform platform;
+
+    /**
+     * CORS pre-flight
+     */
+    @OPTIONS
+    @Path("{path : .*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
+        log.info("realm.preflight: {} -> {}", path, info.getRequestUri());
+        return new DataResponse(null).asJSON();
+    }
+
+    /**
+     * Checks the overall health status of the platform.
+     *
+     * @return HealthCheck response indicating the platform's health status.
+     */
+    public DecodedJWT authenticate(String bearer, I_Keys keys) throws OopsException, SecretsException {
+        return decode(bearer, keys);
+    }
+
+    public abstract boolean entitled(DecodedJWT jwt, IRI agent);
+
+     public boolean entitled(DecodedJWT jwt, String claim, String clause) throws OopsException {
+         if (jwt.getClaim(claim).isMissing())
+             throw new OopsException("api.realm.claim."+claim, Response.Status.UNAUTHORIZED);
+         if (!jwt.getClaim(claim).asList(String.class).contains(clause))
+             throw new OopsException("api.realm.clause."+claim, Response.Status.UNAUTHORIZED);
+         return true;
+     }
+
+    public DecodedJWT authenticate(String auth, String claim, String[] needs, I_Keys keys) throws OopsException, SecretsException {
+        if (!Validate.isBearer(auth))
+            throw new OopsException("api.realm.unauthorized", Response.Status.UNAUTHORIZED);
+
+        DecodedJWT jwt = authenticate(auth, keys);
+        if (jwt == null)
+            throw new OopsException("api.ux.realm.token-invalid", Response.Status.FORBIDDEN);
+
+        Claim claims = jwt.getClaim(claim);
+        if (claims == null || claims.isMissing())
+            throw new OopsException("api.ux.realm.claims-missing", Response.Status.FORBIDDEN);
+
+        String[] roles = claims.asArray(String.class);
+        if (roles == null || roles.length==0)
+            throw new OopsException("api.ux.realm.roles-missing", Response.Status.FORBIDDEN);
+
+        for (String n : needs) {
+            if (!Arrays.asList(roles).contains(n))
+                throw new OopsException("api.ux.realm.claims-invalid", Response.Status.FORBIDDEN);
+        }
+        return jwt;
+    }
+    /**
+     * Checks the overall health status of the platform.
+     *
+     * @return HealthCheck response indicating the platform's health status.
+     */
+    public static DecodedJWT decode(String bearer, I_Keys keys) throws OopsException, SecretsException {
+        if (bearer==null ||bearer.isEmpty())
+            throw new OopsException("api.realm.bearer.missing", Response.Status.UNAUTHORIZED);
+        boolean isValid = Validate.isBearer(bearer);
+        if (!isValid) {
+            throw new OopsException("api.realm.bearer.trust", Response.Status.UNAUTHORIZED);
+        }
+        JWTGen jwtGen = new JWTGen();
+        try {
+            String token = bearer.substring("BEARER ".length());
+            return jwtGen.verify(keys.keys(), token);
+        } catch (Exception e) {
+            log.warn("realm.trust: {}", e.getMessage());
+            throw new OopsException("api.trust.reject", Response.Status.FORBIDDEN);
+        }
+    }
+
+}

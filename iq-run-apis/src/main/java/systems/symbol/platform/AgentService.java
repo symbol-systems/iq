@@ -6,19 +6,14 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.decide.I_Decide;
-import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.*;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
-import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
 import javax.script.Bindings;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 public class AgentService {
     ExecutiveIntent intent;
@@ -27,16 +22,6 @@ public class AgentService {
     Model model;
     Bindings state;
     I_Contents scripts;
-
-//    public AgentService(Platform platform, IRI self, Model model, I_Secrets secrets, Bindings state) throws StateException {
-//        this.self = self;
-//        this.model = model;
-//        this.intent = new ExecutiveIntent(self, model, model,new JSR233(self, model, secrets));
-//        this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
-////        this.intent.add(new Find(self, this.model, platform.getFactFinder()));
-//        this.state = state;
-//        this.scripts = new ModelScriptCatalog(this.model);
-//    }
 
     public AgentService(IRI self, RepositoryConnection connection, I_Secrets secrets, Bindings state) throws StateException, SecretsException {
         this.self = self;

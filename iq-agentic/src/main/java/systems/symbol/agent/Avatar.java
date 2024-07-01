@@ -35,64 +35,75 @@ public class Avatar implements I_Self, I_Intent {
 
     @Override
     @systems.symbol.RDF(IQ_NS.IQ + "a")
-    public Set<IRI> execute(IRI actor, Resource assistant, Bindings bindings) throws StateException {
-        Set<IRI> done = new HashSet<>();
+    public Set<IRI> execute(IRI state, Resource llm, Bindings bindings) throws StateException {
         try {
-            I_LLM<String> gpt = CommonLLM.gpt(assistant, facts, 2048, secrets);
-            if (gpt==null) return done;
-            processLLM(actor, assistant, gpt, bindings);
-        } catch (SecretsException | APIException | IOException e) {
+            return _execute(state, llm, bindings);
+        } catch (APIException | IOException | SecretsException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Set<IRI> _execute(IRI actor, Resource assistant, Bindings bindings) throws StateException, APIException, IOException, SecretsException {
+        Set<IRI> done = new HashSet<>();
+        I_LLM<String> gpt = CommonLLM.gpt(assistant, facts, 2048, secrets);
+        if (gpt==null) return done;
+        processLLM(actor, assistant, gpt, agent, bindings);
         done.add(actor);
         return done;
     }
 
-    private void processLLM(IRI actor, Resource assistant, I_LLM<String> gpt, Bindings bindings) throws SecretsException, IOException, APIException, StateException {
-        log.info("avatar.llm: {} @ {}", actor, agent.getStateMachine().getState());
+    private void processLLM(IRI actor, Resource assistant, I_LLM<String> gpt, I_Agent agent, Bindings bindings) throws IOException, APIException, StateException {
+        Resource state = agent.getStateMachine().getState();
+        log.info("avatar.llm: {} @ {} --> {}", actor, state, assistant);
+        Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
 
         AgentPrompt prompts = new AgentPrompt();
         Conversation ai = new Conversation();
 
-        String prompt = prompts.prompt(actor, agent.getStateMachine().getState(), this.facts);
-        ai.system(prompt);
+        String prompt = prompts.prompt(actor, state, this.facts);
+        ai.system(prompts.bind(prompt,my));
+//        prompts.copy(ai, chat);
         ai.user(chat.latest().getContent());
 
         String wrapper = prompts.prompt(assistant, this.facts);
         String choices = prompts.choices(facts, agent.getStateMachine().getTransitions());
+        bindings.put("choices", prompts.bind(choices, my));
 
         if (wrapper.isEmpty()) {
             chat.assistant(choices);
-            log.info("avatar.choices: {} -> {}", assistant, choices);
         } else {
-            bindings.put("choices", choices);
-            ai.system( prompts.prompt(wrapper, bindings) );
-            log.info("avatar.wrapper: {} == {} -> {}", assistant, wrapper, choices);
+            ai.system(prompts.bind(wrapper, my));
         }
         I_Assist<String> complete = gpt.complete(ai);
-        processIntent(agent, chat ,complete);
-        log.info("avatar.complete: {} == {}\n -> {}", actor, agent.getStateMachine().getState(), chat);
+        log.info("avatar.gpt: {} == {}", actor,  ai);
+        updateChat(agent, chat ,complete);
+        log.info("avatar.done: {} == {}", actor,  chat);
     }
 
-    private void processIntent(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
-//        log.info("avatar.intent: {} == {}", actor, agent.getStateMachine().getState());
-        if (ai.latest() instanceof IntentMessage) {
-            IntentMessage intent = (IntentMessage) ai.latest();
-            I_StateMachine<Resource> fsm = agent.getStateMachine();
-            if (fsm.getTransitions().contains(intent.getSelf())) {
-                if (intent.getSelf().equals(fsm.getState())) {
-                    log.info("avatar.nop: {}\n-> {}", fsm.getState(), intent.getContent());
-                    chat.assistant(intent.getContent());
-                } else {
-                    chat.add(intent);
-                    fsm.transition(intent.getSelf());
-                    log.info("avatar.intent: {} => {} -> {} \n-> {}", chat.messages().size(), fsm.getState(), intent.getIntent(), intent.getContent());
-                }
-            }
-        } else {
+    private void updateChat(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
+        if ( !(ai.latest() instanceof IntentMessage)) {
             String reply = ai.latest().getContent();
             log.info("avatar.reply: {} => {}", chat.messages().size(), reply);
             chat.assistant(reply);
+            return;
+        }
+        IntentMessage intent = (IntentMessage) ai.latest();
+        I_StateMachine<Resource> fsm = agent.getStateMachine();
+        if (!fsm.getTransitions().contains(intent.getSelf())) {
+            log.info("avatar.confused: {} => {}", intent.getIntent(), intent.getContent());
+            chat.assistant(intent.getContent());
+            return;
+        }
+        I_LLMessage<String> latest = chat.latest();
+        if (intent.getSelf().equals(fsm.getState())) {
+            log.info("avatar.same: {}\n-> {}", fsm.getState(), intent.getContent());
+            chat.assistant(intent.getContent());
+        } else if (latest.getRole() == I_LLMessage.RoleType.user) {
+            chat.messages().removeLast();
+            chat.add(new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.assistant, latest.getContent()));
+            log.info("avatar.user: {} => {}", fsm.getState(), chat.latest());
+        } else {
+            chat.add(intent);
         }
     }
 

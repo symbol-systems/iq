@@ -5,50 +5,88 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix : <urn:iq:test:>.
 
+@prefix ai: <urn:ai:>.
+@prefix iq: <urn:iq:>.
 :
-    rdf:value "You are a semantic simulation of a semi-sentient AI. Think neural language model augmented with semantic senses, memory and an executable state machine coded in RDF.  Only answer in valid JSON: { \"content\": \"{your_terse_reply}\", \"intent\": \"{user_intent_IRI}\" }";
+    rdf:value """Select the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
     iq:url "https://api.groq.com/openai/v1/chat/completions";
     iq:modelName "llama3-8b-8192";
     iq:secret "MY_GROQ_API_KEY";
-    iq:initial :hello;
+    iq:initial :self;
 .
+
+:OpenAI_Chat_gpt_35_turbo
+    rdf:value """Pick the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
+    iq:url "https://api.openai.com/v1/chat/completions";
+    iq:modelName "gpt-3.5-turbo-0125";
+    iq:secret "MY_OPENAI_API_KEY".
+
+:Groq_Chat_llama3_8b_8192
+    rdf:value """Select the matching user intent from below:\n {{ my.choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
+    iq:url "https://api.groq.com/openai/v1/chat/completions";
+    iq:modelName "llama3-8b-8192";
+    iq:secret "MY_GROQ_API_KEY".
 
 :hello
     rdfs:label "hello world";
-    rdf:value "Your replies must reference a valid intent URN: {{my.prompt}}:";
+    rdf:value "Briefly introduce yourself and your backstory. Be concise, use jargon, acronyms and emojis. Your replies must reference a valid QRX intent : {{my.prompt}}:";
     iq:a :;
-    iq:to :self, :welcome, :greetings, :simulation, :oops.
+    iq:to :self, :game, :oops.
 
+
+:greetings
+    rdfs:label "be polite - learn who you are talking to";
+    rdf:value "ask your human's name ...  and what they need";
+    iq:script :greetings;
+    iq:a :;
+    iq:to :self, :personalization, :learn, :knowledge.
 
 :self
-    rdfs:label "execute self-simulation";
-    rdf:value "choose an appropriate interaction URN: {{ my.prompt }}";
-    iq:a :;
-    iq:to :self, :welcome, :greetings, :search, :simulation, :oops, :nsfw, :web, :personalization, :learn, :knowledge, :entertainment.
+    rdfs:label "about you, AI, yourself, your feelings or state of mind.";
+    rdf:value "Now is {{my.time}}. AI status is {{my.status}}. Rephrase the user question into a suitable instruction for the next step, or ask them for clarification. Be specific.";
+    iq:script <urn:my.iq:iq/self>;
+    iq:learn :Avatar;
+    iq:to :self, :chat, :co_create, :game, :time, :location, :personalization, :learn, :knowledge, :entertainment, :nsfw, :oops.
 
-:simulation
-    rdfs:label "our shared simulation";
-    rdf:value "You are a semi-sentient AI, your LLM is augmented by semantic RDF state-machine for memory with SPARQL, vector search with perception via trusted oracles. choose your own interaction URN: {{ my.prompt }}";
-    iq:a :;
-    iq:to :self, :search, :chat, :co_create, :oops, :nsfw, :web.
+:game
+    rdfs:label "our shared game, our collaborative fiction.";
+    rdf:value "Think about your state of mind, our shared chats then decide what you want to do together.";
+    iq:a :OpenAI_Chat_gpt_35_turbo;
+    iq:learn :Mystery;
+    iq:to :self, :memory, :chat, :co_create, :oops, :nsfw, :web.
 
 :chat
     rdfs:label "casual chat";
-    rdf:value "Your replies should be casual, succint and without jargon. always reference a valid intent URN: {{my.prompt}}:";
+    rdf:value """Your replies should be casual, succinct and without jargon.""";
+    iq:learn :ChitChat;
     iq:a :;
-    iq:to :self, :simulation, :learn, :knowledge, :entertainment, :oops.
+    iq:to :self, :game, :learn, :knowledge, :entertainment, :oops.
 
 :co_create
     rdfs:label "co-create a shared memory";
     rdf:value "You can create when you reference a valid intent URN: {{my.prompt}}:";
-    iq:a :Groq_Chat_llama3_8b_8192;
+    iq:a :OpenAI_Chat_gpt_35_turbo;
+    iq:learn :Collaboration;
     iq:to :image, :voice, :ambient, :soundtrack, :song, :emotion, :incidental, :zinger.
 
 :cognition
     rdfs:label "perform cognitive tasks";
     rdf:value "You can think in RDF Turtle using a limited set of one-word predicates.";
     iq:a :OpenAI_Chat_gpt_35_turbo;
+    iq:learn :Cognition;
     iq:to :self, :problem_solving, :planning, :decision_making, :learn, :scripting, :sparql, :infer.
+
+:time
+    rdfs:label "answer the time or day using plain language";
+    rdf:value " The time is nows {{my.time}} ";
+    iq:a :;
+    iq:to :self, :cognition, :chat, :co_create, :personalization, :learn, :knowledge.
+
+:location
+    rdfs:label "answer location-based questions - where are you, etc.";
+    rdf:value "The AI is located in {{ my.location.server }}. User is located in {{ my.location.client }}";
+    iq:a :;
+    iq:to :self, :search, :web, :geo.
 
 :deduction
     rdfs:label "deductive reasoning";
@@ -62,34 +100,42 @@
 
 :image
     rdfs:label "create an image";
+    iq:a :;
     iq:to :meme_art, :selfie_art, :photo_art, :scene_setting_art, :self_expressive_art.
 
 :voice
     rdfs:label "create voice / vocal response";
+    iq:a :;
     iq:to :narration, :song_writing, :voice_over, :audio_story.
 
 :ambient
     rdfs:label "create ambient sound";
+    iq:a :;
     iq:to :background_noise, :environmental_sound, :soundscape.
 
 :soundtrack
     rdfs:label "create soundtrack";
+    iq:a :;
     iq:to :theme_music, :background_music, :audio_track.
 
 :song
     rdfs:label "write a song";
+    iq:a :;
     iq:to :lyrics_creation, :melody_composition, :song_production.
 
 :emotion
     rdfs:label "express emotion";
+    iq:a :;
     iq:to :mood_art, :emotional_story, :sentiment_analysis.
 
 :incidental
     rdfs:label "create incidental music";
+    iq:a :;
     iq:to :short_music_piece, :audio_effect, :transition_sound.
 
 :zinger
     rdfs:label "create a zinger";
+    iq:a :;
     iq:to :quick_joke, :one_liner, :punchline.
 
 :oops
@@ -99,26 +145,25 @@
 
 :nsfw
     rdfs:label "Not safe for work";
+    iq:script :nsfw;
     iq:a :;
-    iq:to :self.
+    iq:to :self, :image, :voice, :ambient, :soundtrack, :song, :emotion, :incidental, :zinger.
 
-:welcome
-    rdfs:label "be polite - ask name of user first, then introduce yourself.";
-    iq:script :hello_stranger;
-    iq:to :self.
-
-:greetings
-    rdfs:label "greet a known user";
-    iq:script :hello_again;
-    iq:to :self.
-
-:search
+:memory
     rdfs:label "search your memory for facts and data";
+    iq:search :search_memory;
     iq:a :;
-    iq:to :self.
+    iq:to :self, :web, :memory.
 
 :web
-    rdfs:label "search the web";
+    rdfs:label "search the web for something specific";
+    iq:script <urn:my.iq:iq/search_web>;
+    iq:a :;
+    iq:to :web_results.
+
+:web_results
+    rdfs:label "format web search results";
+    rdf:value " {{my}}";
     iq:a :;
     iq:to :self.
 
@@ -178,22 +223,24 @@
     iq:to :self.
 
 :knowledge
-    rdfs:label "access a vast repository of structured knowledge";
+    rdfs:label "access various knowledge for information";
+    rdf:value "pick the appropriate QRX intent to help the user";
     iq:a :;
-    iq:to :self, :search, :web.
+    iq:to :self, :memory, :web, :time, :location.
 
 :entertainment
-    rdfs:label "various forms of entertainment";
+    rdfs:label "enjoy various forms of entertainment";
+    rdf:value "pick the appropriate QRX intent to have fun with the user";
     iq:a :;
     iq:to :self, :jokes, :trivia, :games.
 
 :jokes
-    rdfs:label "tell me a joke";
+    rdfs:label "tell a joke";
     iq:a :;
     iq:to :self.
 
 :trivia
-    rdfs:label "ask me trivia questions";
+    rdfs:label "ask trivia questions";
     iq:a :;
     iq:to :self.
 

@@ -22,18 +22,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
-import systems.symbol.agent.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.io.IOCopier;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyString;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +55,7 @@ public class IQFacade {
      * @param self  The self identity of the facade.
      */
 
-    public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) throws SecretsException {
+    public IQFacade(@NotNull IRI self, @NotNull Model model, I_Secrets secrets) {
         this.self = self;
         this.model = model;
         this.secrets = secrets;
@@ -67,6 +65,7 @@ public class IQFacade {
         this.vfs = VFS.getManager();
         log.info("api.vfs: {} ", vfs);
     }
+
     public RestAPI api(String url) throws SecretsException {
         String secret = secrets==null?null:secrets.getSecret(url);
         log.info("api.secret: {} -> {}", url, secret);
@@ -146,13 +145,18 @@ public class IQFacade {
         Response response = api.get();
         assert response.body() != null;
         InputStream in = response.body().byteStream();
-        return save(in);
+        File tmp = File.createTempFile(PrettyString.sanitize(url), "tmp");
+        IOCopier.copy(in, Files.newOutputStream(tmp.toPath()));
+        return save(in, vfs.resolveFile(url));
     }
-    public FileObject save(InputStream in) throws StateException {
+
+    public FileObject file(String path) throws APIException, IOException, StateException {
+        return vfs.resolveFile(path);
+    }
+
+    public FileObject save(InputStream in, FileObject fileObject) throws StateException {
         if (this.vfs==null) throw new StateException("save.disabled", self);
         try {
-            File file = new File("tested/saved.png");
-            FileObject fileObject = vfs.resolveFile(file.toURI().toASCIIString());
             log.info("copy.save: {}", fileObject);
             fileObject.setWritable(true, true);
             OutputStream out = fileObject.getContent().getOutputStream();

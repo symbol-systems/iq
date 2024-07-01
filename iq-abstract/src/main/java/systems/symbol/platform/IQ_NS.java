@@ -11,7 +11,7 @@ import org.eclipse.rdf4j.model.util.Values;
 public interface IQ_NS {
     String IQ = "urn:iq:"; // reserved for internal use
     String AI = "urn:ai:"; // runtime foundational knowledge
-    String MY = "urn:my:"; // domain knowledge
+//    String MY = "urn:my:"; // domain knowledge
     String TEST = "urn:iq:test:"; // reserved for testing
 
     // Workflow-related IRIs

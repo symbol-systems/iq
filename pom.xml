@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
-  <version>0.78.0</version>
+  <version>0.78.1</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -55,7 +55,6 @@
     <module>iq-agentic</module>
     <module>iq-run-apis</module>
     <module>iq-persona</module>
-    <module>iq-trusted</module>
     <module>iq-analytics</module>
 <!--    <module>iq-dao</module>-->
   </modules>

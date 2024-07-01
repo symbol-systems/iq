@@ -33,7 +33,7 @@ public class Event extends GuardedAPI {
             return new OopsResponse("api.event#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.event#repository-missing", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.event#repository", Response.Status.BAD_REQUEST).asJSON();
         }
         if (Validate.isNonAlphanumeric(source)) {
             return new OopsResponse("api.event#source-missing", Response.Status.BAD_REQUEST).asJSON();
