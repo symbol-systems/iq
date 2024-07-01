@@ -103,7 +103,7 @@ public class BootstrapLoader implements I_Self {
 		File[] files = dir.listFiles();
 		if(files==null) throw new IOException("Directory listing failed: "+dir.getAbsolutePath());
 //		if (VERBOSE)
-		log.info("deploy.folder: "+dir.getAbsolutePath() + " & files: x" + files.length);
+		log.debug("deploy.folder: "+dir.getAbsolutePath() + " & files: x" + files.length);
 
 		// files first
         for (File file : files) {
@@ -162,7 +162,7 @@ public class BootstrapLoader implements I_Self {
 			} else deployRDF(localPath, inStream, format);
 			total_rdf_files++;
 		} else if (deployAssets && format == null) {
-			log.info("deploy.asset: {} @ {}", mime, localPath);
+			log.debug("deploy.asset: {} @ {}", mime, localPath);
 			deployAsset(localPath, inStream, mime);
 			total_asset_files ++;
 		}
@@ -224,7 +224,7 @@ public class BootstrapLoader implements I_Self {
         } finally {
             getConnection().commit();
         }
-		log.info("large.rdf.done: {} @ {}/s", stopwatch.summary(), linesRead/(stopwatch.getTotalTime()/1000));
+		log.debug("large.rdf.done: {} @ {}/s", stopwatch.summary(), linesRead/(stopwatch.getTotalTime()/1000));
 	}
 	protected void deployAsset(IRI scriptIRI, InputStream inStream, IRI mimeType) throws IOException, RDFParseException, RepositoryException {
 		getConnection().begin();

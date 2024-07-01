@@ -1,0 +1,18 @@
+PREFIX iq: <iq:>
+
+CONSTRUCT {
+    ?s iq:trusts ?t .
+    ?t ?p ?o.
+}
+WHERE {
+    {
+        ?s iq:trusts ?t .
+        ?t ?p ?o.
+    }
+    UNION
+    {
+        ?this iq:trusts ?s .
+        ?s iq:trusts+ ?t .
+        ?t ?p ?o.
+    }
+}

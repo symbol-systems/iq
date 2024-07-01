@@ -27,15 +27,14 @@ public class SelfTest  {
 
         String my_iq = System.getenv("MY_IQ");
         assert my_iq == null || my_iq.isEmpty();
-        assert I_Self.name().equals("my.iq");
-        assert I_Self.self().getSelf().stringValue().equals("urn:my.iq:");
+        assert I_Self.name().equals("iq");
+        assert I_Self.self().getSelf().stringValue().equals("iq:");
     }
 
     @Test
     public void testTrust() {
-
-        IRI correct = Values.iri("urn:my.iq:hello");
-        IRI wrong = Values.iri("urn:my.iq#oops");
+        IRI correct = Values.iri("iq:hello");
+        IRI wrong = Values.iri("my:oops");
         assert I_Self.trust(correct);
         assert !I_Self.trust(wrong);
     }

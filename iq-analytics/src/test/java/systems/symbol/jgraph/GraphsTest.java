@@ -34,11 +34,11 @@ public class GraphsTest {
         ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
         assert ctx!=null;
         log.info("iq.graph.loaded:" +ctx);
-        alice = repository.getValueFactory().createIRI("urn:iq:test:Alice");
-        bob = repository.getValueFactory().createIRI("urn:iq:test:Bob");
-        charlie = repository.getValueFactory().createIRI("urn:iq:test:Charlie");
-        delta = repository.getValueFactory().createIRI("urn:iq:test:Delta");
-        knows = repository.getValueFactory().createIRI("urn:iq:test:knows");
+        alice = repository.getValueFactory().createIRI("iq:test:Alice");
+        bob = repository.getValueFactory().createIRI("iq:test:Bob");
+        charlie = repository.getValueFactory().createIRI("iq:test:Charlie");
+        delta = repository.getValueFactory().createIRI("iq:test:Delta");
+        knows = repository.getValueFactory().createIRI("iq:test:knows");
 
 //        triples = repository.getTripleSource();
     }

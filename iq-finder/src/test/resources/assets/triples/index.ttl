@@ -1,5 +1,5 @@
-@prefix    : <urn:iq:test:>.
-@prefix test: <urn:iq:test:>.
+@prefix    : <iq:test:>.
+@prefix test: <iq:test:>.
 
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix cnt: <http://www.w3.org/2011/content#>.
@@ -33,25 +33,25 @@
     skos:prefLabel "Home";
 .
 
-<urn:iq:test:hbs/hello.hbs>
+<iq:test:hbs/hello.hbs>
     a skos:Concept;
     skos:prefLabel "hello world";
     skos:inScheme :TestCase;
 .
 
-<urn:iq:test:hbs/hru.hbs>
+<iq:test:hbs/hru.hbs>
     a skos:Concept;
     skos:prefLabel "how are you";
     skos:inScheme :TestCase;
 .
 
-<urn:iq:test:hbs/index.hbs>
+<iq:test:hbs/index.hbs>
     a skos:Concept;
     skos:prefLabel "Home Sweet Home";
     skos:inScheme :TestCase;
 .
 
-<urn:iq:test:queries/all.sparql>
+<iq:test:queries/all.sparql>
     a skos:Concept;
     skos:prefLabel "all sparql";
     skos:prefLabel "all sparql";

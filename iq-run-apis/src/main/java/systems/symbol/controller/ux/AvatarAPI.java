@@ -60,17 +60,17 @@ public class AvatarAPI extends RealmAPI {
             try (RepositoryConnection connection2 = myRepo.getConnection()) {
                 AgentBuilder builder = new AgentBuilder(agent, bindings, realm.getSecrets());
                 builder.setGround(connection).setThoughts(connection2).executive().remodel().sparql(connection);
-//                RDFDump.dump(builder.getThoughts());
+
                 SearchDecision search = builder.decision(realm.getFinder(), chat);
                 ChainOfCommand control = builder.decision(search);
                 IntentDecision agentic = builder.decision(chat);
                 control.add(agentic);
                 I_Agent avatar = builder.build(chat,control,jwt);
                 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
-//                RDFDump.dump(avatar.getThoughts());
+
                 avatar.start();
                 log.info("ux.avatar.done: {} x {} facts", avatar.getStateMachine().getState(), avatar.getThoughts().size());
-//                avatar.memorize(connection2);
+
                 log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(), stopwatch);
                 return new ChatResponse(chat).asJSON();
             }

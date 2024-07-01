@@ -80,7 +80,7 @@ System.out.println("bulk.loader.namespaces: " + PrettyString.toString(objects));
         loader.deploy(assetsRoot);
         System.out.println("bulk.loader.scripts.from: " + assetsRoot.getAbsolutePath());
 
-        IRI iri = vf.createIRI("urn:iq:test:hbs/hello");
+        IRI iri = vf.createIRI("iq:test:hbs/hello");
         assert connection.hasStatement(iri, null, null, false, loader.getSelf());
         System.out.println("bulk.loader.scripts.found" );
     }

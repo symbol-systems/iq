@@ -1,10 +1,10 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 
 :   a iq:Agent;
-    <urn:iq:research-rss> <https://machinelearningmastery.com/blog/feed/>;
+    <iq:research-rss> <https://machinelearningmastery.com/blog/feed/>;
     iq:initial :ideation.
 

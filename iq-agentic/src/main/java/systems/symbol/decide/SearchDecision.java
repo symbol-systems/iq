@@ -45,10 +45,11 @@ public class SearchDecision implements I_Delegate<Resource>, I_Decide<Resource> 
         CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
         String content = avatar.getConversation().latest().getContent();
         Collection<IRI> found = finder.search(content, maxResults, minScore);
-        log.info("search.agent: {} -> {}", content, found);
         Collection<Resource> transitions = agent.getStateMachine().getTransitions();
+        log.info("search.agent: {} -> {}", found, transitions);
         for (IRI iri : found) {
             boolean contains = transitions.contains(iri);
+            log.info("search.iri: {} -> {}", iri, contains);
             if (contains) {
                 future.complete(() -> iri);
                 break;

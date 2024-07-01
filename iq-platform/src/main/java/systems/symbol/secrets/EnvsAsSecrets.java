@@ -7,7 +7,7 @@ public class EnvsAsSecrets implements I_Secrets {
     private final Logger log = LoggerFactory.getLogger(getClass());
     public String getSecret(String key) {
         String v = System.getenv(key);
-        log.info("env.getSecret: {} == {}", key, v);
+        log.debug("env.getSecret: {} == {}", key, v);
         return v;
     }
 }

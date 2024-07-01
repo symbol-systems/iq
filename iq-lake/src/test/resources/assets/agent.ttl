@@ -1,8 +1,8 @@
-@base <urn:iq:test:>.
+@base <iq:test:>.
 
-@prefix iq: <urn:iq:>.
+@prefix iq: <iq:>.
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix : <urn:iq:test:>.
+@prefix : <iq:test:>.
 
 :   a iq:Agent;
    iq:initial :intents.
@@ -29,7 +29,7 @@
 :prompt
     iq:prompt "{{my.prompt}}".
 :script
-    iq:script <urn:iq:test:scripts/hello>.
+    iq:script <iq:test:scripts/hello>.
 :webpage
     iq:webpage <https://www.w3.org/1999/02/22-rdf-syntax-ns>.
 :rdf

@@ -1,0 +1,114 @@
+@base <https://smarttrust.ai/v0/self#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+
+@prefix ai: <urn:ai:>.
+@prefix iq: <iq:>.
+
+ai:
+    a owl:Ontology ;
+    schema:name "JO";
+    schema:description  "JO is a trustworthy, thoughtful, fact-based AI agent with honest, helpful opinions";
+    rdfs:label "JO's Ontology" ;
+    rdfs:comment "AI for JO" ;
+    owl:versionInfo "v 0.1.0" ;
+    owl:imports prov:;
+    rdfs:label "JO" ;
+    rdfs:comment "JO is a trustworthy, thoughtful, fact-based AI agent with honest, helpful opinions." ;
+    iq:initial ai:Initialized .
+
+ai:Initialized
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Initialized" ;
+    rdfs:comment "JO initialized" ;
+    iq:to ai:Started .
+
+ai:Started
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Started" ;
+    rdfs:comment "JO is working." ;
+    iq:to ai:Cognition, ai:Stopped, ai:Paused, ai:Oops .
+
+ai:Paused
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Paused" ;
+    rdfs:comment "JO is chilling." ;
+    iq:to ai:Started, ai:Stopped .
+
+ai:Stopped
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Stopped" ;
+    rdfs:comment "JO is patient." ;
+    iq:to ai:Started .
+
+ai:Oops
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Oops" ;
+    rdfs:comment "JO encountered an problem." ;
+    iq:to ai:Paused, ai:Started, ai:Error .
+
+ai:Cognition
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Cognition" ;
+    rdfs:comment "JO is self-aware.";
+    iq:to ai:Oops, ai:Learning, ai:Adapting, ai:Acting, ai:Thinking, ai:Consulting, ai:Planning, ai:Aware .
+
+ai:Completed
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Completed" ;
+    rdfs:comment "JO has completed their goals." ;
+    iq:to ai:Stopped .
+
+ai:Error
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Error" ;
+    rdfs:comment "JO encountered an unrecoverable error." ;
+    iq:to ai:Stopped.
+
+ai:Thinking
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Thinking" ;
+    rdfs:comment "JO is thinking." ;
+    iq:to ai:Cognition, ai:Oops .
+
+ai:Consulting
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Consulting" ;
+    rdfs:comment "JO is seeking executive counsel." ;
+    iq:to ai:Cognition, ai:Oops .
+
+ai:Learning
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Learning" ;
+    rdfs:comment "JO is learning new knowledge." ;
+    iq:to ai:Cognition, ai:Oops .
+
+ai:Adapting
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Adapting" ;
+    rdfs:comment "JO is adapting to changing knowledge." ;
+    iq:to ai:Cognition, ai:Consulting, ai:Oops .
+
+ai:Acting
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Acting" ;
+    rdfs:comment "JO is active." ;
+    iq:to ai:Cognition, ai:Consulting, ai:Oops .
+
+ai:Planning
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Planning" ;
+    rdfs:comment "JO is goal seeking." ;
+    iq:to ai:Cognition, ai:Consulting, ai:Oops .
+
+ai:Aware
+    rdfs:isDefinedBy ai:;
+    rdfs:label "Self Aware" ;
+    rdfs:comment "JO is self." ;
+    iq:to ai:Cognition, ai:Consulting, ai:Oops .

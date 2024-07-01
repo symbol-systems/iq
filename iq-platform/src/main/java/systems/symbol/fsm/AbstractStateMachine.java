@@ -127,7 +127,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
         boolean ok = true;
         for (I_StateListener<T> listener : listeners) {
                 ok = ok & listener.onTransition(from, to);
-            log.info("notified: {} x {} = {}", listener, to, ok);
+            log.info("afterTransition: {} -> {} = {}", from, to, ok);
         }
         return ok;
     }

@@ -150,7 +150,7 @@ public class AgentBuilder implements I_Self {
     public I_Agent build(I_Assist<String> chat, I_Decide<Resource> manager, DecodedJWT jwt) throws SecretsException, StateException {
         log.info("builder.chat: {} -> {} = {}", self, chat.latest(), manager.getClass().getSimpleName());
         bindings.put("messages", chat.messages());
-        bindings.put("message", chat.latest());
+        bindings.put("latest", chat.latest());
         bindings.put("jwt", jwt);
         bindings.put("name", jwt.getClaim("name"));
         bindings.put(RESULTS, new ArrayList<>());
@@ -170,6 +170,11 @@ public class AgentBuilder implements I_Self {
 
     public AgentBuilder setThoughts(RepositoryConnection connection) {
         this.thoughts = new LiveModel(connection);
+        return this;
+    }
+
+    public AgentBuilder setThoughts(Model model) {
+        this.thoughts = model;
         return this;
     }
 }

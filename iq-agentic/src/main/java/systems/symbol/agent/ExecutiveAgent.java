@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
     I_Decide<Resource> manager;
-//    Set<Resource> seen = new HashSet<>();
 
     /**
      * The ExecutiveAgent makes simple decisions and delegates other to manager.
@@ -43,7 +42,6 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     }
 
     public void resume() {
-//        this.seen.clear();
     }
 
     public void setManager(I_Decide<Resource> manager) {
@@ -62,7 +60,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         log.info("agent.onTransition: {} @ {} ==> {} --> {}", self, getStateMachine().getState(), from, to);
         Set<IRI> executed = execute(getSelf(), to, bindings);
         Resource next = decide();
-        log.info("agent.decided: {} <-> {} && {} -> {} --> {}", from, to, getStateMachine().getState(), next, executed);
+        log.info("agent.decided: {} --> {} && {} -> {} --> {}", from, to, getStateMachine().getState(), next, executed);
         if (next==null) return false; // don't veto, we may try again
         if (getStateMachine().getState().equals(next)) return false;
         getStateMachine().transition(next);

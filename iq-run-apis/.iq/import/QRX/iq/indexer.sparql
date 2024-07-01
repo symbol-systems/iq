@@ -1,0 +1,10 @@
+SELECT ?this ?label ?comment ?content
+WHERE {
+    ?this rdfs:label ?label.
+    OPTIONAL {
+        ?this rdfs:comment ?comment.
+    }
+    OPTIONAL {
+        ?this rdf:value ?content.
+    }
+}

@@ -23,8 +23,7 @@ public class IndexHelper {
                 if (!k.equals("this"))
                     s$.append( bindingSet.getValue(k).stringValue()).append(" ");
             }
-
-            log.debug("indexing: {} -> {}", id, s$);
+//            log.debug("indexing: {} -> {}", id, s$);
             finder.store(id, s$.toString());
             count++;
         }

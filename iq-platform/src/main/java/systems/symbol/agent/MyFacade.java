@@ -37,6 +37,7 @@ public class MyFacade {
     public static final String PROMPT = "prompt";
     public static final String TIME = "time";
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");
 
     public static List<Map<String, Object>> results(Bindings bindings, List<Map<String, Object>> results) {
         Object o = bindings.get(MY);
@@ -65,9 +66,7 @@ public class MyFacade {
             bindings.put(MY, my);
             log.debug("my.bind: {}", my.keySet());
         }
-//        MyFacade.dump(bindings, System.out);
-
-        my.put(TIME, dateFormat.format(new Date()));
+        my.put(TIME, humanDateFormat.format(new Date()));
         my.put(SELF, self.stringValue());
         return bindings;
     }

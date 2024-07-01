@@ -24,7 +24,7 @@ class RemodelsTest extends AbstractIntentTest {
     public static List<Map<String,Object>> fakeResults() {
         List<Map<String, Object>> results = new ArrayList<>();
         Bindings row = new SimpleBindings();
-        row.put("id", "urn:iq:test:hello.world");
+        row.put("id", "iq:test:hello.world");
         row.put("label", "Hello World");
         results.add(row);
         return results;

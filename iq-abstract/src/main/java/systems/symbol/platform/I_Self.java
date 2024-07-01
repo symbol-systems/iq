@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public interface I_Self {
 
-        String CODENAME = "MY.IQ";
+        String CODENAME = "iq";
 
         /**
          * The canonical entity known as IRI .
@@ -42,14 +42,13 @@ public interface I_Self {
 
 
         static I_Self self() {
-            return () -> Values.iri("urn:"+name()+":");
+            return () -> Values.iri(name()+":");
         }
 
 
         static String name() {
-                return System.getenv(CODENAME) == null ? CODENAME.toLowerCase() : System.getenv(CODENAME);
+                return System.getenv("MY_IQ") == null ? CODENAME : System.getenv("MY_IQ");
         }
-
 
         static boolean trust(I_Self self) {
                 return trust(self.getSelf());

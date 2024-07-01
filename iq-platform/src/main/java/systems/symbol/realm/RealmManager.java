@@ -38,7 +38,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     protected Map<IRI, Realm> realms = new HashMap<>();
 
     public RealmManager() throws Exception {
-        this(new File(IQ.toLowerCase()));
+        this(new File("."+IQ.toLowerCase()));
     }
 
     public RealmManager(File home) throws Exception {
@@ -71,7 +71,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
 
     public I_Realm getRealm(IRI self) throws SecretsException {
         Realm realm = realms.get(self);
-        log.info("realm.found: {} -> {}", realms.keySet(), realm!=null);
+        log.debug("realm.found: {} -> {}", realms.keySet(), realm!=null);
         if (realm!=null) return realm;
         Repository repo = getRepository(self.stringValue());
 

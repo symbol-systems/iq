@@ -284,13 +284,13 @@ class LoggingInterceptor implements Interceptor {
     public @NotNull Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         // Clone the request to log its body
-        Request copy = request.newBuilder().build();
-        if (copy.body() != null) {
-            Buffer buffer = new Buffer();
-            copy.body().writeTo(buffer);
-            String requestBodyString = buffer.readUtf8();
-            System.out.println("api.debug: " + requestBodyString);
-        }
+//        Request copy = request.newBuilder().build();
+//        if (copy.body() != null) {
+//            Buffer buffer = new Buffer();
+//            copy.body().writeTo(buffer);
+//            String requestBodyString = buffer.readUtf8();
+////            System.out.println("api.debug: " + requestBodyString);
+//        }
 
         return chain.proceed(request);
     }

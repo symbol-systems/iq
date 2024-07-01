@@ -73,7 +73,7 @@ public class Select implements I_Intent, I_Self {
             Bindings bindings = MyFacade.rebind(actor, state, my);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
             log.info("sparql.select: {}", sparql);
-            if (sparql==null||sparql.isEmpty()) return null;
+            if (sparql==null||sparql.isEmpty()) return done;
             TupleQuery prepared = iq.getConnection().prepareTupleQuery(sparql);
             List<Map<String, Object>> results = SPARQLMapper.toMaps(prepared.evaluate());
             MyFacade.results(bindings, results);

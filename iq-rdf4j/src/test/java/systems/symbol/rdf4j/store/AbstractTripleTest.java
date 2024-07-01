@@ -23,8 +23,8 @@ public class AbstractTripleTest {
         vf = assets.getValueFactory();
 
         iriTestCase = vf.createIRI(IQ_NS.TEST +"TestCase");
-        iriSparqlQuery = vf.createIRI("urn:iq:test:queries/all");
-        iriHBSTemplate = vf.createIRI("urn:iq:test:hbs/index");
+        iriSparqlQuery = vf.createIRI("iq:test:queries/all");
+        iriHBSTemplate = vf.createIRI("iq:test:hbs/index");
     }
 
     @AfterMethod

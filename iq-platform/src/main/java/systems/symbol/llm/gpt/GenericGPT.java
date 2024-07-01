@@ -69,14 +69,14 @@ public class GenericGPT implements I_LLM<String> {
             if (responseBody != null) {
                 body = responseBody.string();
                 GPTResponse completion = om.readValue(body, GPTResponse.class);
-                log.info("llm.gpt.status: {} x {} tokens", response.code(), completion.usage.total_tokens);
+                log.debug("llm.gpt.status: {} x {} tokens", response.code(), completion.usage.total_tokens);
                 if (completion!=null && completion.choices!=null && !completion.choices.isEmpty()) {
                     for (int c = 0; c<completion.choices.size();c++) {
                         GPTResponse.Choice choice = completion.choices.get(c);
                         processMessage(chats, choice.message);
                     }
                     history.add(completion);
-                    log.info("llm.gpt.complete: {}", chats.latest());
+                    log.debug("llm.gpt.complete: {}", chats.latest());
                 }
             }
         } catch (Exception e) {

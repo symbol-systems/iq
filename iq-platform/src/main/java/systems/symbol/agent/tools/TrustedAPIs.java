@@ -21,16 +21,6 @@ public class TrustedAPIs {
     public static I_Secrets trusted(Model model, IRI agent, I_Secrets _secrets) throws SecretsException {
         APISecrets secrets = new APISecrets(_secrets);
         Optional<Literal> name = Models.getPropertyLiteral(model, agent, IQ_NS.NAME);
-//        log.warn("trusted.name: {} -> {} == {}", agent, IQ_NS.NAME, name);
-//        Iterable<Statement> statements = model.getStatements(agent, IQ_NS.NAME, null);
-//        for (Statement statement : statements) {
-//            log.warn("\t: {} = {}", statement.getPredicate(), statement.getObject());
-//        }
-//        try {
-//            RDFDump.dump(model, Files.newOutputStream(new File("dump-trusted.ttl").toPath()), RDFFormat.N3);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
         if (!name.isPresent()) {
             log.warn("missing secret name: {}", agent);
             return secrets;

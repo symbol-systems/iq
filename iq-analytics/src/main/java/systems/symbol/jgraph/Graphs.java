@@ -129,7 +129,7 @@ public class Graphs {
 
 	public static Model scores(Map<Object, Double> scores, String type, Model model) {
 		ValidatingValueFactory vf = new ValidatingValueFactory();
-		IRI scoreIRI = vf.createIRI("urn:iq:graph:"+type.toLowerCase(Locale.ROOT)+":score");
+		IRI scoreIRI = vf.createIRI("iq:graph:"+type.toLowerCase(Locale.ROOT)+":score");
 		for(Object s: scores.keySet()) {
 			Double score = scores.get(s);
 			if (score!=null) {
