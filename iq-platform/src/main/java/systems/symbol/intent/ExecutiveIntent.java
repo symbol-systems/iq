@@ -49,7 +49,7 @@ public ExecutiveIntent(IRI self, Model facts, Model thoughts, I_Intent intent) {
 boot(self, thoughts);
 this.facts = facts;
 add(intent);
-log.info("exec.thoughts: {} -> {} & {}-> {}", self, facts.size(), thoughts.size(), intents.keySet());
+log.info("exec.intent: {} -> {} & {}", self, facts.size(), thoughts.size());
 }
 
 public void boot(@NotNull IRI self, Model model) {
