@@ -12,6 +12,8 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.RDFResponse;
 import systems.symbol.finder.FactFinder;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
@@ -27,13 +29,13 @@ private final double DEFAULT_SCORE = 0.65;
 public Response find(@PathParam("finder")String finder, @PathParam("repo")String repo,
 @QueryParam("query") String query,
 @QueryParam("score") double score, @QueryParam("max") int max,
-@HeaderParam("Authorization") String auth) throws IOException {
+@HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("kb.find#protected");
 return new OopsResponse("api.iq.find#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 }
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.iq.find.indexer#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.iq.find.indexer#repository", Response.Status.BAD_REQUEST).asJSON();
 }
 if (Validate.isNonAlphanumeric(finder)) {
 return new OopsResponse("api.iq.find.indexer#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
@@ -41,17 +43,13 @@ return new OopsResponse("api.iq.find.indexer#finder-invalid", Response.Status.BA
 if (Validate.isMissing(query)) {
 return new OopsResponse("api.iq.find.indexer#query-missing", Response.Status.BAD_REQUEST).asJSON();
 }
-FactFinder factFinder = platform.getFactFinder(finder);
+I_Realm realm = platform.getRealm(repo);
+if (realm==null) return new OopsResponse("api.iq.find.realm", Response.Status.NOT_FOUND).asJSON();
+Repository repository = realm.getRepository();
+if (repository == null) return new OopsResponse("api.iq.find#repository", Response.Status.NOT_FOUND).asJSON();
+FactFinder factFinder = realm.getFinder();
 if (factFinder == null) {
 return new OopsResponse("api.iq.find.indexer#finder-missing", Response.Status.NOT_FOUND).asJSON();
-}
-Repository repository = platform.getRepository(repo);
-if (repository == null) {
-return new OopsResponse("api.iq.find.indexer#repository-missing", Response.Status.NOT_FOUND).asJSON();
-}
-//System.out.println("api.iq.find.indexer.repository: "+repository.isInitialized()+" @ "+repository.getDataDir().getAbsolutePath());
-if (!repository.isInitialized()) {
-return new OopsResponse("api.iq.find.indexer#repository-offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
 }
 
 max = max==0?10:Math.min(Math.max(max, 1), 10); // clamp 1-10

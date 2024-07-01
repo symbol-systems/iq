@@ -23,6 +23,8 @@ import systems.symbol.finder.FactFinder;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQConnection;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.util.Stopwatch;
 
@@ -63,7 +65,7 @@ public Response search(
 @QueryParam("maxResults") int maxResults,
 @QueryParam("relevancy") double relevancy,
 @Context UriInfo uriInfo,
-@HeaderParam("Authorization") String auth) throws IOException {
+@HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 return doSearch(repo, model, query, maxResults, relevancy, uriInfo, auth);
 }
 
@@ -81,7 +83,7 @@ public Response searchModel(
 @QueryParam("maxResults") int maxResults,
 @QueryParam("relevancy") double relevancy,
 @Context UriInfo uriInfo,
-@HeaderParam("Authorization") String auth) throws IOException {
+@HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 return doSearch(repo, model, query, maxResults, relevancy, uriInfo, auth);
 }
 
@@ -92,38 +94,31 @@ String query,
 int maxResults,
 double relevancy,
 UriInfo uriInfo,
-String auth) throws IOException {
+String auth) throws SecretsException {
 
 Stopwatch stopwatch = new Stopwatch();
 log.info("ux.find: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
 
-DecodedJWT jwt;
-try {
-jwt = authenticate(auth);
-} catch (OopsException e) {
-return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
-}
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.ux.find#repository-invalid", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.find#repository", Response.Status.BAD_REQUEST).asJSON();
 }
+I_Realm realm = platform.getRealm(repo);
+if (realm==null) return new OopsResponse("api.ux.find.realm", Response.Status.NOT_FOUND).asJSON();
+DecodedJWT jwt;
+try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+
 if (!Validate.isURN(model)) {
-model = model.isEmpty() ?platform.getSelf()+"ux/find":platform.getSelf()+model;
+model = model.isEmpty() ?realm.getSelf()+"ux/find":realm.getSelf()+model;
 }
 log.info("ux.find.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
-
-// Get the text finder instance from the platform
-FactFinder searcher = platform.getFactFinder(repo);
+FactFinder searcher = realm.getFinder();
 if (searcher == null) {
 return new OopsResponse("api.ux.find#finder-missing", Response.Status.NOT_FOUND).asJSON();
 }
-
-// Get the RDF repository instance from the platform
-Repository repository = platform.getRepository(repo);
+Repository repository = realm.getRepository();
 if (repository == null) {
-return new OopsResponse("api.ux.find#repository-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.find#repository", Response.Status.NOT_FOUND).asJSON();
 }
-
-// Check if the repository is initialized
 if (!repository.isInitialized()) {
 return new OopsResponse("api.ux.find#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
 }
@@ -131,14 +126,14 @@ return new OopsResponse("api.ux.find#repository.offline", Response.Status.SERVIC
 log.info("timer.start: {}", stopwatch.summary());
 // Use the platform SPARQL repository
 try (RepositoryConnection connection = repository.getConnection()) {
-IQConnection iq = new IQConnection(platform.getSelf(), connection);
+IQConnection iq = new IQConnection(realm.getSelf(), connection);
 IQScriptCatalog library = new IQScriptCatalog(iq);
 
 // Set a default relevancy threshold if not provided
 if (relevancy < 0.1) relevancy = 0.5;
 
 // Find matches using the text finder
-List<EmbeddingMatch<TextSegment>> matches = searcher.search(query, maxResults, relevancy);
+List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
 log.info("ux.find.matches: {} @ {}", matches.size(), stopwatch.summary());
 
 StringBuilder theseMatches = new StringBuilder();

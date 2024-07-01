@@ -1,30 +1,26 @@
 package systems.symbol.controller.responses;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.agent.I_Facade;
 import systems.symbol.controller.responses.ld.LDAdapter;
-import systems.symbol.controller.responses.ld.RdfJsonLdAdapter;
 
 import javax.script.Bindings;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
-public class LDResponse implements I_Response {
+public class LDResponse implements I_Response, I_Facade {
 protected final static Logger log = LoggerFactory.getLogger(LDResponse.class);
 
 GraphQuery query;
 public LDResponse(GraphQuery query) throws Exception {
 this.query = query;
+}
+
+public Bindings getBindings() {
+return LDAdapter.toJSONLD(this.query.evaluate());
 }
 
 public Response asJSON() {

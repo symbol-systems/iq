@@ -1,8 +1,10 @@
 package systems.symbol.rdf4j.util;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
@@ -55,7 +57,6 @@ public class RDFPrefixer {
 		ns.put("dcat", DCAT.NAMESPACE);
 		ns.put("xsd", XSD.NAMESPACE);
 		ns.put("iq", IQ_NS.IQ);
-		ns.put("my", IQ_NS.MY);
 		ns.put("prov", PROV.NAMESPACE);
 		ns.put("void", VOID.NAMESPACE);
 		ns.put("schema", "http://schema.org/");
@@ -111,5 +112,11 @@ public class RDFPrefixer {
 			return RDFPrefixer.getSPARQLPrefix(connection) + sparql;
 		}
 		return sparql;
+	}
+
+	public static GraphQuery describe(RepositoryConnection connection, IRI thing) {
+		String sparql = RDFPrefixer.toSPARQL(connection, "DESCRIBE <" + thing + ">");
+		if (sparql==null) return null;
+		return connection.prepareGraphQuery(sparql);
 	}
 }

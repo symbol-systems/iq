@@ -47,7 +47,6 @@ private void init() {
 om.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 }
 
-
 public I_LLMConfig getConfig() {
 return config;
 }
@@ -77,7 +76,7 @@ GPTResponse.Choice choice = completion.choices.get(c);
 processMessage(chats, choice.message);
 }
 history.add(completion);
-log.info("llm.gpt.complete: {}", chats.messages().size());
+log.info("llm.gpt.complete: {}", chats.latest());
 }
 }
 } catch (Exception e) {
@@ -100,12 +99,15 @@ try {
 SimpleBindings decision = om.readValue(block, SimpleBindings.class);
 String content = String.valueOf(decision.get("content"));
 String intent = String.valueOf(decision.get("intent"));
-log.info("llm.gpt.intent: {} => {}", intent, content);
-if (intent != null && intent.indexOf(":")>0) {
-chat.add(new IntentMessage(intent, role, content));
+if (intent != null) {
+if (intent.indexOf(":")>0)
+   chat.add(new IntentMessage(intent, role, content));
+else
+chat.add(new TextMessage(role, content));
 } else {
 chat.add(new TextMessage(role, block));
 }
+log.info("llm.gpt.intent: {} => {}", intent, chat.latest());
 } catch (JsonProcessingException e) {
 log.error("llm.gpt.error: {}", block, e);
 chat.add(new TextMessage(role, block));

@@ -26,7 +26,7 @@ import java.util.Set;
  * The {@code FactFinder} class extends {@link TextFinder} and provides additional methods
  * for searching facts in a RDF repository based on text embeddings.
  */
-public class FactFinder extends TextFinder implements I_FactFinder {
+public class FactFinder extends TextFinder {
 private static final Logger log = LoggerFactory.getLogger(FactFinder.class);
 DynamicModelFactory dmf = new DynamicModelFactory();
 Repository repository;
@@ -58,7 +58,7 @@ this.repository = repository;
 }
 
 public Model search(String text, String query) {
-return search(text, query, maxResults, relevancy);
+return search(text, query, maxResults, minScore);
 }
 
 
@@ -103,7 +103,7 @@ return search(model, text, query, maxResults, minScore);
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(Model model, String text, GraphQuery query, int maxResults, double minScore) {
-List<EmbeddingMatch<TextSegment>>  found = search(embed(text), maxResults, minScore);
+List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
 if (found.isEmpty()) return model;
 
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
@@ -132,7 +132,7 @@ return model;
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(Model model, String text, RepositoryConnection connection, int maxResults, double minScore) {
-List<EmbeddingMatch<TextSegment>>  found = search(embed(text), maxResults, minScore);
+List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
 if (found.isEmpty()) return model;
 Set<String> dupes = new HashSet<>();
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
@@ -148,10 +148,5 @@ dupes.add(id);
 }
 log.info("search.found: {} -> {}", found.size(), model.size());
 return model;
-}
-
-@Override
-public Model find(String semantic_prompt) {
-return null;
 }
 }

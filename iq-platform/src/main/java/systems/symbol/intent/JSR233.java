@@ -10,7 +10,6 @@ import systems.symbol.agent.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;
-import systems.symbol.rdf4j.sparql.IQScripts;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
@@ -85,6 +84,8 @@ log.info("script.result: {} -> {} x {}", state, result, done.size());
 } catch (ScriptException e) {
 log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName());
 throw new StateException(e.getMessage(), state, e);
+} catch (SecretsException e) {
+throw new StateException(e.getMessage(), state, e);
 }
 return done;
 }
@@ -98,24 +99,16 @@ return done;
  * @return The result of the script execution.
  * @throws ScriptException If an error occurs during script execution.
  */
-Object executeScript(Literal script, IRI actor, Resource state, Bindings my) throws ScriptException {
+Object executeScript(Literal script, IRI actor, Resource state, Bindings my) throws ScriptException, SecretsException {
 String mime = SupportedScripts.toMimeType(script.getDatatype());
 if (mime == null) return null;
 ScriptEngine engine = engineManager.getEngineByMimeType(mime);
 if (engine == null) {
 return null;
 }
-
-try {
-engine.setBindings( MyFacade.bind(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+engine.setBindings( MyFacade.trust(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
 
 log.debug("script.eval: {} @ {}", script.stringValue(), state.stringValue() );
 return engine.eval(script.stringValue());
-} catch (ScriptException e) {
-//log.error("script.error: {} @ {} x {}", e.getFileName(),e.getColumnNumber(), e.getLineNumber(), e.getCause() );
-throw new ScriptException(e.getMessage()+" -> "+ e.getFileName() +" @" +e.getColumnNumber() +":"+ e.getLineNumber());
-} catch (SecretsException e) {
-throw new ScriptException(e.getMessage()+" -> "+actor);
-}
 }
 }

@@ -5,7 +5,6 @@ import systems.symbol.platform.I_Self;
 
 import javax.script.Bindings;
 
-public interface I_Agentic<T> extends I_Self {
-Bindings getBindings();
+public interface I_Agentic<T> extends I_Self, I_Facade {
 I_Assist<T> getConversation();
 }

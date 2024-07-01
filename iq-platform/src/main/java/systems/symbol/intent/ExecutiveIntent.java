@@ -10,11 +10,7 @@ import systems.symbol.rdf4j.IRIs;
 
 import javax.script.Bindings;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static systems.symbol.platform.Provenance.generated;
+import java.util.*;
 
 /**
  * The ExecutiveIntent class represents an intent executor capable of executing sets of operations based on the
@@ -93,43 +89,35 @@ return null;
 public Set<IRI> getIntents() {
 return intents.keySet();
 }
-
-/**
- * Performs an intent for the RDF triple provided in the Statement.
- *
- * @param s The RDF Statement representing the triple.
- * @return A Set of IRIs representing the result of the intent.
- */
-protected Set<IRI> execute(Statement s, Bindings bindings) throws StateException {
-return executeIntent((IRI) s.getSubject(), s.getPredicate(), (IRI) s.getObject(), bindings);
-}
-
 /**
  * Performs an intent based on the provided IRIs (RDF triple).
  *
+ * @param done
  * @param actor The subject IRI - the input/source for the intent.
  * @param p The predicate IRI - used to identify the intent.
  * @param o The object IRI - the object/target of the intent.
  * @return A Set of IRIs representing the result of the intent or null if no intent.
  */
-protected Set<IRI> executeIntent(IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
+protected void executeIntent(IRIs done, IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
 I_Intent intent = this.intents.get(p);
-if (intent == null) return new IRIs();
+if (intent == null) return;
 log.info("execute.intent: {} == {} -> {} == {}", actor, p, o, intent.getClass().getSimpleName());
-return intent.execute(actor, o, bindings);
+Set<IRI> executed = intent.execute(actor, o, bindings);
+done.addAll(executed);
 }
 
 /**
  * Find matching the I_Intents and execute each.
  */
 
-protected void executeMatchingIntents(IRI actor, Iterable<Statement> maybes, Set<IRI> done, Bindings bindings) throws StateException {
+protected void findIntents(Iterable<Statement> maybes, List<Statement> todo) {
 for (Statement maybe : maybes) {
 Resource s = maybe.getSubject();
 IRI p = maybe.getPredicate();
 Value o = maybe.getObject();
-if (s.isIRI() && o.isResource() && p.isResource()) {
-done.addAll( executeIntent(actor, p, (Resource) o, bindings) );
+if (s.isIRI() && o.isResource() && p.isIRI() && this.intents.containsKey(p)) {
+//log.info("execute.todos: {} -> {}", maybe, todo);
+todo.add( maybe );
 }
 }
 }
@@ -138,14 +126,19 @@ done.addAll( executeIntent(actor, p, (Resource) o, bindings) );
 @RDF(IQ_NS.IQ + "do")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 IRIs done = new IRIs();
-log.info("execute.intents: {}", intents.keySet());
-Iterable<Statement> statements = facts.getStatements(state, null, null);
-executeMatchingIntents(actor, statements, done, bindings);
-if (model!=facts) {
-statements = model.getStatements(state, null, null);
-executeMatchingIntents(actor, statements, done, bindings);
+List<Statement> todo = new ArrayList<>();
+findIntents(facts.getStatements(state, null, null), todo);
+if (model!=facts) findIntents(model.getStatements(state, null, null), todo);
+//log.info("execute.todos: {} @ {} -> {}", actor, state, todo);
+log.info("execute.intents: {} @ {} <-- {}", actor, state, todo);
+for(Statement s : todo) {
+if (!s.getPredicate().getLocalName().equals("a"))
+executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
 }
-log.info("execute.done: {}", done);
+for(Statement s : todo) {
+if (s.getPredicate().getLocalName().equals("a"))
+executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
+}
 return done;
 }
 }

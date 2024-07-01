@@ -20,11 +20,8 @@ Model getModel();
 Repository getRepository();
 FactFinder getFinder();
 
-Properties getProperties();
-
 FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException;
 I_Secrets getSecrets();
 KeyPair keys();
 
-I_LLMConfig getLLM(String name);
 }

@@ -24,14 +24,12 @@ private final FactFinder finder;
 private final I_Secrets secrets;
 private final IRI self;
 private final Map<String, I_LLMConfig> llm = new HashMap<>();
-private KeyPair keys;
-Properties properties;
+private final KeyPair keys;
 
-public Realm(IRI self, Model model, Repository repository, Properties properties, FactFinder finder, I_Secrets secrets, FileSystemManager vfs, KeyPair keys)  {
+public Realm(IRI self, Model model, Repository repository, FactFinder finder, I_Secrets secrets, FileSystemManager vfs, KeyPair keys)  {
 this.self = self;
 this.model = model;
 this.repository = repository;
-this.properties = properties;
 this.finder = finder;
 this.secrets = secrets;
 this.vfs = vfs;
@@ -54,12 +52,6 @@ return this.finder;
 }
 
 @Override
-public Properties getProperties() {
-return this.properties;
-}
-
-
-@Override
 public FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException {
 return vfs.resolveFile( new URI(iri.stringValue()));
 }
@@ -79,15 +71,6 @@ public IRI getSelf() {
 return self;
 }
 
-@Override
-public I_LLMConfig getLLM(String name) {
-if (properties==null||properties.isEmpty()) return null;
-String url = properties.getProperty(name+".url");
-String modelName = properties.getProperty(name+".modelName");
-String maxTokens = properties.getProperty(name+".maxTokens");
-if (url==null || modelName==null || maxTokens==null) return null;
-return new DefaultLLConfig(url, modelName, Integer.parseInt(maxTokens));
-}
 
 public String toString() {
 return getClass().getName()+"["+self.stringValue()+"]";

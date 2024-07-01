@@ -73,7 +73,7 @@ return new OopsResponse("api.search.facts#finder-missing", Response.Status.NOT_F
 // Get the RDF repository instance from the platform
 Repository repository = platform.getRepository(repo);
 if (repository == null) {
-return new OopsResponse("api.search.facts#repository-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.search.facts#repository", Response.Status.NOT_FOUND).asJSON();
 }
 
 // Check if the repository is initialized

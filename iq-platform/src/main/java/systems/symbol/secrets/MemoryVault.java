@@ -25,4 +25,9 @@ setSecrets(agent, new SimpleSecrets());
 public void setSecrets(IRI agent, I_Secrets secrets) {
 store.put(agent, secrets);
 }
+
+@Override
+public String toString() {
+return "vaults:" + store.keySet();
+}
 }

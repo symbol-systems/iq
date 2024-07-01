@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import systems.symbol.agent.MyFacade;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 
 import javax.script.Bindings;
@@ -25,7 +26,9 @@ public class AgentPrompt extends Prompts {
 public AgentPrompt() {
 }
 
-public String prompt(String prompt, Bindings bindings) throws IOException {
+public String bind(String prompt, Bindings bindings) throws IOException {
+log.info("prompt.bind: {}", prompt);
+MyFacade.dump((Map<?, ?>) bindings.get("my"), System.out);
 return hbs.compileInline(prompt).apply(bindings);
 }
 

@@ -8,7 +8,7 @@ import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.RDF;
 import systems.symbol.agent.MyFacade;
-import systems.symbol.finder.I_FactFinder;
+import systems.symbol.finder.I_ModelFinder;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
@@ -34,11 +34,11 @@ import java.util.Set;
  *
  * @see systems.symbol.intent.I_Intent
  * @see systems.symbol.platform.I_Self
- * @see systems.symbol.finder.I_FactFinder
+ * @see I_ModelFinder
  */
 public class Find implements I_Intent, I_Self {
 private final IRI self;
-private final I_FactFinder finder;
+private final I_ModelFinder finder;
 private final Model model;
 private final IRI knows;
 
@@ -49,7 +49,7 @@ private final IRI knows;
  * @param model  The RDF4J model associated with the agent.
  * @param finder The fact finder implementation used for searching.
  */
-public Find(IRI self, Model model, I_FactFinder finder) {
+public Find(IRI self, Model model, I_ModelFinder finder) {
 this.self = self;
 this.finder = finder;
 this.model = model;

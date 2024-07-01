@@ -62,13 +62,13 @@ listeners.add(listener);
 public T transition(T targetState) throws StateException {
 if (targetState == null) return getState();
 boolean allowed = isAllowed(targetState);
-log.debug("allowed: {} @ {} => {}", allowed, getState(), targetState);
 if (allowed) {
 T fromState = currentState;
 setCurrentState(targetState);
 boolean ok = notifyListeners(fromState, targetState);
+//log.debug("allowed: {} @ {} => {}", ok, getState(), targetState);
 if (!ok) {
-log.warn("veto: {} -> {}", getState(), targetState);
+log.warn("veto: {} -> {}", fromState, targetState);
 setCurrentState(fromState);
 }
 return getState();
@@ -125,9 +125,9 @@ protected abstract Collection<T> getTransitions(T state);
  */
 protected boolean notifyListeners(T from, T to) throws StateException {
 boolean ok = true;
-log.info("notify: {} x {}", to, listeners.size());
 for (I_StateListener<T> listener : listeners) {
 ok = ok & listener.onTransition(from, to);
+log.info("notified: {} x {} = {}", listener, to, ok);
 }
 return ok;
 }

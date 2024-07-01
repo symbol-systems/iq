@@ -3,7 +3,6 @@ package systems.symbol.controller.ux;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import org.eclipse.rdf4j.model.Resource;
@@ -14,10 +13,10 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.platform.APIPlatform;
 import systems.symbol.platform.AgentAction;
 import systems.symbol.platform.AgentService;
-import systems.symbol.string.Validate;
+import systems.symbol.realm.I_Realm;
+import systems.symbol.secrets.SecretsException;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
@@ -34,21 +33,17 @@ summary = "api.ux.intent.post.summary",
 description = "api.ux.intent.post.description"
 )
 @Produces(MediaType.APPLICATION_JSON)
-@Path("{repo}")
-public Response action(@PathParam("repo")String repoName, AgentAction action, @HeaderParam("Authorization") String auth) throws IOException {
+@Path("{realm}")
+public Response action(@PathParam("realm")String _realm, AgentAction action, @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+
+if (_realm==null || _realm.isEmpty()) return new OopsResponse("api.ux.intent.repo-missing", Response.Status.BAD_REQUEST).asJSON();
+I_Realm realm = platform.getRealm(_realm);
+if (realm==null) return new OopsResponse("api.ux.intent.realm", Response.Status.NOT_FOUND).asJSON();
 DecodedJWT jwt;
-try {
-jwt = authenticate(auth);
-} catch (OopsException e) {
-return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
-}
-if (repoName==null || repoName.isEmpty()) {
-return new OopsResponse("api.ux.intent.repo-missing", Response.Status.BAD_REQUEST).asJSON();
-}
-Repository repo = platform.getRepository(repoName);
-if (repo==null) {
-return new OopsResponse("api.ux.intent.repo-unknown-"+repoName, Response.Status.NOT_FOUND).asJSON();
-}
+try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+Repository repo = realm.getRepository();
+if (repo==null) return new OopsResponse("api.ux.intent.repo-unknown-"+_realm, Response.Status.NOT_FOUND).asJSON();
+
 log.info("ux.intent.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 if (action==null) {
 return new OopsResponse("api.ux.intent.missing", Response.Status.BAD_REQUEST).asJSON();
@@ -64,7 +59,7 @@ log.info("ux.intent.action: {} -> {}", repo, action);
 //MyFacade.dump(params, System.out);
 Bindings my = MyFacade.rebind(action.getAgent(), action.getBindings(), jwt);
 
-AgentService service = new AgentService(action.getAgent(), connection, platform.getSecrets(), my);
+AgentService service = new AgentService(action.getAgent(), connection, realm.getSecrets(), my);
 
 if (service.getAgent() == null) {
 return new OopsResponse("api.ux.intent.agent-unknown", Response.Status.NOT_FOUND).asJSON();

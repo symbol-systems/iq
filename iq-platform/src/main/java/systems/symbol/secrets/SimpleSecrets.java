@@ -43,6 +43,6 @@ return secretStore.get(key);
  */
 @Override
 public String toString() {
-return "Secrets: " + secretStore.keySet();
+return "secrets:" + secretStore.keySet();
 }
 }

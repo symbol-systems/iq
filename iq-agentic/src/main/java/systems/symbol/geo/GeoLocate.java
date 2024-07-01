@@ -55,6 +55,17 @@ response.append(line);
 return response.toString();
 }
 
+public String location() throws IOException, GeoIp2Exception {
+return location(getPublicIP());
+}
+
+public String location(String ip) throws IOException, GeoIp2Exception {
+InetAddress ipAddress = InetAddress.getByName(ip);
+CityResponse response = reader.city(ipAddress);
+return response.getCity().toString()+", "+response.getMostSpecificSubdivision().toString()+", "+response.getCountry().toString();
+}
+
+
 public Model locate() throws IOException, GeoIp2Exception {
 String ip = getPublicIP();
 DynamicModelFactory dmf = new DynamicModelFactory();

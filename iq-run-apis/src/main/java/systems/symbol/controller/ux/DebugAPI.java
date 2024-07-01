@@ -7,29 +7,25 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.Agentic;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.agent.AgentBuilder;
+import systems.symbol.agent.I_Agent;
+import systems.symbol.controller.platform.RealmAPI;
+import systems.symbol.controller.responses.LDResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
-import systems.symbol.llm.Conversation;
-import systems.symbol.llm.I_Assist;
-import systems.symbol.llm.Prompts;
-import systems.symbol.platform.AgentService;
-import systems.symbol.rdf4j.store.LiveModel;
+import systems.symbol.rdf4j.util.RDFPrefixer;
+import systems.symbol.realm.I_Realm;
 import systems.symbol.string.Validate;
 
 import javax.script.Bindings;
-import javax.script.SimpleBindings;
 
 @Tag(name = "api.ux.debug.name", description = "api.ux.debug.description")
 @Path("ux/debug")
-public class DebugAPI extends GuardedAPI {
+public class DebugAPI extends RealmAPI {
 
 @GET
 @Operation(
@@ -38,44 +34,40 @@ description = "api.ux.debug.post.description"
 )
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces("application/ld+json")
-@Path("{repo}/{focus: .*}")
-public Response ask(@PathParam("repo") String repo, @PathParam("focus") String _focus, @HeaderParam("Authorization") String auth) throws Exception {
+@Path("{realm}/{self: .*}")
+public Response debug(@PathParam("realm") String _realm, @PathParam("self") String _self, @HeaderParam("Authorization") String auth) throws Exception {
+log.info("ux.debug: {} -> {}", _realm, _self);
+if (!Validate.isURN(_self)) return new OopsResponse("api.ux.debug.invalid", Response.Status.BAD_REQUEST).asJSON();
+IRI self = Values.iri(_self);
+I_Realm realm = platform.getRealm(_realm);
+if (realm==null) return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).asJSON();
+log.info("ux.debug.realm: {} -> {}", realm.getSelf(), realm.getSecrets());
 DecodedJWT jwt;
-try {
-jwt = authenticate(auth);
-} catch (OopsException e) {
-return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
-}
-if (!Validate.isURN(_focus)) {
-return new OopsResponse("api.ux.debug.invalid", Response.Status.BAD_REQUEST).asJSON();
-}
-if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.ux.debug.repository-invalid", Response.Status.BAD_REQUEST).asJSON();
-}
-Repository repository = platform.getRepository(repo);
-if (repository == null) {
-return new OopsResponse("api.ux.debug.repository-missing", Response.Status.NOT_FOUND).asJSON();
-}
+try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.debug.repository", Response.Status.BAD_REQUEST).asJSON();
+if (!entitled(jwt, self)) return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).asJSON();
 
+Repository repository = realm.getRepository();
 try (RepositoryConnection connection = repository.getConnection()) {
-IRI focus = Values.iri(_focus);
-Bindings my = MyFacade.rebind(focus, new SimpleBindings(), jwt);
+LDResponse ld = new LDResponse(RDFPrefixer.describe(connection, self));
+Bindings my = ld.getBindings();
 
-LiveModel model = new LiveModel(connection);
-Agentic<String, Resource> agentic = new Agentic<>(()->focus, my, new Conversation());
-AgentService service = new AgentService(focus, connection, null, my);
-I_Assist<String> decisions = Prompts.decision(service.getAgent(), agentic);
-my.put("decisions", decisions);
-I_Assist<String> chats = Prompts.prompt(focus, service.getAgent().getStateMachine().getState(), model, my);
-my.put("chats", chats);
-SimpleBindings claims = new SimpleBindings();
-my.put("claims", claims);
-claims.put("name", jwt.getClaim("name").asString());
-claims.put("aud", jwt.getClaim("aud").asArray(String.class));
-claims.put("roles", jwt.getClaim("roles").asArray(String.class));
+AgentBuilder builder = new AgentBuilder(self, my, realm.getSecrets());
+builder.setGround(connection).executive().remodel().sparql(connection);
+I_Agent agent = builder.build();
+agent.start();
 
-log.info("ux.debug.self: {} -> {}", focus, my);
+my.put("name", jwt.getClaim("name").asString());
+my.put("audience", jwt.getClaim("aud").asArray(String.class));
+my.put("roles", jwt.getClaim("roles").asArray(String.class));
+
+log.info("ux.debug.self: {} -> {}", self, my);
 return new SimpleResponse(my).asJSON();
 }
+}
+
+@Override
+public boolean entitled(DecodedJWT jwt, IRI agent)  {
+return jwt.getAudience().contains(agent.stringValue());
 }
 }

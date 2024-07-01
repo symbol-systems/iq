@@ -72,15 +72,19 @@ my.put(SELF, self.stringValue());
 return bindings;
 }
 
-public static Bindings bind(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted) throws SecretsException {
-log.debug("iq.bind: {}", my.keySet());
-Bindings bindings = rebind(agent, state, my);
+public static Bindings trust(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted) throws SecretsException {
 IQFacade facade = new IQFacade(agent, model, trusted);
 try {
 facade.enableVFS();
 } catch (FileSystemException e) {
 // ignore
 }
+return trust(agent,state,my,facade);
+}
+
+public static Bindings trust(IRI agent, Resource state,  @NotNull Bindings my, IQFacade facade) throws SecretsException {
+log.debug("iq.trust: {} @ {} --> {}", agent, state, my.keySet());
+Bindings bindings = rebind(agent, state, my);
 bindings.put(IQ, facade);
 log.debug("iq.bound: {}", bindings.keySet());
 return bindings;
