@@ -49,7 +49,7 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         boot(self, thoughts);
         this.facts = facts;
         add(intent);
-        log.info("exec.thoughts: {} -> {} & {}-> {}", self, facts.size(), thoughts.size(), intents.keySet());
+        log.info("exec.intent: {} -> {} & {}", self, facts.size(), thoughts.size());
     }
 
     public void boot(@NotNull IRI self, Model model) {

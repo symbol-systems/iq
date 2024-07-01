@@ -55,7 +55,7 @@ public class ModelAPI extends GuardedAPI {
                           @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         log.info("ux.model: {} --> {} -> {}", _realm, query, uriInfo.getQueryParameters().keySet());
 
-        if (!Validate.isBearer(auth))  return new OopsResponse("api.ux.model#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+        if (!Validate.isBearer(auth))  return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
         I_Realm realm = platform.getRealm(_realm);
         if (realm==null) return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
         DecodedJWT jwt;
@@ -67,9 +67,8 @@ public class ModelAPI extends GuardedAPI {
         log.info("ux.model.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
         Repository repository = realm.getRepository();
-        if (repository == null) {
-            return new OopsResponse("api.ux.model#repository", Response.Status.NOT_FOUND).asJSON();
-        }
+        if (repository == null) return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
+
         try (RepositoryConnection connection = repository.getConnection()) {
             IQConnection iq = new IQConnection(realm.getSelf(), connection);
             IQScriptCatalog catalog = new IQScriptCatalog(iq);
@@ -80,7 +79,7 @@ public class ModelAPI extends GuardedAPI {
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
             log.info("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
             if (Validate.isMissing(sparql)) {
-                return new OopsResponse("api.ux.model#query-missing", Response.Status.NOT_FOUND).asJSON();
+                return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).asJSON();
             }
             GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
             LDResponse response = new LDResponse(graphQuery);

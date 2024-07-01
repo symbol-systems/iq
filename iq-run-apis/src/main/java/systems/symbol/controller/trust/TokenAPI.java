@@ -27,11 +27,10 @@ import systems.symbol.trust.generate.JWTGen;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
-import java.io.IOException;
 import java.util.Map;
 
 @Path("trust")
-public class IssuerAPI {
+public class TokenAPI {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     @Inject RealmPlatform realms;
 
@@ -48,23 +47,23 @@ public class IssuerAPI {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/key/{realm}")
     public Response publicKey(@PathParam("realm") String _realm) throws Exception {
-        if (Validate.isMissing(_realm)) return new OopsResponse("api.trust.realm", Response.Status.BAD_REQUEST).asJSON();
+        if (Validate.isMissing(_realm)) return new OopsResponse("api.token.realm", Response.Status.BAD_REQUEST).asJSON();
         I_Realm realm = realms.getRealm(_realm);
-        if (realm == null) return new OopsResponse("api.trust.realm", Response.Status.NOT_FOUND).asJSON();
+        if (realm == null) return new OopsResponse("api.token.realm", Response.Status.NOT_FOUND).asJSON();
         String pkcs8 = SimpleKeyStore.toPKCS8(realm.keys().getPublic());
         return new SimpleResponse(pkcs8).asJSON();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("issuer/{realm}/{provider}")
+    @Path("token/{realm}/{provider}")
     public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider, SimpleBindings params) throws SecretsException {
         log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
         if (provider == null || provider.length() < 4) {
-            return new OopsResponse("api.trust.issuer.subject", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.token.issuer.provider", Response.Status.BAD_REQUEST).asJSON();
         }
         if (Validate.isMissing(_realm)) {
-            return new OopsResponse("api.trust.issuer.realm", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.token.issuer.realm", Response.Status.BAD_REQUEST).asJSON();
         }
         I_Realm realm = realms.getRealm(_realm);
         // TODO: authenticate (subject is a user, subject known to issuer)
@@ -72,7 +71,7 @@ public class IssuerAPI {
 
         Repository repo = realm.getRepository();
         if (repo == null) {
-            return new OopsResponse("api.trust.issuer.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("api.token.issuer.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
         }
         try (RepositoryConnection connection = repo.getConnection()) {
 
@@ -90,7 +89,7 @@ public class IssuerAPI {
             Resource state = agent.getStateMachine().getState();
             log.info("trust.agent: {} -> {}", agent.getSelf(), state);
             if (state == null) {
-                return new OopsResponse("api.trust.issuer.state-unknown", Response.Status.NOT_FOUND).asJSON();
+                return new OopsResponse("api.token.issuer.state", Response.Status.NOT_FOUND).asJSON();
             }
             Resource done = agent.getStateMachine().transition(state);
             Map<?, Object> identity = (Map<?, Object>) bindings.getOrDefault("identity", null);
@@ -98,7 +97,7 @@ public class IssuerAPI {
 
 //            RDFDump.dump(new LiveModel(connection));
             if (done == null || identity == null) {
-                return new OopsResponse("api.trust.issuer.denied-" + _realm, Response.Status.FORBIDDEN).asJSON();
+                return new OopsResponse("api.token.issuer.denied-" + _realm, Response.Status.FORBIDDEN).asJSON();
             }
             String self = identity.getOrDefault("self", "anon:" + provider).toString();
             String name = identity.getOrDefault("name", "anon").toString();
@@ -109,7 +108,7 @@ public class IssuerAPI {
             return response.asJSON();
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new OopsResponse("api.trust.issuer.oops", Response.Status.FORBIDDEN).asJSON();
+            return new OopsResponse("api.token.issuer.oops", Response.Status.FORBIDDEN).asJSON();
         }
     }
 
@@ -120,7 +119,7 @@ public class IssuerAPI {
         I_Realm realm = realms.getRealm(_realm);
         DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
         if (jwt==null) {
-            return new OopsResponse("api.trust.issuer.token", Response.Status.FORBIDDEN).asJSON();
+            return new OopsResponse("api.token.issuer.token", Response.Status.FORBIDDEN).asJSON();
         }
 
         JWTGen jwtGen = new JWTGen();
