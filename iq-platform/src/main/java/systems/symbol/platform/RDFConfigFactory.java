@@ -38,7 +38,7 @@ static final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repositor
 public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format) throws IOException {
 final ConfigTemplate configTemplate = new ConfigTemplate(template);
 final String configString = configTemplate.render(ctx);
-log.info("repository.config: {} -> {}", self.stringValue(), configString);
+log.debug("repository.config: {} -> {}", self.stringValue(), configString);
 
 ValueFactory vf = SimpleValueFactory.getInstance();
 final RDFParser rdfParser = Rio.createParser(format, vf);

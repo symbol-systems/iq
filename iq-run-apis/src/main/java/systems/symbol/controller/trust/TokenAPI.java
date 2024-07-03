@@ -17,10 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.MyFacade;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.*;
-import systems.symbol.geo.GeoLocate;
+import systems.symbol.realm.Facts;
+import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.rdf4j.io.RDFDump;
@@ -35,6 +35,7 @@ import systems.symbol.trust.generate.JWTGen;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.net.URI;
+import java.util.Set;
 
 @Path("trust")
 public class TokenAPI {
@@ -47,7 +48,7 @@ RoutingContext routing;
 @Path("{path : .*}")
 @Produces(MediaType.APPLICATION_JSON)
 public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
-log.warn("preflight.trust: {} @ {}", path, info.getBaseUri());
+log.debug("preflight.trust: {} @ {}", path, info.getBaseUri());
 return new DataResponse().asJSON();
 }
 
@@ -69,21 +70,22 @@ return new SimpleResponse(pkcs8).asJSON();
 public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider, SimpleBindings params, @Context UriInfo info) throws SecretsException {
 log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
 if (provider == null || provider.length() < 4) {
-return new OopsResponse("api.token.issuer.provider", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.token.provider", Response.Status.BAD_REQUEST).asJSON();
 }
 if (Validate.isMissing(_realm)) {
-return new OopsResponse("api.token.issuer.realm", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.token.realm", Response.Status.BAD_REQUEST).asJSON();
 }
 I_Realm realm = realms.getRealm(_realm);
+if (realm == null) return new OopsResponse("api.token.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
 // TODO: authenticate (subject is a user, subject known to issuer)
 // TODO: authorize (subject known to audience)
 
 Repository repo = realm.getRepository();
-if (repo == null) return new OopsResponse("api.token.issuer.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
+if (repo == null) return new OopsResponse("api.token.repository." + _realm, Response.Status.NOT_FOUND).asJSON();
 try (RepositoryConnection connection = repo.getConnection()) {
 connection.begin();
 
-IRI issuer = Values.iri(_realm, ":trust/" + provider+"/");
+IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider+"/");
 log.info("trust.issuer: {} x {}", issuer, connection.size());
 
 Bindings bindings = new SimpleBindings(params);
@@ -104,12 +106,12 @@ log.info("trust.agent: {} -> {} & {} @ {}", agent.getSelf(), state ,done, baseUr
 onboard(routing, builder.getGround(), agent.getThoughts(), agent.getSelf());
 
 Object self = bindings.get("identity");
-if (self==null) return new OopsResponse("api.token.issuer.self", Response.Status.NOT_FOUND).asJSON();
+if (self==null) return new OopsResponse("api.token.self", Response.Status.NOT_FOUND).asJSON();
 if (!self.toString().startsWith(agent.getSelf().stringValue()) || self.toString().length()==agent.getSelf().stringValue().length())
-return new OopsResponse("api.token.issuer.self", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.token.self", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 
 Object name = bindings.get("name");
-if (name==null||name.toString().isEmpty()) return new OopsResponse("api.token.issuer.name", Response.Status.NOT_FOUND).asJSON();
+if (name==null||name.toString().isEmpty()) return new OopsResponse("api.token.name", Response.Status.NOT_FOUND).asJSON();
 log.info("trust.self: {} -> {} -> {} == {}", self, name, !state.equals(done), state);
 I_Realm myRealm = realms.getRealm(self.toString());
 
@@ -125,13 +127,13 @@ SimpleResponse response = new SimpleResponse("access_token", signedToken);
 return response.asJSON();
 } catch (Exception e) {
 log.error(e.getMessage(), e);
-return new OopsResponse("api.token.issuer.oops", Response.Status.FORBIDDEN).asJSON();
+return new OopsResponse("api.token.oops", Response.Status.FORBIDDEN).asJSON();
 }
 }
 
 protected void onboard(RoutingContext routing, Model ground, Model thoughts, IRI self) throws Exception {
-IRIs trusts = Realms.trusts(ground, self, new IRIs(), true);
-Realms.meld(ground, trusts, thoughts);
+Iterable<IRI> trusts = Realms.trusts(ground, self, new IRIs(), true);
+Facts.copy(ground, trusts, thoughts);
 GeoLocate geo = new GeoLocate();
 String ipv4 = routing.request().remoteAddress().host();
 log.info("trust.ipv4: {}", ipv4);
@@ -146,7 +148,7 @@ public Response reissue(@PathParam("realm") String _realm, @HeaderParam("Authori
 I_Realm realm = realms.getRealm(_realm);
 DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
 if (jwt==null) {
-return new OopsResponse("api.token.issuer.token", Response.Status.FORBIDDEN).asJSON();
+return new OopsResponse("api.token.token", Response.Status.FORBIDDEN).asJSON();
 }
 
 JWTGen jwtGen = new JWTGen();

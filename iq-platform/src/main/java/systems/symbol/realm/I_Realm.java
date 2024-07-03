@@ -19,7 +19,7 @@ public interface I_Realm extends I_Self, I_Keys {
 Model getModel();
 Repository getRepository();
 FactFinder getFinder();
-
+FactFinder getFinder(IRI index);
 FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException;
 I_Secrets getSecrets();
 KeyPair keys();

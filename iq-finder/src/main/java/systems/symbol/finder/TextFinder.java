@@ -70,7 +70,6 @@ return model.embed(segment).content();
 		return store.findRelevant(embedding, maxResults, relevancy);
 	}
 	public List<EmbeddingMatch<TextSegment>> find(String text) {
-
 		return find(embed(text), maxResults, minScore);
 	}
 

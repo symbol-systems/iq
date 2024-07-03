@@ -1,0 +1,65 @@
+package systems.symbol.prompt;
+
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.llm.Conversation;
+import systems.symbol.llm.I_Assist;
+import systems.symbol.llm.I_LLM;
+import systems.symbol.llm.I_LLMessage;
+
+import java.io.IOException;
+import java.util.*;
+
+public class PromptChain implements I_LLM<String> {
+Collection<I_LLM<String>> chain;
+Collection<I_LLMessage.RoleType> types = new ArrayList<>();
+
+public PromptChain() {
+this.chain = new ArrayList<>();
+init();
+}
+
+public PromptChain(I_LLM<String> llm) {
+this.chain = new ArrayList<>();
+this.chain.add(llm);
+init();
+}
+
+public PromptChain(Collection<I_LLM<String>> llm) {
+this.chain = new ArrayList<>(llm);
+init();
+}
+
+@SafeVarargs
+public PromptChain(I_LLM<String>... llm) {
+this.chain = new ArrayList<>();
+Collections.addAll(this.chain, llm);
+init();
+}
+
+private void init() {
+types.add(I_LLMessage.RoleType.assistant);
+types.add(I_LLMessage.RoleType.user);
+}
+
+public void setTypes(Collection<I_LLMessage.RoleType> types) {
+this.types = types;
+}
+
+@Override
+public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
+I_Assist<java.lang.String> ai = new Conversation();
+for (I_LLM<String> llm : chain) {
+ai = llm.complete(ai);
+}
+for(I_LLMessage<String> m: chat.messages()) {
+if (types.contains(m.getRole())) {
+ai.add(m);
+}
+}
+return ai;
+}
+
+public void add(I_LLM<String> llm) {
+chain.add(llm);
+}
+}

@@ -1,80 +1,39 @@
 package systems.symbol.prompt;
 
-import com.github.jknack.handlebars.Decorator;
-import com.github.jknack.handlebars.Helper;
-import com.github.jknack.handlebars.Options;
-import com.github.jknack.handlebars.Template;
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.MyFacade;
-import systems.symbol.rdf4j.sparql.SPARQLMapper;
+import systems.symbol.agent.I_Agent;
+import systems.symbol.agent.tools.APIException;
+import systems.symbol.llm.I_Assist;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.realm.Facts;
 
 import javax.script.Bindings;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
-public class AgentPrompt extends Prompts {
+public class AgentPrompt extends AbstractPrompt<String> {
+I_Agent agent;
 
-public AgentPrompt() {
-}
-
-public String bind(String prompt, Bindings bindings) throws IOException {
-log.info("prompt.bind: {} -> {}", prompt, bindings.keySet());
-return hbs.compileInline(prompt).apply(bindings);
+public AgentPrompt(Bindings my, I_Agent agent) {
+super(my);
+this.agent = agent;
 }
 
 public String prompt(IRI self, Resource state, Model facts) {
-return prompt(self, facts)+prompt(state, facts);
+return prompt(self, facts, RDF.VALUE)+prompt(state, facts, RDF.VALUE);
 }
 
-public String prompt(Resource state, Model facts) {
-if (state==null) return "";
-Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
-return groundS.orElse(Values.***REMOVED***("")).stringValue();
+@Override
+public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
+String prompt = prompt(agent.getSelf(), agent.getStateMachine().getState(), agent.getThoughts());
+chat.system(bind(prompt));
+return chat;
 }
 
-public String choices(Model facts, Collection<Resource> choices) throws IOException {
-log.info("prompt.choices: {}", choices);
-
-if (choices.isEmpty()) {
-return "";
+protected String prompt(Iterable<IRI> found) {
+StringBuilder p$ = new StringBuilder();
+found.forEach( f -> { p$.append("[").append(f.getLocalName()).append("](").append(f.stringValue()).append("), "); });
+return p$.toString();
 }
-
-StringBuilder intent$ = new StringBuilder();
-choices.forEach( c -> {
-Iterable<Statement> options = facts.getStatements(c, RDFS.LABEL, null);
-options.forEach( o ->{
-intent$.append("\n- ").append(o.getSubject().stringValue()).append(" = ").append(o.getObject().stringValue());
-});
-});
-return intent$.toString();
-}
-
-void connect(RepositoryConnection connection) {
-hbs.registerDecorator("sparql", new Decorator() {
-public void apply(Template template, Options options) throws IOException {
-log.info("hbs.sparql: {} -> {}", template.text(), options.context);
-
-TupleQuery tupleQuery = connection.prepareTupleQuery(template.text());
-List<Map<String, Object>> maps = SPARQLMapper.toMaps(tupleQuery.evaluate());
-template.apply(options.context);
-options.fn.text();
-}
-});
-hbs.registerHelper("self", new Helper<Object>() {
-public Object apply(Object o, Options options) throws IOException {
-log.info("hbs.self: {} -> {}", o, options.context);
-return o;
-}
-});
-}
-
 }

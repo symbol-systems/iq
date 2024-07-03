@@ -146,7 +146,7 @@ findAllFiles(home, file, recurse);
 			format = null;
 		}
 
-		log.info("deploy.file: {} @ {} -> {} --> {}", mediatype==null?format:mediatype, iri, file.getAbsolutePath(), file.length());
+		log.info("deploy.file: {} @ {} -> {} --> {}", iri, file.getAbsolutePath(), file.length(), mediatype==null?format:mediatype.getLocalName());
 		FileInputStream inStream = new FileInputStream(file);
 		deploy(iri, inStream, mediatype, format);
 		inStream.close();

@@ -12,15 +12,15 @@ import java.util.Properties;
  * Implementations must return the canonical IRI for the entity.
  */
 public interface I_Self {
-
-String CODENAME = "iq";
-
 /**
  * The canonical entity known as IRI .
  *
  * @return the canonical IRI for the entity.
  */
 IRI getSelf();
+
+
+String CODENAME = "iq";
 
 /**
  * Retrieves the implementation version from its manifest file.

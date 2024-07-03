@@ -33,7 +33,7 @@ public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
 I_StateMachine<Resource> fsm = agent.getStateMachine();
 CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
 try {
-Resource decided = decide();
+Resource decided = intent();
 if (decided!=null && !seen.contains(decided)) {
 log.info("intent.decided: {} -> {} == {}", fsm.getState(), decided, seen);
 future.complete(()->decided);
@@ -49,7 +49,7 @@ return future;
 }
 
 @Override
-public Resource decide() {
+public Resource intent() {
 I_LLMessage<String> latest = chat.latest();
 if (latest instanceof IntentMessage) {
 return ((IntentMessage) latest).getSelf();

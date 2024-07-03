@@ -40,7 +40,7 @@ return messages.isEmpty()?null:messages.get(messages.size()-1);
 }
 
 public I_Assist<String> add(String role, String content) {
-if (content==null) return this;
+if (content==null||content.isEmpty()) return this;
 this.messages.add(new TextMessage(role, content));
 return this;
 }

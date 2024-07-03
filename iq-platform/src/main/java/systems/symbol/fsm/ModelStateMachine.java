@@ -2,9 +2,7 @@ package systems.symbol.fsm;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Values;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import systems.symbol.platform.I_Self;
-import systems.symbol.rdf4j.io.RDFDump;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -83,7 +81,7 @@ sync();
 @Override
 public boolean isAllowed(Resource target) {
 if (this.currentState != null && this.currentState.equals(target)) return true;
-Iterable<Statement> transitions = model.getStatements(getState(), nextStep, target);
+Iterable<Statement> transitions = model.getStatements(getState(), TO, target);
 
 boolean hasTransitions = transitions.iterator().hasNext();
 log.info("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
@@ -148,7 +146,7 @@ if (initialized) sync();
 
 @Override
 protected Collection<Resource> getTransitions(Resource state) {
-Collection<Resource> transitions = find(state, model, nextStep);
+Collection<Resource> transitions = find(state, model, TO);
 if (!isGuarded(state)) return transitions;
 
 return transitions.stream()
@@ -168,7 +166,7 @@ if (initialState==null) {
 this.setInitial(from);
 log.debug("initial: {} == {}", this.initialState, this.currentState);
 }
-model.add(from, nextStep, to);
+model.add(from, TO, to);
 }
 
 /**
@@ -193,7 +191,7 @@ model.add(guard, predicate, object);
  * @return True if the state is final (no transitions), false otherwise.
  */
 public boolean isFinal(Resource state) {
-return find(state, model, nextStep).isEmpty();
+return find(state, model, TO).isEmpty();
 }
 
 /**

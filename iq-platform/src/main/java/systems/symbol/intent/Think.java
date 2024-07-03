@@ -14,7 +14,6 @@ import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.Prompts;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.io.FileFormats;
@@ -97,7 +96,7 @@ protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings 
 Bindings bindings = MyFacade.rebind(actor, state, my);
 String intent = my.containsKey(INTENT)?my.get(INTENT).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
-log.info("think.bindings: {} -> {} -> {}", template.getDatatype(), bindings.keySet(), ((Map<?,?>)bindings.get("my")).keySet());
+log.info("think.bindings: {} -> {}", template.getDatatype(), bindings.keySet());
 String mime = FileFormats.toMime(fallbackMime);
 
 // Determine the RDF format based on the datatype of the template ***REMOVED***, or TURTLE.
@@ -107,7 +106,7 @@ RDFFormat format = Rio.getWriterFormatForMIMEType(template.getDatatype().stringV
 String remodelled = HBSRenderer.template(template.stringValue(), bindings);
 log.info("think.raw: {} -> {}", format, remodelled);
 
-I_Assist<String> thought = Prompts.think(actor, state, intent, model, my, format);
+I_Assist<String> thought = null;// Prompts.think(actor, state, intent, model, my, format);
 thought.user(remodelled);
 log.info("think.prompt: {}", thought);
 llm.complete(thought);

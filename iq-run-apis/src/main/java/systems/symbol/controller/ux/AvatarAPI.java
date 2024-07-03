@@ -61,10 +61,9 @@ try (RepositoryConnection connection2 = myRepo.getConnection()) {
 AgentBuilder builder = new AgentBuilder(agent, bindings, realm.getSecrets());
 builder.setGround(connection).setThoughts(connection2).executive().remodel().sparql(connection);
 
-SearchDecision search = builder.decision(realm.getFinder(), chat);
-ChainOfCommand control = builder.decision(search);
-IntentDecision agentic = builder.decision(chat);
-control.add(agentic);
+//SearchDecision search = builder.decision(realm.getFinder(), chat);
+IntentDecision intents = builder.decision(chat);
+ChainOfCommand control = builder.decision(intents);
 I_Agent avatar = builder.build(chat,control,jwt);
 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
 
