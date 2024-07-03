@@ -9,6 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class StochasticDecisionTest {
 
     @Test
-    void decide() {
+    void intent() {
     }
 }

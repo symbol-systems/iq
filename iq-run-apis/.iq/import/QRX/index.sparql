@@ -1,3 +1,6 @@
-SELECT DISTINCT ?this ?label WHERE {
-    ?this rdf:value ?label
+SELECT DISTINCT ?this ?label ?comment WHERE {
+    ?this rdfs:label ?label.
+    OPTIONAL {
+        ?this rdfs:comment ?comment
+    }
 }

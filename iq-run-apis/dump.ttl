@@ -3,7 +3,7 @@
 @prefix iq: <iq:> .
 @prefix discord: <QRX:trust/discord/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix ai: <urn:ai:> .
+@prefix ai: <ai:> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix void: <http://rdfs.org/ns/void#> .
@@ -17,7 +17,7 @@
 @prefix trust: <QRX:trust/> .
 @prefix QR1: <QRX:1> .
 
-<urn:ai:> iq:trusts <urn:ai:>, <iq:> .
+<ai:> iq:trusts <ai:>, <iq:> .
 
 <QRX:> rdf:value """Select the matching user intent below:
  {{ choices }}.
@@ -28,7 +28,7 @@ Reply using valid JSON : { \"content\": \"${your_short_reply}\", \"intent\": \"$
   iq:initial QRX:Hello .
 
 <iq:> a owl:Ontology;
-  iq:trusts <urn:ai:>;
+  iq:trusts <ai:>;
   rdfs:label "Agent Capabilities Ontology";
   rdfs:comment "Executable Capabilities for Autonomous Agents";
   owl:versionInfo "v 0.1.0" .
@@ -1277,7 +1277,7 @@ trust:trusts rdf:value """CONSTRUCT {
     ?s ?p ?o
 }"""^^<urn:application/x-sparql-query> .
 
-discord:authorize rdf:value """PREFIX discord: <QRX:discord:>
+discord:authorize rdf:value """PREFIX twilio: <QRX:twilio:>
 PREFIX iq: <iq:>
 PREFIX my: <QRX:>
 
@@ -1287,24 +1287,24 @@ INSERT {
         a my:Self;
         iq:trusts my:;
         iq:initial my:Hello;
-        iq:name \"{{my.discord.global_name}}\" ;
-        my:label \"{{my.discord.global_name}}\" ;
-        my:image \"{{my.discord.avatar}}\";
+        iq:name \"{{my.twilio.global_name}}\" ;
+        my:label \"{{my.twilio.global_name}}\" ;
+        my:image \"{{my.twilio.avatar}}\";
         rdf:value \"\"\"{
-    \"discord:username\": \"{{my.discord.username}}\",
-    \"discord:avatar\": \"{{my.discord.avatar}}\",
-    \"discord:discriminator\": \"{{my.discord.discriminator}}\",
-    \"discord:public_flags\": \"{{my.discord.public_flags}}\",
-    \"discord:flags\": \"{{my.discord.flags}}\",
-    \"discord:banner\": \"{{my.discord.banner}}\",
-    \"discord:accent_color\": \"{{my.discord.accent_color}}\",
-    \"discord:global_name\": \"{{my.discord.global_name}}\",
-    \"discord:avatar_decoration_data\": \"{{my.discord.avatar_decoration_data}}\",
-    \"discord:banner_color\": \"{{my.discord.banner_color}}\",
-    \"discord:clan\": \"{{my.discord.clan}}\",
-    \"discord:mfa_enabled\": \"{{my.discord.mfa_enabled}}\",
-    \"discord:locale\": \"{{my.discord.locale}}\",
-    \"discord:premium_type\": \"{{my.discord.premium_type}}\"
+    \"twilio:username\": \"{{my.twilio.username}}\",
+    \"twilio:avatar\": \"{{my.twilio.avatar}}\",
+    \"twilio:discriminator\": \"{{my.twilio.discriminator}}\",
+    \"twilio:public_flags\": \"{{my.twilio.public_flags}}\",
+    \"twilio:flags\": \"{{my.twilio.flags}}\",
+    \"twilio:banner\": \"{{my.twilio.banner}}\",
+    \"twilio:accent_color\": \"{{my.twilio.accent_color}}\",
+    \"twilio:global_name\": \"{{my.twilio.global_name}}\",
+    \"twilio:avatar_decoration_data\": \"{{my.twilio.avatar_decoration_data}}\",
+    \"twilio:banner_color\": \"{{my.twilio.banner_color}}\",
+    \"twilio:clan\": \"{{my.twilio.clan}}\",
+    \"twilio:mfa_enabled\": \"{{my.twilio.mfa_enabled}}\",
+    \"twilio:locale\": \"{{my.twilio.locale}}\",
+    \"twilio:premium_type\": \"{{my.twilio.premium_type}}\"
 }\"\"\"^^rdf:JSON.
 }
 WHERE {
@@ -1323,32 +1323,32 @@ import javax.script.Bindings
 iq = (IQFacade)iq;
 my = (Bindings)my;
 
-assert my.provider == \"discord\"
+assert my.provider == \"twilio\"
 
-// println(\"discord.authorize: ${my}\")
+// println(\"twilio.authorize: ${my}\")
 
 def api = iq.api(\"https://discord.com/api/v10/oauth2/token\")
 api.header('Content-Type', 'application/x-www-form-urlencoded')
 api.basic()
 
-def payload = [ 'grant_type': 'authorization_code', 'code': my.code, 'redirect_uri': my.host+\"auth/discord\" ]
-println(\"discord.payload: ${payload}\")
+def payload = [ 'grant_type': 'authorization_code', 'code': my.code, 'redirect_uri': my.host+\"auth/twilio\" ]
+println(\"twilio.payload: ${payload}\")
 
 def r = api.post(payload)
 def auth = iq.json(r)
 my.error = auth.error
-println(\"discord.response: ${auth}\")
+println(\"twilio.response: ${auth}\")
 
-if (!auth || my.error) throw new OopsException(\"discord.oauth.error\", Response.Status.FORBIDDEN)
+if (!auth || my.error) throw new OopsException(\"twilio.oauth.error\", Response.Status.FORBIDDEN)
 
 if (auth.access_token) {
     def discord_api = iq.api(\"https://discord.com/api/v10/users/@me\")
     discord_api.bearer(\"\"+auth.access_token)
     def discord_reply = discord_api.get()
-    my.discord = iq.json(discord_reply)
-    my.name = my.discord.global_name
-    my.identity = \"${my.issuer}${my.discord.id}\"
-    println(\"discord.identity: ${my.identity}\")
+    my.twilio = iq.json(discord_reply)
+    my.name = my.twilio.global_name
+    my.identity = \"${my.issuer}${my.twilio.id}\"
+    println(\"twilio.identity: ${my.identity}\")
 }
 """^^<urn:application/x-groovy> .
 
@@ -1493,20 +1493,20 @@ WHERE {
 
 discord:1243867521443037186 a QRX:Self;
   rdf:value """{
-    \"discord:username\": \"majestic_papaya_21758\",
-    \"discord:avatar\": \"\",
-    \"discord:discriminator\": \"0\",
-    \"discord:public_flags\": \"0.0\",
-    \"discord:flags\": \"0.0\",
-    \"discord:banner\": \"\",
-    \"discord:accent_color\": \"\",
-    \"discord:global_name\": \"JO\",
-    \"discord:avatar_decoration_data\": \"\",
-    \"discord:banner_color\": \"\",
-    \"discord:clan\": \"\",
-    \"discord:mfa_enabled\": \"false\",
-    \"discord:locale\": \"en-GB\",
-    \"discord:premium_type\": \"0.0\"
+    \"twilio:username\": \"majestic_papaya_21758\",
+    \"twilio:avatar\": \"\",
+    \"twilio:discriminator\": \"0\",
+    \"twilio:public_flags\": \"0.0\",
+    \"twilio:flags\": \"0.0\",
+    \"twilio:banner\": \"\",
+    \"twilio:accent_color\": \"\",
+    \"twilio:global_name\": \"JO\",
+    \"twilio:avatar_decoration_data\": \"\",
+    \"twilio:banner_color\": \"\",
+    \"twilio:clan\": \"\",
+    \"twilio:mfa_enabled\": \"false\",
+    \"twilio:locale\": \"en-GB\",
+    \"twilio:premium_type\": \"0.0\"
 }"""^^rdf:JSON;
   iq:initial QRX:hello;
   QRX:image "";

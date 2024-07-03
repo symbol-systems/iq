@@ -35,11 +35,11 @@ import systems.symbol.fsm.StateException;
 public interface I_Delegate<T> {
 
     /**
-     * Makes a decision based on the provided state.
+     * Retrieve a decision intent.
      *
      * @return the decision as a resource
      * @throws StateException if an error occurs during the decision-making process
      */
-    T decide() throws StateException;
+    T intent() throws StateException;
 
 }

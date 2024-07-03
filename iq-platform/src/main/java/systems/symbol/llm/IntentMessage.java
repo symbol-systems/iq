@@ -8,9 +8,13 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.platform.I_Self;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
 public class IntentMessage extends TextMessage implements I_Self {
+    static String EXTRACT_REGEX = "([a-zA-Z0-9:/]+)";
 
     private String intent;
 
@@ -20,7 +24,7 @@ public class IntentMessage extends TextMessage implements I_Self {
                        @JsonProperty("role") String role,
                        @JsonProperty("content") String content) {
         this.type = MessageType.text;
-        this.intent = intent.startsWith("#")?intent.substring(1):intent;
+        this.intent = extract(intent);
         this.role = RoleType.valueOf(role);
         this.content = content;
     }
@@ -30,7 +34,7 @@ public class IntentMessage extends TextMessage implements I_Self {
             @JsonProperty("role") I_LLMessage.RoleType role,
             @JsonProperty("content") String content) {
         this.type = MessageType.text;
-        this.intent = intent.startsWith("#")?intent.substring(1):intent;
+        this.intent = extract(intent);
         this.role = role;
         this.content = content;
     }
@@ -40,10 +44,19 @@ public class IntentMessage extends TextMessage implements I_Self {
     }
 
     public IRI getSelf() {
-        return Values.iri(getIntent());
+        return getIntent().isEmpty()?null:Values.iri(getIntent());
     }
 
     public String toString() {
         return "{role: "+role+", intent: "+intent+", content: "+content+"}";
+    }
+
+    public static String extract(String s) {
+        Pattern pattern = Pattern.compile(EXTRACT_REGEX);
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find() && matcher.group(1).indexOf(":")>0) {
+            return matcher.group(1);
+        }
+        return "";
     }
 }

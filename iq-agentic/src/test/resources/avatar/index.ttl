@@ -5,7 +5,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix : <iq:test:>.
 
-@prefix ai: <urn:ai:>.
+@prefix ai: <ai:>.
 @prefix iq: <iq:>.
 :
     rdf:value """Select the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";

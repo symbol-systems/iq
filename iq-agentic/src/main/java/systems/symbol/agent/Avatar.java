@@ -2,6 +2,7 @@ package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import systems.symbol.llm.*;
 import systems.symbol.llm.gpt.CommonLLM;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
-import systems.symbol.prompt.AgentPrompt;
+import systems.symbol.prompt.*;
 import systems.symbol.secrets.I_Secrets;
 
 import javax.script.Bindings;
@@ -47,40 +48,30 @@ public class Avatar implements I_Self, I_Intent {
         Set<IRI> done = new HashSet<>();
         I_LLM<String> gpt = CommonLLM.gpt(assistant, facts, 2048, secrets);
         if (gpt==null) return done;
-        processLLM(actor, assistant, gpt, agent, bindings);
+        cognition(actor, assistant, gpt, agent, bindings);
         done.add(actor);
         return done;
     }
 
-    private void processLLM(IRI actor, Resource assistant, I_LLM<String> gpt, I_Agent agent, Bindings bindings) throws Exception, APIException {
+    private void cognition(IRI actor, Resource assistant, I_LLM<String> gpt, I_Agent agent, Bindings bindings) throws Exception, APIException {
         Resource state = agent.getStateMachine().getState();
-        log.info("avatar.LLM: {} @ {} as {}", actor, state, assistant);
-        Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
         Optional<Literal> name = Models.getPropertyLiteral(facts, actor, RDFS.LABEL);
-        name.ifPresent(literal -> my.put("name", literal.stringValue()));
-        log.info("avatar.name: {} @ {} x {}", name.isPresent()?name.get():"??", my.keySet(), facts.size());
+        name.ifPresent(literal -> bindings.put(MyFacade.AI, literal.stringValue()));
+        Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
+        log.info("avatar.LLM: {} - {} @ {} as {}", name.isPresent()?name.get():"AI", actor, state, assistant);
 
-        AgentPrompt prompts = new AgentPrompt();
-        Conversation ai = new Conversation();
+        Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
+        PromptChain ai = new PromptChain();
+        ai.add(new AgentPrompt(my, agent));
+        ai.add(new KnownsPrompt(my, agent, facts));
+        if (wrapper.isPresent()) ai.add(new ChoicePrompt(my, agent, wrapper.get().stringValue().trim()));
+        else ai.add(new ChoicePrompt(my, agent));
 
-        String prompt = prompts.prompt(actor, state, this.facts);
-        ai.system(prompts.bind(prompt,my));
-//        prompts.copy(ai, chat);
-        ai.user(chat.latest().getContent());
-
-        String wrapper = prompts.prompt(assistant, this.facts);
-        String choices = prompts.choices(facts, agent.getStateMachine().getTransitions());
-        my.put("choices", prompts.bind(choices, my));
-
-        if (wrapper.isEmpty()) {
-            chat.assistant(choices);
-        } else {
-            ai.system(prompts.bind(wrapper, my));
-        }
-        I_Assist<String> complete = gpt.complete(ai);
-        log.debug("avatar.gpt: {} == {}", actor,  ai);
-        updateChat(agent, chat ,complete);
-        log.debug("avatar.done: {} == {}", actor,  chat);
+//        log.info("avatar.chat: {}", chat);
+        I_Assist<String> answer = gpt.complete(ai.complete(chat));
+        log.info("avatar.GPT: {}\n>>>>\n{}\n", actor,  answer);
+        updateChat(agent, chat ,answer);
+        log.info("avatar.done: {}\n<<<<\n{}\n", actor,  chat);
     }
 
     private void updateChat(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {

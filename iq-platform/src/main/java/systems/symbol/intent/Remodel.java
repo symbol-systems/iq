@@ -139,7 +139,7 @@ public class Remodel extends AbstractIntent {
      */
     public Set<IRI> remodel(IRI actor, Resource state, Literal rdfString, Bindings my, Model model) throws IOException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
-        log.info("remodel.rdf: {} -> {} -> {}", rdfString.getDatatype(), bindings.keySet(), ((Map<?, ?>) bindings.get("my")).keySet());
+        log.info("remodel.rdf: {} -> {} -> {}", rdfString.getDatatype(), bindings.keySet(), ((Map<?, ?>) bindings.get(MyFacade.MY)).keySet());
 
         String remodelled = HBSRenderer.template(rdfString.stringValue(), bindings);
 

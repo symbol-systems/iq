@@ -1,0 +1,33 @@
+PREFIX discord: <QRX:discord:>
+PREFIX iq: <iq:>
+PREFIX my: <QRX:>
+
+INSERT {
+    <{{my.issuer}}> iq:trusts ?self.
+    ?self
+        a my:Self;
+        iq:trusts my:;
+        iq:initial my:Hello;
+        iq:name "{{my.discord.global_name}}" ;
+        my:label "{{my.discord.global_name}}" ;
+        my:image "{{my.discord.avatar}}";
+        rdf:value """{
+    "discord:username": "{{my.discord.username}}",
+    "discord:avatar": "{{my.discord.avatar}}",
+    "discord:discriminator": "{{my.discord.discriminator}}",
+    "discord:public_flags": "{{my.discord.public_flags}}",
+    "discord:flags": "{{my.discord.flags}}",
+    "discord:banner": "{{my.discord.banner}}",
+    "discord:accent_color": "{{my.discord.accent_color}}",
+    "discord:global_name": "{{my.discord.global_name}}",
+    "discord:avatar_decoration_data": "{{my.discord.avatar_decoration_data}}",
+    "discord:banner_color": "{{my.discord.banner_color}}",
+    "discord:clan": "{{my.discord.clan}}",
+    "discord:mfa_enabled": "{{my.discord.mfa_enabled}}",
+    "discord:locale": "{{my.discord.locale}}",
+    "discord:premium_type": "{{my.discord.premium_type}}"
+}"""^^rdf:JSON.
+}
+WHERE {
+    BIND(<{{my.identity}}> AS ?self)
+}

@@ -7,8 +7,6 @@ import systems.symbol.agent.Agentic;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
-import systems.symbol.decide.FutureDecision;
-import systems.symbol.decide.LLMDecision;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
@@ -88,7 +86,7 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
         if (decider==null) return; // quietly
 
         try {
-            Resource decision = decider.get().decide();
+            Resource decision = decider.get().intent();
             if (decision!=null) {
                 pending.remove(actor);
                 decider.complete(() -> decision);
@@ -97,15 +95,6 @@ public class ExecutiveFleet extends AgenticFleet implements I_Decide<Resource>, 
             log.error("decision.failed: {} -> {}", actor, e.getMessage(), e);
         }
 
-    }
-
-    protected Future<I_Delegate<Resource>> delegate(I_Agent agent, I_Agentic<String> context) throws StateException {
-        LLMDecision decision = new LLMDecision(llm, agent, context);
-
-        IRI decided = decision.decide();
-        FutureDecision<Resource> futureDecision = new FutureDecision<>() {
-        };
-        return futureDecision;
     }
 
     /**

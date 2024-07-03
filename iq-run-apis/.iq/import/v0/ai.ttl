@@ -9,7 +9,7 @@
 @prefix schema: <http://schema.org/> .
 
 @prefix iq: <iq:>.
-@prefix ai: <urn:ai:>.
+@prefix ai: <ai:>.
 
 ## IQ - operating environment for cognitive AI.
 

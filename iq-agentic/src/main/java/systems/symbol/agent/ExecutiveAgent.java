@@ -19,6 +19,7 @@ import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
     I_Decide<Resource> manager;
+    Set<Resource> seen = new HashSet<>();
 
     /**
      * The ExecutiveAgent makes simple decisions and delegates other to manager.
@@ -51,20 +52,22 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     /**
      * Handles transitions .
      *
-     * @param from The resource representing the source state of the transition.
+     * @param from The resource representing the source state oSf the transition.
      * @param to   The resource representing the target state of the transition.
      * @return true if the transition is handled successfully, false otherwise.
      */
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
+        if (seen.contains(to)) return false;
         log.info("agent.onTransition: {} @ {} ==> {} --> {}", self, getStateMachine().getState(), from, to);
         Set<IRI> executed = execute(getSelf(), to, bindings);
-        Resource next = decide();
+        Resource next = intent();
         log.info("agent.decided: {} --> {} && {} -> {} --> {}", from, to, getStateMachine().getState(), next, executed);
         if (next==null) return false; // don't veto, we may try again
         if (getStateMachine().getState().equals(next)) return false;
-        getStateMachine().transition(next);
-        return true;
+        Resource transitioned = getStateMachine().transition(next);
+        seen.add(transitioned);
+        return next.equals(transitioned);
     }
 
     /**
@@ -76,7 +79,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      * @throws StateException if there is an issue with the state machine
      */
     @Override
-    public Resource decide() throws StateException {
+    public Resource intent() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
         log.info("agent.deciding: {} -> {}", manager==null?"solo":manager.getClass().getSimpleName(), choices);
         if (choices.isEmpty()) return null;
@@ -86,9 +89,14 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         if (delegated==null) return null;
         try {
             I_Delegate<Resource> delegate = delegated.get();
-            return (delegate==null)?null:delegate.decide();
+            return (delegate==null)?null:delegate.intent();
         } catch (InterruptedException | ExecutionException e) {
             throw new StateException(e.getMessage(), getStateMachine().getState(), e);
         }
+    }
+
+    public void start() throws Exception {
+        this.seen.clear();
+        super.start();
     }
 }

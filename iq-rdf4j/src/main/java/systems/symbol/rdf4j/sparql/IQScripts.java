@@ -60,7 +60,7 @@ public class IQScripts {
                 }
             }
         }
-        log.info("findScript.missing: {}", script);
+        log.warn("findScript.missing: {}", script);
         return null;
     }
 

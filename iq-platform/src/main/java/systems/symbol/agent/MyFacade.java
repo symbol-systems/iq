@@ -32,9 +32,11 @@ public class MyFacade {
     public static final String STATE = "state";
     public static final String RESULTS = "results";
     public static final String INTENT = "intent";
+    public static final String NAME = "name" ;
     public static final String MY = "my";
     public static final String IQ = "iq";
-    public static final String PROMPT = "prompt";
+    public static final String AI = "ai";
+    public static final String CONTENT = "content";
     public static final String TIME = "time";
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");

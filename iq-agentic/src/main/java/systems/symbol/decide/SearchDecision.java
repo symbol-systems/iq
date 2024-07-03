@@ -8,6 +8,7 @@ import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.finder.I_Search;
 import systems.symbol.fsm.StateException;
+import systems.symbol.string.Validate;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -32,7 +33,7 @@ public class SearchDecision implements I_Delegate<Resource>, I_Decide<Resource> 
     }
 
     @Override
-    public Resource decide() throws StateException {
+    public Resource intent() throws StateException {
         String content = avatar.getConversation().latest().getContent();
         Collection<IRI> found = finder.search(content, maxResults, minScore);
         log.info("search.decided: {} -> {}", content, found);
@@ -44,15 +45,18 @@ public class SearchDecision implements I_Delegate<Resource>, I_Decide<Resource> 
     public Future<I_Delegate<Resource>> delegate(I_Agent agent) {
         CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
         String content = avatar.getConversation().latest().getContent();
-        Collection<IRI> found = finder.search(content, maxResults, minScore);
-        Collection<Resource> transitions = agent.getStateMachine().getTransitions();
-        log.info("search.agent: {} -> {}", found, transitions);
-        for (IRI iri : found) {
-            boolean contains = transitions.contains(iri);
-            log.info("search.iri: {} -> {}", iri, contains);
-            if (contains) {
-                future.complete(() -> iri);
-                break;
+        log.info("search.content: {}", content);
+        if (!Validate.isMissing(content)) {
+            Collection<IRI> found = finder.search(content, maxResults, minScore);
+            Collection<Resource> transitions = agent.getStateMachine().getTransitions();
+            log.info("search.agent: {} -> {}", found, transitions);
+            for (IRI iri : found) {
+                boolean contains = transitions.contains(iri);
+                log.info("search.iri: {} -> {}", iri, contains);
+                if (contains) {
+                    future.complete(() -> iri);
+                    break;
+                }
             }
         }
         future.complete(()->agent.getStateMachine().getState());

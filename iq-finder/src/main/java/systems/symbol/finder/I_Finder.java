@@ -39,13 +39,4 @@ public interface I_Finder {
      * @return A list of {@link EmbeddingMatch} objects representing matching text segments.
      */
     List<EmbeddingMatch<TextSegment>> find(Embedding embedding, int maxResults, double minScore);
-
-    /**
-     * Finds text segments similar to the given text, considering the default maximum number of results
-     * and the default minimum similarity score.
-     *
-     * @param text The text to find similar segments for.
-     * @return A list of {@link EmbeddingMatch} objects representing matching text segments.
-     */
-    List<EmbeddingMatch<TextSegment>> find(String text);
 }

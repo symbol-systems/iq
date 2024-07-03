@@ -66,32 +66,11 @@ public class Realms {
         }
     }
 
-    public static IRIs trusts(Model model, IRI agent) {
-        IRIs trusts = new IRIs();
-        return trusts(model, agent, trusts, false);
+    public static Iterable<IRI> trusts(Model model, IRI agent) {
+        return Facts.find(model,agent, new IRIs(), false, IQ_NS.TRUSTS);
     }
 
-    public static IRIs trusts(Model model, IRI focus, IRIs trusts, boolean recurse) {
-        if (trusts.contains(focus)) return trusts;
-        trusts.add(focus);
-        Iterable<Statement> trusted = model.getStatements(focus, IQ_NS.TRUSTS, null);
-        for (Statement st : trusted) {
-            Value thing = st.getObject();
-            if (thing!=null) {
-                IRI resource = Values.iri(thing.stringValue());
-                trusts(model, resource, trusts, recurse);
-            }
-        }
-        return trusts;
-    }
-
-    public static Model meld(Model from, IRIs todos, Model to) {
-        for(IRI todo: todos) {
-            Iterable<Statement> trusted = from.getStatements(todo, null, null);
-            for (Statement st : trusted) {
-                to.add(st);
-            }
-        }
-        return to;
+    public static Iterable<IRI> trusts(Model model, IRI focus, IRIs trusts, boolean recurse) {
+        return Facts.find(model, focus, trusts, recurse, IQ_NS.TRUSTS);
     }
 }
