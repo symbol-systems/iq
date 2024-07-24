@@ -87,7 +87,6 @@ public class TokenAPI {
             connection.begin();
 
             IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider+"/");
-            log.info("trust.issuer: {} x {}", issuer, connection.size());
 
             Bindings bindings = new SimpleBindings(params);
             URI requestUri = info.getRequestUri();
@@ -95,16 +94,18 @@ public class TokenAPI {
             bindings.put("host", baseUrl);
             bindings.put("issuer", issuer);
             bindings.put("provider", provider);
+            log.info("trust.issuer: {} x {} <-- {}", issuer, connection.size(), baseUrl);
 
             AgentBuilder builder = new AgentBuilder(issuer, bindings, realm.getSecrets());
             builder.setGround(connection).setThoughts(realm.getModel()).executive().sparql(connection);
             I_Agent agent = builder.build();
+            agent.start();
             IRI initial = Values.iri(issuer.stringValue()+"verify");
 //            agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
             Resource state = agent.getStateMachine().transition(initial);
-            log.info("trust.agent: {} -> {} & {} @ {}", agent.getSelf(), initial ,state, baseUrl);
-
+            log.info("trust.agent: {} == {} --> {}", agent.getSelf(), initial ,state);
+            agent.stop();
             Object identity = bindings.get("identity");
             if (identity==null) return new OopsResponse("api.token.identity", Response.Status.NOT_FOUND).asJSON();
             if (!identity.toString().startsWith(agent.getSelf().stringValue()) || identity.toString().length()==agent.getSelf().stringValue().length())
