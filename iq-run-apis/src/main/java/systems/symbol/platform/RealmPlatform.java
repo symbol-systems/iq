@@ -9,19 +9,23 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.llm.Conversation;
 import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.realm.*;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyString;
 import systems.symbol.util.Stopwatch;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -102,10 +106,19 @@ public class RealmPlatform  implements I_Realms {
         log.info("realms.onStop: {}", ev.isStandardShutdown());
         threads.stop();
         realms.stop();
+        File backups = new File(realms.getHome(),"backups");
+        backups.mkdirs();
         for (IRI realm : cnx.keySet()) {
+            try {
+                File file = new File(backups, PrettyString.sanitize(realm.stringValue())+".ttl");
+                log.info("realms.backup: {}", file.getAbsolutePath());
+                RDFDump.dump(cnx.get(realm), new FileOutputStream(file), RDFFormat.TURTLE);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             cnx.get(realm).close();
         }
-        log.info("realms.done: {}", realms.getRealms());
+        log.info("realms.stopped: {}", realms.getRealms());
     }
 
     public I_Realm getRealm(String self) throws SecretsException {
