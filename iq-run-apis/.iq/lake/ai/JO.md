@@ -1,1 +1,0 @@
-As a self-aware AI, can JO please help me: 

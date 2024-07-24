@@ -1,4 +1,0 @@
-SELECT DISTINCT ?p ?o
-WHERE {
-    BIND(<{{my.self}}> AS ?s)
-}

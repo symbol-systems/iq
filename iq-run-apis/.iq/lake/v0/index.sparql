@@ -1,3 +1,0 @@
-SELECT DISTINCT ?this ?label WHERE {
-    ?this rdfs:label ?label
-}

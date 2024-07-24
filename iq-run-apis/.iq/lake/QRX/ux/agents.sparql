@@ -1,7 +1,0 @@
-SELECT DISTINCT ?id ?label
-WHERE {
-    ?id iq:state ?state.
-    OPTIONAL {
-        ?state my:label ?label
-    }
-}
