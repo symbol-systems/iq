@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * symbol.systems (c) 2010-2013
@@ -48,7 +51,11 @@ public class IOCopier {
 	}
 
 	public static int copy(File from, File to) throws IOException {
-		return copy(new FileInputStream(from), new FileOutputStream(to));
+		return copy(Files.newInputStream(from.toPath()), Files.newOutputStream(to.toPath()));
+	}
+
+	public static Path save(String token, File file) throws IOException {
+		return Files.write(file.toPath(), token.getBytes(StandardCharsets.UTF_8));
 	}
 
 public void process(InputStream input, OutputStream output) throws IOException {
@@ -57,12 +64,12 @@ public void process(InputStream input, OutputStream output) throws IOException {
 	}
 
 	public static String load(File file) throws IOException {
-		return toString(new FileInputStream(file), "UTF-8");
+		return toString(Files.newInputStream(file.toPath()), "UTF-8");
 	}
 
 	public static String toString(File file)  {
 		try {
-			return toString(new FileInputStream(file), "UTF-8");
+			return toString(Files.newInputStream(file.toPath()), "UTF-8");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

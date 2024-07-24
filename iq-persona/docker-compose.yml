@@ -1,0 +1,32 @@
+version: '2.2'
+services:
+  relay:
+image: chriswayg/tor-server
+init: true
+restart: always
+network_mode: host
+environment:
+  TOR_NICKNAME: QRX
+  CONTACT_EMAIL: JO@QRX.agency
+volumes:
+  - ./tor-data/:/var/lib/tor/
+  - ./torrc:/etc/tor/torrc
+
+  https_server:
+image: nginx:latest
+restart: always
+ports:
+  - "443:443"
+environment:
+  SSL_CERT: |-
+-----BEGIN CERTIFICATE-----
+MIIDXTCCAkWgAwIBAgIJAKYpMYYpXyfsMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+...
+-----END CERTIFICATE-----
+  SSL_CERT_KEY: |-
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDp1ofRqPi9NzP4
+...
+-----END PRIVATE KEY-----
+volumes:
+  - ./nginx.conf:/etc/nginx/nginx.conf:ro

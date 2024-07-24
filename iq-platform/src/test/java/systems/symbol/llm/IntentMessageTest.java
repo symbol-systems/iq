@@ -3,17 +3,18 @@ package systems.symbol.llm;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static systems.symbol.string.Extract.extractIntent;
 
 class IntentMessageTest {
 
 @Test
 void extract() {
 
-assert IntentMessage.extract("#QRX:ABC").equals("QRX:ABC");
-assert IntentMessage.extract("[QRX:ABC]").equals("QRX:ABC");
-assert IntentMessage.extract("[#QRX:ABC]").equals("QRX:ABC");
-assert IntentMessage.extract("(#QRX:ABC]").equals("QRX:ABC");
-assert IntentMessage.extract("QRX:ABC]").equals("QRX:ABC");
-assert !IntentMessage.extract("XQRX:ABC").equals("QRX:ABC");
+assert extractIntent("#QRX:ABC").equals("QRX:ABC");
+assert extractIntent("[QRX:ABC]").equals("QRX:ABC");
+assert extractIntent("[#QRX:ABC]").equals("QRX:ABC");
+assert extractIntent("(#QRX:ABC]").equals("QRX:ABC");
+assert extractIntent("QRX:ABC]").equals("QRX:ABC");
+assert !extractIntent("XQRX:ABC").equals("QRX:ABC");
 }
 }

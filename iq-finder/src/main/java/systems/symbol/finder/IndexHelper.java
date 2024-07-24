@@ -8,12 +8,16 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.string.PrettyString;
+import systems.symbol.util.Stopwatch;
 
 public class IndexHelper {
 protected static final Logger log = LoggerFactory.getLogger(IndexHelper.class);
 
 public static long index(I_Finder finder, TupleQueryResult result) {
 long count = 0;
+Stopwatch stopwatch = new Stopwatch();
+//log.info("index.results ...");
 while (result.hasNext()) {
 BindingSet bindingSet = result.next();
 String id = bindingSet.getValue("this").stringValue();
@@ -23,11 +27,11 @@ for(String k: bindingSet.getBindingNames()) {
 if (!k.equals("this"))
 s$.append( bindingSet.getValue(k).stringValue()).append(" ");
 }
-//log.debug("indexing: {} -> {}", id, s$);
+//log.debug("index.store: {} -> {}", id, PrettyString.truncate(s$.toString(),16));
 finder.store(id, s$.toString());
 count++;
 }
-log.info("indexed.results: {}",count);
+log.info("index.results: {} -> {} @ {}", finder, count, stopwatch);
 return count;
 }
 

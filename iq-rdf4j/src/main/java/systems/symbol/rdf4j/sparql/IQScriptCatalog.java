@@ -88,7 +88,7 @@ return content==null?null:content.stringValue();
  */
 @Override
 public Literal getContent(Resource query, IRI mimetype) {
-log.info("sparql.getContent: {} -> {}", query, mimetype);
+log.debug("sparql.getContent: {} -> {}", query, mimetype);
 return IQScripts.findScript(iq.getConnection(), query, mimetype,null);
 }
 

@@ -15,7 +15,7 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.BootstrapLake;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.string.PrettyString;
 import systems.symbol.string.Validate;

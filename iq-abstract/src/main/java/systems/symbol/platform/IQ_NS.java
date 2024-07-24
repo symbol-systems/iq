@@ -11,24 +11,19 @@ import org.eclipse.rdf4j.model.util.Values;
 public interface IQ_NS {
 String IQ = "iq:"; // reserved for internal use
 String AI = "ai:"; // runtime foundational knowledge
-//String MY = "urn:my:"; // domain knowledge
 String TEST = "iq:test:"; // reserved for testing
 
 // Workflow-related IRIs
-IRI A_WORKFLOW = Values.iri(IQ, "Workflow");
 IRI initialStep = Values.iri(IQ, "initial");
 IRI TO = Values.iri(IQ, "to");
 IRI hasGuard = Values.iri(IQ, "guard");
 IRI hasCurrentState = Values.iri(IQ, "state");
 
 // Action-related IRIs
-IRI doBoot = Values.iri(IQ, "boot");
 IRI KNOWS = Values.iri(IQ, "knows");
 IRI FORGOT = Values.iri(IQ_NS.IQ+"forgot");
-IRI TRUSTS = Values.iri(IQ, "trusts");;
-IRI PROMPT = Values.iri(IQ, "prompt");
-IRI NAME = Values.iri(IQ, "name");;
-
-// Miscellaneous IRIs
-IRI nop = Values.iri(IQ, "nop");
+IRI TRUSTS = Values.iri(IQ, "trusts");
+IRI SECRET = Values.iri(IQ, "secret");
+IRI OOPS = Values.iri(IQ, "oops");
+IRI NEEDS = Values.iri(IQ, "needs");
 }

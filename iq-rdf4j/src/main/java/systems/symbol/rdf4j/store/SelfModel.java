@@ -9,6 +9,7 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.platform.I_Self;
 
+import javax.script.Bindings;
 import java.util.*;
 
 public class SelfModel extends AbstractModel implements I_Self {
@@ -19,6 +20,7 @@ public SelfModel(IRI self, RepositoryConnection connection) {
 this.self=self;
 this.connection = connection;
 }
+
 @Override
 public boolean addAll(Collection<? extends Statement> c) {
 boolean result = super.addAll(c);
@@ -107,4 +109,10 @@ ns.add(new SimpleNamespace("",self.stringValue()));
 ns.add(new SimpleNamespace("self",self.stringValue()));
 return ns;
 }
+
+//public Bindings getBindings() {
+//return new Bindings() {
+//}
+//}
+
 }

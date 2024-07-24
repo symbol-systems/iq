@@ -24,9 +24,12 @@ package systems.symbol.intent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.RDF;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
+import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import java.io.IOException;
@@ -67,9 +70,24 @@ boot(self, model);
 public Set<IRI> learn(IRI actor, Resource fact, Bindings _unused) throws IOException {
 Set<IRI> done = new HashSet<>();
 
+if (fact.isIRI()) {
 log.info("learn: {} -> {}", actor, fact);
 model.add(actor, KNOWS, fact, getSelf());
-if (fact instanceof IRI) done.add((IRI) fact);
+done.add((IRI) fact);
+} else if (fact.isResource() ){
+IRI iri = Values.iri(IdentityHelper.uuid());
+Iterable<Statement> statements = getModel().getStatements(fact, null, null);
+for(Statement statement : statements){
+model.add(iri, statement.getPredicate(), statement.getObject(), getSelf());
+log.info("learn.#: {} -> {} -> {}", actor, iri, statement.getObject());
+}
+model.add(actor, KNOWS, iri, getSelf());
+} else if (fact.isLiteral() ){
+IRI iri = Values.iri(IdentityHelper.uuid());
+model.add(actor, KNOWS, iri, getSelf());
+model.add(iri, org.eclipse.rdf4j.model.vocabulary.RDF.VALUE, fact, getSelf());
+log.info("learn.$: {} -> {} -> {}", actor, iri, fact.stringValue());
+}
 return done;
 }
 

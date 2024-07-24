@@ -3,12 +3,19 @@ package systems.symbol.agent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Values;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
+import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.ModelStateMachine;
+import systems.symbol.fsm.SimpleStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
+import systems.symbol.platform.IQ_NS;
+import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import java.util.Collection;
@@ -45,6 +52,12 @@ public void boot(IRI self, Model ground) {
 public void resume() {
 }
 
+protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
+super.setFSM(fsm);
+this.seen.add(getStateMachine().getState());
+log.info("agent.fsm: {} == {}", getSelf(), getStateMachine().getState());
+}
+
 public void setManager(I_Decide<Resource> manager) {
 this.manager = manager;
 }
@@ -52,22 +65,37 @@ this.manager = manager;
 /**
  * Handles transitions .
  *
- * @param from The resource representing the source state oSf the transition.
+ * @param from The resource representing the source state oSf the transition.;
  * @param to   The resource representing the target state of the transition.
  * @return true if the transition is handled successfully, false otherwise.
  */
 @Override
 public boolean onTransition(Resource from, Resource to) throws StateException {
-if (seen.contains(to)) return false;
+if (seen.contains(to)) {
+log.info("agent.noTransition: {} @ {} ==> {}", self, from, to);
+return false;
+}
+try {
 log.info("agent.onTransition: {} @ {} ==> {} --> {}", self, getStateMachine().getState(), from, to);
 Set<IRI> executed = execute(getSelf(), to, bindings);
 Resource next = intent();
-log.info("agent.decided: {} --> {} && {} -> {} --> {}", from, to, getStateMachine().getState(), next, executed);
-if (next==null) return false; // don't veto, we may try again
-if (getStateMachine().getState().equals(next)) return false;
+log.info("agent.decides: {} --> {} == {}", from, next, executed);
+if (next==null) {
+log.info("agent.undecided: {} == {}", from, executed);
+return false; // don't veto, we may try again
+}
+if (getStateMachine().getState().equals(next)) {
+log.info("agent.same: {}", next);
+return false;
+}
 Resource transitioned = getStateMachine().transition(next);
+log.info("agent.transition: {} --> {}", from, transitioned);
 seen.add(transitioned);
 return next.equals(transitioned);
+} catch (StateException e) {
+log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to, e.getMessage());
+return false;
+}
 }
 
 /**

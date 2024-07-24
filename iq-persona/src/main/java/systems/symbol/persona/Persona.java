@@ -81,10 +81,11 @@ public class Persona implements I_Persona {
 			return;
 		}
 
-		System.out.println("listening ...");
+		System.out.println("opening ...");
 		TargetDataLine microphone = (TargetDataLine) AudioSystem.getLine(info);
 		microphone.open(format);
 		microphone.start();
+		System.out.println("listening ...");
 
 		// Buffer size for audio data
 		int bufferSize = 8096;
@@ -110,7 +111,7 @@ public class Persona implements I_Persona {
 				listener.accept( said );
 			}
 //else
-//System.out.println("?: " + recognizer.getPartialResult());
+System.out.println("?: " + recognizer.getPartialResult());
 		}
 		System.out.println("not listening.");
 		// Close the microphone and recognizer

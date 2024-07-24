@@ -26,7 +26,7 @@ root.put("@context", context);
 List<Bindings> graph = new ArrayList<>();
 root.put("@graph", graph);
 Map<Resource, Bindings> nodes = new HashMap<>();
-log.info("@graph: ... ");
+
 while (result.hasNext()) {
 Statement next = result.next();
 Resource subject = next.getSubject();
@@ -42,7 +42,7 @@ processPredicate(nodes, node, next, context);
 }
 nodes.put(subject, node);
 }
-log.info("\t@size: {}", graph.size());
+//log.debug("\t@size: {}", graph.size());
 //log.debug("\t{}", graph);
 return root;
 }

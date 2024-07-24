@@ -6,20 +6,32 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.util.Values;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import systems.symbol.agent.AgentBuilder;
+import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
+import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.gpt.CommonLLM;
 import systems.symbol.llm.gpt.GenericGPT;
+import systems.symbol.prompt.AgentPrompt;
+import systems.symbol.prompt.PromptChain;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.util.Stopwatch;
 
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
 import java.io.IOException;
 
 /**
@@ -39,31 +51,43 @@ public class ChatAPI extends GuardedAPI {
 summary = "api.ux.chat.post.summary",
 description = "api.ux.chat.post.description"
 )
-@Path("{repo}/{actor:.*}")
+@Path("{realm}/{actor:.*}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public Response chat(@PathParam("repo") String _realm, @PathParam("actor") String actor, @HeaderParam("Authorization") String auth,
+public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor, @HeaderParam("Authorization") String auth,
    Conversation chat) throws APIException, IOException, SecretsException {
 Stopwatch stopwatch = new Stopwatch();
-I_Realm realm = platform.getRealm(_realm);
-DecodedJWT jwt;
-try { jwt = authenticate(auth,realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
-if (realm==null) return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).asJSON();
-log.info("authenticated: {} -> {} => {}", jwt.getSubject(), jwt.getAudience(), jwt.getClaims());
-
 log.info("ux.chat: {}", chat.messages());
-if (chat.messages().isEmpty())
-chat.system("hello");
+if (chat.messages().isEmpty()) return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).asJSON();
+if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).asJSON();
+if (Validate.isMissing(_actor)) return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).asJSON();
+IRI actor = Values.iri(_actor);
+I_Realm realm = platform.getRealm(Values.iri(_realm+":"));
+if (realm==null) return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+DecodedJWT jwt;
+try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+Repository repository = realm.getRepository();
+if (repository == null) return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).asJSON();
 
-I_Secrets secrets = realm.getSecrets();
-String token = secrets.getSecret("MY_GROQ_API_KEY");
-if (Validate.isMissing(token)) {
-return new OopsResponse("api.ux.chat#disabled", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+Bindings bindings = new SimpleBindings();
+I_Realm myRealm = platform.getRealm(Values.iri(jwt.getSubject()));
+log.info("ux.chat.realm: {} @ {} & {}", actor, realm.getSelf(), myRealm.getSelf());
+AgentBuilder builder = new AgentBuilder(actor, bindings, realm.getSecrets());
+
+try (RepositoryConnection connection = repository.getConnection()) {
+builder.setGround(connection).self(chat);
+I_Agent agent = builder.build(chat);
+agent.start();
+PromptChain ai = new PromptChain();
+ai.add(new AgentPrompt(bindings, agent));
+I_Assist<String> complete = ai.complete(chat);
+log.info("ux.chat.reply: {} @ {}", complete.messages(), stopwatch);
+agent.stop();
+return new ChatResponse(complete).asJSON();
+} catch (StateException e) {
+return new OopsResponse("api.ux.chat.state", Response.Status.BAD_REQUEST).asJSON();
+} catch (Exception e) {
+return new OopsResponse("api.ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 }
-GenericGPT gpt = new GenericGPT(token, CommonLLM.GROQ_Llama3_7b(1000));
-gpt.complete(chat);
-
-log.info("ux.chat.reply: {} @ {}", chat.messages(), stopwatch.toString());
-return new ChatResponse(chat).asJSON();
 }
 }

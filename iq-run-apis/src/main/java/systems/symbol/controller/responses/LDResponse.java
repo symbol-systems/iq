@@ -29,7 +29,7 @@ Response.ResponseBuilder builder;
 
 Gson gson = new Gson();
 String json = gson.toJson(jsonld);
-log.info("json: {}", json);
+log.info("json.length: {}", json.length());
 
 builder = Response.ok(json, "application/json");
 builder = addCORS(builder);

@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -23,7 +24,6 @@ import systems.symbol.realm.Facts;
 import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
 import systems.symbol.rdf4j.IRIs;
-import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.Realms;
 import systems.symbol.secrets.SecretsException;
@@ -35,7 +35,8 @@ import systems.symbol.trust.generate.JWTGen;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.net.URI;
-import java.util.Set;
+
+import static systems.symbol.platform.IQ_NS.TRUSTS;
 
 @Path("trust")
 public class TokenAPI {
@@ -48,7 +49,7 @@ RoutingContext routing;
 @Path("{path : .*}")
 @Produces(MediaType.APPLICATION_JSON)
 public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
-log.debug("preflight.trust: {} @ {}", path, info.getBaseUri());
+log.info("preflight.trust: {} @ {}", path, info.getBaseUri());
 return new DataResponse().asJSON();
 }
 
@@ -98,32 +99,36 @@ bindings.put("provider", provider);
 AgentBuilder builder = new AgentBuilder(issuer, bindings, realm.getSecrets());
 builder.setGround(connection).setThoughts(realm.getModel()).executive().sparql(connection);
 I_Agent agent = builder.build();
-IRI state = Values.iri(issuer.stringValue()+"verify");
+IRI initial = Values.iri(issuer.stringValue()+"verify");
 //agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
-Resource done = agent.getStateMachine().transition(state);
-log.info("trust.agent: {} -> {} & {} @ {}", agent.getSelf(), state ,done, baseUrl);
-onboard(routing, builder.getGround(), agent.getThoughts(), agent.getSelf());
+Resource state = agent.getStateMachine().transition(initial);
+log.info("trust.agent: {} -> {} & {} @ {}", agent.getSelf(), initial ,state, baseUrl);
 
-Object self = bindings.get("identity");
-if (self==null) return new OopsResponse("api.token.self", Response.Status.NOT_FOUND).asJSON();
-if (!self.toString().startsWith(agent.getSelf().stringValue()) || self.toString().length()==agent.getSelf().stringValue().length())
-return new OopsResponse("api.token.self", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+Object identity = bindings.get("identity");
+if (identity==null) return new OopsResponse("api.token.identity", Response.Status.NOT_FOUND).asJSON();
+if (!identity.toString().startsWith(agent.getSelf().stringValue()) || identity.toString().length()==agent.getSelf().stringValue().length())
+return new OopsResponse("api.token.identity", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 
 Object name = bindings.get("name");
 if (name==null||name.toString().isEmpty()) return new OopsResponse("api.token.name", Response.Status.NOT_FOUND).asJSON();
-log.info("trust.self: {} -> {} -> {} == {}", self, name, !state.equals(done), state);
-I_Realm myRealm = realms.getRealm(self.toString());
+IRI self = Values.iri(identity.toString());
+log.info("trust.identity: {} -> {} -> {} == {}", self, name, !initial.equals(state), initial);
+I_Realm myRealm = realms.getInstance().newRealm(self);
+log.info("trust.realm: {}", myRealm.getSelf());
 
-RDFDump.dump(myRealm.getModel());
+//RDFDump.dump(myRealm.getModel());
 try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
 myConnection.begin();
+trusting(routing, builder.getGround(), agent.getThoughts(), agent.getSelf(), self);
 myConnection.add(agent.getThoughts());
 myConnection.commit();
 }
-connection.commit();
-String signedToken = tokenize(issuer, provider, self.toString(), name.toString(), new String[]{self.toString(), _realm, provider}, realm);
+String[] roles = { "user", provider, self.stringValue() };
+String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), name.toString(), new String[]{identity.toString(), _realm, provider}, realm, 600); // 10 mins
+//String signedToken = tokenize(issuer, provider, identity.toString(), name.toString(), new String[]{identity.toString(), _realm, provider}, realm);
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
+connection.commit();
 return response.asJSON();
 } catch (Exception e) {
 log.error(e.getMessage(), e);
@@ -131,14 +136,19 @@ return new OopsResponse("api.token.oops", Response.Status.FORBIDDEN).asJSON();
 }
 }
 
-protected void onboard(RoutingContext routing, Model ground, Model thoughts, IRI self) throws Exception {
+protected void trusting(RoutingContext routing, Model ground, Model thoughts, IRI issuer, IRI self) throws Exception {
+Iterable<Statement> statements = ground.getStatements(issuer, TRUSTS, self);
+if (statements.iterator().hasNext()) return;
 Iterable<IRI> trusts = Realms.trusts(ground, self, new IRIs(), true);
 Facts.copy(ground, trusts, thoughts);
 GeoLocate geo = new GeoLocate();
 String ipv4 = routing.request().remoteAddress().host();
 log.info("trust.ipv4: {}", ipv4);
+try {
 geo.locate(self, ipv4, thoughts);
+} catch(Exception e) { /* no op */ }
 //RDFDump.dump(thoughts);
+ground.add(issuer, TRUSTS, self);
 }
 
 @POST
@@ -146,6 +156,7 @@ geo.locate(self, ipv4, thoughts);
 @Path("refresh/{realm}")
 public Response reissue(@PathParam("realm") String _realm, @HeaderParam("Authorization") String bearer) throws SecretsException, OopsException {
 I_Realm realm = realms.getRealm(_realm);
+if (realm == null) return new OopsResponse("api.token.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
 DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
 if (jwt==null) {
 return new OopsResponse("api.token.token", Response.Status.FORBIDDEN).asJSON();
@@ -164,13 +175,10 @@ SimpleResponse response = new SimpleResponse("access_token", signedToken);
 return response.asJSON();
 }
 
-private String tokenize(IRI issuer, String provider, String self, String name, String[] claims, I_Keys keys) throws SecretsException {
-JWTGen jwtGen = new JWTGen();
-JWTCreator.Builder generator = jwtGen.generate(issuer.stringValue(), self, claims, 600); // 10 mins
-generator.withClaim("name", name);
-generator.withArrayClaim("roles", new String[] { "user", provider });
-return jwtGen.sign(generator, keys.keys());
-}
+//private String tokenize(IRI issuer, String provider, String self, String name, String[] claims, I_Keys keys) throws SecretsException {
+//String[] roles = { "user", provider };
+//return Realms.tokenize(issuer, roles, self, name, claims, keys, 600); // 10 mins
+//}
 
 }
 

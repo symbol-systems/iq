@@ -88,6 +88,13 @@ header("Authorization", "Basic " + encoded);
 return this;
 }
 
+public RestAPI header(String name) throws SecretsException {
+if (this.secrets==null) throw new SecretsException("missing.header.secrets");
+String credentials = this.secrets.getSecret(getURL());
+log.info("api.header.auth: {} -> {}", name, credentials);
+return header(name,credentials);
+}
+
 public RestAPI header(String name, String value) {
 if (value!=null) this.headers.put(name, value);
 return this;
@@ -188,15 +195,15 @@ String jsonBody = convertObjectToJsonString(json);
 String contentType = headers.get("Content-Type");
 if (contentType==null||contentType.isEmpty()) contentType = "application/json";
 if (contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
-log.info("api.form: {}", getURL());
-MyFacade.dump(json, System.out);
+log.info("api.form: {} -> {}", json.keySet(), getURL());
+//MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 FormBody formBody = form(json).build();
 builder.post(formBody);
 return executeRequest(builder.build());
 } else {
 RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
-log.debug("api.post: {} -> {} / {} & {}", getURL(), requestBody.contentType(), requestBody.contentLength(), headers);
+log.info("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
 //MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 builder.post(requestBody);

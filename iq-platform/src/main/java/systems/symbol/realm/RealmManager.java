@@ -31,7 +31,7 @@ protected final Logger log = LoggerFactory.getLogger(getClass());
 protected final RepositoryManager manager;
 protected final File keysHome;
 protected FileSystemManager vfs;
-protected File home, logHome, importsHome, vaultHome, indexHome;
+protected File home, logHome, lakeHome, vaultHome, indexHome;
 protected DynamicModelFactory dmf = new DynamicModelFactory();
 protected String defaultType = "default";
 protected I_SecretsStore secrets;
@@ -44,11 +44,11 @@ this(new File("."+IQ.toLowerCase()));
 public RealmManager(File home) throws Exception {
 this.home = home;
 this.logHome = new File(home, "log");
-this.importsHome = new File(home, "import");
+this.lakeHome = new File(home, "lake");
 this.vaultHome = new File(home, "vault");
 this.indexHome = new File(home, "index");
 this.logHome.mkdirs();
-this.importsHome.mkdirs();
+this.lakeHome.mkdirs();
 this.vaultHome.mkdirs();
 this.indexHome.mkdirs();
 this.vfs = VFS.getManager();
@@ -65,11 +65,19 @@ public File getHome() {
 return home;
 }
 
+public File getVaultHome() {
+return vaultHome;
+}
+
 public I_Realm getRealm(String self) throws SecretsException {
 return getRealm(Values.iri(self.contains(":")?self:self+":"));
 }
 
 public I_Realm getRealm(IRI self) throws SecretsException {
+return realms.get(self);
+}
+
+public I_Realm newRealm(IRI self) throws SecretsException {
 Realm realm = realms.get(self);
 log.debug("realm.found: {} -> {}", realms.keySet(), realm!=null);
 if (realm!=null) return realm;
@@ -82,11 +90,14 @@ for (Statement s : statements) {
 model.add(s);
 }
 }
-log.info("realm.model: {} -> {}", self, model.size());
+log.debug("realm.model: {} -> {}", self, model.size());
 return getRealm(self, model);
 }
 
 public I_Realm getRealm(IRI self, Model model) throws SecretsException {
+if (realms.containsKey(self)) {
+return realms.get(self);
+}
 Repository repo = getRepository(self.stringValue());
 
 String id = PrettyString.sanitize(self.stringValue());
@@ -99,7 +110,7 @@ I_Secrets secrets = this.secrets.getSecrets(self);
 log.info("realm.models: {} = {}", self, model.size());
 realm = new Realm(self, model, this.manager.getRepository(id), finder, secrets, this.vfs, keys.keys());
 realms.put(self, realm);
-log.info("realm.cached: {} -> {}", self, realms.keySet());
+log.debug("realm.cached: {} -> {}", self, realms.keySet());
 } catch (SecretsException e) {
 throw new SecretsException(e.getMessage());
 } catch (IOException e) {

@@ -1,7 +1,7 @@
 package systems.symbol.io;
 
 import systems.symbol.cli.CLIContext;
-import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.BootstrapLake;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -19,20 +19,20 @@ public class ImportExport {
 protected static final Logger log = LoggerFactory.getLogger(ImportExport.class);
 
 
-public static BootstrapLoader getBulkAssetLoader(CLIContext context, boolean forceDelete) {
+public static BootstrapLake getBulkAssetLoader(CLIContext context, boolean forceDelete) {
 RepositoryConnection connection = context.getRepository().getConnection();
-return new BootstrapLoader(context.getSelf().stringValue(), connection, forceDelete, true, true, true);
+return new BootstrapLake(context.getSelf().stringValue(), connection, forceDelete, true, true, true);
 }
 
 public static void restore(CLIContext context) throws IOException {
-BootstrapLoader loader = getBulkAssetLoader(context, false);
+BootstrapLake loader = getBulkAssetLoader(context, false);
 log.info("iq.loader.reload.backups: "+ context.backups.getAbsolutePath());
 loader.deploy(context.backups);
 loader.close();
 }
 
-public static BootstrapLoader load(CLIContext context, File userFile, boolean forceDelete) throws IOException {
-BootstrapLoader loader = getBulkAssetLoader(context, forceDelete);
+public static BootstrapLake load(CLIContext context, File userFile, boolean forceDelete) throws IOException {
+BootstrapLake loader = getBulkAssetLoader(context, forceDelete);
 if (userFile!=null && userFile.exists()) {
 log.info("iq.loader.load.file: "+userFile.getAbsolutePath());
 loader.deploy(userFile);

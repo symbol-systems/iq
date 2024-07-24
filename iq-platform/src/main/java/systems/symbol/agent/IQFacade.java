@@ -67,8 +67,6 @@ log.info("api.vfs: {} ", vfs);
 }
 
 public RestAPI api(String url) throws SecretsException {
-String secret = secrets==null?null:secrets.getSecret(url);
-log.info("api.secret: {} -> {}", url, secret);
 return new RestAPI(url, secrets);
 }
 

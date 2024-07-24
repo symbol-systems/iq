@@ -8,7 +8,7 @@
 @prefix ai: <ai:>.
 @prefix iq: <iq:>.
 :
-rdf:value """Select the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
+rdf:value """Select the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}"}""";
 iq:url "https://api.groq.com/openai/v1/chat/completions";
 iq:modelName "llama3-8b-8192";
 iq:secret "MY_GROQ_API_KEY";
@@ -16,13 +16,13 @@ iq:initial :self;
 .
 
 :OpenAI_Chat_gpt_35_turbo
-rdf:value """Pick the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
+rdf:value """Pick the matching user intent below:\n {{ choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}"}""";
 iq:url "https://api.openai.com/v1/chat/completions";
 iq:modelName "gpt-3.5-turbo-0125";
 iq:secret "MY_OPENAI_API_KEY".
 
 :Groq_Chat_llama3_8b_8192
-rdf:value """Select the matching user intent from below:\n {{ my.choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}", "answered": "{true_false}" }""";
+rdf:value """Select the matching user intent from below:\n {{ my.choices }}.\nReply using valid JSON : { "content": "${your_short_reply}", "intent": "${valid_user_intent}"}""";
 iq:url "https://api.groq.com/openai/v1/chat/completions";
 iq:modelName "llama3-8b-8192";
 iq:secret "MY_GROQ_API_KEY".

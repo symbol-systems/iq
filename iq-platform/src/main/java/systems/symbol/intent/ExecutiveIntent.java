@@ -129,7 +129,6 @@ IRIs done = new IRIs();
 List<Statement> todo = new ArrayList<>();
 findIntents(facts.getStatements(state, null, null), todo);
 if (model!=facts) findIntents(model.getStatements(state, null, null), todo);
-//log.info("execute.todos: {} @ {} -> {}", actor, state, todo);
 log.info("execute.intents: {} @ {} <-- {}", actor, state, todo);
 for(Statement s : todo) {
 if (!s.getPredicate().getLocalName().equals("a"))

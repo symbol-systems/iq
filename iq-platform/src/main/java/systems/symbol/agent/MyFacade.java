@@ -20,10 +20,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyFacade {
 protected final static Logger log = LoggerFactory.getLogger(MyFacade.class);
@@ -31,19 +28,17 @@ protected final static Logger log = LoggerFactory.getLogger(MyFacade.class);
 public static final String SELF = "self";
 public static final String STATE = "state";
 public static final String RESULTS = "results";
-public static final String INTENT = "intent";
-public static final String NAME = "name" ;
+public static final String ACTIVITY = "activity";
 public static final String MY = "my";
 public static final String IQ = "iq";
 public static final String AI = "ai";
-public static final String CONTENT = "content";
 public static final String TIME = "time";
 private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");
 
 public static List<Map<String, Object>> results(Bindings bindings, List<Map<String, Object>> results) {
 Object o = bindings.get(MY);
-if (!(o instanceof Map)) return null;
+if (!(o instanceof Map)) return new ArrayList<>();
 @SuppressWarnings("unchecked")
 Map<String, Object> my = (Map<String, Object>) o;
 my.put(RESULTS, results);
@@ -52,7 +47,7 @@ return results;
 
 public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {
 Bindings bindings = rebind(self, my);
-my.put(INTENT, IdentityHelper.uuid(self+"#"));
+if (!my.containsKey(ACTIVITY)) my.put(ACTIVITY, IdentityHelper.uuid(self+"#"));
 if (state!=null) my.put(STATE, state.stringValue());
 return bindings;
 }

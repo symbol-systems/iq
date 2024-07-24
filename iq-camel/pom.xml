@@ -62,8 +62,9 @@
 <start-class>systems.symbol.IQCamelBot</start-class>
 
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-<maven.compiler.plugin.source>11</maven.compiler.plugin.source>
-<maven.compiler.plugin.target>11</maven.compiler.plugin.target>
+<maven.compiler.plugin.source>21</maven.compiler.plugin.source>
+<maven.compiler.plugin.target>21</maven.compiler.plugin.target>
+<maven.compiler.plugin.release>21</maven.compiler.plugin.release>
 <slf4j.version>1.7.32</slf4j.version>
 <logback.version>1.4.14</logback.version>
 

@@ -50,7 +50,7 @@ public class Stopwatch {
 		return "Elapsed: " + (getTotalTime())/1000 + "s, Laps: " + laps + ", Average: " + averageTime + "ms";
 	}
 
-	public long lap() {
-		return laps;
-	}
+//	public long lap() {
+//		return laps;
+//	}
 }

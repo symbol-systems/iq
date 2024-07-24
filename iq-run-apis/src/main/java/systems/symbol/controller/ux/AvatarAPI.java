@@ -40,7 +40,7 @@ description = "api.ux.avatar.post.description"
 @Produces("application/ld+json")
 @Path("{realm}/{agent: .*}")
 public Response chat(@PathParam("realm") String _realm, @PathParam("agent") String _agent, @HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
-log.info("ux.avatar.chat: {} -> {} -> {}", _realm, _agent, chat);
+log.info("ux.avatar: {} -> {} -> {}", _realm, _agent, chat);
 if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.avatar#repository", Response.Status.BAD_REQUEST).asJSON();
 if (Validate.isMissing(_agent)) return new OopsResponse("api.ux.avatar#missing", Response.Status.BAD_REQUEST).asJSON();
 IRI agent = Values.iri(_agent);
@@ -59,7 +59,7 @@ Repository myRepo = myRealm.getRepository();
 try (RepositoryConnection connection = repository.getConnection()) {
 try (RepositoryConnection connection2 = myRepo.getConnection()) {
 AgentBuilder builder = new AgentBuilder(agent, bindings, realm.getSecrets());
-builder.setGround(connection).setThoughts(connection2).executive().remodel().sparql(connection);
+builder.setGround(connection).setThoughts(connection2).executive().remodel().sparql(connection).self(chat);
 
 //SearchDecision search = builder.decision(realm.getFinder(), chat);
 IntentDecision intents = builder.decision(chat);

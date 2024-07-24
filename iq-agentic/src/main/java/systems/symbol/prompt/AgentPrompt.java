@@ -5,12 +5,9 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.I_Assist;
-import systems.symbol.platform.IQ_NS;
-import systems.symbol.realm.Facts;
 
 import javax.script.Bindings;
 import java.io.IOException;
-import java.util.Set;
 
 public class AgentPrompt extends AbstractPrompt<String> {
 I_Agent agent;

@@ -13,6 +13,7 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.fsm.StateException;
 import systems.symbol.platform.AgentAction;
 import systems.symbol.platform.AgentService;
 import systems.symbol.realm.I_Realm;
@@ -34,7 +35,7 @@ description = "api.ux.intent.post.description"
 )
 @Produces(MediaType.APPLICATION_JSON)
 @Path("{realm}")
-public Response action(@PathParam("realm")String _realm, AgentAction action, @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+public Response action(@PathParam("realm")String _realm, AgentAction action, @HeaderParam("Authorization") String auth) throws IOException, SecretsException, StateException {
 
 if (_realm==null || _realm.isEmpty()) return new OopsResponse("api.ux.intent.repo-missing", Response.Status.BAD_REQUEST).asJSON();
 I_Realm realm = platform.getRealm(_realm);
@@ -48,8 +49,8 @@ log.info("ux.intent.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), 
 if (action==null) {
 return new OopsResponse("api.ux.intent.missing", Response.Status.BAD_REQUEST).asJSON();
 }
-log.info("ux.intent.action: {} => {}", action.getAgent(), action.getIntent());
-if (action.getAgent() ==null || action.getIntent() == null) {
+log.info("ux.intent.action: {} => {}", action.getActor(), action.intent());
+if (action.getActor() ==null || action.intent() == null) {
 return new OopsResponse("api.ux.intent.invalid", Response.Status.BAD_REQUEST).asJSON();
 }
 
@@ -57,9 +58,9 @@ try (RepositoryConnection connection = repo.getConnection()) {
 
 log.info("ux.intent.action: {} -> {}", repo, action);
 //MyFacade.dump(params, System.out);
-Bindings my = MyFacade.rebind(action.getAgent(), action.getBindings(), jwt);
+Bindings my = MyFacade.rebind(action.getActor(), action.getBindings(), jwt);
 
-AgentService service = new AgentService(action.getAgent(), connection, realm.getSecrets(), my);
+AgentService service = new AgentService(action.getActor(), connection, realm.getSecrets(), my);
 
 if (service.getAgent() == null) {
 return new OopsResponse("api.ux.intent.agent-unknown", Response.Status.NOT_FOUND).asJSON();
@@ -69,14 +70,14 @@ if (current == null) {
 return new OopsResponse("api.ux.intent.state-unknown", Response.Status.NOT_FOUND).asJSON();
 }
 Collection<Resource> todo = service.getAgent().getStateMachine().getTransitions();
-log.info("ux.intent.before: {} -> {} @ {} ==> {}", action.getAgent(), action.getIntent(), current, todo);
+log.info("ux.intent.before: {} -> {} @ {} ==> {}", action.getActor(), action.intent(), current, todo);
 
 if (!service.getAgent().getStateMachine().getTransitions().isEmpty()) {
-DataResponse response = new DataResponse(new AgentAction(action.getAgent(), current, todo, (SimpleBindings) my));
+DataResponse response = new DataResponse(new AgentAction(action.getActor(), current, todo, (SimpleBindings) my));
 return response.asJSON(Response.Status.MULTIPLE_CHOICES);
 }
 
-Resource state = service.next(action.getIntent());
+Resource state = service.next(action.intent());
 log.info("ux.intent.after: {} == {}", current, state);
 
 //RDFDump.dump(new LiveModel(connection));
@@ -86,7 +87,7 @@ return new OopsResponse("api.ux.intent.failed", Response.Status.NOT_ACCEPTABLE).
 
 Collection<Resource> intents = service.getAgent().getStateMachine().getTransitions();
 
-DataResponse response = new DataResponse(new AgentAction(action.getAgent(), state, intents, (SimpleBindings) my));
+DataResponse response = new DataResponse(new AgentAction(action.getActor(), state, intents, (SimpleBindings) my));
 return response.asJSON();
 } catch (Exception e) {
 log.error(e.getMessage(), e);

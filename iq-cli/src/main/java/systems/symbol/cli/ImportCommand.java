@@ -4,7 +4,7 @@ import com.github.freva.asciitable.AsciiTable;
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
 import systems.symbol.platform.I_Self;
-import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.BootstrapLake;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ return 0;
 
 private void doImport() throws IOException {
 System.out.printf("importing from: %s\n", from.getAbsolutePath());
-BootstrapLoader load = ImportExport.load(context, from, forceDelete);
+BootstrapLake load = ImportExport.load(context, from, forceDelete);
 
 String[] columns = { "total", "assets", "rdf", "errors" };
 Object[] row = { load.total_files, load.total_asset_files, load.total_rdf_files, load.total_errors };

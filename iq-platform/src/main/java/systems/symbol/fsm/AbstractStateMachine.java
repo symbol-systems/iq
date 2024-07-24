@@ -126,8 +126,10 @@ protected abstract Collection<T> getTransitions(T state);
 protected boolean notifyListeners(T from, T to) throws StateException {
 boolean ok = true;
 for (I_StateListener<T> listener : listeners) {
-ok = ok & listener.onTransition(from, to);
-log.info("afterTransition: {} -> {} = {}", from, to, ok);
+boolean _ok = listener.onTransition(from, to);
+if (ok) log.debug("state.ok: {} -> {}", from, to);
+else log.warn("state.oops: {} -> {}", from, to);
+ok = ok & _ok;
 }
 return ok;
 }

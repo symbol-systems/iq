@@ -1,0 +1,6 @@
+SELECT DISTINCT ?this ?label ?comment WHERE {
+?this my:label ?label.
+OPTIONAL {
+?this my:comment ?comment
+}
+}

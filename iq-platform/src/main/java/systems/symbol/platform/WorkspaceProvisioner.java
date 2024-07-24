@@ -1,6 +1,6 @@
 package systems.symbol.platform;
 
-import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.BootstrapLake;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
 import org.eclipse.rdf4j.repository.Repository;
@@ -85,7 +85,7 @@ return;
 }
 try (RepositoryConnection connection = repository.getConnection()) {
 IQ iq = new IQConnection(workspace.getSelf(), connection);
-BootstrapLoader loader = new BootstrapLoader(iq);
+BootstrapLake loader = new BootstrapLake(iq);
 log.info("workspace.deploy.from: {} -> {} @ {}", name, from.getAbsolutePath(), iq.getSelf());
 loader.deploy(from);
 } catch (IOException e) {

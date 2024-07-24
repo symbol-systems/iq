@@ -1,0 +1,45 @@
+@base <ai:>.
+@prefix ai: <ai:>.
+@prefix iq: <iq:>.
+@prefix : <ai:>.
+@prefix my: <ai:>.
+@prefix script: <ai:script/>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+ai:
+iq:to ai:ONLINE;
+.
+ai:ONLINE
+iq:to ai:WELCOME;
+.
+ai:WELCOME
+rdfs:label "{brand_name}";
+rdfs:comment "{action_oriented_headline}";
+rdf:value "{introduction_mission_aims_goals_objectives}";
+iq:to ai:AI;
+iq:to ai:GPT;
+iq:to ai:GRAPH;
+iq:to ai:MIND;
+iq:to ai:GOVERNANCE;
+iq:to ai:AUTONOMY;
+iq:to ai:AUTONOMY;
+iq:to ai:AGI;
+iq:to ai:VIP;
+iq:to ai:SALES;
+iq:to ai:MARKETING;
+iq:to ai:SUPPORT;
+iq:to ai:DEVELOPER;
+iq:to ai:GUARDIAN;
+iq:to ai:AVATAR;
+iq:to ai:ORACLE;
+iq:to ai:DAO;
+iq:to ai:JO;
+iq:to ai:SMART_TRUST;
+.
+ai:JO a ai:Trustee;
+rdfs:label "JO";
+rdfs:comment "A Trustee";
+iq:to ai:Lumina, ai:Echo, ai:Omega, ai:Nova, ai:EchoNexus;
+.

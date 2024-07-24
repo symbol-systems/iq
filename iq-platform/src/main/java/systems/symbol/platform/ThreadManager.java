@@ -31,7 +31,10 @@ return threads.get(iri);
 
 Runnable runnable = () -> {
 try {
+log.info("threads.run: {}", iri);
 task.start();
+task.stop();
+log.info("threads.done: {}", iri);
 } catch (Exception e) {
 log.error("threads.fatal: {} -> {}", iri, e.getMessage());
 }
@@ -41,24 +44,26 @@ Thread thread = new Thread(runnable);
 thread.setName(iri.stringValue());
 threads.put(iri, thread);
 tasks.put(iri, task);
+log.info("threads.add: {}", iri);
 return thread;
 }
 
 /**
- * Starts a specific task identified by an IRI.
+ * Starts a specific agent.
  *
- * @param iri  the IRI identifying the task.
- * @param task the task to be started.
+ * @param agent  the IRI identifying the task.
  */
-public synchronized void start(IRI iri, I_StartStop task) {
-Thread thread = add(iri, task);
-if (thread != null && !thread.isAlive()) {
-thread.start();
-}
+public synchronized Thread start(IRI agent) {
+Thread thread = threads.get(agent);
+if (thread == null) return null;
+log.info("threads.start: {} -> {}", agent, thread.isAlive());
+if (!thread.isAlive()) thread.start();
+return thread;
 }
 
 @Override
 public synchronized void start() throws Exception {
+log.info("threads.starting: x{}", threads.keySet());
 for (IRI iri : tasks.keySet()) {
 Thread thread = threads.get(iri);
 if (thread != null && !thread.isAlive()) {
