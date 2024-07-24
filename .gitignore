@@ -1,16 +1,14 @@
 .secrets
 model
-my.iq
 
 .DS_Store
 .thumbs.db
 node_modules
 target
 *todo
-iq.api
 local
 old
-my.iq
+.iq
 tmp
 *.class
 
