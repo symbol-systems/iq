@@ -17,7 +17,7 @@ public class ModelAPITest {
 
 private static String VALID_AUTH_HEADER;
 private static final String INVALID_AUTH_HEADER = "Bearer invalid.token";
-private static final String REALM = "iq";
+private static final String REALM = "QRX";
 private static final String QUERY = "self/aware";
 
 @BeforeEach
