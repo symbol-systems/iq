@@ -1,5 +1,0 @@
-SELECT DISTINCT ?id ?label
-WHERE {
-?this iq:to ?id.
-?id my:label ?label.
-}

@@ -1,9 +1,0 @@
-SELECT DISTINCT ?id ?content
-WHERE {
-{
-?this iq:to ?id.
-} UNION {
-?this iq:initial ?id.
-}
-?id rdf:value ?content.
-}

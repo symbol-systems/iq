@@ -1,1 +1,0 @@
-println "script.identity: ${my}"
