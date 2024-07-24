@@ -104,6 +104,7 @@ Integer populationDensity = response.getLocation().getPopulationDensity();
 String timeZone = response.getLocation().getTimeZone();
 Integer averageIncome = response.getLocation().getAverageIncome();
 Integer accuracyRadius = response.getLocation().getAccuracyRadius();
+Country country = response.getCountry();
 
 ModelBuilder modelBuilder = new ModelBuilder(model);
 modelBuilder.subject(self)
@@ -111,43 +112,15 @@ modelBuilder.subject(self)
 .add(WGS84.LAT, location.getLatitude().toString())
 .add(WGS84.LONG, location.getLongitude().toString())
 .add(Values.iri(SCHEMA_PREFIX + "address"), place)
-.add(Values.iri(SCHEMA_PREFIX + "geoNameId"), geoNameId.toString())
 .add(Values.iri(SCHEMA_PREFIX + "postalCode"), postalCode !=null?postalCode:"")
+.add(Values.iri(SCHEMA_PREFIX + "addressCountry"), country !=null?country.getName():"")
+.add(Values.iri(SCHEMA_PREFIX + "geoNameId"), geoNameId.toString())
 .add(Values.iri(SCHEMA_PREFIX + "metroCode"), metroCode != null ? metroCode.toString() : "")
 .add(Values.iri(SCHEMA_PREFIX + "populationDensity"), populationDensity != null ? populationDensity.toString() : "0")
 .add(Values.iri(SCHEMA_PREFIX + "timeZone"), timeZone)
 .add(Values.iri(SCHEMA_PREFIX + "averageIncome"), averageIncome != null ? averageIncome.toString() : "0")
 .add(Values.iri(SCHEMA_PREFIX + "accuracyRadius"), accuracyRadius != null ? accuracyRadius.toString() : "0")
 .build();
-
-if (response.getCountry() != null) {
-Country country = response.getCountry();
-modelBuilder.subject(self)
-.add(schemaOrg("addressCountry"), Values.iri(RDF_SCHEMA_LABEL, country.getName()))
-.build();
-}
-
-if (response.getMostSpecificSubdivision() != null) {
-Subdivision subdivision = response.getMostSpecificSubdivision();
-modelBuilder.subject(self)
-.add(schemaOrg("addressRegion"), subdivision.getName())
-.build();
-}
-
-if (response.getCity() != null) {
-City city = response.getCity();
-modelBuilder.subject(self)
-.add(schemaOrg("addressLocality"), Values.iri(RDF_SCHEMA_LABEL, city.getName()))
-.build();
-}
-
-if (response.getPostal() != null) {
-Postal postal = response.getPostal();
-modelBuilder.subject(self)
-.add(schemaOrg("postalCode"), postal.getCode())
-.build();
-}
-
 return modelBuilder.build();
 }
 
