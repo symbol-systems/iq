@@ -41,11 +41,11 @@ public class DebugAPI extends RealmAPI {
         IRI self = Values.iri(_self);
         I_Realm realm = platform.getRealm(_realm);
         if (realm==null) return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).asJSON();
-        log.info("ux.debug.realm: {} -> {}", realm.getSelf(), realm.getSecrets());
+        log.debug("ux.debug.realm: {} -> {}", realm.getSelf(), realm.getSecrets());
         DecodedJWT jwt;
         try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
         if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.debug.repository", Response.Status.BAD_REQUEST).asJSON();
-        if (!entitled(jwt, self)) return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).asJSON();
+        if (!entitled(jwt, _realm)) return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).asJSON();
 
         Repository repository = realm.getRepository();
         try (RepositoryConnection connection = repository.getConnection()) {
@@ -66,8 +66,13 @@ public class DebugAPI extends RealmAPI {
         }
     }
 
+    public boolean entitled(DecodedJWT jwt, String agent)  {
+        log.info("ux.debug.entitled: {} -> {}", jwt.getAudience(), agent);
+        return jwt.getAudience().contains(agent);
+    }
+
     @Override
-    public boolean entitled(DecodedJWT jwt, IRI agent)  {
-        return jwt.getAudience().contains(agent.stringValue());
+    public boolean entitled(DecodedJWT jwt, IRI agent) {
+        return true;
     }
 }

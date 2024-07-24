@@ -70,7 +70,7 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
 
         state.add(self, initialStep, initialState);
         state.add(self, hasCurrentState, getState());
-        log.info("msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
+        log.debug("msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
     }
 
     @Override
@@ -84,10 +84,10 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
         Iterable<Statement> transitions = model.getStatements(getState(), TO, target);
 
         boolean hasTransitions = transitions.iterator().hasNext();
-        log.info("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
+        log.debug("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
         if (!hasTransitions) return false; // No transitions
 
-        log.info("allowed/final&guarded: {} -> {} & {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
+        log.info("allowed/final/guarded: {} -> {} -> {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
 //        if (isFinal(getState())) return false; // No states
         if (!isGuarded(target)) return true; // Not guarded
         return isAllowedByGuard(self, target); // Ask the guards ...
@@ -107,7 +107,7 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
     public boolean isAllowedByGuard(Resource subject, Resource target) {
         Collection<Resource> guards = find(target, model, hasGuard);
         Iterator<Resource> iGuards = guards.iterator();
-        log.info("guards: {} -> {} -> {}", subject, target, iGuards.hasNext());
+        log.info("guarded?: {} @ {} -> {}", iGuards.hasNext(), subject, target);
         if (!iGuards.hasNext()) return true; // No guards, we're good
 
         while (iGuards.hasNext()) {
@@ -119,13 +119,15 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
             // ensure the rule 2-tuple match the subject's 2-tuple (aka name/value)
             while (iRules.hasNext()) {
                 Statement rule = iRules.next();
-                log.info("check: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
+                log.info("guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
                 if ( ! hasGuard.equals(rule.getPredicate()) ) {
                     // ensure rules tuples match the subject
                     Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(), rule.getObject());
-                    boolean matches = (!rule.getPredicate().equals(hasGuard) && statements.iterator().hasNext());
-                    log.info("guard.matched: {} -> {}", statements.iterator().hasNext(), matches);
-                    if (!matches) return false;
+                    boolean matches = statements.iterator().hasNext();
+                    if (!matches) {
+                        log.info("guard.block: {} == {}", subject, rule.getPredicate());
+                        return false;
+                    }
                 }
             }
         }

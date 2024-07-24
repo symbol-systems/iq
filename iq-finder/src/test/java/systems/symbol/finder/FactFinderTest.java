@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.testng.annotations.Test;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.rdf4j.io.BootstrapLoader;
+import systems.symbol.rdf4j.io.BootstrapLake;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.rdf4j.store.IQ;
@@ -25,7 +25,7 @@ public class FactFinderTest {
             IQ iq = new IQConnection(IQ_NS.TEST, connection);
             IQScriptCatalog library = new IQScriptCatalog(iq);
 
-            BootstrapLoader loader = new BootstrapLoader(IQ_NS.TEST, connection, true, true, true, false);
+            BootstrapLake loader = new BootstrapLake(IQ_NS.TEST, connection, true, true, true, false);
             loader.deploy(ASSETS_HOME);
 
 

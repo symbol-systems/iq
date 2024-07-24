@@ -81,7 +81,7 @@ public class Update implements I_Intent, I_Self {
             org.eclipse.rdf4j.query.Update updated = iq.getConnection().prepareUpdate(sparql);
             SPARQLMapper.setBindings(updated, my);
             updated.execute();
-            log.info("sparql.updated: {}", updated.getBindings());
+            log.debug("sparql.updated: {}", updated.getBindings());
 //            MyFacade.dump(my, System.out);
 //            RDFDump.dump(iq.getConnection(), System.out, RDFFormat.TURTLE);
             done.add((IRI) state);

@@ -43,22 +43,22 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_I
         if (fsm==null) {
             ModelStateMachine fsm = new ModelStateMachine(self, model);
             setFSM(fsm);
-            log.info("fsm.boot: {} @ {}", getSelf(), fsm.getState());
+            log.info("agent.fsm.boot: {} @ {}", getSelf(), fsm.getState());
         } else if (fsm instanceof ModelStateMachine) {
             ((ModelStateMachine) fsm).initialize(self, model, model);
-            log.info("fsm.reboot: {} @ {}", getSelf(), fsm.getState());
+            log.info("agent.fsm.reboot: {} @ {}", getSelf(), fsm.getState());
         }
     }
 
     @Override
     public void start() throws Exception {
         getStateMachine().transition(getStateMachine().getState());
-        log.info("started: {} @ {}", getSelf(), getStateMachine().getState());
+        log.info("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
     }
 
     @Override
     public void stop()  {
-        log.info("stopped: {} @ {}", getSelf(), getStateMachine().getState());
+        log.info("agent.stopped: {} @ {}", getSelf(), getStateMachine().getState());
     }
 
     /**

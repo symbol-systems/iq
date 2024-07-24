@@ -1,7 +1,0 @@
-SELECT ?id ?label ?comment
-WHERE {
-    ?id rdfs:label ?label;
-        rdfs:comment ?comment.
-    FILTER(?id = ?this)
-    VALUES ?this { <{{my.self}}> }
-}

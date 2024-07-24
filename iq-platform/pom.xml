@@ -18,8 +18,9 @@
     <properties>
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-        <maven.compiler.plugin.source>11</maven.compiler.plugin.source>
-        <maven.compiler.plugin.target>11</maven.compiler.plugin.target>
+        <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
+        <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
+        <maven.compiler.plugin.release>21</maven.compiler.plugin.release>
 
 <!--        <quarkus.version>3.11.1</quarkus.version>-->
         <graalvm.version>24.0.1</graalvm.version>

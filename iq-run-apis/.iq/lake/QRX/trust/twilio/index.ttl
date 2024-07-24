@@ -1,0 +1,27 @@
+@prefix iq: <iq:>.
+@prefix my: <QRX:>.
+@prefix twilio: <QRX:trust/twilio/>.
+@prefix trust: <QRX:trust/>.
+
+# The trust flow for SMS vs Twilio, involving verification, authorization, and device assertion.
+# Used by TokenAPI to register/login with a mobile phone.
+
+twilio:
+        iq:trusts <https://twilio.com>;
+        iq:secret my:MY_TWILIO_SECRET;
+        iq:initial twilio:verify.
+
+    twilio:verify
+        iq:script twilio:twilio;
+        iq:to twilio:authorize.
+
+    twilio:authorize
+        iq:update twilio:authorize;
+        iq:to twilio:identify.
+
+    twilio:identify
+        iq:select trust:identity;
+        iq:to twilio:trusted.
+
+    twilio:trusted
+        iq:to trust:.

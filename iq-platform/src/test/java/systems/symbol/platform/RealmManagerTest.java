@@ -33,10 +33,12 @@ class RealmManagerTest {
     }
 
     @Test
-    void testRealm() throws Exception {
+    void testRealmFactory() throws Exception {
         RealmManager realms = new RealmManager(home);
         I_Realm realm = realms.getRealm(self);
-        System.out.println("realm.factory: "+realm.getSelf());
+        assert realm == null;
+        assert realms.newRealm(self).getSelf().equals(self);
+        realm = realms.getRealm(self);
         assertNotNull(realm);
         assert realm.getSelf().equals(self);
         realms.stop();

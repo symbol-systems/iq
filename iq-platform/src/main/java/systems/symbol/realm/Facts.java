@@ -24,8 +24,8 @@ public class Facts {
         if (!self.isIRI()) return found;
         if (found.contains((IRI)self)) return found;
         found.add((IRI)self);
-        Iterable<Statement> trusted = model.getStatements(self, follow, null);
-        for (Statement st : trusted) {
+        Iterable<Statement> facts = model.getStatements(self, follow, null);
+        for (Statement st : facts) {
             Value thing = st.getObject();
             if (thing!=null && thing.isIRI()) {
                 IRI resource = Values.iri(thing.stringValue());

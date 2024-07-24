@@ -29,7 +29,7 @@ public class LDResponse implements I_Response, I_Facade {
 
         Gson gson = new Gson();
         String json = gson.toJson(jsonld);
-        log.info("json: {}", json);
+        log.info("json.length: {}", json.length());
 
         builder = Response.ok(json, "application/json");
         builder = addCORS(builder);

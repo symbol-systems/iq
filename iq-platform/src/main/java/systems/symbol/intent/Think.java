@@ -18,19 +18,19 @@ import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.io.FileFormats;
 import systems.symbol.render.HBSRenderer;
+import systems.symbol.string.Extract;
 import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
-import static systems.symbol.agent.MyFacade.INTENT;
+import static systems.symbol.agent.MyFacade.ACTIVITY;
 
 /**
  * An intent that processes and renders structured content into a format suitable for human consumption.
@@ -43,7 +43,6 @@ public class Think extends AbstractIntent {
     IRI fallbackMime;
     I_Contents contents;
     I_LLM<String> llm;
-    Pattern extractBody = Pattern.compile("```(\\w+\n)\\s*(.*?)\n```", Pattern.DOTALL);
 
     public Think(IRI self, Model model, I_Contents contents, I_LLM<String> llm) {
         boot(self, model);
@@ -94,7 +93,7 @@ public class Think extends AbstractIntent {
 
     protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings my, Model model) throws IOException, APIException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
-        String intent = my.containsKey(INTENT)?my.get(INTENT).toString():IdentityHelper.uuid(actor.stringValue()+"#");
+        String intent = my.containsKey(ACTIVITY)?my.get(ACTIVITY).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
         log.info("think.bindings: {} -> {}", template.getDatatype(), bindings.keySet());
         String mime = FileFormats.toMime(fallbackMime);
@@ -110,7 +109,7 @@ public class Think extends AbstractIntent {
         thought.user(remodelled);
         log.info("think.prompt: {}", thought);
         llm.complete(thought);
-        String rdf = hackItToWork(thought.latest().getContent());
+        String rdf = Extract.hackItToWork(thought.latest().getContent());
         log.info("think.thoughts: {}", rdf);
 
         ParserConfig config = new ParserConfig();
@@ -119,12 +118,6 @@ public class Think extends AbstractIntent {
         Model parsed = Rio.parse(new StringReader(rdf), intent, format);
         model.addAll(parsed);
         return Models.subjectIRIs(parsed);
-    }
-
-    String hackItToWork(String msg) {
-        Matcher matcher = extractBody.matcher(msg);
-        if (!matcher.find()) return msg;
-        return matcher.group(2);
     }
 
     @Override

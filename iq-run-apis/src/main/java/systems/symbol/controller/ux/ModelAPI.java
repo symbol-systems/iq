@@ -44,8 +44,8 @@ public class ModelAPI extends GuardedAPI {
      */
     @GET
     @Operation(
-            summary = "api.ux.model.post.summary",
-            description = "api.ux.model.post.description"
+            summary = "api.ux.model.get.summary",
+            description = "api.ux.model.get.description"
     )
     @Path("{realm}/{query: .*}")
     @Produces("application/ld+json")
@@ -77,7 +77,7 @@ public class ModelAPI extends GuardedAPI {
             Bindings my = MyFacade.rebind(self, params, jwt);
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
-            log.info("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
+            log.debug("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
             if (Validate.isMissing(sparql)) {
                 return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).asJSON();
             }

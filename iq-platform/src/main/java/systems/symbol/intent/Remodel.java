@@ -31,7 +31,7 @@ import java.io.StringReader;
 import java.util.*;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
-import static systems.symbol.agent.MyFacade.INTENT;
+import static systems.symbol.agent.MyFacade.ACTIVITY;
 
 /**
  * Intent representing the act of remodeling RDF graph in IQ.
@@ -150,7 +150,7 @@ public class Remodel extends AbstractIntent {
         ParserConfig config = new ParserConfig();
         config.set(FAIL_ON_INVALID_LINES, false);
 
-        String intent = my.containsKey(INTENT) ? my.get(INTENT).toString() : actor.stringValue();
+        String intent = my.containsKey(ACTIVITY) ? my.get(ACTIVITY).toString() : actor.stringValue();
         try {
             Model parsed = Rio.parse(new StringReader(remodelled), intent, format);
             model.addAll(parsed);

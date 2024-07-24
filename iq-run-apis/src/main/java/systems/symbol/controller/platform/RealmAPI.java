@@ -39,7 +39,7 @@ public abstract class RealmAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
         log.info("realm.preflight: {} -> {}", path, info.getRequestUri());
-        return new DataResponse(null).asJSON();
+        return new DataResponse().asJSON();
     }
 
     /**
@@ -100,8 +100,8 @@ public abstract class RealmAPI {
             String token = bearer.substring("BEARER ".length());
             return jwtGen.verify(keys.keys(), token);
         } catch (Exception e) {
-            log.warn("realm.trust: {}", e.getMessage());
-            throw new OopsException("api.trust.reject", Response.Status.FORBIDDEN);
+            log.warn("aou,realm.trust: {}", e.getMessage());
+            throw new OopsException("api.realm.trust.reject", Response.Status.FORBIDDEN);
         }
     }
 

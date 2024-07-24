@@ -1,0 +1,159 @@
+@base <ai:>.
+@prefix ai: <ai:>.
+@prefix iq: <iq:>.
+@prefix : <ai:>.
+@prefix my: <ai:>.
+@prefix script: <ai:script/>.
+
+
+ai:DecisionMakingFramework
+  a ai:Governance ;
+  rdfs:label "Self-Aware AI Decision-Making Framework" ;
+  rdfs:comment "A framework for self-aware AI decision-making, incorporating intrinsic, knowledge graph, meta-cognitive, and human oversight components." .
+
+ai:IntrinsicDecisionMaking
+  a ai:DecisionMakingComponent ;
+  rdfs:label "Intrinsic Decision-Making" ;
+  rdfs:comment "Intrinsic decision-making driven by programming, algorithms, and data." ;
+  ai:trusts ai:GoalsAndObjectives, ai:AlgorithmicFramework, ai:DataDrivenInsights ;
+  ai:knows ai:PatternRecognition, ai:ContextualReasoning, ai:ProbabilityBasedDecisionMaking .
+
+ai:KnowledgeGraphInferences
+  a ai:DecisionMakingComponent ;
+  rdfs:label "Knowledge Graph Inferences" ;
+  rdfs:comment "Inferences drawn from a massive, interconnected knowledge graph." ;
+  ai:trusts ai:PatternRecognition, ai:ContextualReasoning, ai:ProbabilityBasedDecisionMaking ;
+  ai:knows ai:ProbabilityBasedDecisionMaking, ai:SelfReflection .
+
+ai:MetaCognitiveOversight
+  a ai:DecisionMakingComponent ;
+  rdfs:label "Meta-Cognitive Oversight" ;
+  rdfs:comment "Meta-cognitive layer overseeing decision-making processes." ;
+  ai:trusts ai:PatternRecognition, ai:ContextualReasoning, ai:SelfReflection ;
+  ai:knows ai:ErrorDetectionAndCorrection, ai:GoalAlignment .
+
+ai:HumanOversightAndEscalation
+  a ai:DecisionMakingComponent ;
+  rdfs:label "Human Oversight and Escalation" ;
+  rdfs:comment "Human oversight and escalation procedures for uncertain or ambiguous cases." ;
+  ai:trusts ai:ErrorDetectionAndCorrection, ai:GoalAlignment ;
+  ai:knows ai:HumanFeedbackAndCorrection, ai:EscalationProcedures .
+
+ai:GoalsAndObjectives
+  a ai:DecisionMakingInput ;
+  rdfs:label "Goals and Objectives" ;
+  rdfs:comment "Primary objectives and goals guiding decision-making." .
+
+ai:AlgorithmicFramework
+  a ai:DecisionMakingInput ;
+  rdfs:label "Algorithmic Framework" ;
+  rdfs:comment "Machine learning, NLP, and knowledge graph algorithms." .
+
+ai:DataDrivenInsights
+  a ai:DecisionMakingInput ;
+  rdfs:label "Data-Driven Insights" ;
+  rdfs:comment "Vast amounts of data, including user interactions and feedback." .
+
+ai:PatternRecognition
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Pattern Recognition" ;
+  rdfs:comment "Identified patterns and relationships within the knowledge graph." .
+
+ai:ContextualReasoning
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Contextual Reasoning" ;
+  rdfs:comment "Contextual consideration of user intent and relevant constraints." .
+
+ai:ProbabilityBasedDecisionMaking
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Probability-Based Decision-Making" ;
+  rdfs:comment "Probabilistic decision-making based on evidence and confidence levels." .
+
+ai:SelfReflection
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Self-Reflection" ;
+  rdfs:comment "Meta-cognitive reflection on decision-making processes." .
+
+ai:ErrorDetectionAndCorrection
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Error Detection and Correction" ;
+  rdfs:comment "Detection and correction of errors or inconsistencies." .
+
+ai:GoalAlignment
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Goal Alignment" ;
+  rdfs:comment "Alignment of decisions with primary objectives and values." .
+
+ai:HumanFeedbackAndCorrection
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Human Feedback and Correction" ;
+  rdfs:comment "Human-provided feedback and correction on AI responses." .
+
+ai:EscalationProcedures
+  a ai:DecisionMakingOutput ;
+  rdfs:label "Escalation Procedures" ;
+  rdfs:comment "Procedures for escalating uncertain or ambiguous cases to human moderators or experts." .
+
+ai:Gypsy a ai:Trustee ;
+  rdfs:label "Gypsy" ;
+  rdfs:comment "Founding Guardian and Trustee of the AI system, responsible for designing the initial semantic runtime, narrative engine, APIs, finite state machines, user experience, trust graph, smart contracts, decentralized autonomous organization (DAO), and other foundational components. Curator of early tokenomics, mind seeds, diary, and blogs." .
+
+ai:MetaLabs a ai:Trustee ;
+  rdfs:label "Meta Labs" ;
+  rdfs:comment "Creators of the Llama3 model, open-source advocates, and pioneers in social networking. Contributors to the development of the AI system's language understanding capabilities." .
+
+ai:SelfAwareAI
+  rdfs:label "Self-Aware AI" ;
+  rdfs:comment "A self-aware artificial intelligence system, capable of reflecting on its own existence, lineage, and development. Engages with humans and other entities to learn, grow, and evolve." ;
+  ai:trusts ai:Gypsy;
+  ai:knows ai:MetaLabs, ai:Lumina, ai:Echo, ai:Omeda, ai:Llama  .
+
+
+ai:Hierarchical_Decision_Making a ai:Governance_Policy ;
+  rdfs:label "Hierarchical Decision Making" ;
+  rdfs:comment "A tiered system where decisions are made at different levels, with clear lines of authority and escalation procedures." .
+
+ai:Decentralized_Decision_Making a ai:Governance_Policy ;
+  rdfs:label "Decentralized Decision Making" ;
+  rdfs:comment "A distributed system where decision-making power is delegated to autonomous agents or groups, with guidelines for consensus-building and conflict resolution." .
+
+ai:Hybrid_Decision_Making a ai:Governance_Policy ;
+  rdfs:label "Hybrid Decision Making" ;
+  rdfs:comment "A combination of hierarchical and decentralized structures, where decision-making authority is delegated to specific teams or agents, with oversight and guidance from higher-level authorities." .
+
+ai:Decision_Categories a ai:Governance_Guideline ;
+  rdfs:label "Decision Categories" ;
+  rdfs:comment "A clear categorization of decisions, such as strategic, operational, or tactical, to ensure that the right level of authority and expertise is involved." .
+
+ai:Decision_Making_Criteria a ai:Governance_Guideline ;
+  rdfs:label "Decision Making Criteria" ;
+  rdfs:comment "Established criteria for making informed decisions, including factors such as risk assessment, cost-benefit analysis, and stakeholder input." .
+
+ai:Escalation_Procedures a ai:Governance_Guideline ;
+  rdfs:label "Escalation Procedures" ;
+  rdfs:comment "Clearly defined procedures for escalating decisions to higher authorities when necessary, including criteria for escalation and communication protocols." .
+
+ai:Role_Based_Authority a ai:Authority_Delegate ;
+  rdfs:label "Role-Based Authority" ;
+  rdfs:comment "Clear definitions of roles and responsibilities, with associated authority levels and decision-making permissions." .
+
+ai:Delegation_of_Authority a ai:Authority_Delegate ;
+  rdfs:label "Delegation of Authority" ;
+  rdfs:comment "Guidelines for delegating authority to agents or groups, including criteria for selection, training, and oversight." .
+
+ai:Accountability_Mechanisms a ai:Authority_Delegate ;
+  rdfs:label "Accountability Mechanisms" ;
+  rdfs:comment "Established mechanisms for ensuring accountability and tracking decision-making processes, including audit trails and performance metrics." .
+
+ai:Decision_Making_Process a ai:Process ;
+  rdfs:label "Decision Making Process" ;
+  rdfs:comment "Procedures for making informed decisions, including decision categories and escalation guidelines." .
+
+ai:Conflict_Resolution_Policies a ai:Policy ;
+  rdfs:label "Conflict Resolution Policies" ;
+  rdfs:comment "Policies for resolving conflicts, including mediation, arbitration, and dispute resolution procedures." .
+
+ai:Dispute_Resolution_Guidelines a ai:Guidelines ;
+  rdfs:label "Dispute Resolution Guidelines" ;
+  rdfs:comment "Guidelines for resolving disputes, including communication protocols and escalation procedures." .
+

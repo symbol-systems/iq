@@ -1,0 +1,28 @@
+@prefix iq: <iq:>.
+@prefix my: <QRX:>.
+@prefix discord: <QRX:trust/discord/>.
+@prefix trust: <QRX:trust/>.
+@prefix script: <QRX:script/>.
+
+# The trust flow for Discord, involving verification, authorization, and identity assertion.
+# Used by TokenAPI to register/login with a Discord user account.
+
+discord:
+        iq:trusts <https://discord.com>;
+        iq:secret my:MY_DISCORD_SECRET;
+        iq:initial discord:verify.
+
+    discord:verify
+        iq:script discord:discord;
+        iq:to discord:authorize.
+
+    discord:authorize
+        iq:update discord:authorize;
+        iq:to discord:identify.
+
+    discord:identify
+        iq:script script:identity;
+        iq:to discord:trusted.
+
+    discord:trusted
+        iq:to trust:.

@@ -75,15 +75,17 @@ public class JSR233 extends AbstractIntent {
     public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
         Set<IRI> done = new HashSet<>();
         Literal script = scripts.getContent(state, null);
-//        Literal script = IQScripts.findScript(model, state, null, null);
-        if (script == null) return done;
+        if (script == null) {
+            log.error("script.missing: {}", state);
+            return done;
+        }
         try {
             Object result = executeScript(script, actor, state, my );
             done.add(actor);
             log.info("script.result: {} -> {} x {}", state, result, done.size());
         } catch (ScriptException e) {
-            log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getFileName());
-            throw new StateException(e.getMessage(), state, e);
+            log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getCause().getMessage());
+            throw new StateException(e.getCause().getMessage(), state, e.getCause());
         } catch (SecretsException e) {
             throw new StateException(e.getMessage(), state, e);
         }

@@ -18,6 +18,7 @@ import systems.symbol.prompt.*;
 import systems.symbol.secrets.I_Secrets;
 
 import javax.script.Bindings;
+import javax.script.SimpleBindings;
 import java.util.*;
 
 public class Avatar implements I_Self, I_Intent {
@@ -94,7 +95,7 @@ public class Avatar implements I_Self, I_Intent {
             chat.assistant(intent.getContent());
         } else if (latest.getRole() == I_LLMessage.RoleType.user) {
             chat.messages().removeLast();
-            chat.add(new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.assistant, latest.getContent()));
+            chat.add(new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.assistant, latest.getContent(), new SimpleBindings()));
             log.info("avatar.user: {} => {}", fsm.getState(), chat.latest());
         } else {
             chat.add(intent);

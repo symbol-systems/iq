@@ -194,6 +194,11 @@ public class PrettyString {
 		return o.toString();
 	}
 
+	public static String truncate(String s, int i) {
+		if (s.length()<=i) return s;
+		return s.substring(0,i);
+	}
+
     /**
 	 * Turns a non-negative number into an ordinal string used to denote the position in an ordered sequence, such as 1st, 2nd,
 	 * 3rd, 4th.
@@ -210,5 +215,27 @@ public class PrettyString {
 		if (remainder == 2) return numberStr + "nd";
 		if (remainder == 3) return numberStr + "rd";
 		return numberStr + "th";
+	}
+
+	public static String localName(String iri) {
+		if (iri == null || iri.isEmpty()) {
+			return null;
+		}
+
+		String[] delimiters = {":", "/", "v#"};
+		int delimiterIndex = -1;
+
+		for (String delimiter : delimiters) {
+			int index = iri.lastIndexOf(delimiter);
+			if (index > delimiterIndex) {
+				delimiterIndex = index;
+			}
+		}
+
+		if (delimiterIndex >= 0) {
+			return iri.substring(delimiterIndex + 1);
+		} else {
+			return iri;
+		}
 	}
 }

@@ -28,11 +28,19 @@ public class GenericGPT implements I_LLM<String> {
     String token;
     I_LLMConfig config;
     private final List<GPTResponse> history;
+    private int retryCount = 1;
 
     public GenericGPT(String token, I_LLMConfig config) {
         this.token = token;
         this.config = config;
         this.history = new ArrayList<>();
+    }
+
+    public GenericGPT(String token, I_LLMConfig config, int retryCount) {
+        this.token = token;
+        this.history = new ArrayList<>();
+        this.config = config;
+        this.retryCount = retryCount;
         init();
     }
 
@@ -55,32 +63,35 @@ public class GenericGPT implements I_LLM<String> {
     public I_Assist<String> complete(I_Assist<String> chats) throws APIException, IOException {
         log.debug("llm.gpt.url: {} -> {}", config.getName(), config.getURL());
         RestAPI api = new RestAPI(config.getURL());
-        api.header("Authorization", "Bearer "+token);
+        api.header("Authorization", "Bearer " + token);
 
-        Map<String, Object> json = toPayload(null, chats.messages()); // "json_object"
-//        log.info("llm.gpt.post: {}", json);
+        Map<String, Object> json = toPayload(null, chats.messages());
 
         String body;
-        try (okhttp3.Response response = api.post(json)) {
-            log.debug("llm.gpt.response: {} -> {}", response.code(), response.message());
+        int attempts = 0;
+        while (attempts < retryCount) {
+            attempts++;
+            try (okhttp3.Response response = api.post(json)) {
+                log.debug("llm.gpt.response: {} -> {}", response.code(), response.message());
 
-            // to BODY into `JSON`
-            ResponseBody responseBody = response.body();
-            if (responseBody != null) {
-                body = responseBody.string();
-                GPTResponse completion = om.readValue(body, GPTResponse.class);
-                log.debug("llm.gpt.status: {} x {} tokens", response.code(), completion.usage.total_tokens);
-                if (completion!=null && completion.choices!=null && !completion.choices.isEmpty()) {
-                    for (int c = 0; c<completion.choices.size();c++) {
-                        GPTResponse.Choice choice = completion.choices.get(c);
-                        processMessage(chats, choice.message);
+                ResponseBody responseBody = response.body();
+                if (responseBody != null) {
+                    body = responseBody.string();
+                    GPTResponse completion = om.readValue(body, GPTResponse.class);
+                    log.debug("llm.gpt.status: {} x {} tokens", response.code(), completion.usage.total_tokens);
+                    if (completion.choices != null && !completion.choices.isEmpty()) {
+                        for (int c = 0; c < completion.choices.size(); c++) {
+                            GPTResponse.Choice choice = completion.choices.get(c);
+                            processMessage(chats, choice.message);
+                        }
+                        history.add(completion);
+                        log.debug("llm.gpt.complete: {}", chats.latest());
+                        return chats;
                     }
-                    history.add(completion);
-                    log.debug("llm.gpt.complete: {}", chats.latest());
                 }
+            } catch (Exception e) {
+                log.info("llm.gpt.error # {}: {}", attempts, e.getMessage());
             }
-        } catch (Exception e) {
-            log.info("llm.gpt.error: {}", e.getMessage());
         }
         return chats;
     }
@@ -100,8 +111,8 @@ public class GenericGPT implements I_LLM<String> {
                     String content = String.valueOf(decision.get("content"));
                     String intent = String.valueOf(decision.get("intent"));
                     if (intent != null) {
-                        if (intent.indexOf(":")>0)
-                           chat.add(new IntentMessage(intent, role, content));
+                        if (intent.indexOf(":") > 0)
+                            chat.add(new IntentMessage(intent, role, content, decision));
                         else
                             chat.add(new TextMessage(role, content));
                     } else {
@@ -113,14 +124,14 @@ public class GenericGPT implements I_LLM<String> {
                     chat.add(new TextMessage(role, block));
                 }
             } else {
-                log.info("llm.gpt.message: {} => {}" ,message.content , block);
+                log.info("llm.gpt.message: {} => {}", message.content, block);
                 chat.add(new TextMessage(role, block));
             }
             matchFound = true;
         }
 
         if (!matchFound) {
-            log.info("llm.gpt.message: {}" , message.content);
+            log.debug("llm.gpt.message: {}", message.content);
             chat.add(new TextMessage(role, message.content));
         }
     }
@@ -130,7 +141,6 @@ public class GenericGPT implements I_LLM<String> {
         json.put("model", config.getName());
         json.put("temperature", config.getTemperature());
         json.put("frequency_penalty", config.getFrequencyPenalty());
-//        json.put("top_p", config.getTopP());
         json.put("seed", config.getSeed());
         List<Map<String, Object>> messages = new ArrayList<>();
         for (I_LLMessage<String> msg : msgs) {
@@ -139,7 +149,7 @@ public class GenericGPT implements I_LLM<String> {
             }
         }
         json.put("messages", messages);
-        if (response_format_type!=null) {
+        if (response_format_type != null) {
             Map<String, Object> response_format = RestAPI.newParams();
             response_format.put("type", response_format_type);
             json.put("response_format", response_format);

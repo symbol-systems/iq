@@ -54,6 +54,6 @@ public class Validate {
     }
 
     public static boolean isURN(String thing) {
-        return thing != null && thing.startsWith("urn:");
+        return thing != null && thing.contains(":");
     }
 }

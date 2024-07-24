@@ -19,12 +19,16 @@ import systems.symbol.finder.I_ModelFinder;
 import systems.symbol.finder.I_Search;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.*;
+import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
+import systems.symbol.rdf4j.store.SelfModel;
+import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.self.SelfIntent;
 
 import javax.script.Bindings;
 import java.util.ArrayList;
@@ -135,6 +139,11 @@ public class AgentBuilder implements I_Self {
         return new SearchDecision(finder, new Agentic<>(()->self, bindings, chat));
     }
 
+    public AgentBuilder self(Conversation chat) {
+        this.intents.add(new SelfIntent(self,  thoughts, chat, secrets));
+        return this;
+    }
+
     public I_Agent build() throws SecretsException, StateException {
         return new ExecutiveAgent(self, getGround(), getThoughts(), intents, null, bindings);
     }
@@ -144,13 +153,15 @@ public class AgentBuilder implements I_Self {
     }
 
     public I_Agent build(I_Assist<String> chat) throws SecretsException, StateException {
+        bindings.put("messages", chat.messages());
+        bindings.put("latest", chat.latest());
         return build(decision(chat));
     }
 
     public I_Agent build(I_Assist<String> chat, I_Decide<Resource> manager, DecodedJWT jwt) throws SecretsException, StateException {
-        log.info("builder.chat: {} -> {} = {}", self, chat.latest(), manager.getClass().getSimpleName());
         bindings.put("messages", chat.messages());
         bindings.put("latest", chat.latest());
+        log.info("builder.chat: {} -> {} = {}", self, chat.latest(), manager.getClass().getSimpleName());
         bindings.put("jwt", jwt);
         bindings.put("name", jwt.getClaim("name"));
         bindings.put(RESULTS, new ArrayList<>());
@@ -176,5 +187,15 @@ public class AgentBuilder implements I_Self {
     public AgentBuilder setThoughts(Model model) {
         this.thoughts = model;
         return this;
+    }
+
+    public AgentBuilder realm(I_Realm realm) {
+        bindings.put("realm", realm);
+        bindings.put("model", realm.getModel());
+        return this;
+    }
+
+    public I_Intents getIntents() {
+        return intents;
     }
 }

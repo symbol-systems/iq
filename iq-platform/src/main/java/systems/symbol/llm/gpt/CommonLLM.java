@@ -11,6 +11,7 @@ import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.platform.Poke;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyString;
 
 public class CommonLLM {
     static protected final Logger log = LoggerFactory.getLogger(CommonLLM.class);
@@ -40,12 +41,11 @@ public class CommonLLM {
     public static I_LLM<String> gpt(Resource self, Model model, int contextLength, I_Secrets secrets) throws SecretsException {
         I_LLMConfig config = configure(self, model, contextLength);
         if (config.getName()==null || config.getURL() ==null) return null;
-        String secretName = config.getSecretName();
-        log.debug("gpt.secrets: {} @ {} -> {} -> {}", self, secretName, config.getName(), config.getURL());
+        String secretName = PrettyString.localName(config.getSecretName());
+        log.debug("gpt.secrets: {} -> {} @ {}", self, secretName, config.getURL());
         if (secretName==null||secretName.isEmpty()) throw new SecretsException("secret.missing: "+config.getName());
         String token = secrets.getSecret(secretName);
         if (token==null) throw new SecretsException("missing: "+secretName);
         return new GenericGPT(token, config);
     }
-
 }

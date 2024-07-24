@@ -88,7 +88,7 @@ public class IQScriptCatalog implements I_Contents {
      */
     @Override
     public Literal getContent(Resource query, IRI mimetype) {
-        log.info("sparql.getContent: {} -> {}", query, mimetype);
+        log.debug("sparql.getContent: {} -> {}", query, mimetype);
         return IQScripts.findScript(iq.getConnection(), query, mimetype,null);
     }
 

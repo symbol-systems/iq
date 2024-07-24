@@ -33,7 +33,7 @@ public class Poke {
         Object value = stmt.getObject();
         Class<?> fieldType = field.getType();
 
-        log.debug("poke: {} -> {} / {}", field.getName(), value, fieldType);
+        log.info("poke: {} -> {} / {}", field.getName(), value, fieldType);
         if (fieldType == String.class) {
             if (value instanceof Literal) {
                 field.set(config, ((Literal) value).stringValue());

@@ -30,11 +30,11 @@ public class APISecrets implements I_Secrets {
                 name = grants.get(urlPrefix);
                 found = urlPrefix;
             }
-            log.info("secret.match: {} -> {} ==> {} -> {} --> {}", found != null ? found.length() : "no", urlPrefix.length(), urlPrefix, url.startsWith(urlPrefix), url);
+            log.debug("secret.match: {} -> {} ==> {} -> {} --> {}", found != null ? found.length() : "no", urlPrefix.length(), urlPrefix, url.startsWith(urlPrefix), url);
         }
         if (name == null) return null;
         String secret = secrets.getSecret(name);
-        log.info("secret.found: {} -> {} in {}", found, name, secret);
+        log.info("secret.found: {} -> {}", found, name);
         return secret;
     }
     /**
