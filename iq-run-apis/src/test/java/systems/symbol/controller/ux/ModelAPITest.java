@@ -55,7 +55,7 @@ given()
 public void testGraphRealmNotFound() {
 given()
 .header("Authorization", VALID_AUTH_HEADER)
-.pathParam("realm", "nonExistentRealm")
+.pathParam("realm", "oops")
 .pathParam("query", QUERY)
 .when()
 .get("/ux/model/{realm}/{query}")

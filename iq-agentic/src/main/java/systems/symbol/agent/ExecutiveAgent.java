@@ -47,10 +47,11 @@ setFSM(new ModelStateMachine(self, ground, thoughts));
 
 @Override
 public void boot(IRI self, Model ground) {
+log.info("agent.boot: {} x {}", self, ground.size());
 }
 
-public void resume() {
-}
+//public void resume() {
+//}
 
 protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
 super.setFSM(fsm);

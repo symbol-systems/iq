@@ -3,7 +3,7 @@
   <parent>
 <artifactId>iq-parent</artifactId>
 <groupId>systems.symbol</groupId>
-   <version>0.78.3</version>
+<version>0.78.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli-pro</artifactId>
@@ -123,7 +123,6 @@
   </plugin>
   <plugin>
 <artifactId>maven-compiler-plugin</artifactId>
-<version>${maven.compiler.plugin.version}</version>
 <executions>
   <execution>
 <id>default-compile</id>
@@ -148,29 +147,6 @@
 </goals>
   </execution>
 </executions>
-<dependencies>
-  <dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-compiler</artifactId>
-<version>${groovy-eclipse-compiler.version}</version>
-  </dependency>
-  <dependency>
-<groupId>org.codehaus.groovy</groupId>
-<artifactId>groovy-eclipse-batch</artifactId>
-<version>${groovy-eclipse-batch.version}</version>
-  </dependency>
-  <dependency>
-<groupId>org.apache.groovy</groupId>
-<artifactId>groovy-all</artifactId>
-<version>${groovy.version}</version>
-<type>pom</type>
-  </dependency>
-</dependencies>
-<configuration>
-  <compilerId>groovy-eclipse-compiler</compilerId>
-  <source>${maven.compiler.plugin.source}</source>
-  <target>${maven.compiler.plugin.target}</target>
-</configuration>
   </plugin>
 </plugins>
   </build>
@@ -224,19 +200,20 @@
   <properties>
 <project.build.directory>deploy</project.build.directory>
 <kotlin.version>1.9.23</kotlin.version>
-<maven.compiler.plugin.target>11</maven.compiler.plugin.target>
+<maven.compiler.plugin.target>21</maven.compiler.plugin.target>
 <site.host.stable>${project.url}</site.host.stable>
 <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
 <site.host>${site.host.dev}</site.host>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+<maven.compiler.plugin.release>21</maven.compiler.plugin.release>
 <slf4j.version>1.7.32</slf4j.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
 <groovy.version>5.0.0-alpha-8</groovy.version>
 <rdf4j.version>4.3.12</rdf4j.version>
-<maven.compiler.plugin.source>11</maven.compiler.plugin.source>
 <logback.version>1.5.3</logback.version>
+<maven.compiler.plugin.source>21</maven.compiler.plugin.source>
 <handlebars.version>4.3.1</handlebars.version>
 <site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
 <main.class>systems.symbol.PowerCLI</main.class>
