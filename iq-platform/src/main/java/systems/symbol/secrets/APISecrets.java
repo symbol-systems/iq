@@ -32,17 +32,12 @@ public class APISecrets implements I_Secrets {
             }
             log.debug("secret.match: {} -> {} ==> {} -> {} --> {}", found != null ? found.length() : "no", urlPrefix.length(), urlPrefix, url.startsWith(urlPrefix), url);
         }
-        if (name == null) return null;
+        if (name == null) {
+            log.info("secret.missing: {} -> {}", found, url);
+            return null;
+        }
         String secret = secrets.getSecret(name);
-        log.info("secret.found: {} -> {}", found, name);
+        log.info("secret.found: {} -> {} => {}", found, name, secret==null?"NONE":secret.substring(0,2));
         return secret;
     }
-    /**
-     *     Check the URL matches the Swagger-style pattern (`/v1/example{param1}/{param2}`)
-     */
-    private boolean isMatch(String pattern, String url) {
-        String regexPattern = pattern.replaceAll("\\{[^/]+\\}", "[^/]+");
-        return url.matches(regexPattern);
-    }
-
 }

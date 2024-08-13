@@ -18,7 +18,6 @@ import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.decide.IntentDecision;
 import systems.symbol.decide.ChainOfCommand;
-import systems.symbol.decide.SearchDecision;
 import systems.symbol.llm.Conversation;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.string.Validate;
@@ -58,13 +57,13 @@ public class AvatarAPI extends RealmAPI {
         Repository myRepo = myRealm.getRepository();
         try (RepositoryConnection connection = repository.getConnection()) {
             try (RepositoryConnection connection2 = myRepo.getConnection()) {
-                AgentBuilder builder = new AgentBuilder(agent, bindings, realm.getSecrets());
-                builder.setGround(connection).setThoughts(connection2).executive().remodel().sparql(connection).self(chat);
+                AgentBuilder builder = new AgentBuilder(agent, connection, bindings, realm.getSecrets());
+                builder.setThoughts(connection2).scripting().remodel().sparql(connection).self(chat);
 
 //                SearchDecision search = builder.decision(realm.getFinder(), chat);
                 IntentDecision intents = builder.decision(chat);
                 ChainOfCommand control = builder.decision(intents);
-                I_Agent avatar = builder.build(chat,control,jwt);
+                I_Agent avatar = builder.agent(chat,control,jwt);
                 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
 
                 avatar.start();

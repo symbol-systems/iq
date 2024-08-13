@@ -11,6 +11,11 @@ public class OopsException extends Exception {
         this.status = status;
     }
 
+    public OopsException(String msg) {
+        this.msg = msg;
+        this.status = Response.Status.BAD_REQUEST;
+    }
+
     public String getMessage() {
         return this.msg;
     }

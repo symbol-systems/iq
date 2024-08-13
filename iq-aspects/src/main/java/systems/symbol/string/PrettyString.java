@@ -80,7 +80,7 @@ public class PrettyString {
 	    while (words.hasMoreTokens()) {
 	        String currentToken = sanitize(words.nextToken());
 	        if (first) currentToken = currentToken.toLowerCase();
-	        else currentToken = capitalise(currentToken);
+	        else currentToken = capitalize(currentToken);
 	        camelCase.append(currentToken);
 	        first = false;
 	    }
@@ -97,7 +97,7 @@ public class PrettyString {
 	    StringBuilder camelCase = new StringBuilder();
 	    while (words.hasMoreTokens()) {
 	        String currentToken = words.nextToken();
-	        currentToken = capitalise(currentToken);
+	        currentToken = capitalize(currentToken);
 	        camelCase.append(currentToken);
 	    }
 	    return camelCase.toString().trim();
@@ -108,14 +108,15 @@ public class PrettyString {
 	    StringBuilder camelCase = new StringBuilder();
 	    while (words.hasMoreTokens()) {
 	        String currentToken = words.nextToken();
-	        currentToken = capitalise(currentToken);
+	        currentToken = capitalize(currentToken);
 	        camelCase.append(currentToken).append(" ");
 	    }
 	    return sanitize(camelCase.toString().trim());
 	}
-	
-	public static String capitalise(String word) {
-		return word.substring(0,1).toUpperCase() + word.substring(1).toLowerCase();
+
+	public static String capitalize(Object word) {
+		String _word = word.toString().trim();
+		return _word.substring(0,1).toUpperCase() + _word.substring(1).toLowerCase();
 	}
 
     public static String slice(String word, String sep) {

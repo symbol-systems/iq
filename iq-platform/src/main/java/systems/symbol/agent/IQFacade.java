@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.*;
 //import org.apache.ivy.util.CopyProgressEvent;
 //import org.apache.ivy.util.CopyProgressListener;
 //import org.apache.ivy.util.FileUtil;
@@ -15,6 +12,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
 import systems.symbol.fsm.StateException;
+import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.io.IOCopier;
 import systems.symbol.secrets.I_Secrets;
@@ -35,6 +34,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A simplified string-friendly wrapper for scripting an agent, model and state machine.
@@ -63,6 +63,7 @@ public class IQFacade {
 
     protected void enableVFS() throws FileSystemException {
         this.vfs = VFS.getManager();
+//        LocalFileSystemConfigBuilder.getInstance().setBaseFile(opts, baseFile);
         log.info("api.vfs: {} ", vfs);
     }
 
@@ -92,7 +93,12 @@ public class IQFacade {
     }
 
     public Literal value() {
-        return get(RDF.VALUE).get(0);
+        return get(RDF.VALUE).getFirst();
+    }
+
+    public String name(String subject) {
+        Optional<Literal> label = Models.getPropertyLiteral(model, toIRI(subject), IQ_NS.NAME);
+        return label.orElse(Values.literal("")).stringValue();
     }
 
     /**
@@ -110,11 +116,11 @@ public class IQFacade {
     /**
      * Expand a prefixed string key to an IRI or appends a simple key to self IRI.
      *
-     * @param key The string key to convert.
+     * @param thing The string key to convert.
      * @return The IRI representation of the key.
      */
-    protected IRI toIRI(String key) {
-        return NS.toIRI(model, self, key);
+    protected IRI toIRI(String thing) {
+        return NS.toIRI(model, self, thing);
     }
 
     /**
@@ -149,18 +155,18 @@ public class IQFacade {
     }
 
     public FileObject file(String path) throws APIException, IOException, StateException {
-        return vfs.resolveFile(path);
+        if (this.vfs==null) throw new StateException("files.disabled", self);
+        return vfs.resolveFile(vfs.getBaseFile().getURI().toURL()+ path);
     }
 
-    public FileObject save(InputStream in, FileObject fileObject) throws StateException {
-        if (this.vfs==null) throw new StateException("save.disabled", self);
+    public FileObject save(InputStream in, FileObject file) throws StateException {
         try {
-            log.info("copy.save: {}", fileObject);
-            fileObject.setWritable(true, true);
-            OutputStream out = fileObject.getContent().getOutputStream();
+            log.info("copy.save: {}", file);
+            file.setWritable(true, true);
+            OutputStream out = file.getContent().getOutputStream();
             IOCopier.copy(in, out);
 
-            return fileObject;
+            return file;
         } catch (IOException e) {
             throw new StateException(e.getMessage(), self, e);
         }

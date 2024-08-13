@@ -1,6 +1,7 @@
 package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 
 /**
@@ -26,4 +27,5 @@ public interface IQ_NS {
     IRI SECRET = Values.iri(IQ, "secret");
     IRI OOPS = Values.iri(IQ, "oops");
     IRI NEEDS = Values.iri(IQ, "needs");
+    IRI NAME = Values.iri(IQ, "name");
 }

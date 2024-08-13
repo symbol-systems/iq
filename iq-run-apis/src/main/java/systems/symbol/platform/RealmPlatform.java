@@ -8,12 +8,14 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
+import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.Conversation;
 import systems.symbol.rdf4j.io.IOCopier;
 import systems.symbol.rdf4j.io.RDFDump;
@@ -84,8 +86,10 @@ public class RealmPlatform  implements I_Realms {
             threads.start();
             log.info("realms.running: {} @ {}", realms.getRealms(), stopwatch.elapsed());
         } catch (Exception e) {
-            log.error("realms.fatal: {} @ {}", realms.getRealms(), e.getMessage());
+            log.error("realms.error: {} @ {}", realms.getRealms(), e.getMessage());
             System.exit(1);
+        } catch (APIException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -99,26 +103,36 @@ public class RealmPlatform  implements I_Realms {
         File file = new File(jwtHome, name+".jwt");
         IOCopier.save(token, file);
         LocalDateTime until = LocalDateTime.now().plusSeconds(duration);
-        log.info("realms.trusted: {} -> {} -> {} until {}", self, name, file.getAbsolutePath(), until);
+        log.info("realms.trusted: {} -> {} -> {} until {}", self, name, file.getPath(), until);
     }
 
     protected void onStop(@Observes ShutdownEvent ev) {
         log.info("realms.onStop: {}", ev.isStandardShutdown());
+        backups();
         threads.stop();
         realms.stop();
-        File backups = new File(realms.getHome(),"backups");
-        backups.mkdirs();
         for (IRI realm : cnx.keySet()) {
-            try {
-                File file = new File(backups, PrettyString.sanitize(realm.stringValue())+".ttl");
-                log.info("realms.backup: {}", file.getAbsolutePath());
-                RDFDump.dump(cnx.get(realm), new FileOutputStream(file), RDFFormat.TURTLE);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
             cnx.get(realm).close();
         }
         log.info("realms.stopped: {}", realms.getRealms());
+    }
+
+    private void backups() {
+        File backups = new File(realms.getHome(),"backups");
+        backups.mkdirs();
+        for (IRI realm : cnx.keySet()) {
+            File file = new File(backups, PrettyString.sanitize(realm.stringValue())+"backup.ttl");
+            log.info("realms.backup: {} @ {}", realm, file.getAbsolutePath());
+            try {
+                Repository repository = realms.getRealm(realm).getRepository();
+                try (RepositoryConnection connection = repository.getConnection()) {
+                    RDFDump.dump(connection, new FileOutputStream(file), RDFFormat.TURTLE);
+                }
+            } catch (Exception e) {
+                log.error("realms.backup.error: {}", file.getAbsolutePath());
+            }
+            cnx.get(realm).close();
+        }
     }
 
     public I_Realm getRealm(String self) throws SecretsException {
@@ -127,8 +141,8 @@ public class RealmPlatform  implements I_Realms {
     }
 
     @Override
-    public I_Realm getRealm(IRI self) throws SecretsException {
-        return realms.getRealm(self);
+    public I_Realm getRealm(IRI self) throws SecretsException, PlatformException {
+        return realms.newRealm(self);
     }
 
     @Override
@@ -141,15 +155,14 @@ public class RealmPlatform  implements I_Realms {
         return realms.getRealms();
     }
 
-    protected void agent(I_Realm realm) throws Exception {
+    protected void agent(I_Realm realm) throws Exception, APIException {
         Bindings bindings = new SimpleBindings();
-        AgentBuilder builder = new AgentBuilder(realm.getSelf(), bindings, realm.getSecrets());
         RepositoryConnection connection = realm.getRepository().getConnection();
-        cnx.put(realm.getSelf(), connection);
         Conversation chat = new Conversation();
-        chat.user("- as a self-aware AI, write bullet points to your self:");
-        builder.setGround(connection).setThoughts(realm.getModel()).executive().remodel().sparql(connection).realm(realm).self(chat);
-        I_Agent agent = builder.build(chat);
+        AgentBuilder builder = new AgentBuilder(realm.getSelf(), connection, bindings, realm.getSecrets());
+        builder.setThoughts(realm.getModel()).scripting().remodel().sparql(connection).realm(realm).self(chat);
+        I_Agent agent = builder.avatar(chat);
+        if (agent==null) return;
         Resource state = agent.getStateMachine().getState();
         if (state!=null) {
             Thread thread = threads.add(agent.getSelf(), agent);

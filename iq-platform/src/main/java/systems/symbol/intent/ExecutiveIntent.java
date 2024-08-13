@@ -36,7 +36,7 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
     public ExecutiveIntent(IRI self, Model facts) {
         boot(self, facts);
         this.facts = facts;
-        log.info("exec.facts: {} -> {}", self, facts.size());
+        log.info("exec.intent: {} -> {} ==> {}", self, facts.size(), this.intents.keySet());
     }
 
     /**
@@ -49,7 +49,7 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         boot(self, thoughts);
         this.facts = facts;
         add(intent);
-        log.info("exec.intent: {} -> {} & {}", self, facts.size(), thoughts.size());
+        log.info("exec.intent: {} -> {} & {} ==> {}", self, facts.size(), thoughts.size(), this.intents.keySet());
     }
 
     public void boot(@NotNull IRI self, Model model) {
@@ -115,11 +115,16 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
             Resource s = maybe.getSubject();
             IRI p = maybe.getPredicate();
             Value o = maybe.getObject();
+//            log.info("execute.todo ?: {} -> {}", maybe, todo);
             if (s.isIRI() && o.isResource() && p.isIRI() && this.intents.containsKey(p)) {
-//                log.info("execute.todos: {} -> {}", maybe, todo);
                 todo.add( maybe );
             }
         }
+//        List<Statement> maybeList = new ArrayList<>();
+//        for (Statement statement : maybes) {
+//            maybeList.add(statement);
+//        }
+//        log.info("execute.maybe: {} -> {}", maybeList, todo);
     }
 
     @Override
@@ -128,8 +133,9 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         IRIs done = new IRIs();
         List<Statement> todo = new ArrayList<>();
         findIntents(facts.getStatements(state, null, null), todo);
-        if (model!=facts) findIntents(model.getStatements(state, null, null), todo);
-        log.info("execute.intents: {} @ {} <-- {}", actor, state, todo);
+        if (model!=facts)
+            findIntents(model.getStatements(state, null, null), todo);
+        log.info("execute.todo: {} @ {} <-- {}", actor, state, todo);
         for(Statement s : todo) {
             if (!s.getPredicate().getLocalName().equals("a"))
                 executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
@@ -139,5 +145,9 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
                 executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
         }
         return done;
+    }
+
+    public String toString() {
+        return getClass().getSimpleName()+" "+this.intents.keySet();
     }
 }

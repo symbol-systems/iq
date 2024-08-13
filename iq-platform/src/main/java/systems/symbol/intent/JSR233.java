@@ -35,7 +35,6 @@ import java.util.Set;
  * @see systems.symbol.platform.IQ_NS
  */
 public class JSR233 extends AbstractIntent {
-
     private final ScriptEngineManager engineManager = new ScriptEngineManager();
     private final I_Secrets secrets;
     private final I_Contents scripts;
@@ -84,6 +83,9 @@ public class JSR233 extends AbstractIntent {
             done.add(actor);
             log.info("script.result: {} -> {} x {}", state, result, done.size());
         } catch (ScriptException e) {
+//            if (e.getCause() instanceof OopsException) {
+//
+//            }
             log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getCause().getMessage());
             throw new StateException(e.getCause().getMessage(), state, e.getCause());
         } catch (SecretsException e) {

@@ -23,19 +23,19 @@ public class TrustedAPIs {
     public static I_Secrets trusted(Model model, IRI agent, I_Secrets _secrets) throws SecretsException {
         APISecrets secrets = new APISecrets(_secrets);
         Optional<IRI> name = Models.getPropertyIRI(model, agent, IQ_NS.SECRET);
-        if (!name.isPresent()) {
-            log.warn("missing secret name: {}", agent);
+        if (name.isEmpty()) {
+            log.warn("trusted.missing: {}", agent);
             return secrets;
         }
         String key = name.get().getLocalName();
         String secret = _secrets.getSecret(key);
-        if (secret == null) throw new SecretsException(name.get().stringValue());
+        if (secret == null) throw new SecretsException(agent.stringValue()+" @ "+name.get().stringValue());
 
         Set<IRI> iris = Facts.find(model, agent, IQ_NS.TRUSTS);
         for (IRI iri : iris) {
             secrets.grant(iri.stringValue(), key);
         }
-        log.info("secret.grant: {} -> {}", key, iris);
+        log.info("trusted.grant: {} -> {}", key, iris);
         return secrets;
     }
 

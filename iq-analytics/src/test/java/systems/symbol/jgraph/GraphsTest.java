@@ -9,6 +9,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.platform.IQ_NS;
@@ -28,8 +29,8 @@ public class GraphsTest {
     static IRI ctx, alice, bob, charlie, delta, knows;
 //    TripleSource triples;
 
-    @BeforeAll
-    static void bootstrap() throws IOException {
+    @BeforeEach
+    void bootstrap() throws IOException {
         repository = new BootstrapRepository();
         ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
         assert ctx!=null;

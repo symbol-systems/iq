@@ -26,11 +26,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
-import static systems.symbol.agent.MyFacade.ACTIVITY;
+import static systems.symbol.agent.MyFacade.SELF;
 
 /**
  * An intent that processes and renders structured content into a format suitable for human consumption.
@@ -93,7 +91,7 @@ public class Think extends AbstractIntent {
 
     protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings my, Model model) throws IOException, APIException {
         Bindings bindings = MyFacade.rebind(actor, state, my);
-        String intent = my.containsKey(ACTIVITY)?my.get(ACTIVITY).toString():IdentityHelper.uuid(actor.stringValue()+"#");
+        String intent = my.containsKey(SELF)?my.get(SELF).toString():IdentityHelper.uuid(actor.stringValue()+"#");
 
         log.info("think.bindings: {} -> {}", template.getDatatype(), bindings.keySet());
         String mime = FileFormats.toMime(fallbackMime);

@@ -28,7 +28,6 @@ import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.Realms;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
-import systems.symbol.trust.I_Keys;
 import systems.symbol.trust.SimpleKeyStore;
 import systems.symbol.trust.generate.JWTGen;
 
@@ -96,25 +95,25 @@ public class TokenAPI {
             bindings.put("provider", provider);
             log.info("trust.issuer: {} x {} <-- {}", issuer, connection.size(), baseUrl);
 
-            AgentBuilder builder = new AgentBuilder(issuer, bindings, realm.getSecrets());
-            builder.setGround(connection).setThoughts(realm.getModel()).executive().sparql(connection);
-            I_Agent agent = builder.build();
+            AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
+            builder.setThoughts(realm.getModel()).scripting().sparql(connection);
+            I_Agent agent = builder.agent();
             agent.start();
             IRI initial = Values.iri(issuer.stringValue()+"verify");
 //            agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
             Resource state = agent.getStateMachine().transition(initial);
-            log.info("trust.agent: {} == {} --> {}", agent.getSelf(), initial ,state);
             agent.stop();
             Object identity = bindings.get("identity");
+            log.info("trust.identity: {} == {} @ {}", agent.getSelf(), identity ,state);
             if (identity==null) return new OopsResponse("api.token.identity", Response.Status.NOT_FOUND).asJSON();
             if (!identity.toString().startsWith(agent.getSelf().stringValue()) || identity.toString().length()==agent.getSelf().stringValue().length())
-                return new OopsResponse("api.token.identity", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+                return new OopsResponse("api.token.fraud", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 
-            Object name = bindings.get("name");
-            if (name==null||name.toString().isEmpty()) return new OopsResponse("api.token.name", Response.Status.NOT_FOUND).asJSON();
             IRI self = Values.iri(identity.toString());
-            log.info("trust.identity: {} -> {} -> {} == {}", self, name, !initial.equals(state), initial);
+            Object human = bindings.get("human");
+            log.info("trust.human: {} == {}", human==null?"ANON":human, self);
+            if (human==null||human.toString().isEmpty()) return new OopsResponse("api.token.human.name", Response.Status.NOT_FOUND).asJSON();
             I_Realm myRealm = realms.getInstance().newRealm(self);
             log.info("trust.realm: {}", myRealm.getSelf());
 
@@ -126,13 +125,17 @@ public class TokenAPI {
                 myConnection.commit();
             }
             String[] roles = { "user", provider, self.stringValue() };
-            String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), name.toString(), new String[]{identity.toString(), _realm, provider}, realm, 600); // 10 mins
-//            String signedToken = tokenize(issuer, provider, identity.toString(), name.toString(), new String[]{identity.toString(), _realm, provider}, realm);
+            String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), new String[]{identity.toString(), _realm, provider}, realm, 600); // 10 mins
+//            String signedToken = tokenize(issuer, provider, identity.toString(), human.toString(), new String[]{identity.toString(), _realm, provider}, realm);
             SimpleResponse response = new SimpleResponse("access_token", signedToken);
             connection.commit();
             return response.asJSON();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (e instanceof OopsException oops) {
+                log.warn("trust.oops: {} == {}",e.getMessage(), oops.getStatus(), e);
+                return new SimpleResponse(oops.getMessage(), oops.getStatus()).asJSON();
+            }
+            log.error("trust.failed: {}",e.getMessage(), e);
             return new OopsResponse("api.token.oops", Response.Status.FORBIDDEN).asJSON();
         }
     }

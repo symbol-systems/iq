@@ -11,11 +11,19 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecretsHelper {
+    static final Logger log = LoggerFactory.getLogger(SecretsHelper.class);
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
     public static final String KEY_MATTER_ALGORITHM = "PBKDF2WithHmacSHA256";
+    protected static final int TIME_STEP = 180;
+    protected static final int iterations = 10000;
+    protected static final int keyLength = 256;
 
     public static I_Secrets unlock(InputStream fileInputStream, String password) throws IOException, ClassNotFoundException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fileInputStream));
@@ -30,13 +38,7 @@ public class SecretsHelper {
     }
 
     protected SecretKey toKey(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        int iterations = 10000; // Number of iterations, can be adjusted based on security requirements
-        int keyLength = 256; // Key length in bits
-
-        // Creating a key specification for PBKDF2
         KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLength);
-
-        // Using a SecretKeyFactory to derive the key material
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(KEY_MATTER_ALGORITHM);
         return keyFactory.generateSecret(keySpec);
     }
@@ -76,4 +78,50 @@ public class SecretsHelper {
             return ois.readObject();
         }
     }
-}
+
+    public static String totp(String seed, int length) {
+        return totp(seed,length, "HmacSHA1", TIME_STEP);
+    }
+
+    public static String totp(String seed) {
+        return totp(seed, 6, "HmacSHA1", TIME_STEP).toUpperCase();
+    }
+
+    public static String totp(String seed, int length, String algo, int timeSeconds) {
+        try {
+            long timeCounter = System.currentTimeMillis() / 1000 / timeSeconds;
+            byte[] timeBytes = longToBytes(timeCounter);
+
+            byte[] keyBytes = seed.getBytes();
+            SecretKeySpec signingKey = new SecretKeySpec(keyBytes, algo);
+            Mac mac = Mac.getInstance(algo);
+            mac.init(signingKey);
+
+            byte[] hash = mac.doFinal(timeBytes);
+            int offset = hash[hash.length - 1] & 0xF;
+            int binary = ((hash[offset] & 0x7F) << 24) |
+                    ((hash[offset + 1] & 0xFF) << 16) |
+                    ((hash[offset + 2] & 0xFF) << 8) |
+                    (hash[offset + 3] & 0xFF);
+            int otp = binary % (int) Math.pow(10, length);
+
+            String code = String.format("%0" + length + "d", otp);
+            log.info("totp.code: {} @ {}", code, timeCounter);
+            return code;
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static byte[] longToBytes(long value) {
+        return new byte[] {
+                (byte) (value >> 56),
+                (byte) (value >> 48),
+                (byte) (value >> 40),
+                (byte) (value >> 32),
+                (byte) (value >> 24),
+                (byte) (value >> 16),
+                (byte) (value >> 8),
+                (byte) value
+        };
+    }}

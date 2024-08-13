@@ -28,11 +28,14 @@ public class MyFacade {
     public static final String SELF = "self";
     public static final String STATE = "state";
     public static final String RESULTS = "results";
-    public static final String ACTIVITY = "activity";
+    public static final String NAME = "name";
+    public static final String TIME = "time";
+    public static final String AGENT = "agent";
+    public static final String TODAY = "today";
+
     public static final String MY = "my";
     public static final String IQ = "iq";
     public static final String AI = "ai";
-    public static final String TIME = "time";
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");
 
@@ -47,7 +50,7 @@ public class MyFacade {
 
     public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {
         Bindings bindings = rebind(self, my);
-        if (!my.containsKey(ACTIVITY)) my.put(ACTIVITY, IdentityHelper.uuid(self+"#"));
+        if (!my.containsKey(SELF)) my.put(SELF, IdentityHelper.uuid(self+"#"));
         if (state!=null) my.put(STATE, state.stringValue());
         return bindings;
     }

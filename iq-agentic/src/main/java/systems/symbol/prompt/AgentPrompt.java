@@ -11,10 +11,12 @@ import java.io.IOException;
 
 public class AgentPrompt extends AbstractPrompt<String> {
     I_Agent agent;
+    Model facts;
 
-    public AgentPrompt(Bindings my, I_Agent agent) {
+    public AgentPrompt(Bindings my, I_Agent agent, Model facts) {
         super(my);
         this.agent = agent;
+        this.facts = facts;
     }
 
     public String prompt(IRI self, Resource state, Model facts) {
@@ -23,7 +25,7 @@ public class AgentPrompt extends AbstractPrompt<String> {
 
     @Override
     public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
-        String prompt = prompt(agent.getSelf(), agent.getStateMachine().getState(), agent.getThoughts());
+        String prompt = prompt(agent.getSelf(), agent.getStateMachine().getState(), facts);
         chat.system(bind(prompt));
         return chat;
     }

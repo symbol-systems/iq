@@ -77,12 +77,13 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         return realms.get(self);
     }
 
-    public I_Realm newRealm(IRI self) throws SecretsException {
+    public I_Realm newRealm(IRI self) throws SecretsException, PlatformException {
         Realm realm = realms.get(self);
         log.debug("realm.found: {} -> {}", realms.keySet(), realm!=null);
         if (realm!=null) return realm;
         Repository repo = getRepository(self.stringValue());
-
+        if (repo==null) throw new PlatformException("Cannot find realm: "+self);
+//        Facts.clone();
         DynamicModel model = dmf.createEmptyModel();
         try (RepositoryConnection conn = repo.getConnection()) {
             RepositoryResult<Statement> statements = conn.getStatements(null, null, null);
@@ -99,19 +100,25 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
             return realms.get(self);
         }
         Repository repo = getRepository(self.stringValue());
+        if (repo==null) {
+            log.warn("realm.repo.missing: {}", self);
+            return null;
+        }
 
         String id = PrettyString.sanitize(self.stringValue());
         File finderFile = new File(indexHome, id);
         FactFinder finder = new FactFinder(repo, finderFile, null, 10, 0.7);
         Realm realm = null;
         try {
-            SimpleKeyStore keys = new SimpleKeyStore(new File(keysHome, id));
+            File keyHome = new File(keysHome, id);
+            SimpleKeyStore keys = new SimpleKeyStore(keyHome); // TODO: encrypt
             I_Secrets secrets = this.secrets.getSecrets(self);
-            log.info("realm.models: {} = {}", self, model.size());
+            log.info("realm.secrets: {} x {} == {}", self, model.size(), secrets!=null);
             realm = new Realm(self, model, this.manager.getRepository(id), finder, secrets, this.vfs, keys.keys());
             realms.put(self, realm);
             log.debug("realm.cached: {} -> {}", self, realms.keySet());
         } catch (SecretsException e) {
+            log.error("realm.secrets",e);
             throw new SecretsException(e.getMessage());
         } catch (IOException e) {
             log.error("realm.load",e);

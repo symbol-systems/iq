@@ -20,6 +20,7 @@ import systems.symbol.util.IdentityHelper;
 import javax.script.Bindings;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -73,16 +74,22 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
         if (seen.contains(to)) {
-            log.info("agent.noTransition: {} @ {} ==> {}", self, from, to);
+            log.debug("agent.noTransition: {} @ {} ==> {}", self, from, to);
             return false;
         }
+        seen.add(to);
+        if (to.isIRI() && IQ_NS.TO.equals(to)) {
+            Resource transitioned = getStateMachine().transition(getSelf());
+            log.info("agent.self: {} -> {}", getSelf(), transitioned);
+            return transitioned!=null& Objects.equals(transitioned, getSelf());
+        }
         try {
-            log.info("agent.onTransition: {} @ {} ==> {} --> {}", self, getStateMachine().getState(), from, to);
+            log.info("agent.execute: {} @ {}", self, getStateMachine().getState());
             Set<IRI> executed = execute(getSelf(), to, bindings);
             Resource next = intent();
-            log.info("agent.decides: {} --> {} == {}", from, next, executed);
+            log.info("agent.decided: {} --> {} <-- {}", from, next, executed);
             if (next==null) {
-                log.info("agent.undecided: {} == {}", from, executed);
+                log.info("agent.undecided: {} @ {}", getSelf(), from);
                 return false; // don't veto, we may try again
             }
             if (getStateMachine().getState().equals(next)) {
@@ -90,7 +97,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
                 return false;
             }
             Resource transitioned = getStateMachine().transition(next);
-            log.info("agent.transition: {} --> {}", from, transitioned);
+            log.info("agent.transitioned: {} --> {}", from, transitioned);
             seen.add(transitioned);
             return next.equals(transitioned);
         } catch (StateException e) {

@@ -22,7 +22,8 @@ public class SimpleKeyStore implements I_KeyStore {
 
     public SimpleKeyStore(File keysHome) throws Exception {
         this.keysHome = keysHome;
-        if (keysHome.mkdirs() && !isProvisioned()) {
+        keysHome.mkdirs();
+        if (!isProvisioned()) {
             save(newKeys(algo));
         }
     }

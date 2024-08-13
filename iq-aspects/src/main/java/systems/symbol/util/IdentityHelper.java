@@ -34,7 +34,7 @@ public class IdentityHelper {
     }
 
     public static String uuid() {
-        return uuid("urn:uuid:");
+        return uuid("urn:");
     }
 
     public static String uuid(String prefix) {

@@ -6,9 +6,9 @@
 
 {{#each my.results.infobox.results}}
 
-    <{{my.self}}> iq:knows <{{my.activity}}>.
+    <{{my.agent}}> iq:knows <{{my.self}}>.
 
-    <{{my.activity}}> schema:hasPart <{{url}}>.
+    <{{my.self}}> schema:hasPart <{{url}}>.
     <{{url}}>
         a schema:WebPage;
         schema:url <{{website_url}}> ;
@@ -18,7 +18,7 @@
         schema:thumbnailUrl "{{thumbnail.original}}";
 .
     {{#each profiles}}
-        <{{my.activity}}> schema:hasPart <{{url}}>.
+        <{{my.self}}> schema:hasPart <{{url}}>.
         <{{url}}>
             a schema:ProfilePage;
         schema:url <{{url}}> ;
@@ -32,7 +32,7 @@
 {{/each}}
 
 {{#each my.results.videos.results}}
-    <{{my.activity}}> schema:hasPart <{{url}}>.
+    <{{my.self}}> schema:hasPart <{{url}}>.
 
     <{{url}}> a schema:VideoObject;
         schema:url <{{url}}> ;
@@ -44,7 +44,7 @@
 {{/each}}
 
 {{#each my.results.web.results}}
-        <{{my.activity}}> schema:hasPart <{{url}}>.
+        <{{my.self}}> schema:hasPart <{{url}}>.
 
 <{{url}}> a schema:WebPage;
           schema:url <{{url}}> ;
