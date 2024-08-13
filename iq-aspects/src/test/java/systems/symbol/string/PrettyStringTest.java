@@ -57,8 +57,8 @@ public void testWikize() {
 }
 
 @Test
-public void testCapitalise() {
-String hello_world = PrettyString.capitalise("hello world");
+public void testCapitalize() {
+String hello_world = PrettyString.capitalize("hello world");
 System.out.println("testCapitalise: "+hello_world);
 assert hello_world.equals("Hello world");
 }

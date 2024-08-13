@@ -33,7 +33,7 @@ field.setAccessible(true);
 Object value = stmt.getObject();
 Class<?> fieldType = field.getType();
 
-log.info("poke: {} -> {} / {}", field.getName(), value, fieldType);
+//log.info("poke: {} -> {} / {}", field.getName(), value, fieldType);
 if (fieldType == String.class) {
 if (value instanceof Literal) {
 field.set(config, ((Literal) value).stringValue());

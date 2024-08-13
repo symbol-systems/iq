@@ -59,7 +59,7 @@ setInitial(found_initial.next());
 Iterator<Resource> found_current = find(self, state, hasCurrentState).iterator();
 if (found_current.hasNext()) {
 Resource next = found_current.next();
-log.info("msm.current: {}", next);
+log.info("msm.msm.current: {}", next);
 setCurrentState(next);
 }
 }
@@ -70,7 +70,7 @@ state.remove(self, hasCurrentState, null);
 
 state.add(self, initialStep, initialState);
 state.add(self, hasCurrentState, getState());
-log.debug("msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
+log.debug("msm.msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
 }
 
 @Override
@@ -84,10 +84,12 @@ if (this.currentState != null && this.currentState.equals(target)) return true;
 Iterable<Statement> transitions = model.getStatements(getState(), TO, target);
 
 boolean hasTransitions = transitions.iterator().hasNext();
-log.debug("allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
-if (!hasTransitions) return false; // No transitions
+if (!hasTransitions) {
+log.debug("msm.allowed.transition?: {} -> {} == {}", getState(), target, hasTransitions);
+return false; // No transitions
+}
 
-log.info("allowed/final/guarded: {} -> {} -> {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
+log.info("msm.updated (final/guarded): {} ---> {} / {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
 //if (isFinal(getState())) return false; // No states
 if (!isGuarded(target)) return true; // Not guarded
 return isAllowedByGuard(self, target); // Ask the guards ...
@@ -107,31 +109,31 @@ return !find(state, model, hasGuard).isEmpty();
 public boolean isAllowedByGuard(Resource subject, Resource target) {
 Collection<Resource> guards = find(target, model, hasGuard);
 Iterator<Resource> iGuards = guards.iterator();
-log.info("guarded?: {} @ {} -> {}", iGuards.hasNext(), subject, target);
+log.debug("msm.guarded?: {} @ {} -> {}", iGuards.hasNext(), subject, target);
 if (!iGuards.hasNext()) return true; // No guards, we're good
 
 while (iGuards.hasNext()) {
 Resource guard = iGuards.next();
 Iterable<Statement> rules = model.getStatements(guard, null, null);
 Iterator<Statement> iRules = rules.iterator();
-log.info("guard: {} --> {} = {}", subject, guard, iRules.hasNext());
+log.info("msm.guard: {} --> {} = {}", subject, guard, iRules.hasNext());
 
 // ensure the rule 2-tuple match the subject's 2-tuple (aka name/value)
 while (iRules.hasNext()) {
 Statement rule = iRules.next();
-log.info("guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
+log.info("msm.guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
 if ( ! hasGuard.equals(rule.getPredicate()) ) {
 // ensure rules tuples match the subject
 Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(), rule.getObject());
 boolean matches = statements.iterator().hasNext();
 if (!matches) {
-log.info("guard.block: {} == {}", subject, rule.getPredicate());
+log.info("msm.guard.block: {} == {}", subject, rule.getPredicate());
 return false;
 }
 }
 }
 }
-log.info("guard.grants: {} -> {}", subject, target);
+log.info("msm.guard.grants: {} -> {}", subject, target);
 return true; // All rules must have matched
 }
 
@@ -163,10 +165,10 @@ return transitions.stream()
  * @param to   The target state.
  */
 public void add(Resource from, Resource to) {
-log.debug("add: [{}/{}] -> {} ==> {} == {}",model.size(), model.isEmpty(), from, to, getState());
+log.debug("msm.add: [{}/{}] -> {} ==> {} == {}",model.size(), model.isEmpty(), from, to, getState());
 if (initialState==null) {
 this.setInitial(from);
-log.debug("initial: {} == {}", this.initialState, this.currentState);
+log.debug("msm.initial: {} == {}", this.initialState, this.currentState);
 }
 model.add(from, TO, to);
 }

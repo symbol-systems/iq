@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.Validate;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -66,6 +67,7 @@ return baseURL;
 public RestAPI bearer() throws SecretsException {
 if (this.secrets==null) throw new SecretsException("missing.bearer.secrets");
 String authToken = this.secrets.getSecret(getURL());
+if (authToken==null) throw new SecretsException("missing.api.secret");
 return header("Authorization", "Bearer "+authToken);
 }
 
@@ -73,9 +75,17 @@ public RestAPI bearer(String authToken) throws SecretsException {
 return header("Authorization", "Bearer "+authToken);
 }
 
+public RestAPI authorization(String prefix) throws SecretsException {
+if (this.secrets==null) throw new SecretsException("missing.auth.secrets");
+String authToken = this.secrets.getSecret(getURL());
+if (Validate.isMissing(authToken)) throw new SecretsException("missing.auth.secret");
+return header("Authorization", prefix+authToken);
+}
+
 public RestAPI authorization() throws SecretsException {
 if (this.secrets==null) throw new SecretsException("missing.auth.secrets");
 String authToken = this.secrets.getSecret(getURL());
+if (Validate.isMissing(authToken)) throw new SecretsException("missing.auth.secret");
 return header("Authorization", authToken);
 }
 
@@ -252,7 +262,7 @@ Request.Builder builder = new Request.Builder();
 for(String n: headers.keySet()) {
 builder.header(n, headers.get(n));
 }
-
+log.info("api.headers: {} -> {}", getURL(), headers);
 return builder;
 }
 

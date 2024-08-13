@@ -71,7 +71,7 @@ ai.add(prompt);
 
 I_Assist<String> memoires = ai.complete(chat);
 
-log.info("self.memoires: {}", memoires);
+log.debug("self.memoires: {}", memoires);
 I_Assist<String> diary = gpt.complete(memoires);
 I_LLMessage<String> myself = diary.latest();
 log.info("self.reflect: {}", myself.getContent());

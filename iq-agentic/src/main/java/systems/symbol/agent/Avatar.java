@@ -48,7 +48,10 @@ throw new RuntimeException(e);
 public Set<IRI> _execute(IRI actor, Resource assistant, Bindings bindings) throws APIException, Exception {
 Set<IRI> done = new HashSet<>();
 I_LLM<String> gpt = CommonLLM.gpt(assistant, facts, 2048, secrets);
-if (gpt==null) return done;
+if (gpt==null) {
+log.warn("avatar.mute: {} -> {}", actor, assistant);
+return done;
+}
 cognition(actor, assistant, gpt, agent, bindings);
 done.add(actor);
 return done;
@@ -56,33 +59,34 @@ return done;
 
 private void cognition(IRI actor, Resource assistant, I_LLM<String> gpt, I_Agent agent, Bindings bindings) throws Exception, APIException {
 Resource state = agent.getStateMachine().getState();
-Optional<Literal> name = Models.getPropertyLiteral(facts, actor, RDFS.LABEL);
-name.ifPresent(***REMOVED*** -> bindings.put(MyFacade.AI, ***REMOVED***.stringValue()));
+//Optional<Literal> name = Models.getPropertyLiteral(facts, actor, RDFS.LABEL);
+bindings.put(MyFacade.AI, actor.getLocalName());
 Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
-log.info("avatar.LLM: {} - {} @ {} as {}", name.isPresent()?name.get():"AI", actor, state, assistant);
+log.info("avatar.{}: {} @ {}", assistant, actor, state);
 
 Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
 PromptChain ai = new PromptChain();
-ai.add(new AgentPrompt(my, agent));
+ai.add(new AgentPrompt(my, agent, facts));
 ai.add(new KnownsPrompt(my, agent, facts));
+ai.add(new KnownsPrompt(my, agent, agent.getThoughts()));
 if (wrapper.isPresent()) ai.add(new ChoicePrompt(my, agent, wrapper.get().stringValue().trim()));
 else ai.add(new ChoicePrompt(my, agent));
 
-//log.info("avatar.chat: {}", chat);
-I_Assist<String> answer = gpt.complete(ai.complete(chat));
+I_Assist<String> prompt = ai.complete(chat);
+log.info("avatar.prompt: {}", prompt);
+I_Assist<String> answer = gpt.complete(prompt);
 log.info("avatar.GPT: {}\n>>>>\n{}\n", actor,  answer);
 updateChat(agent, chat ,answer);
 log.info("avatar.done: {}\n<<<<\n{}\n", actor,  chat);
 }
 
 private void updateChat(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
-if ( !(ai.latest() instanceof IntentMessage)) {
+if ( !(ai.latest() instanceof IntentMessage intent)) {
 String reply = ai.latest().getContent();
 log.info("avatar.reply: {} => {}", chat.messages().size(), reply);
 chat.assistant(reply);
 return;
 }
-IntentMessage intent = (IntentMessage) ai.latest();
 I_StateMachine<Resource> fsm = agent.getStateMachine();
 if (!fsm.getTransitions().contains(intent.getSelf())) {
 log.info("avatar.confused: {} => {}", intent.getIntent(), intent.getContent());

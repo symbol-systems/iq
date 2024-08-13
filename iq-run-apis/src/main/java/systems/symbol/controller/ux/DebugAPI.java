@@ -52,9 +52,9 @@ try (RepositoryConnection connection = repository.getConnection()) {
 LDResponse ld = new LDResponse(RDFPrefixer.describe(connection, self));
 Bindings my = ld.getBindings();
 
-AgentBuilder builder = new AgentBuilder(self, my, realm.getSecrets());
-builder.setGround(connection).executive().remodel().sparql(connection);
-I_Agent agent = builder.build();
+AgentBuilder builder = new AgentBuilder(self, connection, my, realm.getSecrets());
+builder.scripting().remodel().sparql(connection);
+I_Agent agent = builder.agent();
 agent.start();
 
 my.put("name", jwt.getClaim("name").asString());

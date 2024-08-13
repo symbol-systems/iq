@@ -43,17 +43,17 @@ public void boot(IRI self, Model model) throws StateException {
 if (fsm==null) {
 ModelStateMachine fsm = new ModelStateMachine(self, model);
 setFSM(fsm);
-log.info("agent.fsm.boot: {} @ {}", getSelf(), fsm.getState());
+log.debug("agent.boot: {} @ {}", getSelf(), fsm.getState());
 } else if (fsm instanceof ModelStateMachine) {
 ((ModelStateMachine) fsm).initialize(self, model, model);
-log.info("agent.fsm.reboot: {} @ {}", getSelf(), fsm.getState());
+log.info("agent.reboot: {} @ {}", getSelf(), fsm.getState());
 }
 }
 
 @Override
 public void start() throws Exception {
 getStateMachine().transition(getStateMachine().getState());
-log.info("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
+log.debug("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
 @Override
@@ -96,7 +96,7 @@ log.error("agent.intent.failed: {}", fsm, e);
 return false;
 }
 });
-log.info("agent.listen: {} @ {}", fsm.getState(), getSelf() );
+log.debug("agent.listen: {} @ {}", fsm.getState(), getSelf() );
 }
 
 /**

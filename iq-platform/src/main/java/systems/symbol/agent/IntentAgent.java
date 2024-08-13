@@ -61,7 +61,7 @@ return false;
 @RDF(IQ_NS.IQ + "agent")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
 if (state instanceof IRI) {
-log.info("agent.execute: {} -> {} -> {}", intent.getClass().getSimpleName(), actor, state);
+log.info("agent.do: {} <-- {} @ {}", intent, actor, state);
 return intent.execute(actor, state, bindings);
 }
 Set<IRI> iris = new HashSet<>();

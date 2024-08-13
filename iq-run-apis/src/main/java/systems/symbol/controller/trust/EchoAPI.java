@@ -23,6 +23,7 @@ import systems.symbol.llm.I_Assist;
 import systems.symbol.prompt.AgentPrompt;
 import systems.symbol.prompt.PromptChain;
 import systems.symbol.realm.I_Realm;
+import systems.symbol.realm.PlatformException;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.util.Stopwatch;
@@ -52,7 +53,7 @@ description = "api.trust.chat.post.description"
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor, @HeaderParam("Authorization") String auth,
-   Conversation chat) throws APIException, IOException, SecretsException {
+   Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
 Stopwatch stopwatch = new Stopwatch();
 log.info("trust.chat: {}", chat.messages());
 if (chat.messages().isEmpty()) return new OopsResponse("api.trust.chat.empty", Response.Status.NOT_FOUND).asJSON();
@@ -69,14 +70,14 @@ if (repository == null) return new OopsResponse("api.trust.chat.repository.missi
 Bindings bindings = new SimpleBindings();
 I_Realm myRealm = platform.getRealm(Values.iri(jwt.getSubject()));
 log.info("trust.chat.realm: {} @ {} & {}", actor, realm.getSelf(), myRealm.getSelf());
-AgentBuilder builder = new AgentBuilder(actor, bindings, realm.getSecrets());
 
 try (RepositoryConnection connection = repository.getConnection()) {
-builder.setGround(connection).self(chat).executive();
-I_Agent agent = builder.build(chat);
+AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets());
+builder.self(chat).scripting();
+I_Agent agent = builder.avatar(chat);
 agent.start();
 PromptChain ai = new PromptChain();
-ai.add(new AgentPrompt(bindings, agent));
+ai.add(new AgentPrompt(bindings, agent, realm.getModel()));
 I_Assist<String> complete = ai.complete(chat);
 log.info("trust.chat.reply: {} @ {}", complete.messages(), stopwatch);
 agent.stop();

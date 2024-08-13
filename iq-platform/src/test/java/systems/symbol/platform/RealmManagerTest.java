@@ -9,10 +9,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
 import systems.symbol.finder.FactFinder;
 import systems.symbol.rdf4j.io.RDFDump;
-import systems.symbol.realm.Facts;
-import systems.symbol.realm.I_Realm;
-import systems.symbol.realm.Realms;
-import systems.symbol.realm.RealmManager;
+import systems.symbol.realm.*;
 
 import java.io.File;
 import java.util.Collection;
@@ -24,7 +21,7 @@ IRI self = Values.iri("test:");
 File home = new File("my.test");
 
 @Test
-void bootstrap() throws Exception {
+void bootstrap() throws Exception, PlatformException {
 RealmManager realms = new RealmManager();
 Realms.bootstrap(realms, new File("src/test/resources/realms/").listFiles());
 System.out.println("realm.bootstrap: "+realms.getRealms());
@@ -33,7 +30,7 @@ realms.stop();
 }
 
 @Test
-void testRealmFactory() throws Exception {
+void testRealmFactory() throws Exception, PlatformException {
 RealmManager realms = new RealmManager(home);
 I_Realm realm = realms.getRealm(self);
 assert realm == null;

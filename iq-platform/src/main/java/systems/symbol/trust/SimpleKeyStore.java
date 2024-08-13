@@ -22,7 +22,8 @@ int KEY_SIZE = 4096;
 
 public SimpleKeyStore(File keysHome) throws Exception {
 this.keysHome = keysHome;
-if (keysHome.mkdirs() && !isProvisioned()) {
+keysHome.mkdirs();
+if (!isProvisioned()) {
 save(newKeys(algo));
 }
 }

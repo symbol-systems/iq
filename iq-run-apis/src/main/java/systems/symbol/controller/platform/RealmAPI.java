@@ -28,7 +28,7 @@ import java.util.Arrays;
  * Abstract endpoint for realm-based APIs
  */
 public abstract class RealmAPI {
-protected final static Logger log = LoggerFactory.getLogger(RealmAPI.class);
+protected final  Logger log = LoggerFactory.getLogger(getClass());
 @Inject protected RealmPlatform platform;
 
 /**
@@ -100,7 +100,7 @@ try {
 String token = bearer.substring("BEARER ".length());
 return jwtGen.verify(keys.keys(), token);
 } catch (Exception e) {
-log.warn("aou,realm.trust: {}", e.getMessage());
+//log.warn("aou,realm.trust: {}", e.getMessage());
 throw new OopsException("api.realm.trust.reject", Response.Status.FORBIDDEN);
 }
 }

@@ -56,4 +56,14 @@ return thing==null || thing.toString().trim().isEmpty();
 public static boolean isURN(String thing) {
 return thing != null && thing.contains(":");
 }
+
+/**
+ * Check the URL matches the Swagger-style pattern (`/v1/example{param1}/{param2}`)
+ */
+public static boolean isSwaggerPath(String pattern, String url) {
+String ***REMOVED***Pattern = pattern.replaceAll("\\{[^/]+\\}", "[^/]+");
+return url.matches(***REMOVED***Pattern);
+}
+
+
 }

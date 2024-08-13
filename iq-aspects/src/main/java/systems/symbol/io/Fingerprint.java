@@ -58,10 +58,10 @@ return toHex(md.digest());
 		return toHex(md.digest());
 	}
 
-public static String identify(String buffer) {
+public static String identify(String content) {
 try {
 MessageDigest md = MessageDigest.getInstance(DEFAULT_ALGO);
-md.update(buffer.getBytes(StandardCharsets.UTF_8));
+md.update(content.getBytes(StandardCharsets.UTF_8));
 return toHex(md.digest());
 } catch (NoSuchAlgorithmException e) {
 log.error(e.getMessage(),e);
