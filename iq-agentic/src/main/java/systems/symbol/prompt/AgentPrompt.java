@@ -25,8 +25,8 @@ public class AgentPrompt extends AbstractPrompt<String> {
 
     @Override
     public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
-        String prompt = prompt(agent.getSelf(), agent.getStateMachine().getState(), facts);
-        chat.system(bind(prompt));
+        String prompt = prompt(agent.getSelf(), agent.getStateMachine().getState(), facts).trim();
+        if (!prompt.isEmpty()) chat.system(bind(prompt));
         return chat;
     }
 

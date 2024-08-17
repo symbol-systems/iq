@@ -123,6 +123,7 @@ public class AgentBuilder implements I_Self {
         bindings.put(TIME, HumanDate.format(now));
         bindings.put(TODAY, "today:"+TodayDate.format(now));
         bindings.put(RESULTS, new ArrayList<>());
+        bindings.put("size", thoughts.size());
     }
 
     public I_Agent agent() throws SecretsException, StateException {

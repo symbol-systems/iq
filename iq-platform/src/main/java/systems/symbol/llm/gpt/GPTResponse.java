@@ -36,6 +36,7 @@ public class GPTResponse {
         public float prompt_time;
         public float completion_time;
         public float total_time;
+        public float queue_time;
     }
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Error {

@@ -69,11 +69,11 @@ public class ModelAPI extends GuardedAPI {
         Repository repository = realm.getRepository();
         if (repository == null) return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
 
+        IRI self = Values.iri(jwt.getSubject());
         try (RepositoryConnection connection = repository.getConnection()) {
             IQConnection iq = new IQConnection(realm.getSelf(), connection);
             IQScriptCatalog catalog = new IQScriptCatalog(iq);
             Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
-            IRI self = Values.iri(jwt.getSubject());
             Bindings my = MyFacade.rebind(self, params, jwt);
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
@@ -85,7 +85,8 @@ public class ModelAPI extends GuardedAPI {
             LDResponse response = new LDResponse(graphQuery);
             return response.asJSON();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("ux.mind.failed: {} -> {} ==> {}", self, query, e.getMessage());
+            return new OopsResponse("api.ux.model.failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
         }
     }
 }
