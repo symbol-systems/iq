@@ -30,7 +30,7 @@ if (model!=null && !model.isEmpty() && !model.equals(agent.getThoughts())) {
 Facts.find(model, agent.getStateMachine().getState(), iris, false, IQ_NS.KNOWS);
 Facts.find(model, agent.getStateMachine().getState(), iris, false, IQ_NS.KNOWS);
 }
-chat.system(" I learned "+bind(prompt(iris)));
+chat.system(" I know "+bind(prompt(iris)));
 return chat;
 }
 

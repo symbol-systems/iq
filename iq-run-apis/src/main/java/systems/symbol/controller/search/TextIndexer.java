@@ -79,7 +79,7 @@ String sparql = library.getSPARQL(query);
 if (sparql.isEmpty()) {
 return new OopsResponse("api.iq.text.indexer#query-missing", Response.Status.NO_CONTENT).asJSON();
 }
-log.info("iq.text.indexer.sparql: {}", sparql);
+log.info("iq.text.index.sparql: {}", sparql);
 // SPARQL query used to populate index
 TupleQuery tupleQuery = connection.prepareTupleQuery(RDFPrefixer.getSPARQLPrefix(connection)+sparql);
 long indexed = IndexHelper.index(factFinder, tupleQuery);

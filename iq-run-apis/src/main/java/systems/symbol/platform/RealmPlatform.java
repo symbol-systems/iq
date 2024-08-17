@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static systems.symbol.Formats.HumanDate;
+import java.util.Date;
+
 //@ApplicationScoped
 @Singleton
 public class RealmPlatform  implements I_Realms {
@@ -120,8 +123,9 @@ log.info("realms.stopped: {}", realms.getRealms());
 private void backups() {
 File backups = new File(realms.getHome(),"backups");
 backups.mkdirs();
+String now = HumanDate.format(System.currentTimeMillis());
 for (IRI realm : cnx.keySet()) {
-File file = new File(backups, PrettyString.sanitize(realm.stringValue())+"backup.ttl");
+File file = new File(backups, PrettyString.sanitize(realm.stringValue())+"now.ttl");
 log.info("realms.backup: {} @ {}", realm, file.getAbsolutePath());
 try {
 Repository repository = realms.getRealm(realm).getRepository();

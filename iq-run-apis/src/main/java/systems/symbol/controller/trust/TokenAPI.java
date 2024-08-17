@@ -125,7 +125,7 @@ myConnection.add(agent.getThoughts());
 myConnection.commit();
 }
 String[] roles = { "user", provider, self.stringValue() };
-String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), new String[]{identity.toString(), _realm, provider}, realm, 600); // 10 mins
+String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), new String[]{identity.toString(), _realm}, realm, 600); // 10 mins
 //String signedToken = tokenize(issuer, provider, identity.toString(), human.toString(), new String[]{identity.toString(), _realm, provider}, realm);
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
 connection.commit();

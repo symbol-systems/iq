@@ -78,7 +78,7 @@ public static void index(I_Realms realms) throws SecretsException, PlatformExcep
 for(IRI r: realms.getRealms()) {
 I_Realm realm = realms.getRealm(r);
 log.info("realm.index: {}", realm.getSelf());
-long indexed = index(realm, Values.iri(r.stringValue(), "index"));
+long indexed = index(realm, Values.iri(r.stringValue(), "script/index"));
 log.info("realm.index.ok: {} x {}", realm.getSelf(), indexed);
 }
 }
