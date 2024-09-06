@@ -25,6 +25,13 @@ public class Conversation implements I_Assist<String> {
     }
 
     public Conversation add(I_LLMessage<String> msg) {
+//        I_LLMessage<String> last = this.messages.getLast();
+//        if (last!=null && last.getRole().equals(msg.getRole())) {
+////            this.messages.removeLast();
+//            this.messages.add(msg);
+//        } else {
+//            this.messages.add(msg);
+//        }
         this.messages.add(msg);
         return this;
     }
@@ -37,6 +44,27 @@ public class Conversation implements I_Assist<String> {
     @Override
     public I_LLMessage<String> latest() {
         return messages.isEmpty()?null:messages.get(messages.size()-1);
+    }
+
+    public String context() {
+        return context(2);
+    }
+
+    public String context(int window) {
+        StringBuilder s$ = new StringBuilder();
+        int i = messages.size() - 1;
+        int count = 0;
+
+        while (i >= 0 && count < window) {
+            I_LLMessage<String> msg = messages.get(i);
+            if (msg.getRole() != I_LLMessage.RoleType.system) {
+                s$.append(msg.getContent());
+                count++;
+            }
+            i--;
+        }
+
+        return s$.toString();
     }
 
     public I_Assist<String> add(String role, String content) {

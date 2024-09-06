@@ -11,7 +11,4 @@ public interface IQ extends I_Self {
     RepositoryConnection getConnection();
     void close();
     IRI toIRI(String local);
-
-
-
 }

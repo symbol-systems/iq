@@ -21,6 +21,14 @@ public interface I_LLMConfig {
     String getName();
 
 
+    /**
+     * Retrieves the response type.
+     *
+     * @return The response type.
+     */
+    String getResponseFormat();
+
+
     String getSecretName();
 
     /**

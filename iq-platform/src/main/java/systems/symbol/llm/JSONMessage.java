@@ -1,0 +1,24 @@
+package systems.symbol.llm;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import javax.script.Bindings;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize
+public class JSONMessage extends AbstractMessage<String> {
+    public JSONMessage() {
+    }
+
+    @JsonCreator
+    public JSONMessage(
+                       @JsonProperty("role") String role,
+                       @JsonProperty("content") String json) {
+        this.type = MessageType.JSON;
+        this.role = RoleType.valueOf(role);
+        this.content = json;
+    }
+}

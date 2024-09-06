@@ -17,10 +17,10 @@ import java.util.*;
  * SearchMatrix provides an in-memory vector search mechanism based on cosine similarity.
  * It allows indexing and searching of entities based on their textual content embeddings.
  */
-public class SearchMatrix implements I_Search<I_Found<IRI>> {
+public class SearchMatrix implements I_Search<I_Found<IRI>>, I_Indexer {
     private static final Logger log = LoggerFactory.getLogger(SearchMatrix.class);
 
-    private EmbeddingModel model;
+    private final EmbeddingModel model;
 
     // Indices of embeddings and metadata for semantic augmentation
     private final Map<Integer, float[]> vectorsById = new HashMap<>();
@@ -45,32 +45,36 @@ public class SearchMatrix implements I_Search<I_Found<IRI>> {
         this.model = model;
     }
 
-    /**
-     * Static method to create and index a new SearchMatrix instance with default settings.
-     *
-     * @param facts the collection of RDF statements to index.
-     * @param concept the IRI representing the concept for grouping.
-     * @return an instance of I_Search<IRI> containing the indexed data.
-     */
-    public static SearchMatrix index(Iterable<Statement> facts, IRI concept) {
-        SearchMatrix searchMatrix = new SearchMatrix();
-        searchMatrix.reindex(facts, concept);
-        return searchMatrix;
+    public boolean indexed(IRI iri) {
+        return contentHashByThing.containsKey(iri);
     }
 
-    /**
-     * Static method to create and index a new SearchMatrix instance with a custom EmbeddingModel.
-     *
-     * @param facts the collection of RDF statements to index.
-     * @param concept the IRI representing the concept for grouping.
-     * @param model the EmbeddingModel to use for embedding text.
-     * @return an instance of I_Search<IRI> containing the indexed data.
-     */
-    public static SearchMatrix index(Iterable<Statement> facts, IRI concept, EmbeddingModel model) {
-        SearchMatrix searchMatrix = new SearchMatrix(model);
-        searchMatrix.reindex(facts, concept);
-        return searchMatrix;
-    }
+//    /**
+//     * Static method to create and index a new SearchMatrix instance with default settings.
+//     *
+//     * @param facts the collection of RDF statements to index.
+//     * @param concept the IRI representing the concept for grouping.
+//     * @return an instance of I_Search<IRI> containing the indexed data.
+//     */
+//    public static SearchMatrix index(Iterable<Statement> facts, IRI concept) {
+//        SearchMatrix searchMatrix = new SearchMatrix();
+//        searchMatrix.reindex(facts, concept);
+//        return searchMatrix;
+//    }
+
+//    /**
+//     * Static method to create and index a new SearchMatrix instance with a custom EmbeddingModel.
+//     *
+//     * @param facts the collection of RDF statements to index.
+//     * @param concept the IRI representing the concept for grouping.
+//     * @param model the EmbeddingModel to use for embedding text.
+//     * @return an instance of I_Search<IRI> containing the indexed data.
+//     */
+//    public static SearchMatrix index(Iterable<Statement> facts, IRI concept, EmbeddingModel model) {
+//        SearchMatrix searchMatrix = new SearchMatrix(model);
+//        searchMatrix.reindex(facts, concept);
+//        return searchMatrix;
+//    }
 
     /**
      * Indexes a collection of RDF statements under a specific concept.
@@ -78,16 +82,14 @@ public class SearchMatrix implements I_Search<I_Found<IRI>> {
      * @param facts the collection of RDF statements to index.
      * @param concept the IRI representing the concept for grouping.
      */
-    public void reindex(Iterable<Statement> facts, IRI concept) {
-        for (Statement fact : facts) {
+    public void reindex(Iterator<Statement> facts, IRI concept) {
+        while (facts.hasNext()) {
+            Statement fact = facts.next();
             if (fact.getSubject().isIRI() && fact.getObject().isLiteral()) {
-                reindex((IRI)fact.getSubject(), concept, fact.getObject().stringValue());
+                reindex((IRI) fact.getSubject(), fact.getObject().stringValue(), concept);
             }
         }
-    }
-
-    public boolean indexed(IRI iri) {
-        return contentHashByThing.containsKey(iri);
+        log.info("matrix.indexed: {}", vectorsById.size());
     }
 
     /**
@@ -98,11 +100,13 @@ public class SearchMatrix implements I_Search<I_Found<IRI>> {
      * @param concept the IRI representing the concept for grouping.
      * @param content the textual content to index.
      */
-    public void reindex(IRI iri, IRI concept, String content) {
+    public void reindex(IRI iri, String content, IRI concept) {
+        if (content==null||content.isEmpty()||content.trim().isEmpty()) return;
         int contentHash = content.hashCode();
         boolean contentUnchanged = contentHashByThing.containsKey(iri) && contentHashByThing.get(iri) == contentHash;
         if (contentUnchanged) return;
 
+//        log.info("matrix.embed: {} ==> {}", iri, content);
         Response<Embedding> embed = embed(content);
         float[] vector = embed.content().vector();
         contentHashByThing.put(iri, contentHash);
@@ -153,6 +157,7 @@ public class SearchMatrix implements I_Search<I_Found<IRI>> {
         List<ScoredIRI> scoredResults = new ArrayList<>();
         Set<Integer> idsToSearch = (concept == null) ? vectorsById.keySet() : indexByThing.getOrDefault(concept, Collections.emptySet());
 
+        log.info("matrix.search: {}", idsToSearch.size());
         for (Integer id : idsToSearch) {
             float[] vector = vectorsById.get(id);
             double score = cosineSimilarity(queryVector, vector);

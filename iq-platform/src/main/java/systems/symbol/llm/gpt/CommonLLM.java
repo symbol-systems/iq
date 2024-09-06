@@ -1,6 +1,5 @@
 package systems.symbol.llm.gpt;
 
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
@@ -38,11 +37,11 @@ public class CommonLLM {
         return config;
     }
 
-    public static I_LLM<String> gpt(Resource self, Model model, int contextLength, I_Secrets secrets) throws SecretsException {
+    public static I_LLM<String> complete(Resource self, Model model, int contextLength, I_Secrets secrets) throws SecretsException {
         I_LLMConfig config = configure(self, model, contextLength);
         if (config.getName()==null || config.getURL() ==null) return null;
         String secretName = PrettyString.localName(config.getSecretName());
-        log.debug("gpt.secrets: {} -> {} @ {}", self, secretName, config.getURL());
+        log.info("llm.complete: {} -> {} @ {} as {}", self, secretName, config.getURL(), config.getResponseFormat());
         if (secretName==null||secretName.isEmpty()) throw new SecretsException("secret.missing: "+config.getName());
         String token = secrets.getSecret(secretName);
         if (token==null) throw new SecretsException("missing: "+secretName);

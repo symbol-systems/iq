@@ -61,8 +61,8 @@ public class AvatarAPI extends RealmAPI {
                 builder.setThoughts(connection2).scripting().remodel().sparql(connection).self(chat);
 
 //                SearchDecision search = builder.decision(realm.getFinder(), chat);
-                IntentDecision intents = builder.decision(chat);
-                ChainOfCommand control = builder.decision(intents);
+                IntentDecision intents = builder.intention(chat);
+                ChainOfCommand control = builder.control(intents);
                 I_Agent avatar = builder.agent(chat,control,jwt);
                 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
 

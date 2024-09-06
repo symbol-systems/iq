@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="{{host}}jnlp">
+    <information>
+        <title>IQ</title>
+        <vendor>symbol.systems</vendor>
+        <description>AI operating system</description>
+    </information>
+    <resources>
+        <j2se version="1.8+" href="http://java.sun.com/products/autodl/j2se"/>
+        <jar href="iq.jar" main="true"/>
+    </resources>
+    <application-desc main-class="systems.symbol.platform.RealmPlatform"/>
+</jnlp>

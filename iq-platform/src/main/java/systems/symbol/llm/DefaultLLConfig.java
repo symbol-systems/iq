@@ -10,6 +10,7 @@ public class DefaultLLConfig implements I_LLMConfig {
     public float topP;
     public int n, seed;
     public String secret;
+    public String response_format = null;
 
     public DefaultLLConfig() {
     }
@@ -36,6 +37,11 @@ public class DefaultLLConfig implements I_LLMConfig {
     @Override
     public String getName() {
         return modelName;
+    }
+
+    @Override
+    public String getResponseFormat() {
+        return response_format;
     }
 
     @Override

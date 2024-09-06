@@ -141,15 +141,18 @@ public class AgentBuilder implements I_Self {
         return agentic( new ExecutiveAgent(self, getGround(), getThoughts(), intents, manager, bindings));
     }
 
-    public I_Agent avatar(Conversation chat) throws StateException, APIException, IOException {
-        return avatar(new ExecutiveAgent(self, getGround(), getThoughts(), intents, decision(decision(chat)), bindings), chat);
+    public Avatar avatar(Conversation chat) throws StateException, APIException, IOException {
+        ChainOfCommand control = control(intention(chat));
+        return avatar(new ExecutiveAgent(self, getGround(), getThoughts(), intents, control, bindings), chat);
     }
 
-    public I_Agent avatar(I_Agent agent, I_Assist<String> chat) throws APIException, IOException {
+    public Avatar avatar(I_Agent agent, I_Assist<String> chat) throws APIException, IOException {
         chat(chat);
-        intents.add(new Avatar(agent, chat, getGround(), secrets));
+        Avatar avatar = new Avatar(agent, chat, getGround(), secrets);
+        intents.add(avatar);
         log.info("builder.avatar: {}", agent==null?"":agent.getSelf());
-        return agent;
+
+        return avatar;
     }
 
         protected I_Agent agentic(I_Agent agent) {
@@ -175,41 +178,30 @@ public class AgentBuilder implements I_Self {
         return this;
     }
 
-    public ChainOfCommand decision(I_Decide<Resource> decider) {
+    public ChainOfCommand control(I_Decide<Resource> decider) {
         return new ChainOfCommand(decider);
     }
 
-    public IntentDecision decision(I_Assist<String> chat) {
+    public IntentDecision intention(I_Assist<String> chat) {
         return new IntentDecision(chat);
     }
 
-    public SearchDecision decision(I_Search<IRI> finder, I_Assist<String> chat) {
+    public SearchDecision searching(I_Search<IRI> finder, I_Assist<String> chat) {
         return new SearchDecision(finder, new Agentic<>(()->self, bindings, chat));
     }
 
-    public AgentBuilder self(Conversation chat) {
-        this.intents.add(new SelfIntent(self,  thoughts, chat, secrets));
+    public AgentBuilder self(Conversation chat) throws APIException, IOException, StateException {
+        this.intents.add(new SelfIntent(avatar(chat), chat));
         return this;
     }
 
-//    public I_Agent manager(I_Assist<String> chat) throws SecretsException, StateException {
-//        chat(chat);
-//        return agent(decision(chat));
-//    }
-
-//    public AgentBuilder setGround(RepositoryConnection connection) {
-//        this.ground = new LiveModel(connection);
-//        this.intents = new ExecutiveIntent(self, ground);
-//        return this;
-//    }
-
     public AgentBuilder setThoughts(RepositoryConnection connection) {
-        this.thoughts = new LiveModel(connection);
-        return this;
+        return setThoughts(new LiveModel(connection));
     }
 
     public AgentBuilder setThoughts(Model model) {
         this.thoughts = model;
+        bindings.put("size", thoughts.size());
         return this;
     }
 
@@ -217,20 +209,9 @@ public class AgentBuilder implements I_Self {
         return intents;
     }
 
-//    public void setGround(RepositoryResult<Statement> result) {
-//        while (result.hasNext()) {
-//            ground.add(result.next());
-//        }
-//        result.close();
-//    }
-
     public Model getThoughts() {
         return thoughts;
     }
-
-//    public void setThoughts(Model thoughts) {
-//        this.thoughts = thoughts;
-//    }
 
     public IRI getSelf() {
         return self;
