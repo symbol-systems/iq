@@ -8,8 +8,11 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +33,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static systems.symbol.Formats.HumanDate;
-import java.util.Date;
 
 //@ApplicationScoped
 @Singleton
@@ -78,21 +78,43 @@ log.info("realms.starting: {} @ :{}", seed.getSelf(), port);
 realms.start();
 log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getAbsolutePath() , realms.getRealms(), stopwatch);
 Realms.bootstrap(realms);
-log.info("realms.booted: {}", stopwatch.elapsed());
-Realms.index(realms);
-log.info("realms.indexed: {}", stopwatch.elapsed());
+//Realms.index(realms);
+//log.info("realms.indexed: {}", stopwatch.elapsed());
 for (IRI realm : realms.getRealms()) {
 I_Realm i_realm = getRealm(realm);
-agent(i_realm);
-trust(i_realm);
+start(i_realm);
 }
 threads.start();
 log.info("realms.running: {} @ {}", realms.getRealms(), stopwatch.elapsed());
 } catch (Exception e) {
 log.error("realms.error: {} @ {}", realms.getRealms(), e.getMessage());
 System.exit(1);
+}
+}
+
+private void start(I_Realm i_realm)  {
+try {
+log.info("realms.boot: {}", i_realm.getSelf().stringValue());
+trust(i_realm);
+index(i_realm);
+agent(i_realm);
+log.info("realms.matrix: {}",i_realm.search(i_realm.getSelf().stringValue(), 3, 0.8));
 } catch (APIException e) {
-throw new RuntimeException(e);
+log.error("realms.oops.api: {} @ {}", i_realm.getSelf(), e.getMessage());
+} catch (IOException e) {
+log.error("realms.oops.io: {} @ {}", i_realm.getSelf(), e.getMessage());
+} catch (SecretsException e) {
+log.error("realms.oops.secret: {} @ {}", i_realm.getSelf(), e.getMessage());
+} catch (Exception e) {
+log.error("realms.oops.error: {}", i_realm.getSelf(), e);
+}
+}
+
+private void index(I_Realm realm) {
+try (RepositoryConnection connection = realm.getRepository().getConnection()) {
+RepositoryResult<Statement> contents = connection.getStatements(null, RDF.VALUE, null);
+realm.reindex(contents.iterator(), realm.getSelf());
+contents.close();
 }
 }
 
@@ -123,7 +145,7 @@ log.info("realms.stopped: {}", realms.getRealms());
 private void backups() {
 File backups = new File(realms.getHome(),"backups");
 backups.mkdirs();
-String now = HumanDate.format(System.currentTimeMillis());
+//String now = HumanDate.format(System.currentTimeMillis());
 for (IRI realm : cnx.keySet()) {
 File file = new File(backups, PrettyString.sanitize(realm.stringValue())+"now.ttl");
 log.info("realms.backup: {} @ {}", realm, file.getAbsolutePath());

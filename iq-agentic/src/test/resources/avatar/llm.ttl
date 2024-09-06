@@ -10,7 +10,7 @@ iq:url "https://api.openai.com/v1/chat/completions";
 iq:modelName "gpt-3.5-turbo-0125";
 iq:secret "MY_OPENAI_SECRET".
 
-:Groq_Chat_llama3_8b_8192
+:groq_chat_llama3_8b_8192
 iq:url "https://api.groq.com/openai/v1/chat/completions";
 iq:modelName "llama3-8b-8192";
 iq:secret "MY_GROQ_API_KEY".

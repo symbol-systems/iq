@@ -39,7 +39,7 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> response = new Response<>(embedding);
 
 // Simulate embedding response
-searchMatrix.reindex(entity, concept, content);
+searchMatrix.reindex(entity, content, concept);
 
 // Verify indexing
 Assert.assertNotNull(searchMatrix.byConcept(concept));
@@ -59,7 +59,7 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
 // Reindex with mock data
-searchMatrix.reindex(entity, concept, content);
+searchMatrix.reindex(entity, content, concept);
 
 // Perform search
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
@@ -86,7 +86,7 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
 // Reindex with mock data
-searchMatrix.reindex(entity, concept, content);
+searchMatrix.reindex(entity, content, concept);
 
 // Perform search
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
@@ -126,7 +126,7 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
 // Reindex with mock data
-searchMatrix.reindex(entity, concept, content);
+searchMatrix.reindex(entity, content, concept);
 
 // Perform search with a low score threshold
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.0);

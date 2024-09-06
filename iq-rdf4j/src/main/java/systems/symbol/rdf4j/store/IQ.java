@@ -11,7 +11,4 @@ ValueFactory vf = SimpleValueFactory.getInstance();
 RepositoryConnection getConnection();
 void close();
 IRI toIRI(String local);
-
-
-
 }

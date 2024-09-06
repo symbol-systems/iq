@@ -13,7 +13,7 @@ import java.util.Collection;
 
 public class ChoicePrompt extends AbstractPrompt<String> {
 I_Agent agent;
-String wrapper;
+String wrapper = "{{prompt}}";
 
 public ChoicePrompt(Bindings my, I_Agent agent, String wrapper) {
 this(my, agent);
@@ -28,13 +28,12 @@ this.agent = agent;
 @Override
 public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
 String prompt = prompt(agent.getThoughts(), agent.getStateMachine().getTransitions());
-log.debug("prompt.choices: {}", prompt);
+log.info("prompt.choices: {}", prompt);
 if (!prompt.isEmpty()) chat.system(bind(prompt));
 return chat;
 }
 
 public String bind(String prompt, Bindings bindings) throws IOException {
-if (wrapper==null||wrapper.isEmpty()) return super.bind(prompt,bindings);
 log.debug("prompt.rebind: {} -> {}", prompt, bindings.keySet());
 SimpleBindings my = new SimpleBindings(bindings);
 my.put("prompt", prompt);

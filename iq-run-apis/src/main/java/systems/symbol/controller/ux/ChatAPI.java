@@ -17,13 +17,9 @@ import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.decide.ChainOfCommand;
-import systems.symbol.decide.IntentDecision;
+import systems.symbol.finder.I_Found;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
-import systems.symbol.llm.I_Assist;
-import systems.symbol.prompt.AgentPrompt;
-import systems.symbol.prompt.PromptChain;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.PlatformException;
 import systems.symbol.secrets.SecretsException;
@@ -33,6 +29,7 @@ import systems.symbol.util.Stopwatch;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * REST-ful API to chat with an LLM avatar.
@@ -78,13 +75,17 @@ log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm!=null);
 if (myRealm==null) return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
 log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
-builder.jwt(jwt);
+builder.jwt(jwt).setThoughts(myRealm.getModel());
+
+Collection<I_Found<IRI>> search = myRealm.search(chat.context(), 5, 0.1);
+log.info("ux.chat.search: {} -> {}", chat.context(), search);
+
 bindings.put("realm", _realm);
 bindings.put("capacity", connection.size());
 I_Agent agent = builder.avatar(chat);
 agent.start();
 agent.stop();
-log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(),chat.messages.getLast(), stopwatch);
+log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
 return new ChatResponse(chat).asJSON();
 } catch (StateException e) {
 log.error("ux.chat.oops: {}", e.getMessage());

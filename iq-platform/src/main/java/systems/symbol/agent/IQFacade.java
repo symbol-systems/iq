@@ -64,7 +64,7 @@ this.secrets = secrets;
 protected void enableVFS() throws FileSystemException {
 this.vfs = VFS.getManager();
 //LocalFileSystemConfigBuilder.getInstance().setBaseFile(opts, baseFile);
-log.info("api.vfs: {} ", vfs);
+log.info("api.vfs: {} ", vfs.getBaseFile());
 }
 
 public RestAPI api(String url) throws SecretsException {

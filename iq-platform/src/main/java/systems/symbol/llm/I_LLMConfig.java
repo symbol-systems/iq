@@ -21,6 +21,14 @@ String getURL();
 String getName();
 
 
+/**
+ * Retrieves the response type.
+ *
+ * @return The response type.
+ */
+String getResponseFormat();
+
+
 String getSecretName();
 
 /**

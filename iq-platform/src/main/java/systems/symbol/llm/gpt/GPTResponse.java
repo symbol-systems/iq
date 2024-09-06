@@ -1,6 +1,7 @@
 package systems.symbol.llm.gpt;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import systems.symbol.llm.I_LLMessage;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public String model;
 public List<Choice> choices;
 public Usage usage;
 public String system_fingerprint;
+public String refusal;
 public Error error;
 
 public GPTResponse() {}
@@ -25,10 +27,13 @@ public Boolean logprobs;
 public String finish_reason;
 }
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public static class Message {
 public String role;
+public String refusal;
 public String content;
 }
+
 public static class Usage {
 public int prompt_tokens;
 public int completion_tokens;
@@ -40,6 +45,6 @@ public float queue_time;
 }
 @JsonIgnoreProperties(ignoreUnknown = true)
 public static class Error {
-String message, type, param, code;
+public String message, type, param, code, failed_generation;
 }
 }

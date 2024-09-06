@@ -10,6 +10,7 @@ public int maxTokens = 2048;
 public float topP;
 public int n, seed;
 public String secret;
+public String response_format = null;
 
 public DefaultLLConfig() {
 }
@@ -36,6 +37,11 @@ return url;
 @Override
 public String getName() {
 return modelName;
+}
+
+@Override
+public String getResponseFormat() {
+return response_format;
 }
 
 @Override

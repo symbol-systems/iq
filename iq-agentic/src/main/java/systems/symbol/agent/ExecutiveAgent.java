@@ -56,8 +56,10 @@ log.info("agent.boot: {} x {}", self, ground.size());
 
 protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
 super.setFSM(fsm);
-this.seen.add(getStateMachine().getState());
-log.info("agent.fsm: {} == {}", getSelf(), getStateMachine().getState());
+Resource state = getStateMachine().getState();
+if (state==null) return;
+this.seen.add(state);
+log.info("agent.fsm: {} == {}", getSelf(), state);
 }
 
 public void setManager(I_Decide<Resource> manager) {

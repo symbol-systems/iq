@@ -162,10 +162,7 @@ public Response reissue(@PathParam("realm") String _realm, @HeaderParam("Authori
 I_Realm realm = realms.getRealm(_realm);
 if (realm == null) return new OopsResponse("api.token.realm." + _realm, Response.Status.NOT_FOUND).asJSON();
 DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
-if (jwt==null) {
-return new OopsResponse("api.token.token", Response.Status.FORBIDDEN).asJSON();
-}
-
+if (jwt==null) return new OopsResponse("api.token.token", Response.Status.FORBIDDEN).asJSON();
 JWTGen jwtGen = new JWTGen();
 Claim claims = jwt.getClaims().get("aud");
 String[] aud = claims.asArray(String.class);

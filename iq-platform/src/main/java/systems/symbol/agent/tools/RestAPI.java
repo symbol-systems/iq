@@ -213,7 +213,7 @@ builder.post(formBody);
 return executeRequest(builder.build());
 } else {
 RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
-log.info("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
+log.debug("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
 //MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 builder.post(requestBody);
@@ -262,7 +262,7 @@ Request.Builder builder = new Request.Builder();
 for(String n: headers.keySet()) {
 builder.header(n, headers.get(n));
 }
-log.info("api.headers: {} -> {}", getURL(), headers);
+log.debug("api.headers: {} -> {}", getURL(), headers);
 return builder;
 }
 

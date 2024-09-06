@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.AgentBuilder;
+import systems.symbol.agent.Avatar;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
@@ -19,9 +20,6 @@ import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
-import systems.symbol.llm.I_Assist;
-import systems.symbol.prompt.AgentPrompt;
-import systems.symbol.prompt.PromptChain;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.PlatformException;
 import systems.symbol.secrets.SecretsException;
@@ -74,14 +72,12 @@ log.info("trust.chat.realm: {} @ {} & {}", actor, realm.getSelf(), myRealm.getSe
 try (RepositoryConnection connection = repository.getConnection()) {
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets());
 builder.self(chat).scripting();
+Avatar avatar = builder.avatar(chat);
+avatar.start();
 I_Agent agent = builder.avatar(chat);
-agent.start();
-PromptChain ai = new PromptChain();
-ai.add(new AgentPrompt(bindings, agent, realm.getModel()));
-I_Assist<String> complete = ai.complete(chat);
-log.info("trust.chat.reply: {} @ {}", complete.messages(), stopwatch);
+log.info("trust.chat.reply: {} @ {}", chat.messages().getLast(), stopwatch);
 agent.stop();
-return new ChatResponse(complete).asJSON();
+return new ChatResponse(chat).asJSON();
 } catch (StateException e) {
 return new OopsResponse("api.trust.chat.state", Response.Status.BAD_REQUEST).asJSON();
 } catch (Exception e) {
