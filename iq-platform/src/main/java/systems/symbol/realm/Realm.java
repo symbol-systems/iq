@@ -14,17 +14,18 @@ import java.security.KeyPair;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class Realm implements I_Realm, I_Indexer,I_Search<I_Found<IRI>> {
+public class Realm implements I_Realm {
     FileSystemManager vfs;
     private final Model model;
-    private final Repository  repository;
+    private final Repository repository;
     private final FactFinder finder;
     private final I_Secrets secrets;
     private final IRI self;
     private final KeyPair keys;
     private final SearchMatrix search;
 
-    public Realm(IRI self, Model model, Repository repository, FactFinder finder, I_Secrets secrets, FileSystemManager vfs, KeyPair keys)  {
+    public Realm(IRI self, Model model, Repository repository, FactFinder finder, I_Secrets secrets,
+            FileSystemManager vfs, KeyPair keys) {
         this.self = self;
         this.model = model;
         this.repository = repository;
@@ -50,19 +51,19 @@ public class Realm implements I_Realm, I_Indexer,I_Search<I_Found<IRI>> {
         return this.finder;
     }
 
-//    @Override
-//    public I_Search<I_Found<IRI>> getSearch(IRI index) {
-//        return search;
-//    }
+    // @Override
+    // public I_Search<I_Found<IRI>> getSearch(IRI index) {
+    // return search;
+    // }
 
-//    @Override
-//    public FactFinder getFinder(IRI index) {
-//        return this.finder;
-//    }
+    // @Override
+    // public FactFinder getFinder(IRI index) {
+    // return this.finder;
+    // }
 
     @Override
     public FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException {
-        return vfs.resolveFile( new URI(iri.stringValue()));
+        return vfs.resolveFile(new URI(iri.stringValue()));
     }
 
     @Override
@@ -81,7 +82,7 @@ public class Realm implements I_Realm, I_Indexer,I_Search<I_Found<IRI>> {
     }
 
     public String toString() {
-        return getClass().getName()+"["+self.stringValue()+"]";
+        return getClass().getName() + "[" + self.stringValue() + "]";
     }
 
     @Override

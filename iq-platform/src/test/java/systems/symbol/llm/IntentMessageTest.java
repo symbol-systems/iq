@@ -2,7 +2,6 @@ package systems.symbol.llm;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static systems.symbol.string.Extract.extractIntent;
 
 class IntentMessageTest {

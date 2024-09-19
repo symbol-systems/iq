@@ -37,7 +37,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * A simplified string-friendly wrapper for scripting an agent, model and state machine.
+ * A simplified string-friendly wrapper for scripting an agent, model and state
+ * machine.
  */
 public class IQFacade {
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -48,7 +49,8 @@ public class IQFacade {
     Gson gson = new Gson();
 
     /**
-     * Constructs a new ScriptFacade with the provided RDF4J model and self identity,
+     * Constructs a new ScriptFacade with the provided RDF4J model and self
+     * identity,
      * creating a LazyAgent as the base agent.
      *
      * @param model The RDF4J model associated with the facade.
@@ -63,7 +65,7 @@ public class IQFacade {
 
     protected void enableVFS() throws FileSystemException {
         this.vfs = VFS.getManager();
-//        LocalFileSystemConfigBuilder.getInstance().setBaseFile(opts, baseFile);
+        // LocalFileSystemConfigBuilder.getInstance().setBaseFile(opts, baseFile);
         log.info("api.vfs: {} ", vfs.getBaseFile());
     }
 
@@ -71,13 +73,14 @@ public class IQFacade {
         return new RestAPI(url, secrets);
     }
 
-    public Map<String,Object> json(Response response) throws SecretsException, IOException {
+    public Map<String, Object> json(Response response) throws SecretsException, IOException {
         ResponseBody body = response.body();
-        return body==null?null:json(body);
+        return body == null ? null : json(body);
     }
 
-    public Map<String,Object> json(ResponseBody body) throws SecretsException, IOException {
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+    public Map<String, Object> json(ResponseBody body) throws SecretsException, IOException {
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
         return gson.fromJson(body.string(), type);
     }
 
@@ -147,16 +150,17 @@ public class IQFacade {
     public FileObject download(String url) throws APIException, IOException, StateException {
         RestAPI api = new RestAPI(url, secrets);
         Response response = api.get();
-        assert response.body() != null;
         InputStream in = response.body().byteStream();
         File tmp = File.createTempFile(PrettyString.sanitize(url), "tmp");
         IOCopier.copy(in, Files.newOutputStream(tmp.toPath()));
+        response.close();
         return save(in, vfs.resolveFile(url));
     }
 
     public FileObject file(String path) throws APIException, IOException, StateException {
-        if (this.vfs==null) throw new StateException("files.disabled", self);
-        return vfs.resolveFile(vfs.getBaseFile().getURI().toURL()+ path);
+        if (this.vfs == null)
+            throw new StateException("files.disabled", self);
+        return vfs.resolveFile(vfs.getBaseFile().getURI().toURL() + path);
     }
 
     public FileObject save(InputStream in, FileObject file) throws StateException {

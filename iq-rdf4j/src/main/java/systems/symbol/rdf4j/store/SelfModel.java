@@ -9,7 +9,6 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.platform.I_Self;
 
-import javax.script.Bindings;
 import java.util.*;
 
 public class SelfModel extends AbstractModel implements I_Self {
@@ -17,14 +16,15 @@ public class SelfModel extends AbstractModel implements I_Self {
     private IRI self;
 
     public SelfModel(IRI self, RepositoryConnection connection) {
-        this.self=self;
+        this.self = self;
         this.connection = connection;
     }
-    
+
     @Override
     public boolean addAll(Collection<? extends Statement> c) {
         boolean result = super.addAll(c);
-        if (result) connection.commit();
+        if (result)
+            connection.commit();
         return result;
     }
 
@@ -34,19 +34,20 @@ public class SelfModel extends AbstractModel implements I_Self {
     }
 
     @Override
-    public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj, Resource... contexts) {
-        //TODO  what is this?
+    public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj,
+            Resource... contexts) {
+        // TODO what is this?
         this.connection.rollback();
     }
 
     @Override
     public @NotNull Iterator<Statement> iterator() {
-        return this.connection.getStatements(null, null, null, getSelf()).stream().iterator();
+        return this.connection.getStatements(null, null, null, getSelf()).iterator();
     }
 
     @Override
     public int size() {
-        return (int) this.connection.getStatements(null, null, null,getSelf()).stream().count();
+        return (int) this.connection.size();
     }
 
     @Override
@@ -89,13 +90,13 @@ public class SelfModel extends AbstractModel implements I_Self {
 
     @Override
     public Iterable<Statement> getStatements(Resource subject, IRI predicate, Value object, Resource... contexts) {
-        RepositoryResult<Statement> result = connection.getStatements(subject, predicate, object, getSelf());
-        Collection<Statement> found = new ArrayList<>();
-        for(Statement s: result) {
-            found.add(s);
+        try (RepositoryResult<Statement> result = connection.getStatements(subject, predicate, object, getSelf())) {
+            Collection<Statement> found = new ArrayList<>();
+            for (Statement s : result) {
+                found.add(s);
+            }
+            return found;
         }
-        result.close();
-        return found;
     }
 
     @Override
@@ -105,14 +106,14 @@ public class SelfModel extends AbstractModel implements I_Self {
         while (namespaces.hasNext()) {
             ns.add(namespaces.next());
         }
-        ns.add(new SimpleNamespace("",self.stringValue()));
-        ns.add(new SimpleNamespace("self",self.stringValue()));
+        ns.add(new SimpleNamespace("", self.stringValue()));
+        ns.add(new SimpleNamespace("self", self.stringValue()));
         return ns;
     }
 
-//    public Bindings getBindings() {
-//        return new Bindings() {
-//        }
-//    }
+    // public Bindings getBindings() {
+    // return new Bindings() {
+    // }
+    // }
 
 }

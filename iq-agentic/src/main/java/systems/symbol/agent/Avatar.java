@@ -7,42 +7,47 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
-import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
-import systems.symbol.intent.I_Intent;
 import systems.symbol.llm.*;
 import systems.symbol.llm.gpt.CommonLLM;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.platform.I_Self;
 import systems.symbol.prompt.*;
 import systems.symbol.secrets.I_Secrets;
 
 import javax.script.Bindings;
 import java.util.*;
+
 /**
- * The `Avatar` class represents an intelligent agent capable of interacting with
- * a large language model (LLM) to process and execute user intents within a state
+ * The `Avatar` class represents an intelligent agent capable of interacting
+ * with
+ * a large language model (LLM) to process and execute user intents within a
+ * state
  * machine framework. This class acts as a mediator between the agent's internal
- * decision-making processes and the external prompts and responses managed by the LLM.
+ * decision-making processes and the external prompts and responses managed by
+ * the LLM.
  *
  * <ul>
- *   <li>Manages agent's state machine and ensuring that state transitions
- *       are performed according to the message intent.</li>
- *   <li>Generating and processing prompts through the LLM, allowing the agent to
- *       provide intelligent, context-aware responses.</li>
- *   <li>Updating the conversation flow (`chat`) based on the LLM's output and
- *       the agent's internal decision-making logic.</li>
- *   <li>Heuristically determining the correct state transition based on user
- *       intents, ensuring that the agent's behavior aligns with the user's expectations.</li>
+ * <li>Manages agent's state machine and ensuring that state transitions
+ * are performed according to the message intent.</li>
+ * <li>Generating and processing prompts through the LLM, allowing the agent to
+ * provide intelligent, context-aware responses.</li>
+ * <li>Updating the conversation flow (`chat`) based on the LLM's output and
+ * the agent's internal decision-making logic.</li>
+ * <li>Heuristically determining the correct state transition based on user
+ * intents, ensuring that the agent's behavior aligns with the user's
+ * expectations.</li>
  * </ul>
  *
- * The intent flow in the Avatar class involves recognizing a user’s intent through chat interactions, processing it using a LLM,
- * and then determining and executing the appropriate state transition within the agent’s state machine.
- * The flow is designed to be modular, with clear separation of concerns between intent recognition, state management, and interaction handling.
+ * The intent flow in the Avatar class involves recognizing a user’s intent
+ * through chat interactions, processing it using a LLM,
+ * and then determining and executing the appropriate state transition within
+ * the agent’s state machine.
+ * The flow is designed to be modular, with clear separation of concerns between
+ * intent recognition, state management, and interaction handling.
  */
 
-public class Avatar implements I_Selfie, I_Agent, I_Self, I_Intent, I_Delegate<Resource> {
+public class Avatar implements I_Selfie {
     private static final Logger log = LoggerFactory.getLogger(Avatar.class);
     I_Agent agent;
     I_Assist<String> chat;
@@ -87,22 +92,26 @@ public class Avatar implements I_Selfie, I_Agent, I_Self, I_Intent, I_Delegate<R
         return done;
     }
 
-    // Builds then binds the Avatar prompt from agent & state,  calls LLM and updates the LLM
-    protected boolean prompts(IRI actor, Resource assistant, I_LLM<String> llm, Bindings bindings) throws Exception, APIException {
+    // Builds then binds the Avatar prompt from agent & state, calls LLM and updates
+    // the LLM
+    protected boolean prompts(IRI actor, Resource assistant, I_LLM<String> llm, Bindings bindings)
+            throws Exception, APIException {
         Resource state = agent.getStateMachine().getState();
         bindings.put(MyFacade.AI, actor.getLocalName());
         Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
-        if (wrapper.isEmpty()) return false;
+        if (wrapper.isEmpty())
+            return false;
         log.info("avatar.prompt.{}: {} @ {}", assistant, actor, state);
 
-        String prompt$ = value(agent.getSelf())+" "+value(agent.getStateMachine().getState());
-        if (prompt$.trim().isEmpty()) return false;
+        String prompt$ = value(agent.getSelf()) + " " + value(agent.getStateMachine().getState());
+        if (prompt$.trim().isEmpty())
+            return false;
         Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
         SimplePrompt prompt = new SimplePrompt(wrapper.get().stringValue(), my);
         PromptChain chain = new PromptChain(prompt);
 
         bindings.put("prompt", prompt.bind(prompt$));
-//        log.info("avatar.state: {}", prompt$);
+        // log.info("avatar.state: {}", prompt$);
         I_Assist<String> prompted = chain.complete(chat);
         log.info("avatar.prompted: {} -> {}", bindings.keySet(), prompted);
         I_Assist<String> answer = llm.complete(prompted);
@@ -113,16 +122,20 @@ public class Avatar implements I_Selfie, I_Agent, I_Self, I_Intent, I_Delegate<R
     }
 
     protected void links(StringBuilder s$, Iterable<IRI> found) {
-        found.forEach( f -> { s$.append("[").append(f.getLocalName()).append("](").append(f.stringValue()).append("), "); });
+        found.forEach(f -> {
+            s$.append("[").append(f.getLocalName()).append("](").append(f.stringValue()).append("), ");
+        });
     }
 
     public String value(Resource state) {
-        if (state == null) return null;
+        if (state == null)
+            return null;
         Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
         return groundS.orElse(Values.literal("")).stringValue();
     }
 
-    // Updates the chat interface with the LLM's response and handles intent processing
+    // Updates the chat interface with the LLM's response and handles intent
+    // processing
     private void answered(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
         I_LLMessage<String> latest = ai.latest();
         if (!(latest instanceof IntentMessage intent)) {
@@ -143,7 +156,8 @@ public class Avatar implements I_Selfie, I_Agent, I_Self, I_Intent, I_Delegate<R
         }
     }
 
-    // Determines the appropriate state transition based on the message intent - the match is namespace and case agnostic
+    // Determines the appropriate state transition based on the message intent - the
+    // match is namespace and case agnostic
     private IRI next(I_Agent agent, IntentMessage message) throws StateException {
         I_StateMachine<Resource> fsm = agent.getStateMachine();
         Collection<Resource> transitions = fsm.getTransitions();

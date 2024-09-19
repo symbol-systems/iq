@@ -13,10 +13,11 @@ import systems.symbol.string.Validate;
 import java.io.IOException;
 
 /**
- * RESTful endpoint for checking the health status of the platform and RDF repositories.
+ * RESTful endpoint for checking the health status of the platform and RDF
+ * repositories.
  */
 @Path("health")
-public class Healthy extends GuardedAPI{
+public class Healthy extends GuardedAPI {
 
     /**
      * Checks the overall health status of the platform.
@@ -40,7 +41,7 @@ public class Healthy extends GuardedAPI{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response repositoryHealth(@PathParam("repo") String repo,
-                                        @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+            @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         if (!Validate.isBearer(auth)) {
             log.info("health#protected-repository");
             return new OopsResponse("api.health#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
@@ -49,10 +50,11 @@ public class Healthy extends GuardedAPI{
             return new OopsResponse("api.health#repository", Response.Status.BAD_REQUEST).asJSON();
         }
         I_Realm realm = platform.getRealm(repo);
-        if (realm==null) return new OopsResponse("api.health.realm", Response.Status.NOT_FOUND).asJSON();
+        if (realm == null)
+            return new OopsResponse("api.health.realm", Response.Status.NOT_FOUND).asJSON();
         Repository repository = realm.getRepository();
         boolean healthy = (repository != null && repository.isInitialized());
-        log.info("healthy.repo: {}", (healthy?repository.getDataDir():"n/a"));
+        log.info("healthy.repo: {}", (healthy ? "yes" : "no"));
         return new HealthCheck(healthy ? "ok" : "api.health#repository-offline").asJSON();
     }
 }

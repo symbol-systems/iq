@@ -36,12 +36,14 @@ public class MyFacade {
     public static final String MY = "my";
     public static final String IQ = "iq";
     public static final String AI = "ai";
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd
+    // HH:mm:ss");
     private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");
 
     public static List<Map<String, Object>> results(Bindings bindings, List<Map<String, Object>> results) {
         Object o = bindings.get(MY);
-        if (!(o instanceof Map)) return new ArrayList<>();
+        if (!(o instanceof Map))
+            return new ArrayList<>();
         @SuppressWarnings("unchecked")
         Map<String, Object> my = (Map<String, Object>) o;
         my.put(RESULTS, results);
@@ -50,8 +52,10 @@ public class MyFacade {
 
     public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {
         Bindings bindings = rebind(self, my);
-        if (!my.containsKey(SELF)) my.put(SELF, IdentityHelper.uuid(self+"#"));
-        if (state!=null) my.put(STATE, state.stringValue());
+        if (!my.containsKey(SELF))
+            my.put(SELF, IdentityHelper.uuid(self + "#"));
+        if (state != null)
+            my.put(STATE, state.stringValue());
         return bindings;
     }
 
@@ -71,17 +75,19 @@ public class MyFacade {
         return bindings;
     }
 
-    public static Bindings trust(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted) throws SecretsException {
+    public static Bindings trust(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted)
+            throws SecretsException {
         IQFacade facade = new IQFacade(agent, model, trusted);
         try {
             facade.enableVFS();
         } catch (FileSystemException e) {
             // ignore
         }
-        return trust(agent,state,my,facade);
+        return trust(agent, state, my, facade);
     }
 
-    public static Bindings trust(IRI agent, Resource state,  @NotNull Bindings my, IQFacade facade) throws SecretsException {
+    public static Bindings trust(IRI agent, Resource state, @NotNull Bindings my, IQFacade facade)
+            throws SecretsException {
         log.debug("iq.trust: {} @ {} --> {}", agent, state, my.keySet());
         Bindings bindings = rebind(agent, state, my);
         bindings.put(IQ, facade);
@@ -89,12 +95,11 @@ public class MyFacade {
         return bindings;
     }
 
-
-    public static void dump(Map<?,?> bindings, OutputStream out) {
+    public static void dump(Map<?, ?> bindings, OutputStream out) {
         PrintWriter writer = new PrintWriter(out);
         writer.println("------");
-        if (bindings!=null)
-            for (Map.Entry<?,?> entry : bindings.entrySet()) {
+        if (bindings != null)
+            for (Map.Entry<?, ?> entry : bindings.entrySet()) {
                 writer.printf("\t%s == ", entry.getKey());
 
                 Object value = entry.getValue();
@@ -104,12 +109,12 @@ public class MyFacade {
                         writer.printf("- %s ", value1);
                     }
                 } else if ((value instanceof Map)) {
-                    Map<?,?> temp = (Map<?,?>) value;
+                    Map<?, ?> temp = (Map<?, ?>) value;
                     writer.printf("%s\n", temp.keySet());
                     writer.printf("\n\t\t[%s] => %s", entry.getKey(), temp.keySet());
                     dump(temp, out);
                 } else {
-                    writer.printf("%s (%s)", value, value==null?"NULL":value.getClass().getCanonicalName());
+                    writer.printf("%s (%s)", value, value == null ? "NULL" : value.getClass().getCanonicalName());
                 }
                 writer.println();
             }

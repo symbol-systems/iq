@@ -16,22 +16,23 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.rdf4j.NS;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * symbol.systems (c) 2014
  * Module: systems.symbol.rdf4j.util
+ * 
  * @author Symbol Systems
- * Date  : 17/06/2014
- * Time  : 10:16 PM
+ *         Date : 17/06/2014
+ *         Time : 10:16 PM
  */
 public class RDFHelper {
-    private static final Logger log = LoggerFactory.getLogger(RDFHelper.class);
+	private static final Logger log = LoggerFactory.getLogger(RDFHelper.class);
 
 	protected static ValueFactory vf = SimpleValueFactory.getInstance();
-    public static IRI toIRI(RepositoryConnection c, String s) {
+
+	public static IRI toIRI(RepositoryConnection c, String s) {
 		return c.getValueFactory().createIRI(s);
 	}
 
@@ -46,27 +47,31 @@ public class RDFHelper {
 		return null;
 	}
 
-	public static StringBuilder toSPARQLPrefix(RepositoryConnection connection) throws IOException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+	public static StringBuilder toSPARQLPrefix(RepositoryConnection connection)
+			throws IOException, RepositoryException, MalformedQueryException, QueryEvaluationException {
 		RepositoryResult<Namespace> namespaces = connection.getNamespaces();
 		StringBuilder namespace$ = new StringBuilder();
-		while(namespaces.hasNext()) {
+		while (namespaces.hasNext()) {
 			Namespace namespace = namespaces.next();
-			namespace$.append("PREFIX ").append(namespace.getPrefix()).append(": <").append(namespace.getName()).append( ">\n");
+			namespace$.append("PREFIX ").append(namespace.getPrefix()).append(": <").append(namespace.getName())
+					.append(">\n");
 		}
 		log.trace("SPARQL prefices: " + namespace$);
 		return namespace$;
 	}
 
-//	public static CloseableIteration<? extends Statement, QueryEvaluationException> find(TripleSource tripleSource, IRI s, IRI p, Value v, IRI c) {
-//    	if (c==null)
-//			return tripleSource.getStatements(s, p, v);
-//		return tripleSource.getStatements(s, p, v, c);
-//	}
+	// public static CloseableIteration<? extends Statement,
+	// QueryEvaluationException> find(TripleSource tripleSource, IRI s, IRI p, Value
+	// v, IRI c) {
+	// if (c==null)
+	// return tripleSource.getStatements(s, p, v);
+	// return tripleSource.getStatements(s, p, v, c);
+	// }
 
 	public static void save(RepositoryConnection connection, IRI subject, Map<IRI, Value> model, IRI context) {
 		ValueFactory vf = connection.getValueFactory();
 		connection.begin();
-		for(IRI p: model.keySet()) {
+		for (IRI p : model.keySet()) {
 			Value value = model.get(p);
 			Statement statement = vf.createStatement(subject, p, value, context);
 			connection.add(statement, context);
@@ -75,16 +80,20 @@ public class RDFHelper {
 	}
 
 	public static Literal label(Model model, Value find) {
-		if (find.isLiteral()) return (Literal)find;
+		if (find.isLiteral())
+			return (Literal) find;
 		Set<Literal> values = Models.getPropertyLiterals(model, (Resource) find, RDFS.LABEL);
-		if (values.isEmpty()) return null;
+		if (values.isEmpty())
+			return null;
 		return values.iterator().next();
 	}
 
 	public static Literal value(Model model, Value find) {
-		if (find.isLiteral()) return (Literal)find;
+		if (find.isLiteral())
+			return (Literal) find;
 		Set<Literal> values = values(model, (Resource) find);
-		if (values.isEmpty()) return null;
+		if (values.isEmpty())
+			return null;
 		return values.iterator().next();
 	}
 

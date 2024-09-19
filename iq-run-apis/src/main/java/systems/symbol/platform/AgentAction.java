@@ -4,7 +4,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.agent.I_Facade;
-import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 

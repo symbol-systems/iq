@@ -3,10 +3,7 @@ package systems.symbol.sigint;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import com.maxmind.geoip2.record.City;
 import com.maxmind.geoip2.record.Country;
-import com.maxmind.geoip2.record.Postal;
-import com.maxmind.geoip2.record.Subdivision;
 import com.maxmind.geoip2.record.Location;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -20,12 +17,13 @@ import systems.symbol.string.PrettyString;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.URL;
+import java.net.URI;
 
 public class GeoLocate {
     private static final String GEO_PREFIX = "geo:";
     private static final String SCHEMA_PREFIX = "http://schema.org/";
-    private static final String RDF_SCHEMA_LABEL = "http://www.w3.org/2000/01/rdf-schema#label";
+    // private static final String RDF_SCHEMA_LABEL =
+    // "http://www.w3.org/2000/01/rdf-schema#label";
     private static final String IPIFY_URL = "https://api.ipify.org";
 
     private DatabaseReader reader;
@@ -51,8 +49,8 @@ public class GeoLocate {
     }
 
     public static String getPublicIP() throws IOException {
-        URL url = new URL(IPIFY_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        URI uri = URI.create(IPIFY_URL);
+        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
 
         StringBuilder response = new StringBuilder();
@@ -112,19 +110,22 @@ public class GeoLocate {
                 .add(WGS84.LAT, location.getLatitude().toString())
                 .add(WGS84.LONG, location.getLongitude().toString())
                 .add(Values.iri(SCHEMA_PREFIX + "address"), place)
-                .add(Values.iri(SCHEMA_PREFIX + "postalCode"), postalCode !=null?postalCode:"")
-                .add(Values.iri(SCHEMA_PREFIX + "addressCountry"), country !=null?country.getName():"")
+                .add(Values.iri(SCHEMA_PREFIX + "postalCode"), postalCode != null ? postalCode : "")
+                .add(Values.iri(SCHEMA_PREFIX + "addressCountry"), country != null ? country.getName() : "")
                 .add(Values.iri(SCHEMA_PREFIX + "geoNameId"), geoNameId.toString())
                 .add(Values.iri(SCHEMA_PREFIX + "metroCode"), metroCode != null ? metroCode.toString() : "")
-                .add(Values.iri(SCHEMA_PREFIX + "populationDensity"), populationDensity != null ? populationDensity.toString() : "0")
+                .add(Values.iri(SCHEMA_PREFIX + "populationDensity"),
+                        populationDensity != null ? populationDensity.toString() : "0")
                 .add(Values.iri(SCHEMA_PREFIX + "timeZone"), timeZone)
-                .add(Values.iri(SCHEMA_PREFIX + "averageIncome"), averageIncome != null ? averageIncome.toString() : "0")
-                .add(Values.iri(SCHEMA_PREFIX + "accuracyRadius"), accuracyRadius != null ? accuracyRadius.toString() : "0")
+                .add(Values.iri(SCHEMA_PREFIX + "averageIncome"),
+                        averageIncome != null ? averageIncome.toString() : "0")
+                .add(Values.iri(SCHEMA_PREFIX + "accuracyRadius"),
+                        accuracyRadius != null ? accuracyRadius.toString() : "0")
                 .build();
         return modelBuilder.build();
     }
 
-    private IRI schemaOrg(String name) {
-        return Values.iri(SCHEMA_PREFIX + name);
-    }
+    // private IRI schemaOrg(String name) {
+    // return Values.iri(SCHEMA_PREFIX + name);
+    // }
 }

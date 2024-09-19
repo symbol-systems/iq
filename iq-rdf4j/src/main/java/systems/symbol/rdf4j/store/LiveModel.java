@@ -18,17 +18,18 @@ public class LiveModel extends AbstractModel {
     }
 
     @Override
-    public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj, Resource... contexts) {
+    public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj,
+            Resource... contexts) {
     }
 
     @Override
     public @NotNull Iterator<Statement> iterator() {
-        return this.connection.getStatements(null, null, null).stream().iterator();
+        return this.connection.getStatements(null, null, null).iterator();
     }
 
     @Override
     public int size() {
-        return (int) this.connection.getStatements(null, null, null).stream().count();
+        return (int) this.connection.size();
     }
 
     @Override
@@ -71,13 +72,13 @@ public class LiveModel extends AbstractModel {
 
     @Override
     public Iterable<Statement> getStatements(Resource subject, IRI predicate, Value object, Resource... contexts) {
-        RepositoryResult<Statement> result = connection.getStatements(subject, predicate, object, contexts);
-        Collection<Statement> found = new ArrayList<>();
-        for(Statement s: result) {
-            found.add(s);
+        try (RepositoryResult<Statement> result = connection.getStatements(subject, predicate, object, contexts)) {
+            Collection<Statement> found = new ArrayList<>();
+            for (Statement s : result) {
+                found.add(s);
+            }
+            return found;
         }
-        result.close();
-        return found;
     }
 
     @Override

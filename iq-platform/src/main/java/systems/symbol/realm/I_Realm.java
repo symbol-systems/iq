@@ -9,14 +9,12 @@ import systems.symbol.finder.FactFinder;
 import systems.symbol.finder.I_Found;
 import systems.symbol.finder.I_Indexer;
 import systems.symbol.finder.I_Search;
-import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.platform.I_Self;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.trust.I_Keys;
 
 import java.net.URISyntaxException;
 import java.security.KeyPair;
-import java.util.Properties;
 
 public interface I_Realm extends I_Self, I_Keys, I_Search<I_Found<IRI>>, I_Indexer {
     Model getModel();

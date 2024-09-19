@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 public class GenericGPT implements I_LLM<String> {
-    private static final String MD_BLOCKS_REGEX = "```(?:([a-zA-Z0-9_]+))?\\n([\\s\\S]*?)\\n```";
-    private static final String JSON_BLOCKS_REGEX = "\\{[^{}]*\\}";
+    // private static final String MD_BLOCKS_REGEX =
+    // "```(?:([a-zA-Z0-9_]+))?\\n([\\s\\S]*?)\\n```";
+    // private static final String JSON_BLOCKS_REGEX = "\\{[^{}]*\\}";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
     ObjectMapper om = new ObjectMapper();
@@ -76,7 +77,7 @@ public class GenericGPT implements I_LLM<String> {
                 if (responseBody != null) {
                     body = responseBody.string();
                     GPTResponse completion = om.readValue(body, GPTResponse.class);
-                    int tokens = completion.usage==null?-1:completion.usage.total_tokens;
+                    int tokens = completion.usage == null ? -1 : completion.usage.total_tokens;
                     log.info("llm.gpt.reply: {} == {} x {} tokens", config.getName(), response.code(), tokens);
                     if (completion.choices != null && !completion.choices.isEmpty()) {
                         for (int c = 0; c < completion.choices.size(); c++) {
@@ -86,15 +87,18 @@ public class GenericGPT implements I_LLM<String> {
                         history.add(completion);
                         log.info("llm.gpt.ok: {} => {} x {} tokens", completion.choices.size(), chats.latest(), tokens);
                         return chats;
-                    } else if (completion.error!=null) {
-//                        completion.error.failed_generation
-                        if (completion.error.failed_generation!=null) {
-                            log.info("llm.gpt.oops: {} / {} => {}", response.code(), completion.error.code, completion.error.failed_generation);
-                            chats.add(new TextMessage(I_LLMessage.RoleType.assistant, completion.error.failed_generation));
+                    } else if (completion.error != null) {
+                        // completion.error.failed_generation
+                        if (completion.error.failed_generation != null) {
+                            log.info("llm.gpt.oops: {} / {} => {}", response.code(), completion.error.code,
+                                    completion.error.failed_generation);
+                            chats.add(new TextMessage(I_LLMessage.RoleType.assistant,
+                                    completion.error.failed_generation));
                         } else {
-                            log.info("llm.gpt.OOPS: {} -> {} => {}", completion.error.code, completion.error.message, completion.error.type);
+                            log.info("llm.gpt.OOPS: {} -> {} => {}", completion.error.code, completion.error.message,
+                                    completion.error.type);
                             log.info("llm.dump: {}", chats.messages());
-                            chats.add(new TextMessage(I_LLMessage.RoleType.assistant, "llm.oops."+completion.error));
+                            chats.add(new TextMessage(I_LLMessage.RoleType.assistant, "llm.oops." + completion.error));
                         }
                     }
                 }

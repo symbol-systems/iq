@@ -32,11 +32,11 @@ import java.util.function.Consumer;
 public class XHTMLLinkIngestor implements Consumer<FileObject> {
     protected static final Logger log = LoggerFactory.getLogger(XHTMLLinkIngestor.class);
     protected URI self;
-    private DefaultFileSystemManager vfs  = new DefaultFileSystemManager();
+    private DefaultFileSystemManager vfs = new DefaultFileSystemManager();
     protected Consumer<ContentEntity<?>> processor;
     Model model;
     ValueFactory vf = SimpleValueFactory.getInstance();
-    IRI clzz = vf.createIRI("urn:"+getClass().getCanonicalName());
+    IRI clzz = vf.createIRI("urn:" + getClass().getCanonicalName());
 
     protected XHTMLLinkIngestor() {
     }
@@ -55,10 +55,10 @@ public class XHTMLLinkIngestor implements Consumer<FileObject> {
         this.vfs.addProvider("https", new HttpsFileProvider());
         this.vfs.addProvider("file", new DefaultLocalFileProvider());
         this.vfs.init();
-/*
-        this.vfs.setFilesCache(new DefaultFilesCache());
-        this.vfs.setCacheStrategy(CacheStrategy.ON_RESOLVE);
-*/
+        /*
+         * this.vfs.setFilesCache(new DefaultFilesCache());
+         * this.vfs.setCacheStrategy(CacheStrategy.ON_RESOLVE);
+         */
         this.vfs.setBaseFile(new File(""));
     }
 
@@ -71,7 +71,7 @@ public class XHTMLLinkIngestor implements Consumer<FileObject> {
     protected void processXHTML(FileObject file) throws IOException, URISyntaxException {
         log.info("page: " + file.getURI());
         extractLinks(model, file);
-//        file.resolveFile("href://"+file.getPublicURIString());
+        // file.resolveFile("href://"+file.getPublicURIString());
     }
 
     /**
@@ -112,24 +112,28 @@ public class XHTMLLinkIngestor implements Consumer<FileObject> {
      * @throws IOException        If an I/O error occurs during extraction.
      * @throws URISyntaxException If a link has a malformed URI.
      */
-    private String extractLink(Model model, FileObject file, URI host, Element link) throws IOException, URISyntaxException {
+    private String extractLink(Model model, FileObject file, URI host, Element link)
+            throws IOException, URISyntaxException {
         String href = link.attr("href");
-//        log.info("link.extract: {} -> {} --> {}", href, host, file.getName().getFriendlyURI(), file.getFileSystem().getRoot());
+        // log.info("link.extract: {} -> {} --> {}", href, host,
+        // file.getName().getFriendlyURI(), file.getFileSystem().getRoot());
         boolean hasHost = Validate.hasHost(href);
         if (!hasHost) {
             href = JsonLdLinkExtractor.toAbsoluteURL(self.toASCIIString(), href);
         }
-        if (href==null) return null;
+        if (href == null)
+            return null;
         if (!Validate.isSameHost(self.toASCIIString(), href)) {
             log.info("link.offsite: {} != {}", host, href);
             return href;
         }
-//        log.info("link.resolve: {} -> {} --> {} ==> {}", href, host, file.getName().getFriendlyURI(), file.getFileSystem().getRootURI());
+        // log.info("link.resolve: {} -> {} --> {} ==> {}", href, host,
+        // file.getName().getFriendlyURI(), file.getFileSystem().getRootURI());
 
         try (FileObject page = vfs.resolveFile(href)) {
             if (!isSeen(page.getURI())) {
-//                log.info("link.resolved: {}", page.getURI());
-                ContentEntity entity = new ContentEntity(page.getURI().toString(), link.text());
+                // log.info("link.resolved: {}", page.getURI());
+                ContentEntity<String> entity = new ContentEntity<String>(page.getURI().toString(), link.text());
                 processor.accept(entity);
                 seen(page.getURI());
                 log.info("link.seen: {} -> {}", entity.getSelf(), isSeen(page.getURI()));
@@ -165,7 +169,7 @@ public class XHTMLLinkIngestor implements Consumer<FileObject> {
     }
 
     URI extractHost(FileObject file) throws URISyntaxException {
-        String uri = file.getURI().getScheme()+"://"+file.getURI().getHost();
+        String uri = file.getURI().getScheme() + "://" + file.getURI().getHost();
         return new URI(uri);
     }
 

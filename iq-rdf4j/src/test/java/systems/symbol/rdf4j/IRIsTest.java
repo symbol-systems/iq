@@ -6,9 +6,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.testng.annotations.Test;
 
-import java.util.Set;
-
-public class IRIsTest extends AbstractTripleTest  {
+public class IRIsTest extends AbstractTripleTest {
 
     @Test
     public void testForLabels() {

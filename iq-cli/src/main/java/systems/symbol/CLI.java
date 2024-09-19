@@ -12,13 +12,12 @@ import java.util.concurrent.Callable;
 
 import static systems.symbol.cli.CLIContext.CODENAME;
 
-
 /*
  *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
  *  Licence: https://systems.symbol/about/license
  */
 @CommandLine.Command(name = "iq", description = "IQ: applied knowledge")
-public class CLI implements Callable<Number>  {
+public class CLI implements Callable<Number> {
 	protected static final Logger log = LoggerFactory.getLogger(CLI.class);
 	@CommandLine.Option(names = "--home", required = false, description = "Location of workspace files ")
 	File home = null;
@@ -54,20 +53,20 @@ public class CLI implements Callable<Number>  {
 			cli.setInterpolateVariables(false);
 			return cli;
 		} catch (Exception e) {
-			log.error("A problem occurred: {}", e.getMessage(),e);
+			log.error("A problem occurred: {}", e.getMessage(), e);
 		}
 		context.close();
 		return null;
 	}
 
 	public File getHomeFolder() {
-		if (home!=null) return home;
+		if (home != null)
+			return home;
 		String HOME_FOLDER = System.getenv("IQ_HOME");
-		if (HOME_FOLDER == null || HOME_FOLDER.isEmpty()) HOME_FOLDER= "."+ CODENAME;
+		if (HOME_FOLDER == null || HOME_FOLDER.isEmpty())
+			HOME_FOLDER = "." + CODENAME;
 		return new File(HOME_FOLDER);
 	}
-
-
 
 	public static void main(String[] args) {
 		CLI cli = new CLI();
@@ -76,17 +75,18 @@ public class CLI implements Callable<Number>  {
 			log.info("iq.cli.home: {}", home.getAbsolutePath());
 			CLIContext context = new CLIContext(home);
 			CommandLine commands = cli.getCommandLine(context);
-			if (commands==null) {
+			if (commands == null) {
 				System.exit(1);
+				return;
 			}
 			int exitCode = commands.execute(args);
 			System.exit(exitCode);
 		} catch (IOException e) {
 			log.error("iq.cli.io.error: {} -> {}", e, e.getStackTrace());
 		} catch (CLIException e) {
-            throw new RuntimeException(e);
-        }
-    }
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	public Number call() throws Exception {

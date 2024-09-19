@@ -11,6 +11,7 @@ import java.io.File;
 class LLMIngestorTest {
 
     String llmPrompt = "as an expert ontologist use SKOS and DC vocabularies to describe this text using RDF Turtle: ";
+
     @Test
     void testIngest() throws RepositoryException, FileSystemException {
         File from = new File("./tested/tika/");
@@ -20,12 +21,13 @@ class LLMIngestorTest {
             try {
                 GenericGPT ai = new GenericGPT(openaiApiKey, 1000);
 
-                boolean[] done = {false};
+                boolean[] done = { false };
                 LLMIngestor ingest = new LLMIngestor(ai, llmPrompt, content -> {
                     done[0] = true;
                     System.out.println("test.ingest.LLM: " + content.getSelf() + " ==> " + content.getContent());
-                }, 1000);
-                VFSCrawler crawler = new VFSCrawler(new FileContentConverter(new XHTMLChunkIngestor(new ThrottleIngestor<>(1, ingest))));
+                });
+                VFSCrawler crawler = new VFSCrawler(
+                        new FileContentConverter(new XHTMLChunkIngestor(new ThrottleIngestor<>(1, ingest))));
                 crawler.crawl(from.toURI());
                 assert done[0];
             } catch (RuntimeException e) {

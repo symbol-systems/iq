@@ -16,9 +16,10 @@ import java.util.Date;
 /**
  * symbol.systems (c) 2013-2021
  * Module: systems.symbol.iq.bean
+ * 
  * @author Symbol Systems
- * Date  : 31/12/2013
- * Time  : 9:24 PM
+ *         Date : 31/12/2013
+ *         Time : 9:24 PM
  */
 public class XSD2POJOConverter {
     public final static String MIME_TYPE = "http://www.iana.org/assignments/media-types/";
@@ -26,10 +27,8 @@ public class XSD2POJOConverter {
     public final static String NULL = "null";
 
     public static boolean isBasicType(Class<?> type) {
-        //            type == JSONObject.class || type == JSONArray.class ||
-        return
-                type != null && (
-                        type == String.class || type.isPrimitive() || type == URI.class || type == Date.class);
+        // type == JSONObject.class || type == JSONArray.class ||
+        return type != null && (type == String.class || type.isPrimitive() || type == URI.class || type == Date.class);
     }
 
     public boolean isTypeSupported(Class<?> type) {
@@ -46,18 +45,19 @@ public class XSD2POJOConverter {
      * A null type uses String semantics
      * For Strings, "null" returns null
      *
-     * **/
-        public Object convertToType(String value, Class<?> type) throws ClassCastException {
-	    try {
-		    return _convertToType(value, type);
-	    } catch (Exception e) {
-		    throw new ClassCastException(e.getMessage());
-	    }
+     **/
+    public Object convertToType(String value, Class<?> type) throws ClassCastException {
+        try {
+            return _convertToType(value, type);
+        } catch (Exception e) {
+            throw new ClassCastException(e.getMessage());
+        }
     }
 
     private Object _convertToType(String value, Class<?> type) throws Exception {
-        if (value==null) return null;
-        if (type == null || String.class == type ) {
+        if (value == null)
+            return null;
+        if (type == null || String.class == type) {
             return NULL.equals(value) ? null : value;
         } else if (Boolean.class == type) {
             return DatatypeConverter.parseBoolean(value);
@@ -71,24 +71,26 @@ public class XSD2POJOConverter {
             return DatatypeConverter.parseDouble(value);
         } else if (Character.class == type) {
             return value.charAt(0);
-		} else if (Byte.class == type) {
-			return DatatypeConverter.parseByte(value);
+        } else if (Byte.class == type) {
+            return DatatypeConverter.parseByte(value);
         } else if (URI.class.isInstance(type)) {
             return new URI(value);
         } else if (Date.class.isInstance(type)) {
             Calendar calendar = DatatypeConverter.parseDateTime(value);
             return calendar.getTime();
         } else if (URLConnection.class.isInstance(type)) {
-	        URL url = new URL(value);
-	        return url.openConnection();
+            URI uri = new URI(value);
+            URL url = uri.toURL();
+            return url.openConnection();
         } else if (InputStream.class.isInstance(type)) {
-	        URL url = new URL(value);
-	        return url.openStream();
-	        // TODO: replace with GSON
-//        } else if (JSONObject.class.isInstance(type)) {
-//            return JSONObject.fromObject(value);
-//        } else if (JSONArray.class.isInstance(type)) {
-//            return JSONArray.fromObject(value);
+            URI uri = new URI(value);
+            URL url = uri.toURL();
+            return url.openStream();
+            // TODO: replace with GSON
+            // } else if (JSONObject.class.isInstance(type)) {
+            // return JSONObject.fromObject(value);
+            // } else if (JSONArray.class.isInstance(type)) {
+            // return JSONArray.fromObject(value);
         }
         return DatatypeConverter.parseAnySimpleType(value);
     }
@@ -99,56 +101,91 @@ public class XSD2POJOConverter {
     }
 
     public static Class<?> convertXSDToClass(String xsdType) {
-	    if (xsdType==null) return String.class;
-        switch(xsdType) {
+        if (xsdType == null)
+            return String.class;
+        switch (xsdType) {
             // xsd
-            case MIME_TYPE+"string": return String.class;
-            case MIME_TYPE+"integer": return Integer.class;
-            case MIME_TYPE+"int": return Integer.class;
-            case MIME_TYPE+"float": return Float.class;
-            case MIME_TYPE+"double": return Double.class;
-            case MIME_TYPE+"decimal": return Double.class;
-            case MIME_TYPE+"boolean": return Boolean.class;
-            case MIME_TYPE+"long": return Long.class;
-            case MIME_TYPE+"date": return Date.class;
-            case MIME_TYPE+"dateTime": return Date.class;
-            case MIME_TYPE+"anyURI": return URI.class;
-	        case MIME_TYPE+"null": return null;
+            case MIME_TYPE + "string":
+                return String.class;
+            case MIME_TYPE + "integer":
+                return Integer.class;
+            case MIME_TYPE + "int":
+                return Integer.class;
+            case MIME_TYPE + "float":
+                return Float.class;
+            case MIME_TYPE + "double":
+                return Double.class;
+            case MIME_TYPE + "decimal":
+                return Double.class;
+            case MIME_TYPE + "boolean":
+                return Boolean.class;
+            case MIME_TYPE + "long":
+                return Long.class;
+            case MIME_TYPE + "date":
+                return Date.class;
+            case MIME_TYPE + "dateTime":
+                return Date.class;
+            case MIME_TYPE + "anyURI":
+                return URI.class;
+            case MIME_TYPE + "null":
+                return null;
             // simple
-            case "string": return String.class;
-            case "integer": return Integer.class;
-            case "int": return Integer.class;
-            case "float": return Float.class;
-            case "double": return Double.class;
-            case "decimal": return Double.class;
-            case "boolean": return Boolean.class;
-            case "long": return Long.class;
-            case "date": return Date.class;
-            case "dateTime": return Date.class;
-            case "anyURI": return URI.class;
-	        case "null": return null;
+            case "string":
+                return String.class;
+            case "integer":
+                return Integer.class;
+            case "int":
+                return Integer.class;
+            case "float":
+                return Float.class;
+            case "double":
+                return Double.class;
+            case "decimal":
+                return Double.class;
+            case "boolean":
+                return Boolean.class;
+            case "long":
+                return Long.class;
+            case "date":
+                return Date.class;
+            case "dateTime":
+                return Date.class;
+            case "anyURI":
+                return URI.class;
+            case "null":
+                return null;
         }
-	    if (xsdType.startsWith(MIME_TYPE)) {
-		    return InputStream.class;
-	    }
+        if (xsdType.startsWith(MIME_TYPE)) {
+            return InputStream.class;
+        }
         return Object.class;
     }
 
     public static String convertToXSD(Object type) {
-        if (type==null) return MIME_TYPE+"string";
+        if (type == null)
+            return MIME_TYPE + "string";
         return convertClassToXSD(type.getClass());
     }
 
     public static String convertClassToXSD(Class<?> type) {
-	    if (type==null) return MIME_TYPE+"null";
-        if (String.class.isInstance(type)) return MIME_TYPE+"string";
-        if (Integer.class.isInstance(type)) return MIME_TYPE+"integer";
-        if (Float.class.isInstance(type)) return MIME_TYPE+"float";
-        if (Double.class.isInstance(type)) return MIME_TYPE+"double";
-        if (Number.class.isInstance(type)) return MIME_TYPE+"decimal";
-        if (Date.class.isInstance(type)) return MIME_TYPE+"dateTime";
-        if (URI.class.isInstance(type)) return MIME_TYPE+"anyURI";
-        if (URL.class.isInstance(type)) return MIME_TYPE+"anyURI";
-        return MIME_TYPE+"string";
+        if (type == null)
+            return MIME_TYPE + "null";
+        if (String.class.isInstance(type))
+            return MIME_TYPE + "string";
+        if (Integer.class.isInstance(type))
+            return MIME_TYPE + "integer";
+        if (Float.class.isInstance(type))
+            return MIME_TYPE + "float";
+        if (Double.class.isInstance(type))
+            return MIME_TYPE + "double";
+        if (Number.class.isInstance(type))
+            return MIME_TYPE + "decimal";
+        if (Date.class.isInstance(type))
+            return MIME_TYPE + "dateTime";
+        if (URI.class.isInstance(type))
+            return MIME_TYPE + "anyURI";
+        if (URL.class.isInstance(type))
+            return MIME_TYPE + "anyURI";
+        return MIME_TYPE + "string";
     }
 }

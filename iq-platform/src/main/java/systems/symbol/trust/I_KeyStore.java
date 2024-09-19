@@ -1,17 +1,15 @@
 package systems.symbol.trust;
 
-import java.io.File;
 import java.security.KeyPair;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 
 public interface I_KeyStore extends I_Keys {
-
 
     /**
      * Checks if the key pair is provisioned in the specified folder.
      *
-     * @return true if both private and public key files exist in the folder, false otherwise
+     * @return true if both private and public key files exist in the folder, false
+     *         otherwise
      */
     boolean isProvisioned();
 

@@ -14,12 +14,12 @@ class XHTMLLinkIngestorTest {
     @Test
     void processXHTMLLinks() throws FileSystemException, URISyntaxException {
         String site = "https://arxiv.org";
-        String from = site+"/list/cs.AI/pastweek?skip=0&show=5";
+        String from = site + "/list/cs.AI/pastweek?skip=0&show=5";
 
-        boolean done[] = {false};
+        boolean done[] = { false };
         Model model = new LinkedHashModel();
         XHTMLLinkIngestor ingestHTML = new XHTMLLinkIngestor(model, new URI(site), t -> {
-//            System.out.println("links.found: " + t.getIdentity());
+            // System.out.println("links.found: " + t.getIdentity());
             done[0] = t.getSelf().stringValue().startsWith(site);
         });
         VFSCrawler crawler = new VFSCrawler(ingestHTML);

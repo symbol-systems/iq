@@ -20,11 +20,10 @@ class JWTGenTest {
 
     @Test
     void testKeySaveLoad() throws Exception {
-        JWTGen jwtGen = new JWTGen();
         SimpleKeyStore keyStore = new SimpleKeyStore(secretsFolder);
         KeyPair keyPair = keyStore.keys();
         keyStore.save(keyPair);
-        System.out.println("JWT saved: " + secretsFolder.getAbsolutePath());
+        System.out.println("keys saved: " + secretsFolder.getAbsolutePath());
         KeyPair keyPairLoaded = keyStore.load();
 
         assertTrue(keyPair.getPublic().equals(keyPairLoaded.getPublic()));
@@ -37,14 +36,14 @@ class JWTGenTest {
         SimpleKeyStore keyStore = new SimpleKeyStore(secretsFolder);
         KeyPair keyPair = keyStore.keys();
 
-        JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, new String[]{audience}, 60);
+        JWTCreator.Builder jwtBuilder = jwtGen.generate(issuer, subject, new String[] { audience }, 60);
 
         jwtBuilder.withClaim("hello", "world");
         String jwt = jwtGen.sign(jwtBuilder, keyPair);
-//        System.out.println("Generated JWT: " + jwt);
+        // System.out.println("Generated JWT: " + jwt);
 
         DecodedJWT verified = jwtGen.verify(keyPair, jwt);
-//        System.out.println("Verified JWT: " + verified.getPayload());
+        // System.out.println("Verified JWT: " + verified.getPayload());
         DecodedJWT decoded = JWT.decode(jwt);
         System.out.println("JWT: " + decoded.getPayload());
         assertEquals(verified.getPayload(), decoded.getPayload());
@@ -55,7 +54,8 @@ class JWTGenTest {
         System.out.println("JWT expires: " + decoded.getExpiresAt());
 
         assertEquals(decoded.getSubject(), subject);
-        for (boolean b : new boolean[]{decoded.getSubject().contains(subject), decoded.getAudience().contains(audience), decoded.getIssuer().equals(issuer)}) {
+        for (boolean b : new boolean[] { decoded.getSubject().contains(subject),
+                decoded.getAudience().contains(audience), decoded.getIssuer().equals(issuer) }) {
             assertTrue(b);
         }
 

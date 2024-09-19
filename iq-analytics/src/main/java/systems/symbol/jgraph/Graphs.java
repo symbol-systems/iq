@@ -11,129 +11,114 @@ import org.jgrapht.alg.linkprediction.HubPromotedIndexLinkPrediction;
 import org.jgrapht.alg.scoring.KatzCentrality;
 import org.jgrapht.alg.scoring.PageRank;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Stream;
 
-/*
- *	symbol.systems - AGPL v3 Licensed
- *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
- */
 public class Graphs {
 	protected static final Logger log = LoggerFactory.getLogger(Graphs.class);
 	public static int MAX_PATHS = 10;
 
-	public Graphs()  {
-	}
-
-	Graph<Resource, Resource> toGraph() {
-		Graph<Resource, Resource> graph = new DefaultDirectedWeightedGraph(DefaultWeightedEdge.class);
+	static Graph<Resource, DefaultEdge> toGraph() {
+		Graph<Resource, DefaultEdge> graph = new DefaultDirectedWeightedGraph<Resource, DefaultEdge>(
+				DefaultEdge.class);
 		return graph;
 	}
-	
-	public static Graph<Resource, Resource> toGraph(Iterable<Statement> statements) {
-		Graph<Resource, Resource> graph = new DefaultDirectedWeightedGraph(DefaultWeightedEdge.class);
+
+	public static Graph<Resource, DefaultEdge> toGraph(Iterable<Statement> statements) {
+		Graph<Resource, DefaultEdge> graph = toGraph();
 		statements.forEach(s -> {
 			add(graph, s);
 		});
 		return graph;
 	}
 
-	public static Graph<Resource, Resource> toGraph(Stream<? extends Statement> statements) {
-		Graph<Resource, Resource> graph = new DefaultDirectedWeightedGraph(DefaultWeightedEdge.class);
+	public static Graph<Resource, DefaultEdge> toGraph(Iterator<Statement> statements) {
+		Graph<Resource, DefaultEdge> graph = new DefaultDirectedGraph<Resource, DefaultEdge>(DefaultEdge.class);
 		return toGraph(graph, statements);
 	}
 
-	public static Graph<Resource, Resource> toGraph(Graph<Resource, Resource> graph, Stream<? extends Statement> statements) {
-		statements.forEach( stmt-> {
-			add(graph, stmt);
-		});
+	public static Graph<Resource, DefaultEdge> toGraph(Graph<Resource, DefaultEdge> graph,
+			Iterator<Statement> iterator) {
+		while (iterator.hasNext()) {
+			add(graph, iterator.next());
+		}
 		return graph;
 	}
 
-	private static void add(Graph<Resource, Resource> graph, Statement stmt) {
+	private static void add(Graph<Resource, DefaultEdge> graph, Statement stmt) {
 		Resource s = stmt.getSubject();
 		Value o = stmt.getObject();
 		if (o instanceof Resource) {
 			graph.addVertex(s);
-			graph.addVertex((Resource)o);
-			graph.addEdge(s,(Resource)o);
+			graph.addVertex((Resource) o);
+			graph.addEdge(s, (Resource) o);
 		}
 	}
-//
-//	public static Graph<Resource, Resource> toGraph(Collection<Triple> triples) {
-//		Graph<Resource, Resource> graph = new DefaultDirectedWeightedGraph(DefaultWeightedEdge.class);
-//		return toGraph(graph, triples);
-//	}
-//
-//	public static Graph<Resource, Resource> toGraph(Graph<Resource, Resource> graph, Collection<Triple> triples) {
-//		for(Triple t: triples) {
-//			BlankNodeOrIRI s = t.getSubject();
-//			RDFTerm o = t.getObject();
-//			graph.addVertex(s);
-//			graph.addVertex(o);
-//			graph.addEdge(s.toString(),o.toString());
-//		}
-//		return graph;
-//	}
 
-	public static Graph<Resource, Resource> toGraph(Model model) {
+	public static Graph<Resource, DefaultEdge> toGraph(Model model) {
 		return toGraph(model.getStatements(null, null, null));
 	}
 
-	public static Collection<GraphPath> findDirectedPaths(Graph g, Object from, Object to, boolean simple, int maxLenth) {
-		AllDirectedPaths paths = new AllDirectedPaths(g);
+	public static Collection<GraphPath<Resource, DefaultEdge>> findDirectedPaths(Graph<Resource, DefaultEdge> g,
+			Resource from,
+			Resource to, boolean simple,
+			int maxLenth) {
+		AllDirectedPaths<Resource, DefaultEdge> paths = new AllDirectedPaths<Resource, DefaultEdge>(g);
 		return paths.getAllPaths(from, to, simple, maxLenth);
 	}
 
-	public static Collection<GraphPath> findDirectedPaths(Graph g, Object from, Object to) {
-		return findDirectedPaths(g,from,to,true,MAX_PATHS);
+	public static Collection<GraphPath<Resource, DefaultEdge>> findDirectedPaths(Graph<Resource, DefaultEdge> g,
+			Resource from, Resource to) {
+		return findDirectedPaths(g, from, to, true, MAX_PATHS);
 	}
 
-	public static double predictLinkCommonNeighbors(Graph g, Object from, Object to) {
-		LinkPredictionAlgorithm linkPrediction = new CommonNeighborsLinkPrediction(g);
+	public static double predictLinkCommonNeighbors(Graph<Resource, DefaultEdge> g, Resource from, Resource to) {
+		LinkPredictionAlgorithm<Resource, DefaultEdge> linkPrediction = new CommonNeighborsLinkPrediction<Resource, DefaultEdge>(
+				g);
 		return linkPrediction.predict(from, to);
 	}
 
-	public static double predictLinkHubPromoted(Graph g, Object from, Object to) {
-		LinkPredictionAlgorithm linkPrediction = new HubPromotedIndexLinkPrediction(g);
+	public static double predictLinkHubPromoted(Graph<Resource, DefaultEdge> g, Resource from, Resource to) {
+		LinkPredictionAlgorithm<Resource, DefaultEdge> linkPrediction = new HubPromotedIndexLinkPrediction<Resource, DefaultEdge>(
+				g);
 		return linkPrediction.predict(from, to);
 	}
 
-	public static Map<Object,Double> findKatzCentrality(Graph g) {
-		KatzCentrality centrality = new KatzCentrality(g);
+	public static Map<Resource, Double> findKatzCentrality(Graph<Resource, DefaultEdge> g) {
+		KatzCentrality<Resource, DefaultEdge> centrality = new KatzCentrality<Resource, DefaultEdge>(g);
 		return centrality.getScores();
 	}
 
-	public static Map<Object,Double> findPageRank(Graph g) {
-		VertexScoringAlgorithm centrality = new PageRank<>(g);
+	public static Map<Resource, Double> findPageRank(Graph<Resource, DefaultEdge> g) {
+		VertexScoringAlgorithm<Resource, Double> centrality = new PageRank<Resource, DefaultEdge>(g);
 		return centrality.getScores();
 	}
 
-	public static Model pageRank(Graph graph, Model model) {
-		Map<Object, Double> rank = Graphs.findPageRank(graph);
+	public static Model pageRank(Graph<Resource, DefaultEdge> graph, Model model) {
+		Map<Resource, Double> rank = Graphs.findPageRank(graph);
 		return scores(rank, "rank", model);
 	}
 
-	public static Model centrality(Graph graph, Model model) {
-		Map<Object, Double> centrality = Graphs.findKatzCentrality(graph);
+	public static Model centrality(Graph<Resource, DefaultEdge> graph, Model model) {
+		Map<Resource, Double> centrality = Graphs.findKatzCentrality(graph);
 		return scores(centrality, "centrality", model);
 	}
 
-	public static Model scores(Map<Object, Double> scores, String type, Model model) {
+	public static Model scores(Map<Resource, Double> scores, String type, Model model) {
 		ValidatingValueFactory vf = new ValidatingValueFactory();
-		IRI scoreIRI = vf.createIRI("iq:graph:"+type.toLowerCase(Locale.ROOT)+":score");
-		for(Object s: scores.keySet()) {
+		IRI scoreIRI = vf.createIRI("iq:graph:" + type.toLowerCase(Locale.ROOT) + ":score");
+		for (Object s : scores.keySet()) {
 			Double score = scores.get(s);
-			if (score!=null) {
-				model.add( (Resource) s, scoreIRI, vf.createLiteral(score));
+			if (score != null) {
+				model.add((Resource) s, scoreIRI, vf.createLiteral(score));
 			}
 		}
 		return model;

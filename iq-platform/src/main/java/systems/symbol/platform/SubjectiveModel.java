@@ -1,7 +1,6 @@
 package systems.symbol.platform;
 
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -14,6 +13,7 @@ public class SubjectiveModel implements Model {
         this.model = model;
         this.self = self;
     }
+
     @Override
     public Model unmodifiable() {
         return model.unmodifiable();
@@ -31,13 +31,14 @@ public class SubjectiveModel implements Model {
 
     @Override
     public boolean contains(Resource subj, IRI pred, Value obj, Resource... contexts) {
-        return model.contains( subj, pred, obj, subjective(contexts));
+        return model.contains(subj, pred, obj, subjective(contexts));
     }
 
     @Override
     public boolean add(Resource subj, IRI pred, Value obj, Resource... contexts) {
-        if (subj instanceof IRI && !isSubjective((IRI)subj)) return false;
-        return model.add(subj,pred,obj,subjective(contexts));
+        if (subj instanceof IRI && !isSubjective((IRI) subj))
+            return false;
+        return model.add(subj, pred, obj, subjective(contexts));
     }
 
     @Override
@@ -47,12 +48,12 @@ public class SubjectiveModel implements Model {
 
     @Override
     public boolean remove(Resource subj, IRI pred, Value obj, Resource... contexts) {
-        return model.remove(subj, pred,obj, subjective(contexts));
+        return model.remove(subj, pred, obj, subjective(contexts));
     }
 
     @Override
     public Model filter(Resource subj, IRI pred, Value obj, Resource... contexts) {
-        return model.filter(subj, pred,obj, subjective(contexts));
+        return model.filter(subj, pred, obj, subjective(contexts));
     }
 
     @Override
@@ -144,12 +145,13 @@ public class SubjectiveModel implements Model {
     }
 
     public boolean isSubjective(IRI subj) {
-        return subj!=null && subj.stringValue().startsWith(self.stringValue());
+        return subj != null && subj.stringValue().startsWith(self.stringValue());
     }
 
     public Resource[] subjective(Resource... contexts) {
         List<Resource> subjective = new ArrayList<>(Arrays.asList(contexts));
-        if (!subjective.contains(self))  subjective.add(self);
+        if (!subjective.contains(self))
+            subjective.add(self);
         return subjective.toArray(new Resource[0]);
     }
 

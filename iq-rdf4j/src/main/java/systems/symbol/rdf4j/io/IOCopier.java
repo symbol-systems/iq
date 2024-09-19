@@ -6,9 +6,6 @@ package systems.symbol.rdf4j.io;
  */
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,21 +13,21 @@ import java.nio.file.Path;
 
 /**
  * symbol.systems (c) 2010-2013
- * @author Symbol Systems
- * Date: 12/02/13
- * Time: 6:27 PM
  * 
- * Common IO
+ * @author Symbol Systems
+ *         Date: 12/02/13
+ *         Time: 6:27 PM
+ * 
+ *         Common IO
  * 
  */
 public class IOCopier {
-	private static final Logger log = LoggerFactory.getLogger(IOCopier.class);
+	// private static final Logger log = LoggerFactory.getLogger(IOCopier.class);
 
 	public static void copy(InputStream input, Writer output) throws IOException {
 		IOUtils.copy(input, output, "UTF-8");
 		output.flush();
 	}
-
 
 	public static int copy(Reader input, Writer output, int buffer_size) throws IOException {
 		char[] buffer = new char[buffer_size + 16];
@@ -58,7 +55,7 @@ public class IOCopier {
 		return Files.write(file.toPath(), token.getBytes(StandardCharsets.UTF_8));
 	}
 
-    public void process(InputStream input, OutputStream output) throws IOException {
+	public void process(InputStream input, OutputStream output) throws IOException {
 		IOUtils.copy(input, output);
 		output.flush();
 	}
@@ -67,7 +64,7 @@ public class IOCopier {
 		return toString(Files.newInputStream(file.toPath()), "UTF-8");
 	}
 
-	public static String toString(File file)  {
+	public static String toString(File file) {
 		try {
 			return toString(Files.newInputStream(file.toPath()), "UTF-8");
 		} catch (IOException e) {

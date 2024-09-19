@@ -32,7 +32,7 @@ public class ChainTest extends AbstractRDFTest {
     void tearDown() throws RDFParseException, RepositoryException, IOException {
         shutDown();
     }
-    
+
     @Test
     void testIngestChain() throws FileSystemException, ParserConfigurationException {
         File assetsHome = new File("./src/test/resources/assets").getAbsoluteFile();

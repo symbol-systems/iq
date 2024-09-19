@@ -39,9 +39,9 @@ public class HREFFileSystem extends AbstractFileSystem {
     }
 }
 
-class HREFFileObject extends AbstractFileObject {
+class HREFFileObject extends AbstractFileObject<HREFFileSystem> {
 
-    HREFFileObject(AbstractFileName file, AbstractFileSystem fs) throws IOException {
+    HREFFileObject(AbstractFileName file, HREFFileSystem fs) throws IOException {
         super(file, fs);
         deference();
     }

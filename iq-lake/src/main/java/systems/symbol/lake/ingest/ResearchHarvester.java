@@ -7,17 +7,19 @@ import org.eclipse.rdf4j.model.Model;
 import java.util.function.Consumer;
 
 public class ResearchHarvester extends AbstractIngestor<FileObject> {
-    Consumer ingestor;
+    Consumer<FileObject> ingestor;
     VFS vfs;
 
     public ResearchHarvester(Model model, VFS vfs, FileObject root) {
         this.vfs = vfs;
-//        ingestor = new FileCloneIngestor(new OAIPMHIngestor(model), root);
+        // ingestor = new FileCloneIngestor(new OAIPMHIngestor(model), root);
     }
+
     @Override
     public void accept(FileObject url) {
         log.info("harvest: {}", url.getURI());
-        if (ingestor!=null) ingestor.accept(url);
+        if (ingestor != null)
+            ingestor.accept(url);
 
     }
 }

@@ -15,38 +15,40 @@ import systems.symbol.platform.IQ_NS;
 import java.util.*;
 
 public class Recommends {
-//    private final static Logger log = LoggerFactory.getLogger(Recommends.class);
+    private final static Logger log = LoggerFactory.getLogger(Recommends.class);
 
-//    public static Map<Resource, float[]> index(Model model, IRI predicate) {
-//        return index(model, predicate, new AllMiniLmL6V2EmbeddingModel());
-//    }
+    // public static Map<Resource, float[]> index(Model model, IRI predicate) {
+    // return index(model, predicate, new AllMiniLmL6V2EmbeddingModel());
+    // }
 
     public static Map<Resource, float[]> index(Model model, IRI predicate, EmbeddingModel embeddingModel) {
         Map<Resource, float[]> found = new HashMap<>();
         Iterable<Statement> statements = model.getStatements(null, predicate, null);
         for (Statement s : statements) {
             Value object = s.getObject();
-            if (object!=null && !object.stringValue().isEmpty() && !found.containsKey(s.getSubject())) {
+            if (object != null && !object.stringValue().isEmpty() && !found.containsKey(s.getSubject())) {
                 Response<Embedding> embed = embeddingModel.embed(object.stringValue());
                 float[] vector = embed.content().vector();
                 found.put(s.getSubject(), vector);
             }
         }
+        log.info("recommends.index: {}", found);
         return found;
     }
 
     public static Map<Resource, Double> similarity(Model model, IRI predicate, String prompt, double threshold) {
         AllMiniLmL6V2EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
         Response<Embedding> match = embeddingModel.embed(prompt);
-        return similarity( match, index(model,predicate, embeddingModel), threshold );
+        return similarity(match, index(model, predicate, embeddingModel), threshold);
     }
 
-    private static Map<Resource, Double> similarity(Response<Embedding> match, Map<Resource, float[]> index, double threshold) {
+    private static Map<Resource, Double> similarity(Response<Embedding> match, Map<Resource, float[]> index,
+            double threshold) {
         Map<Resource, Double> documentScores = new HashMap<>();
         for (Resource document : index.keySet()) {
             float[] embeds = index.get(document);
             double similarity = cosineSimilarity(match.content().vector(), embeds);
-            if (similarity>threshold) {
+            if (similarity > threshold) {
                 documentScores.put(document, similarity);
             }
         }
@@ -99,7 +101,7 @@ public class Recommends {
     }
 
     public static Model score(Model memoryModel, Map<Resource, Double> similarity) {
-        for(Resource r: similarity.keySet()) {
+        for (Resource r : similarity.keySet()) {
             memoryModel.add(r, Values.iri(IQ_NS.IQ, "score"), Values.literal(similarity.get(r).floatValue()));
         }
         return memoryModel;
@@ -107,13 +109,13 @@ public class Recommends {
 
     public static Model prune(Model memoryModel, Map<Resource, Double> similarity) {
         DynamicModel model = new DynamicModelFactory().createEmptyModel();
-        for(Resource r: similarity.keySet()) {
+        for (Resource r : similarity.keySet()) {
             Iterable<Statement> statements = memoryModel.getStatements(r, null, null);
-            for(Statement s: statements) {
+            for (Statement s : statements) {
                 model.add(s);
             }
             statements = memoryModel.getStatements(null, null, r);
-            for(Statement s: statements) {
+            for (Statement s : statements) {
                 model.add(s);
             }
         }
