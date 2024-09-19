@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
@@ -27,26 +28,30 @@ import java.util.Set;
 public class Remodels {
 private static final Logger log = LoggerFactory.getLogger(Remodels.class);
 static DynamicModelFactory dmf = new DynamicModelFactory();
+
 public static IRI iri(File f) {
 return iri(f.toURI());
 }
+
 public static IRI iri(URI uri) {
 return Values.iri(uri.toString());
 }
+
 public static IRI iri(String p) {
 return Values.iri(p);
 }
 
 public static Model model(String ttl, String baseURL, RDFFormat format)
 throws RDFParseException, UnsupportedRDFormatException, IOException {
-if (baseURL!=null) ttl = "@prefix : <" + baseURL + "> .\n" + ttl;
+if (baseURL != null)
+ttl = "@prefix : <" + baseURL + "> .\n" + ttl;
 return Rio.parse(new StringReader(ttl), baseURL, format);
 }
 
 public static Model model(RepositoryConnection conn, String ttl, String baseURL, RDFFormat format)
 throws RDFParseException, UnsupportedRDFormatException, IOException {
 StringBuilder rdf = RDFPrefixer.getPrefix(conn);
-if (baseURL!=null) {
+if (baseURL != null) {
 rdf.append("@prefix : <").append(baseURL).append("> .\n");
 rdf.append("@base <").append(baseURL).append("> .\n");
 }
@@ -66,8 +71,18 @@ model.add(s);
 results.close();
 return model;
 }
+
+public static Model model(RepositoryResult<Statement> results) throws IOException {
+Model model = dmf.createEmptyModel();
+for (Statement s : results) {
+model.add(s);
+}
+return model;
+}
+
 public static Literal ***REMOVED***(Iterator<Statement> iterator, IRI mimetype) {
-if (mimetype==null) iterator.next();
+if (mimetype == null)
+iterator.next();
 HashSet<IRI> mimes = new HashSet<>();
 mimes.add(mimetype);
 return ***REMOVED***(iterator, mimes);
@@ -78,8 +93,9 @@ while (iterator.hasNext()) {
 Statement statement = iterator.next();
 if (statement.getObject() instanceof Literal) {
 Literal ***REMOVED*** = (Literal) statement.getObject();
-log.debug("***REMOVED***.found: " + statement.getSubject() +" --> "+***REMOVED***+" -> "+mimetypes);
-if (mimetypes.contains(***REMOVED***.getDatatype())) return ***REMOVED***;
+log.debug("***REMOVED***.found: " + statement.getSubject() + " --> " + ***REMOVED*** + " -> " + mimetypes);
+if (mimetypes.contains(***REMOVED***.getDatatype()))
+return ***REMOVED***;
 }
 }
 log.debug("***REMOVED***.unknown");

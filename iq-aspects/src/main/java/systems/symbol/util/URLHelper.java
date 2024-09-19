@@ -1,15 +1,16 @@
 package systems.symbol.util;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class URLHelper {
 
 public static boolean isValidUrl(String urlString) {
 try {
-new URL(urlString);
+new URI(urlString).toURL();
 return true;
-} catch (MalformedURLException e) {
+} catch (URISyntaxException | MalformedURLException e) {
 return false;
 }
 }

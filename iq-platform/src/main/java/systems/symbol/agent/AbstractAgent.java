@@ -12,7 +12,6 @@ import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.I_Bootstrap;
-import systems.symbol.platform.I_Self;
 
 import javax.script.Bindings;
 import java.util.Set;
@@ -22,14 +21,16 @@ import java.util.Set;
  * The agent state is maintained by an RDF4J Model.
  * Skills are finite state machines which represent sets of next-best actions.
  */
-public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Self, I_Intent, I_StateListener<Resource> {
+public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Intent, I_StateListener<Resource> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected I_StateMachine<Resource> fsm;
 protected Model thoughts;
 protected IRI self;
 
 /**
- * Parameterized constructor allowing initialization with a pre-existing RDF4J model.
+ * Parameterized constructor allowing initialization with a pre-existing RDF4J
+ * model.
+ * 
  * @param thoughts The RDF4J model to be associated with the agent.
  */
 public AbstractAgent(IRI self, @NotNull Model thoughts) throws StateException {
@@ -40,7 +41,7 @@ boot(self, thoughts);
 
 @Override
 public void boot(IRI self, Model model) throws StateException {
-if (fsm==null) {
+if (fsm == null) {
 ModelStateMachine fsm = new ModelStateMachine(self, model);
 setFSM(fsm);
 log.debug("agent.boot: {} @ {}", getSelf(), fsm.getState());
@@ -57,12 +58,13 @@ log.debug("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
 @Override
-public void stop()  {
+public void stop() {
 log.info("agent.stopped: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
 /**
  * Retrieves the state model associated with the agent.
+ * 
  * @return The RDF4J model.
  */
 @Override
@@ -72,7 +74,9 @@ return thoughts;
 
 /**
  * initiating a state machine associated with a given workflow resource.
- * @return The state machine associated with the workflow (currently set to null).
+ * 
+ * @return The state machine associated with the workflow (currently set to
+ * null).
  */
 @Override
 public I_StateMachine<Resource> getStateMachine() {
@@ -80,7 +84,8 @@ return fsm;
 }
 
 /**
- * build actionable workflow sets by associating a workflow with a state machine.
+ * build actionable workflow sets by associating a workflow with a state
+ * machine.
  * The state machines represent the behaviour of the agent
  *
  * @param fsm The state machine associated with the workflow.
@@ -88,22 +93,22 @@ return fsm;
 protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
 this.fsm = fsm;
 fsm.listen((from, to) -> {
-log.info("agent.onIntent: {} ==> {} @ {}", from, to, getSelf() );
+log.info("agent.onIntent: {} ==> {} @ {}", from, to, getSelf());
 try {
 return onTransition(from, to);
-} catch(Exception e) {
+} catch (Exception e) {
 log.error("agent.intent.failed: {}", fsm, e);
 return false;
 }
 });
-log.debug("agent.listen: {} @ {}", fsm.getState(), getSelf() );
+log.debug("agent.listen: {} @ {}", fsm.getState(), getSelf());
 }
 
 /**
  * 
- * @param from  previous state
- * @param tocurrent state (unless veto-ed)
- * @return  will veto/revert the transition if false
+ * @param from previous state
+ * @param to   current state (unless veto-ed)
+ * @return will veto/revert the transition if false
  */
 public abstract boolean onTransition(Resource from, Resource to) throws StateException;
 

@@ -13,8 +13,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SecretsHelper {
 static final Logger log = LoggerFactory.getLogger(SecretsHelper.class);
@@ -25,13 +23,17 @@ protected static final int TIME_STEP = 180;
 protected static final int iterations = 10000;
 protected static final int keyLength = 256;
 
-public static I_Secrets unlock(InputStream fileInputStream, String password) throws IOException, ClassNotFoundException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+public static I_Secrets unlock(InputStream fileInputStream, String password)
+throws IOException, ClassNotFoundException, InvalidAlgorithmParameterException, NoSuchPaddingException,
+IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fileInputStream));
 byte[] encryptedData = (byte[]) ois.readObject();
 return decrypt(encryptedData, password);
 }
 
-public static void lock(I_Secrets ownerSecrets, OutputStream fileOutputStream, String password) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+public static void lock(I_Secrets ownerSecrets, OutputStream fileOutputStream, String password)
+throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException,
+NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
 ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(fileOutputStream));
 byte[] encryptedData = encrypt(ownerSecrets, password);
 oos.writeObject(encryptedData);
@@ -43,8 +45,10 @@ SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(KEY_MATTER_ALGORITHM)
 return keyFactory.generateSecret(keySpec);
 }
 
-public static byte[] encrypt(I_Secrets data, String password) throws NoSuchPaddingException, NoSuchAlgorithmException,
-InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
+public static byte[] encrypt(I_Secrets data, String password)
+throws NoSuchPaddingException, NoSuchAlgorithmException,
+InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException,
+IOException {
 byte[] key = password.getBytes(StandardCharsets.UTF_8);
 
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -54,7 +58,8 @@ return cipher.doFinal(serialize(data));
 }
 
 public static I_Secrets decrypt(byte[] encryptedData, String password) throws NoSuchAlgorithmException,
-InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IOException, ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException {
+InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IOException,
+ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException {
 
 byte[] key = password.getBytes(StandardCharsets.UTF_8);
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -66,7 +71,7 @@ return (I_Secrets) Deserialize(decryptedData);
 
 public static byte[] serialize(I_Secrets obj) throws IOException {
 try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
- ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+ObjectOutputStream oos = new ObjectOutputStream(bos)) {
 oos.writeObject(obj);
 return bos.toByteArray();
 }
@@ -74,13 +79,13 @@ return bos.toByteArray();
 
 public static Object Deserialize(byte[] data) throws IOException, ClassNotFoundException {
 try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
- ObjectInputStream ois = new ObjectInputStream(bis)) {
+ObjectInputStream ois = new ObjectInputStream(bis)) {
 return ois.readObject();
 }
 }
 
 public static String totp(String seed, int length) {
-return totp(seed,length, "HmacSHA1", TIME_STEP);
+return totp(seed, length, "HmacSHA1", TIME_STEP);
 }
 
 public static String totp(String seed) {
@@ -124,4 +129,5 @@ return new byte[] {
 (byte) (value >> 8),
 (byte) value
 };
-}}
+}
+}

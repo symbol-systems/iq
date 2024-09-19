@@ -1,23 +1,19 @@
 package systems.symbol.lake.crawl;
 
-import systems.symbol.lake.ContentEntity;
-import systems.symbol.lake.ingest.DeDupeIngestor;
 import systems.symbol.lake.ingest.FileContentConverter;
-import systems.symbol.lake.ingest.MockIngestor;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.rdf4j.model.IRI;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.function.Consumer;
 
 class VFSCrawlerTest {
 String ARXIV = "https://export.arxiv.org/list/cs.AI/recent";
 
 @Test
 void crawlArxivWebPage() throws FileSystemException, URISyntaxException {
-boolean[] done = {true};
+boolean[] done = { true };
 VFSCrawler crawler = new VFSCrawler(new FileContentConverter(entity -> {
 done[0] = entity.getContent().contains("html");
 }));

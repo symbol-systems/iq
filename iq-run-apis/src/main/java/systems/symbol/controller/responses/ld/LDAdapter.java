@@ -42,12 +42,13 @@ processPredicate(nodes, node, next, context);
 }
 nodes.put(subject, node);
 }
-//log.debug("\t@size: {}", graph.size());
-//log.debug("\t{}", graph);
+// log.debug("\t@size: {}", graph.size());
+// log.debug("\t{}", graph);
 return root;
 }
 
 private static void addType(Bindings node, IRI type, Map<String, String> context) {
+@SuppressWarnings("unchecked")
 List<String> types = (List<String>) node.get("@type");
 if (types == null) {
 types = new ArrayList<>();
@@ -57,7 +58,8 @@ types.add(key(type, context));
 log.debug("@type: {}", type);
 }
 
-private static void processPredicate(Map<Resource, Bindings> nodes, Bindings node, Statement next, Map<String, String> context) {
+private static void processPredicate(Map<Resource, Bindings> nodes, Bindings node, Statement next,
+Map<String, String> context) {
 String key = key(next.getPredicate(), context);
 if (next.getObject().isLiteral()) {
 processLiteral(nodes, node, next, context);
@@ -69,17 +71,18 @@ node.put(key, bnode(nodes, (BNode) next.getObject(), context));
 log.debug("\t{} = {}", key, node.get(key));
 }
 
-private static void processLiteral(Map<Resource, Bindings> nodes, Bindings node, Statement next, Map<String, String> context) {
+private static void processLiteral(Map<Resource, Bindings> nodes, Bindings node, Statement next,
+Map<String, String> context) {
 Literal ***REMOVED*** = ((Literal) next.getObject());
 String name = next.getPredicate().getLocalName();
-if (null!=***REMOVED***.getDatatype()) {
+if (null != ***REMOVED***.getDatatype()) {
 if (***REMOVED***.getCoreDatatype().isXSDDatatype()) {
 processXSD(node, name, ***REMOVED***);
 } else {
 Bindings content = content(***REMOVED***, context);
 node.put(name, content);
 }
-} else if (***REMOVED***.getLanguage().isPresent()){
+} else if (***REMOVED***.getLanguage().isPresent()) {
 node.put(***REMOVED***.getLanguage().orElse("en"), ***REMOVED***.stringValue());
 node.put(name, ***REMOVED***.stringValue());
 } else {
@@ -97,7 +100,7 @@ node.put(name, ***REMOVED***.doubleValue());
 }
 
 private static Bindings createEntity(Map<Resource, Bindings> nodes, Resource subject) {
-Bindings node = nodes.containsKey(subject)?nodes.get(subject):new SimpleBindings();
+Bindings node = nodes.containsKey(subject) ? nodes.get(subject) : new SimpleBindings();
 node.put("@id", subject.stringValue());
 node.put("@type", new ArrayList<String>());
 log.debug("@id: {}", subject);
@@ -121,22 +124,24 @@ return list;
 
 private static void ref(Map<Resource, Bindings> nodes, Bindings node, Statement s) {
 String name = s.getPredicate().getLocalName();
-List enlist = enlist(node, name);
+List<Object> enlist = enlist(node, name);
 node.put(name, enlist);
 
 Bindings v = new SimpleBindings();
 v.put("@id", s.getObject().stringValue());
-//node.put("_"+name, v);
+// node.put("_"+name, v);
 enlist.add(v);
 log.debug("@ref: {} -> {} == {}", s.getSubject(), name, enlist);
 }
 
-private static List enlist(Bindings node, String name) {
+@SuppressWarnings("unchecked")
+private static List<Object> enlist(Bindings node, String name) {
 Object o = node.get(name);
-if (o==null) return new ArrayList<>();
-List l;
+if (o == null)
+return new ArrayList<>();
+List<Object> l;
 if (o instanceof List) {
-return (List) o;
+return (List<Object>) o;
 } else {
 l = new ArrayList<>();
 l.add(o);

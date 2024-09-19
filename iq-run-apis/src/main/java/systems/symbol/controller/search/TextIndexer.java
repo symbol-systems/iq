@@ -1,6 +1,5 @@
 package systems.symbol.controller.search;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.ws.rs.*;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
@@ -28,7 +27,7 @@ public class TextIndexer extends GuardedAPI {
 @POST
 @Path("{repo}/{finder}/{query: .*}")
 @Produces(MediaType.APPLICATION_JSON)
-public Response importLocal(@PathParam("repo")String repo, @PathParam("finder")String finder,
+public Response importLocal(@PathParam("repo") String repo, @PathParam("finder") String finder,
 @PathParam("query") String query,
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 return doImport(repo, finder, query, auth);
@@ -37,16 +36,22 @@ return doImport(repo, finder, query, auth);
 @POST
 @Path("{realm}")
 @Produces(MediaType.APPLICATION_JSON)
-public Response importLocal(@PathParam("realm")String _realm, @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+public Response importLocal(@PathParam("realm") String _realm, @HeaderParam("Authorization") String auth)
+throws IOException, SecretsException {
 return doImport(_realm, _realm, "iq/indexer", auth);
 }
 
 public Response doImport(String _realm, String finder, String query, String auth) throws SecretsException {
-if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.iq.text.indexer#repository", Response.Status.BAD_REQUEST).asJSON();
+if (Validate.isNonAlphanumeric(_realm))
+return new OopsResponse("api.iq.text.indexer#repository", Response.Status.BAD_REQUEST).asJSON();
 I_Realm realm = platform.getRealm(_realm);
-if (realm==null) return new OopsResponse("api.iq.text.indexer.realm", Response.Status.NOT_FOUND).asJSON();
-DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+if (realm == null)
+return new OopsResponse("api.iq.text.indexer.realm", Response.Status.NOT_FOUND).asJSON();
+try {
+authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+}
 
 log.info("text.index: {} -> {} -> {}", _realm, finder, query);
 
@@ -68,9 +73,11 @@ Repository repository = realm.getRepository();
 if (repository == null) {
 return new OopsResponse("api.iq.text.indexer#repository", Response.Status.NOT_FOUND).asJSON();
 }
-log.info("iq.text.indexer.repository: {} @ {}", repository.isInitialized(), repository.getDataDir().getAbsolutePath());
+log.info("iq.text.indexer.repository: {} @ {}", repository.isInitialized(),
+repository.getDataDir().getAbsolutePath());
 if (!repository.isInitialized()) {
-return new OopsResponse("api.iq.text.indexer#repository-offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+return new OopsResponse("api.iq.text.indexer#repository-offline", Response.Status.SERVICE_UNAVAILABLE)
+.asJSON();
 }
 Stopwatch stopwatch = new Stopwatch();
 try (RepositoryConnection connection = repository.getConnection()) {
@@ -81,7 +88,7 @@ return new OopsResponse("api.iq.text.indexer#query-missing", Response.Status.NO_
 }
 log.info("iq.text.index.sparql: {}", sparql);
 // SPARQL query used to populate index
-TupleQuery tupleQuery = connection.prepareTupleQuery(RDFPrefixer.getSPARQLPrefix(connection)+sparql);
+TupleQuery tupleQuery = connection.prepareTupleQuery(RDFPrefixer.getSPARQLPrefix(connection) + sparql);
 long indexed = IndexHelper.index(factFinder, tupleQuery);
 factFinder.save();
 

@@ -24,10 +24,10 @@ import static systems.symbol.platform.Provenance.generated;
 
 public class WebPage extends AbstractIntent {
 
-//protected VFSCrawler crawler;
+// protected VFSCrawler crawler;
 protected Consumer<ContentEntity<String>> processor;
 protected Consumer<ContentEntity<String>> ingestRDF;
-protected Consumer<ContentEntity<String>>  llm2RDF;
+protected Consumer<ContentEntity<String>> llm2RDF;
 
 public WebPage(IRI self, Model model) throws IOException {
 boot(self, model);
@@ -37,15 +37,17 @@ public WebPage(IRI self, Model model, I_LLM<String> llm, String prompt) throws I
 boot(self, model);
 init(llm, prompt, RDFFormat.JSONLD);
 }
+
 public void init(I_LLM<String> llm, String prompt, RDFFormat format) throws IOException {
-if (llm!=null)
-llm2RDF = new LLMIngestor(llm, "Reply only using valid "+ format.getName()+" RDF: "+prompt, ingestRDF, 1000);
+if (llm != null)
+llm2RDF = new LLMIngestor(llm, "Reply only using valid " + format.getName() + " RDF: " + prompt, ingestRDF);
 ingestRDF = new RDFModelIngestor(model, format);
-processor = new WebpageIngestor(new XHTMLChunkIngestor(llm2RDF==null?ingestRDF:llm2RDF));
+processor = new WebpageIngestor(new XHTMLChunkIngestor(llm2RDF == null ? ingestRDF : llm2RDF));
 log.info("init: {} --> {}", self, prompt);
 }
+
 @Override
-@RDF(IQ_NS.IQ+"webpage")
+@RDF(IQ_NS.IQ + "webpage")
 public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) {
 Set<IRI> done = new HashSet<>();
 log.info("read: {} @ {}", state, actor);

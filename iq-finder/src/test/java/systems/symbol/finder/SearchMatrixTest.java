@@ -1,7 +1,6 @@
 package systems.symbol.finder;
 
 import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
@@ -34,11 +33,6 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 
 // Simulate embedding response
-float[] mockVector = new float[]{0.1f, 0.2f, 0.3f};
-Embedding embedding = new Embedding(mockVector);
-Response<Embedding> response = new Response<>(embedding);
-
-// Simulate embedding response
 searchMatrix.reindex(entity, content, concept);
 
 // Verify indexing
@@ -53,11 +47,6 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content"; // Query matches the indexed content
 
-// Manually create embeddings
-float[] mockVector = new float[]{0.1f, 0.2f, 0.3f};
-Embedding embedding = new Embedding(mockVector);
-Response<Embedding> queryResponse = new Response<>(embedding);
-
 // Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
@@ -69,7 +58,7 @@ Assert.assertNotNull(results);
 Assert.assertEquals(results.size(), 1); // Should find exactly one result
 I_Found<IRI> found = results.iterator().next();
 Assert.assertNotNull(found);
-System.out.println("search.matrix.found:" + found.intent()+ " -> "+found.score());
+System.out.println("search.matrix.found:" + found.intent() + " -> " + found.score());
 Assert.assertEquals(found.intent(), entity);
 }
 
@@ -81,10 +70,11 @@ String content = "Sample content";
 String query = "Different query"; // Query does not match the indexed content
 
 // Manually create embeddings
-float[] mockVector = new float[]{0.1f, 0.2f, 0.3f};
+float[] mockVector = new float[] { 0.1f, 0.2f, 0.3f };
 Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
+assert queryResponse.content().vector().length == embedding.vector().length;
 // Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
@@ -99,11 +89,6 @@ Assert.assertTrue(results.isEmpty()); // No results returned
 @Test
 public void testSearchWithNoResults() {
 String query = "Nonexistent content"; // Query should not match any indexed content
-
-// Manually create embeddings
-float[] mockVector = new float[]{0.1f, 0.2f, 0.3f};
-Embedding embedding = new Embedding(mockVector);
-Response<Embedding> queryResponse = new Response<>(embedding);
 
 // Perform search
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
@@ -120,11 +105,6 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content";
 
-// Manually create embeddings
-float[] mockVector = new float[]{0.1f, 0.2f, 0.3f};
-Embedding embedding = new Embedding(mockVector);
-Response<Embedding> queryResponse = new Response<>(embedding);
-
 // Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
@@ -137,7 +117,7 @@ Assert.assertEquals(results.size(), 1);
 System.out.println("search.matrix.score-low:" + results);
 I_Found<IRI> found = results.iterator().next();
 Assert.assertNotNull(found);
-System.out.println("search.matrix.found:" + found.intent()+ " -> "+found.score());
+System.out.println("search.matrix.found:" + found.intent() + " -> " + found.score());
 Assert.assertEquals(found.intent(), entity);
 }
 }

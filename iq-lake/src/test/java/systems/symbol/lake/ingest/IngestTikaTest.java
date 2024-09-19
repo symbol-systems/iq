@@ -3,14 +3,11 @@ package systems.symbol.lake.ingest;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
-import systems.symbol.lake.crawl.VFSCrawler;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-
 
 //mvn test -Dtest="IngestTikaTest"
 
@@ -18,10 +15,9 @@ public class IngestTikaTest {
 File from = new File("./src/test/resources/docs/");
 File to = new File("./tested/tika/");
 
-
 @Test
 void testIngest() throws RepositoryException, IOException {
-boolean[] done = {false};
+boolean[] done = { false };
 try (FileSystemManager vfs = VFS.getManager()) {
 FileObject fileObject = vfs.resolveFile(new File(from, "Example.pdf").toURI());
 TikaDocumentIngestor tika = new TikaDocumentIngestor();

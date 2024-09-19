@@ -7,8 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.DefaultEdge;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,39 +18,38 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class GraphsTest {
-private static final Logger log = LoggerFactory.getLogger( GraphsTest.class );
+private static final Logger log = LoggerFactory.getLogger(GraphsTest.class);
 
 static BootstrapRepository repository;
 static IRI ctx, alice, bob, charlie, delta, knows;
-//TripleSource triples;
+// TripleSource triples;
 
 @BeforeEach
 void bootstrap() throws IOException {
 repository = new BootstrapRepository();
 ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
-assert ctx!=null;
-log.info("iq.graph.loaded:" +ctx);
+assert ctx != null;
+log.info("iq.graph.loaded:" + ctx);
 alice = repository.getValueFactory().createIRI("iq:test:Alice");
 bob = repository.getValueFactory().createIRI("iq:test:Bob");
 charlie = repository.getValueFactory().createIRI("iq:test:Charlie");
 delta = repository.getValueFactory().createIRI("iq:test:Delta");
 knows = repository.getValueFactory().createIRI("iq:test:knows");
 
-//triples = repository.getTripleSource();
+// triples = repository.getTripleSource();
 }
 
 @Test
 public void testFromRDF4J() throws IOException {
-Graph<Resource, Resource> src_graph = new DefaultDirectedWeightedGraph(DefaultWeightedEdge.class);
+Graph<Resource, DefaultEdge> src_graph = Graphs.toGraph();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
-Graph<Resource, Resource> graph = Graphs.toGraph(src_graph, statements.stream());
-log.info("iq.graph.rdf:" +graph);
+Graph<Resource, DefaultEdge> graph = Graphs.toGraph(src_graph, statements.iterator());
+log.info("iq.graph.rdf:" + graph);
 assert src_graph == graph;
 assert graph.containsVertex(alice);
 assert graph.containsVertex(bob);
@@ -69,11 +67,11 @@ public void testFromRDF() {
 public void testFindDirectedPaths() {
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
-Graph<Resource, Resource> graph = Graphs.toGraph(statements.stream());
-Collection<GraphPath> paths = Graphs.findDirectedPaths(graph, alice, charlie);
+Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
+Collection<GraphPath<Resource, DefaultEdge>> paths = Graphs.findDirectedPaths(graph, alice, charlie);
 log.info("iq.graph.found.paths: " + paths.size() + " ->" + paths);
-assert paths!=null;
-assert paths.size()>0;
+assert paths != null;
+assert paths.size() > 0;
 }
 
 }
@@ -82,8 +80,8 @@ assert paths.size()>0;
 public void testPredictLink() {
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
-Graph<Resource, Resource> graph = Graphs.toGraph(statements.stream());
-//log.info("iq.graph.predict.graph: " + graph);
+Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
+// log.info("iq.graph.predict.graph: " + graph);
 assert graph.containsVertex(alice);
 double confidence1 = Graphs.predictLinkCommonNeighbors(graph, alice, bob);
 log.info("iq.graph.predict.link.1: " + confidence1);
@@ -99,10 +97,10 @@ log.info("iq.graph.predict.link.2: " + confidence2);
 public void testPredictKatzCentrality() {
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
-Graph<Resource, Resource> graph = Graphs.toGraph(statements.stream());
-Map<Object, Double> found = Graphs.findKatzCentrality(graph);
+Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
+Map<Resource, Double> found = Graphs.findKatzCentrality(graph);
 log.info("iq.graph.katz.scores: " + found);
-assert found!=null;
+assert found != null;
 assert !found.isEmpty();
 assert 1.0 == found.get(alice);
 }

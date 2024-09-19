@@ -3,20 +3,14 @@ package systems.symbol.agent;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.util.Values;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.ModelStateMachine;
-import systems.symbol.fsm.SimpleStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.util.IdentityHelper;
-
 import javax.script.Bindings;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,16 +25,19 @@ Set<Resource> seen = new HashSet<>();
 
 /**
  * The ExecutiveAgent makes simple decisions and delegates other to manager.
+ * 
  * @param self The identity of the agent
  * @param thoughts The working memory of the agent as an RDF4J Model.
  */
-public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
+public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager,
+Bindings bindings) throws StateException {
 super(self, thoughts, intent, bindings);
 this.manager = manager;
 setFSM(new ModelStateMachine(self, thoughts, thoughts));
 }
 
-public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager, Bindings bindings) throws StateException {
+public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent,
+I_Decide<Resource> manager, Bindings bindings) throws StateException {
 super(self, thoughts, intent, bindings);
 this.manager = manager;
 setFSM(new ModelStateMachine(self, ground, thoughts));
@@ -51,13 +48,14 @@ public void boot(IRI self, Model ground) {
 log.info("agent.boot: {} x {}", self, ground.size());
 }
 
-//public void resume() {
-//}
+// public void resume() {
+// }
 
 protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
 super.setFSM(fsm);
 Resource state = getStateMachine().getState();
-if (state==null) return;
+if (state == null)
+return;
 this.seen.add(state);
 log.info("agent.fsm: {} == {}", getSelf(), state);
 }
@@ -83,14 +81,14 @@ seen.add(to);
 if (to.isIRI() && IQ_NS.TO.equals(to)) {
 Resource transitioned = getStateMachine().transition(getSelf());
 log.info("agent.self: {} -> {}", getSelf(), transitioned);
-return transitioned!=null& Objects.equals(transitioned, getSelf());
+return transitioned != null & Objects.equals(transitioned, getSelf());
 }
 try {
 log.info("agent.execute: {} @ {}", self, getStateMachine().getState());
 Set<IRI> executed = execute(getSelf(), to, bindings);
 Resource next = intent();
 log.info("agent.decided: {} --> {} <-- {}", from, next, executed);
-if (next==null) {
+if (next == null) {
 log.info("agent.undecided: {} @ {}", getSelf(), from);
 return false; // don't veto, we may try again
 }
@@ -109,9 +107,11 @@ return false;
 }
 
 /**
- * Determines the appropriate next-step based on the current transitions (choices) of the state machine.
+ * Determines the appropriate next-step based on the current transitions
+ * (choices) of the state machine.
  * If a single choice exists, the decision is simply made.
- * If multiple choices are available, we delegate the decision-making process to the manager.
+ * If multiple choices are available, we delegate the decision-making process to
+ * the manager.
  *
  * @return the selected resource
  * @throws StateException if there is an issue with the state machine
@@ -119,15 +119,19 @@ return false;
 @Override
 public Resource intent() throws StateException {
 Collection<Resource> choices = getStateMachine().getTransitions();
-log.info("agent.deciding: {} -> {}", manager==null?"solo":manager.getClass().getSimpleName(), choices);
-if (choices.isEmpty()) return null;
-if (choices.size()==1) return choices.iterator().next();
-if (manager == null) return null;
+log.info("agent.deciding: {} -> {}", manager == null ? "solo" : manager.getClass().getSimpleName(), choices);
+if (choices.isEmpty())
+return null;
+if (choices.size() == 1)
+return choices.iterator().next();
+if (manager == null)
+return null;
 Future<I_Delegate<Resource>> delegated = manager.delegate(this);
-if (delegated==null) return null;
+if (delegated == null)
+return null;
 try {
 I_Delegate<Resource> delegate = delegated.get();
-return (delegate==null)?null:delegate.intent();
+return (delegate == null) ? null : delegate.intent();
 } catch (InterruptedException | ExecutionException e) {
 throw new StateException(e.getMessage(), getStateMachine().getState(), e);
 }

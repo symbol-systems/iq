@@ -55,14 +55,15 @@ private static final Resource think = Values.iri(TEST, "think");
 public static void setUp() throws IOException {
 assets = new BootstrapRepository();
 self = assets.load(new File("src/test/resources/fleet"), TEST);
-assert TEST.equals( self.stringValue() );
+assert TEST.equals(self.stringValue());
 testedFolder.mkdirs();
 secrets = new APISecrets(new EnvsAsSecrets());
 secrets.grant("https://api.search.brave.com", "BRAVE_API_KEY");
 secrets.grant("https://api.openai.com/", "OPENAI_API_KEY");
 }
 
-//@Test
+// @Test
+@SuppressWarnings("unchecked")
 void fleetSelfTest() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("healthy.fleet.llm.skipped: ");
@@ -84,24 +85,24 @@ assert null != context;
 Bindings my = context.getBindings();
 
 fleet.start();
-System.out.println("healthy.fleet.prompting: "+self);
+System.out.println("healthy.fleet.prompting: " + self);
 context.getConversation().user("How are you ?");
 fleet.run();
-System.out.println("healthy.fleet.done: "+gson.toJson(context.getBindings()));
+System.out.println("healthy.fleet.done: " + gson.toJson(context.getBindings()));
 fleet.stop();
 System.out.println("healthy.fleet.stopped");
 
 Iterable<Statement> statements = model.getStatements(self, KNOWS, Values.iri(TEST, "Self"));
 boolean hasNext = statements.iterator().hasNext();
-System.out.println("healthy.fleet.done: "+hasNext+" x "+fleet.agents.size());
+System.out.println("healthy.fleet.done: " + hasNext + " x " + fleet.agents.size());
 assert hasNext;
 assert my.containsKey("results");
 assert my.get("results") instanceof List;
-assert ((List<Map<?,?>>)my.get("results")).get(0).get("label").equals("healthy");
+assert ((List<Map<?, ?>>) my.get("results")).get(0).get("label").equals("healthy");
 }
 }
 
-//@Test
+// @Test
 void searchBrave() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("brave.fleet.llm.skipped: ");
@@ -109,7 +110,7 @@ return;
 }
 System.out.println("---- search");
 GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
-System.out.println("brave.fleet: "+self);
+System.out.println("brave.fleet: " + self);
 
 Stopwatch stopwatch = new Stopwatch();
 try (RepositoryConnection connection = assets.getConnection()) {
@@ -130,17 +131,18 @@ assert null != context.getConversation();
 String prompt = "What is OpenAI mission?";
 context.getConversation().user(prompt);
 
-System.out.println("brave.thread.in: @ "+stopwatch.summary());
+System.out.println("brave.thread.in: @ " + stopwatch.summary());
 fleet.start();
 fleet.run();
-System.out.println("brave.thread.out: @ "+stopwatch.summary());
+System.out.println("brave.thread.out: @ " + stopwatch.summary());
 fleet.stop();
 
-Map<Resource, Double> similarity = Recommends.similarity(memoryModel, Values.iri("http://schema.org/description"), prompt, 0.6);
-System.out.println("brave.recommends @ "+stopwatch.summary());
-System.out.println("brave.similarity: "+similarity);
-System.out.println("brave.found: "+memoryModel.size());
-assert memoryModel.size()>10;
+Map<Resource, Double> similarity = Recommends.similarity(memoryModel,
+Values.iri("http://schema.org/description"), prompt, 0.6);
+System.out.println("brave.recommends @ " + stopwatch.summary());
+System.out.println("brave.similarity: " + similarity);
+System.out.println("brave.found: " + memoryModel.size());
+assert memoryModel.size() > 10;
 
 Recommends.score(memoryModel, similarity);
 File dumpFile = new File(testedFolder, "brave.search.ttl");
@@ -149,11 +151,11 @@ RDFDump.dump(memoryModel, Files.newOutputStream(dumpFile.toPath()), RDFFormat.TU
 Model pruned = Recommends.prune(memoryModel, similarity);
 File prunedFile = new File(testedFolder, "brave.search.pruned.ttl");
 RDFDump.dump(pruned, Files.newOutputStream(prunedFile.toPath()), RDFFormat.TURTLE);
-System.out.println("brave.dumpFile @ "+stopwatch.summary());
+System.out.println("brave.dumpFile @ " + stopwatch.summary());
 }
 }
 
-//@Test
+// @Test
 void guardedFleet() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("guarded.llm.skipped: ");
@@ -161,7 +163,7 @@ return;
 }
 System.out.println("---- guarded");
 GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
-System.out.println("guarded.fleet: "+self);
+System.out.println("guarded.fleet: " + self);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 
@@ -174,13 +176,13 @@ I_Agent agent = fleet.getAgent(self);
 assert null != agent;
 
 // attempt a guarded state
-boolean[] guarded = {false};
+boolean[] guarded = { false };
 try {
 Resource transitioned = agent.getStateMachine().transition(aware);
-System.out.println("fleet.unguarded: "+transitioned);
+System.out.println("fleet.unguarded: " + transitioned);
 } catch (StateException e) {
 guarded[0] = true;
-System.out.println("fleet.guarded: "+agent.getStateMachine().getState());
+System.out.println("fleet.guarded: " + agent.getStateMachine().getState());
 
 }
 // check we're guarded
@@ -191,7 +193,7 @@ assert !agent.getStateMachine().getState().equals(aware);
 model.add(self, KNOWS, Values.iri(TEST, "Self"));
 // try the transition again ... we should skip to
 Resource transitioned = agent.getStateMachine().transition(aware);
-System.out.println("fleet.transitioned: "+transitioned);
+System.out.println("fleet.transitioned: " + transitioned);
 // check we're all good
 assert null != transitioned;
 assert selfIntent.equals(transitioned);
@@ -199,7 +201,7 @@ assert selfIntent.equals(agent.getStateMachine().getState());
 }
 }
 
-//@Test
+// @Test
 void generateImage() throws Exception {
 if (Validate.isMissing(OPENAI_API_KEY)) {
 System.err.println("image.fleet.llm.skipped: ");
@@ -207,7 +209,7 @@ return;
 }
 System.out.println("---- image generation");
 GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
-System.out.println("image.fleet: "+self);
+System.out.println("image.fleet: " + self);
 
 Stopwatch stopwatch = new Stopwatch();
 try (RepositoryConnection connection = assets.getConnection()) {
@@ -228,13 +230,13 @@ assert null != context.getConversation();
 String prompt = "Generate image of a feminine digital intelligence in pastel shades";
 context.getConversation().user(prompt);
 
-System.out.println("image.thread.in: @ "+stopwatch.summary());
+System.out.println("image.thread.in: @ " + stopwatch.summary());
 fleet.start();
 fleet.run();
-System.out.println("image.thread.out: @ "+stopwatch.summary());
+System.out.println("image.thread.out: @ " + stopwatch.summary());
 fleet.stop();
 
-System.out.println("image.done @ "+stopwatch.summary());
+System.out.println("image.done @ " + stopwatch.summary());
 }
 }
 
@@ -246,7 +248,7 @@ return;
 }
 System.out.println("---- thinking");
 GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, 1000);
-System.out.println("thinking.fleet: "+self);
+System.out.println("thinking.fleet: " + self);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 
@@ -260,11 +262,12 @@ I_Agent agent = fleet.getAgent(self);
 
 assert null != agent;
 Resource transitioned = agent.getStateMachine().transition(think);
-System.out.println("thinking.done: "+transitioned+" -> "+thoughts.size());
+System.out.println("thinking.done: " + transitioned + " -> " + thoughts.size());
 RDFDump.dump(thoughts, Files.newOutputStream(new File("tested/thoughts.ttl").toPath()), RDFFormat.TURTLE);
 // check we're all good
 assert null != transitioned;
 assert think.equals(transitioned);
 assert think.equals(agent.getStateMachine().getState());
 }
-}}
+}
+}

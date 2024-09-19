@@ -15,18 +15,17 @@ public class LLMIngestor extends AbstractIngestor<ContentEntity<String>> {
 protected static final Logger log = LoggerFactory.getLogger(LLMIngestor.class);
 I_LLM<String> llm;
 private String systemPrompt = "";
-private int max_tokens = 512;
 
-public LLMIngestor(I_LLM<String> llm, String systemPrompt, Consumer<ContentEntity<String>> next, int max_tokens) throws FileSystemException {
+public LLMIngestor(I_LLM<String> llm, String systemPrompt, Consumer<ContentEntity<String>> next)
+throws FileSystemException {
 super(next);
 this.llm = llm;
 this.systemPrompt = systemPrompt;
-this.max_tokens = max_tokens;
 }
 
-protected ContentEntity<String> transform (ContentEntity<?> content) throws IOException, APIException {
+protected ContentEntity<String> transform(ContentEntity<?> content) throws IOException, APIException {
 Conversation thread = new Conversation();
-thread.system(systemPrompt+"\n: Your base URI is:"+content.getSelf());
+thread.system(systemPrompt + "\n: Your base URI is:" + content.getSelf());
 thread.user(content.getContent().toString());
 this.llm.complete(thread);
 I_LLMessage<?> latest = thread.latest();
@@ -36,7 +35,7 @@ return new ContentEntity<String>(content.getSelf(), reply, "text/plain");
 }
 
 @Override
-public void accept(ContentEntity content) {
+public void accept(ContentEntity<String> content) {
 try {
 log.debug("accept: {} => {}", content.getSelf(), content.getContent().toString());
 next(transform(content));

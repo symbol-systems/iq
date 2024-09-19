@@ -4,7 +4,6 @@ import systems.symbol.lake.ContentEntity;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
 import org.eclipse.rdf4j.model.IRI;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,9 +11,13 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.block_return;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -53,31 +56,34 @@ return null;
 public void ingestJSONLD(ContentEntity<String> source) throws IOException {
 String content = source.getContent();
 ContentEntity<String> entity = new ContentEntity<>(source.getSelf(), content, contentType);
-log.info("json.parsed: {}: {}", entity.getSelf(), content);
+log.info("json.parsed: {} x {}", entity.getSelf(), content.length());
 extractJSON(entity.getSelf(), content);
 }
 
 private void extractJSON(IRI page, String html) {
-if (seen.contains(page)) return;
+if (seen.contains(page))
+return;
 
 Document document = Jsoup.parse(html);
 seen.add(page);
-Elements jsonLdScripts = document.select("[type="+contentType+"]");
+Elements jsonLdScripts = document.select("[type=" + contentType + "]");
 log.info("json.scripts.found: {}", jsonLdScripts);
 jsonLdScripts.forEach(script -> {
 String src = script.attr("src");
 if (!src.isEmpty()) {
 try {
 String jsonURL = toAbsoluteURL(page.stringValue(), src);
-log.debug("json.script.url: {}", jsonURL);
+log.info("json.script.url: {} + {} ==> {}", page.stringValue(), src, jsonURL);
+if (jsonURL != null) {
 FileObject json = this.vfs.resolveFile(jsonURL);
 seen.add(next(new ContentEntity<String>(jsonURL, json.getContent().getString("UTF-8"))));
+}
 } catch (FileSystemException e) {
 log.error("json.script.vfs: {}", src, e);
-throw new RuntimeException(e);
+// throw new RuntimeException(e);
 } catch (IOException e) {
 log.error("json.script.io: {}", src, e);
-throw new RuntimeException(e);
+// throw new RuntimeException(e);
 }
 } else {
 String json = script.html();
@@ -91,10 +97,9 @@ next(new ContentEntity<String>(page, json, contentType));
 
 static public String toAbsoluteURL(String pageURL, String linkURL) {
 try {
-URL base = new URL(pageURL);
-URL absoluteURL = new URL(base, linkURL);
-return absoluteURL.toString();
-} catch (MalformedURLException e) {
+return new URI(pageURL).resolve(linkURL).toURL().toExternalForm();
+} catch (IllegalArgumentException | MalformedURLException | URISyntaxException e) {
+log.error("json.url.error: {} + {} ==> {}", pageURL, linkURL, e);
 return null;
 }
 }

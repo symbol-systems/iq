@@ -24,6 +24,7 @@ this.finder = finder;
 @Override
 public Collection<I_Found<IRI>> search(String text, int maxResults, double minScore) {
 List<EmbeddingMatch<TextSegment>> found = finder.find(text, maxResults, minScore);
+log.info("search.found: {}", found);
 Collection<I_Found<IRI>> searches = new ArrayList<>();
 for (EmbeddingMatch<TextSegment> match : found) {
 searches.add(new I_Found<>() {

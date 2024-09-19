@@ -1,21 +1,14 @@
 package systems.symbol.lake.crawl;
 
-import com.github.vfss3.S3FileProvider;
-import org.apache.commons.vfs2.CacheStrategy;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.cache.DefaultFilesCache;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.http.HttpFileProvider;
-import org.apache.commons.vfs2.provider.https.HttpsFileProvider;
-import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.net.URI;
 import java.util.function.Consumer;
 
@@ -44,7 +37,7 @@ log.debug("vfs.crawl: {} --> {}", from, sourceURI);
 Walkers.recurse(this.vfs, opts, sourceURI, next);
 return SimpleValueFactory.getInstance().createIRI(sourceURI);
 } catch (FileSystemException e) {
-log.error("vfs.crawl.failed: "+from, e);
+log.error("vfs.crawl.failed: " + from, e);
 return null;
 }
 }

@@ -39,7 +39,7 @@ import static systems.symbol.Formats.HumanDate;
 
 //@ApplicationScoped
 @Singleton
-public class RealmPlatform  implements I_Realms {
+public class RealmPlatform implements I_Realms {
 protected static final Logger log = LoggerFactory.getLogger(RealmPlatform.class);
 @ConfigProperty(name = "quarkus.http.port", defaultValue = "8080")
 int port;
@@ -76,10 +76,11 @@ Stopwatch stopwatch = new Stopwatch();
 I_Realm seed = realms.newRealm(I_Self.self().getSelf());
 log.info("realms.starting: {} @ :{}", seed.getSelf(), port);
 realms.start();
-log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getAbsolutePath() , realms.getRealms(), stopwatch);
+log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getAbsolutePath(), realms.getRealms(),
+stopwatch);
 Realms.bootstrap(realms);
-//Realms.index(realms);
-//log.info("realms.indexed: {}", stopwatch.elapsed());
+// Realms.index(realms);
+// log.info("realms.indexed: {}", stopwatch.elapsed());
 for (IRI realm : realms.getRealms()) {
 I_Realm i_realm = getRealm(realm);
 start(i_realm);
@@ -92,13 +93,13 @@ System.exit(1);
 }
 }
 
-private void start(I_Realm i_realm)  {
+private void start(I_Realm i_realm) {
 try {
 log.info("realms.boot: {}", i_realm.getSelf().stringValue());
 trust(i_realm);
 index(i_realm);
 agent(i_realm);
-log.info("realms.matrix: {}",i_realm.search(i_realm.getSelf().stringValue(), 3, 0.8));
+log.info("realms.matrix: {}", i_realm.search(i_realm.getSelf().stringValue(), 3, 0.8));
 } catch (APIException e) {
 log.error("realms.oops.api: {} @ {}", i_realm.getSelf(), e.getMessage());
 } catch (IOException e) {
@@ -112,20 +113,20 @@ log.error("realms.oops.error: {}", i_realm.getSelf(), e);
 
 private void index(I_Realm realm) {
 try (RepositoryConnection connection = realm.getRepository().getConnection()) {
-RepositoryResult<Statement> contents = connection.getStatements(null, RDF.VALUE, null);
+try (RepositoryResult<Statement> contents = connection.getStatements(null, RDF.VALUE, null)) {
 realm.reindex(contents.iterator(), realm.getSelf());
-contents.close();
+}
 }
 }
 
 protected void trust(I_Realm realm) throws SecretsException, IOException {
 String self = realm.getSelf().stringValue();
-String[] roles = {self};
-String name = realm.getSelf().getNamespace().substring(0, realm.getSelf().getNamespace().length()-1);
+String[] roles = { self };
+String name = realm.getSelf().getNamespace().substring(0, realm.getSelf().getNamespace().length() - 1);
 String token = Realms.tokenize(realm.getSelf(), roles, self, name, roles, realm, duration);
-File jwtHome = new File(realms.getVaultHome(),"jwt");
-boolean mkdirs = jwtHome.mkdirs();
-File file = new File(jwtHome, name+".jwt");
+File jwtHome = new File(realms.getVaultHome(), "jwt");
+jwtHome.mkdirs();
+File file = new File(jwtHome, name + ".jwt");
 IOCopier.save(token, file);
 LocalDateTime until = LocalDateTime.now().plusSeconds(duration);
 log.info("realms.trusted: {} -> {} -> {} until {}", self, name, file.getPath(), until);
@@ -143,11 +144,11 @@ log.info("realms.stopped: {}", realms.getRealms());
 }
 
 private void backups() {
-File backups = new File(realms.getHome(),"backups");
+File backups = new File(realms.getHome(), "backups");
 backups.mkdirs();
-//String now = HumanDate.format(System.currentTimeMillis());
+// String now = HumanDate.format(System.currentTimeMillis());
 for (IRI realm : cnx.keySet()) {
-File file = new File(backups, PrettyString.sanitize(realm.stringValue())+"now.ttl");
+File file = new File(backups, PrettyString.sanitize(realm.stringValue()) + "now.ttl");
 log.info("realms.backup: {} @ {}", realm, file.getAbsolutePath());
 try {
 Repository repository = realms.getRealm(realm).getRepository();
@@ -188,11 +189,13 @@ Conversation chat = new Conversation();
 AgentBuilder builder = new AgentBuilder(realm.getSelf(), connection, bindings, realm.getSecrets());
 builder.setThoughts(realm.getModel()).scripting().remodel().sparql(connection).realm(realm).self(chat);
 I_Agent agent = builder.avatar(chat);
-if (agent==null) return;
+if (agent == null)
+return;
 Resource state = agent.getStateMachine().getState();
-if (state!=null) {
+if (state != null) {
 Thread thread = threads.add(agent.getSelf(), agent);
-log.info("realm.aware: {} -> {} -> {}", thread.getState(), agent.getStateMachine().getState(), builder.getIntents().getIntents());
+log.info("realm.aware: {} -> {} -> {}", thread.getState(), agent.getStateMachine().getState(),
+builder.getIntents().getIntents());
 } else {
 connection.close();
 cnx.remove(realm.getSelf());

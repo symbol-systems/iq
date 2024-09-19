@@ -20,5 +20,6 @@ FileObject to = vfs.resolveFile("./tested/");
 FileCloneIngestor ingestor = new FileCloneIngestor(to, null);
 VFSCrawler crawler = new VFSCrawler(ingestor);
 crawler.crawl(new URI(from));
+vfs.close();
 }
 }

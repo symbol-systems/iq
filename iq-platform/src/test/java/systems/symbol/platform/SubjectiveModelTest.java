@@ -1,6 +1,5 @@
 package systems.symbol.platform;
 
-import systems.symbol.COMMONS;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.ValueFactory;

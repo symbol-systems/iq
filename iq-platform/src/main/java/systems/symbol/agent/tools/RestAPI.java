@@ -3,11 +3,8 @@ package systems.symbol.agent.tools;
 import com.amazonaws.util.Base64;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import okio.Buffer;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.MyFacade;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
@@ -27,22 +24,22 @@ private final OkHttpClient client;
 private final ObjectMapper objectMapper = new ObjectMapper();
 private final String baseURL;
 private final HttpUrl httpUrl;
-private final Map<String,String> headers = new HashMap<>();
+private final Map<String, String> headers = new HashMap<>();
 private final I_Secrets secrets;
 
 /**
  * Creates a new instance of the RestAPI class.
  *
- * @param baseURL   The base URL of the API.
+ * @param baseURL The base URL of the API.
  */
 public RestAPI(String baseURL) {
-this(baseURL,null);
+this(baseURL, null);
 }
 
 /**
  * Creates a new instance of the RestAPI class.
  *
- * @param baseURL   The base URL of the API.
+ * @param baseURL The base URL of the API.
  */
 public RestAPI(String baseURL, I_Secrets secrets) {
 OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -54,6 +51,7 @@ this.baseURL = baseURL;
 this.httpUrl = HttpUrl.parse(getURL());
 this.secrets = secrets;
 }
+
 /**
  * Gets the base URL of the API.
  *
@@ -65,32 +63,39 @@ return baseURL;
 }
 
 public RestAPI bearer() throws SecretsException {
-if (this.secrets==null) throw new SecretsException("missing.bearer.secrets");
+if (this.secrets == null)
+throw new SecretsException("missing.bearer.secrets");
 String authToken = this.secrets.getSecret(getURL());
-if (authToken==null) throw new SecretsException("missing.api.secret");
-return header("Authorization", "Bearer "+authToken);
+if (authToken == null)
+throw new SecretsException("missing.api.secret");
+return header("Authorization", "Bearer " + authToken);
 }
 
 public RestAPI bearer(String authToken) throws SecretsException {
-return header("Authorization", "Bearer "+authToken);
+return header("Authorization", "Bearer " + authToken);
 }
 
 public RestAPI authorization(String prefix) throws SecretsException {
-if (this.secrets==null) throw new SecretsException("missing.auth.secrets");
+if (this.secrets == null)
+throw new SecretsException("missing.auth.secrets");
 String authToken = this.secrets.getSecret(getURL());
-if (Validate.isMissing(authToken)) throw new SecretsException("missing.auth.secret");
-return header("Authorization", prefix+authToken);
+if (Validate.isMissing(authToken))
+throw new SecretsException("missing.auth.secret");
+return header("Authorization", prefix + authToken);
 }
 
 public RestAPI authorization() throws SecretsException {
-if (this.secrets==null) throw new SecretsException("missing.auth.secrets");
+if (this.secrets == null)
+throw new SecretsException("missing.auth.secrets");
 String authToken = this.secrets.getSecret(getURL());
-if (Validate.isMissing(authToken)) throw new SecretsException("missing.auth.secret");
+if (Validate.isMissing(authToken))
+throw new SecretsException("missing.auth.secret");
 return header("Authorization", authToken);
 }
 
 public RestAPI basic() throws SecretsException {
-if (this.secrets==null) throw new SecretsException("missing.basic.secrets");
+if (this.secrets == null)
+throw new SecretsException("missing.basic.secrets");
 String credentials = this.secrets.getSecret(getURL());
 String encoded = Base64.encodeAsString(credentials.getBytes(StandardCharsets.UTF_8));
 log.info("api.basic.auth: {} -> {}", credentials, encoded);
@@ -99,14 +104,16 @@ return this;
 }
 
 public RestAPI header(String name) throws SecretsException {
-if (this.secrets==null) throw new SecretsException("missing.header.secrets");
+if (this.secrets == null)
+throw new SecretsException("missing.header.secrets");
 String credentials = this.secrets.getSecret(getURL());
 log.info("api.header.auth: {} -> {}", name, credentials);
-return header(name,credentials);
+return header(name, credentials);
 }
 
 public RestAPI header(String name, String value) {
-if (value!=null) this.headers.put(name, value);
+if (value != null)
+this.headers.put(name, value);
 return this;
 }
 
@@ -119,14 +126,13 @@ public static Map<String, Object> newParams() {
 return new HashMap<>();
 }
 
-
 /**
  * Makes a HEAD request to the API with optional query parameters.
  *
  * @param queryParams The query parameters.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response head(Map<String, Object> queryParams) throws IOException, APIException {
@@ -141,8 +147,8 @@ return executeRequest(request);
  * Makes a GET request to the API with optional query parameters.
  *
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response get() throws IOException, APIException {
@@ -154,13 +160,14 @@ return get(null);
  *
  * @param queryParams The query parameters.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response get(Map<String, Object> queryParams) throws IOException, APIException {
 HttpUrl.Builder urlBuilder = httpUrl.newBuilder();
-if (queryParams!=null) buildUrlWithQueryParameters(urlBuilder, queryParams);
+if (queryParams != null)
+buildUrlWithQueryParameters(urlBuilder, queryParams);
 
 Request request = createRequestBuilder().url(urlBuilder.build()).get().build();
 return executeRequest(request);
@@ -171,8 +178,8 @@ return executeRequest(request);
  *
  * @param queryParams The query parameters.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response delete(Map<String, Object> queryParams) throws IOException, APIException {
@@ -196,17 +203,18 @@ return formBody;
  *
  * @param json The JSON body.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response post(Map<String, Object> json) throws IOException, APIException {
 String jsonBody = convertObjectToJsonString(json);
 String contentType = headers.get("Content-Type");
-if (contentType==null||contentType.isEmpty()) contentType = "application/json";
+if (contentType == null || contentType.isEmpty())
+contentType = "application/json";
 if (contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
 log.info("api.form: {} -> {}", json.keySet(), getURL());
-//MyFacade.dump(json, System.out);
+// MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 FormBody formBody = form(json).build();
 builder.post(formBody);
@@ -214,7 +222,7 @@ return executeRequest(builder.build());
 } else {
 RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
 log.debug("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
-//MyFacade.dump(json, System.out);
+// MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 builder.post(requestBody);
 return executeRequest(builder.build());
@@ -226,8 +234,8 @@ return executeRequest(builder.build());
  *
  * @param json The JSON body.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
- * @throws APIException  If the API response is not successful.
+ * @throws IOException  If an I/O error occurs.
+ * @throws APIException If the API response is not successful.
  */
 @Override
 public Response put(Map<String, Object> json) throws IOException, APIException {
@@ -241,8 +249,8 @@ return executeRequest(request);
 /**
  * Builds the URL with optional query parameters.
  *
- * @param urlBuilder   The URL builder.
- * @param queryParams  The query parameters.
+ * @param urlBuilder  The URL builder.
+ * @param queryParams The query parameters.
  */
 private void buildUrlWithQueryParameters(HttpUrl.Builder urlBuilder, Map<String, Object> queryParams) {
 if (queryParams != null) {
@@ -259,7 +267,7 @@ urlBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
  */
 private Request.Builder createRequestBuilder() {
 Request.Builder builder = new Request.Builder();
-for(String n: headers.keySet()) {
+for (String n : headers.keySet()) {
 builder.header(n, headers.get(n));
 }
 log.debug("api.headers: {} -> {}", getURL(), headers);
@@ -271,15 +279,15 @@ return builder;
  *
  * @param request The HTTP request.
  * @return The response body.
- * @throws IOException   If an I/O error occurs.
+ * @throws IOException If an I/O error occurs.
  */
 private Response executeRequest(Request request) throws IOException {
 try {
-log.debug("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet() );
+log.debug("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet());
 return client.newCall(request).execute();
 } catch (java.net.SocketTimeoutException e) {
 // retry
-log.warn("api.retry: {}", request );
+log.warn("api.retry: {}", request);
 return client.newCall(request).execute();
 }
 }
@@ -298,16 +306,16 @@ return objectMapper.writeValueAsString(object);
 
 class LoggingInterceptor implements Interceptor {
 @Override
-public @NotNull Response intercept(Chain chain) throws IOException {
+public Response intercept(Chain chain) throws IOException {
 Request request = chain.request();
 // Clone the request to log its body
-//Request copy = request.newBuilder().build();
-//if (copy.body() != null) {
-//Buffer buffer = new Buffer();
-//copy.body().writeTo(buffer);
-//String requestBodyString = buffer.readUtf8();
-////System.out.println("api.debug: " + requestBodyString);
-//}
+// Request copy = request.newBuilder().build();
+// if (copy.body() != null) {
+// Buffer buffer = new Buffer();
+// copy.body().writeTo(buffer);
+// String requestBodyString = buffer.readUtf8();
+//// System.out.println("api.debug: " + requestBodyString);
+// }
 
 return chain.proceed(request);
 }

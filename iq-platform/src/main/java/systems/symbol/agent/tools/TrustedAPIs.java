@@ -2,18 +2,14 @@ package systems.symbol.agent.tools;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.realm.Facts;
 import systems.symbol.secrets.APISecrets;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,7 +25,8 @@ return secrets;
 }
 String key = name.get().getLocalName();
 String secret = _secrets.getSecret(key);
-if (secret == null) throw new SecretsException(agent.stringValue()+" @ "+name.get().stringValue());
+if (secret == null)
+throw new SecretsException(agent.stringValue() + " @ " + name.get().stringValue());
 
 Set<IRI> iris = Facts.find(model, agent, IQ_NS.TRUSTS);
 for (IRI iri : iris) {
@@ -40,4 +37,3 @@ return secrets;
 }
 
 }
-

@@ -17,17 +17,15 @@ import systems.symbol.COMMONS;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.rdf4j.store.IQ;
 import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.render.HBSRenderer;
 
 import java.io.IOException;
 import java.util.Map;
 
-
 public class IQScriptCatalog implements I_Contents {
 private static final Logger log = LoggerFactory.getLogger(IQScriptCatalog.class);
 public static IRI HAS_CONTENT = RDF.VALUE;
-public static IRI SPARQL_MIME = IQ.vf.createIRI("urn:"+COMMONS.MIME_SPARQL);
+public static IRI SPARQL_MIME = IQ.vf.createIRI("urn:" + COMMONS.MIME_SPARQL);
 IQ iq;
 
 /**
@@ -42,6 +40,7 @@ this.iq = iq;
 public IQScriptCatalog(IRI self, RepositoryConnection connection) {
 this.iq = new IQConnection(self, connection);
 }
+
 /**
  * Retrieves a SPARQL query based on the provided query path and MIME type.
  *
@@ -50,9 +49,11 @@ this.iq = new IQConnection(self, connection);
  */
 public String getSPARQL(String queryPath) {
 Literal content;
-if (!queryPath.contains(":")) content= getContent(iq.toIRI(queryPath), SPARQL_MIME);
-else content = getContent(Values.iri(queryPath), SPARQL_MIME);
-return content==null?null:content.stringValue();
+if (!queryPath.contains(":"))
+content = getContent(iq.toIRI(queryPath), SPARQL_MIME);
+else
+content = getContent(Values.iri(queryPath), SPARQL_MIME);
+return content == null ? null : content.stringValue();
 }
 
 /**
@@ -65,7 +66,7 @@ return content==null?null:content.stringValue();
  */
 public String getSPARQL(String queryPath, Map<String, Object> bindings) throws IOException {
 String query = getSPARQL(queryPath);
-return query==null||bindings==null?query:HBSRenderer.template(query, bindings);
+return query == null || bindings == null ? query : HBSRenderer.template(query, bindings);
 }
 
 /**
@@ -76,7 +77,7 @@ return query==null||bindings==null?query:HBSRenderer.template(query, bindings);
  */
 public String getSPARQL(IRI query) {
 Literal content = getContent(query, SPARQL_MIME);
-return content==null?null:content.stringValue();
+return content == null ? null : content.stringValue();
 }
 
 /**
@@ -89,7 +90,7 @@ return content==null?null:content.stringValue();
 @Override
 public Literal getContent(Resource query, IRI mimetype) {
 log.debug("sparql.getContent: {} -> {}", query, mimetype);
-return IQScripts.findScript(iq.getConnection(), query, mimetype,null);
+return IQScripts.findScript(iq.getConnection(), query, mimetype, null);
 }
 
 }

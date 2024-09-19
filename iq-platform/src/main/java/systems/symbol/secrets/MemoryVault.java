@@ -2,14 +2,14 @@ package systems.symbol.secrets;
 
 import org.eclipse.rdf4j.model.IRI;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryVault implements I_SecretsStore {
 Map<IRI, I_Secrets> store = new HashMap<>();
 
-public MemoryVault() {}
+public MemoryVault() {
+}
 
 @Override
 public I_Secrets getSecrets(IRI agent) {
