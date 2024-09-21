@@ -44,35 +44,44 @@ public class ChatAPI extends GuardedAPI {
      * @return JSON response containing language model results.
      */
     @POST
-    @Operation(
-            summary = "api.ux.chat.post.summary",
-            description = "api.ux.chat.post.description"
-    )
+    @Operation(summary = "api.ux.chat.post.summary", description = "api.ux.chat.post.description")
     @Path("{realm}/{actor:.*}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor, @HeaderParam("Authorization") String auth,
-                               Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
+    public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor,
+            @HeaderParam("Authorization") String auth,
+            Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.chat: {}", chat.messages());
-        if (chat.messages().isEmpty()) return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).asJSON();
-        if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).asJSON();
-        if (Validate.isMissing(_actor)) return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).asJSON();
+        if (chat.messages().isEmpty())
+            return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).asJSON();
+        if (Validate.isNonAlphanumeric(_realm))
+            return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).asJSON();
+        if (Validate.isMissing(_actor))
+            return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).asJSON();
         IRI actor = Values.iri(_actor);
-        I_Realm realm = platform.getRealm(Values.iri(_realm+":"));
-        if (realm==null) return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+        I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
+        if (realm == null)
+            return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
         DecodedJWT jwt;
-        try { jwt = authenticate(auth, realm); } catch (OopsException e) {log.info("ux.chat.token");return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+        try {
+            jwt = authenticate(auth, realm);
+        } catch (OopsException e) {
+            log.info("ux.chat.token");
+            return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+        }
         Repository realmRepository = realm.getRepository();
-        if (realmRepository == null) return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).asJSON();
+        if (realmRepository == null)
+            return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).asJSON();
 
         Bindings bindings = new SimpleBindings();
         IRI user = Values.iri(jwt.getSubject());
 
         try (RepositoryConnection connection = realmRepository.getConnection()) {
             I_Realm myRealm = platform.getRealm(user);
-            log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm!=null);
-            if (myRealm==null) return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+            log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm != null);
+            if (myRealm == null)
+                return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
             log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
             AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
             builder.jwt(jwt).setThoughts(myRealm.getModel());
@@ -86,7 +95,7 @@ public class ChatAPI extends GuardedAPI {
             agent.start();
             agent.stop();
             log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
-            return new ChatResponse(chat).asJSON();
+            return new ChatResponse(chat, agent).asJSON();
         } catch (StateException e) {
             log.error("ux.chat.oops: {}", e.getMessage());
             return new OopsResponse("api.ux.chat.state", Response.Status.BAD_REQUEST).asJSON();

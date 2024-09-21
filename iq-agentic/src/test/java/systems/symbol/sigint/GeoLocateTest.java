@@ -10,9 +10,12 @@ class GeoLocateTest {
     void locate() throws Exception {
         GeoLocate geoLocate = new GeoLocate();
 
-        Model located = geoLocate.locate();
-
-        RDFDump.dump(located);
+        try {
+            Model located = geoLocate.locate();
+            RDFDump.dump(located);
+        } catch (java.net.SocketException e) {
+            System.err.println("geo.offline");
+        }
 
     }
 }

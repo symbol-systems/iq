@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,8 @@ public class GraphsTest {
     static IRI ctx, alice, bob, charlie, delta, knows;
     // TripleSource triples;
 
-    @BeforeEach
-    void bootstrap() throws IOException {
+    @BeforeAll
+    static void bootstrap() throws IOException {
         repository = new BootstrapRepository();
         ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
         assert ctx != null;

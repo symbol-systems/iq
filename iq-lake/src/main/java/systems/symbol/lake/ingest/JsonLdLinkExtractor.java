@@ -11,11 +11,8 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import groovyjarjarantlr4.v4.parse.ANTLRParser.block_return;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -99,7 +96,7 @@ public class JsonLdLinkExtractor implements Consumer<ContentEntity<String>> {
         try {
             return new URI(pageURL).resolve(linkURL).toURL().toExternalForm();
         } catch (IllegalArgumentException | MalformedURLException | URISyntaxException e) {
-            log.error("json.url.error: {} + {} ==> {}", pageURL, linkURL, e);
+            log.error("json.url.error: {} + {} ==> {}", pageURL, linkURL, e.getMessage());
             return null;
         }
     }

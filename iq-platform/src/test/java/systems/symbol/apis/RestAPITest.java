@@ -3,6 +3,8 @@ package systems.symbol.apis;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,12 +19,14 @@ class RestAPITest {
 
             Response response = api.get();
             assert null != response;
-            assert null != response.body();
-            String body = response.body().string();
-            assert body.contains("{") && body.contains("}");
+            ResponseBody body = response.body();
+            assert null != body;
+            String body$ = body.string();
+            assert body$.contains("{") && body$.contains("}");
+            response.close();
 
         } catch (UnknownHostException e) {
-            System.err.println("mock host offline: "+e.getMessage());
+            System.err.println("mock host offline: " + e.getMessage());
         }
     }
 }

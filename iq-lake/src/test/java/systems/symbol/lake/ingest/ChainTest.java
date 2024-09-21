@@ -41,7 +41,7 @@ public class ChainTest extends AbstractRDFTest {
             Consumer<FileObject> rdf = new RDFFileIngestor(connection, self);
             Consumer<FileObject> txt = new TextAsRDFIngestor(connection);
 
-            Consumer chain = new Consumers(rdf).add(txt);
+            Consumer<FileObject> chain = new Consumers<FileObject>(rdf).add(txt);
             VFSCrawler crawler = new VFSCrawler(chain);
             crawler.crawl(assetsHome.toURI());
         }
