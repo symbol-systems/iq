@@ -12,7 +12,10 @@ import java.util.function.Consumer;
 
 public class XHTMLChunkIngestor extends AbstractIngestor<ContentEntity<String>> {
 protected int CHUNK_SIZE = 512;
-protected XHTMLChunkIngestor() {}
+
+protected XHTMLChunkIngestor() {
+}
+
 public XHTMLChunkIngestor(Consumer<ContentEntity<String>> processor) {
 super(processor);
 }
@@ -39,13 +42,15 @@ for (Element element : sections) {
 processChunk(file, sb, element, chunk++);
 }
 // final chunk, less than chunk-size
-processTextChunk(file,sb,chunk);
+processTextChunk(file, sb, chunk);
 }
 
-protected void processChunk(ContentEntity<String> file, StringBuilder sb, Element element, int chunk) throws IOException {
+protected void processChunk(ContentEntity<String> file, StringBuilder sb, Element element, int chunk)
+throws IOException {
 String content = element.text().trim();
-log.info("xhtml.chunk: {} => {} -> {}", file.getSelf(), chunk, content);
-if (content.isEmpty()) return;
+log.debug("xhtml.chunk: {} => {} -> {}", file.getSelf(), chunk, content);
+if (content.isEmpty())
+return;
 sb.append(content);
 if (sb.length() >= CHUNK_SIZE) {
 processTextChunk(file, sb, chunk);
@@ -53,11 +58,12 @@ processTextChunk(file, sb, chunk);
 }
 
 protected void processTextChunk(ContentEntity<String> file, StringBuilder sb, int chunk) {
-log.debug("xhtml.text: {} --> {}" ,chunk, sb);
-if (sb.length()<1) return;
+log.debug("xhtml.text: {} --> {}", chunk, sb);
+if (sb.length() < 1)
+return;
 String content = sb.substring(0, Math.min(CHUNK_SIZE, sb.length()));
-ContentEntity<String> entity = new ContentEntity<>(file.getSelf()+"#chunk_"+chunk, content);
-sb.setLength(Math.max(sb.length()-CHUNK_SIZE,0));
+ContentEntity<String> entity = new ContentEntity<>(file.getSelf() + "#chunk_" + chunk, content);
+sb.setLength(Math.max(sb.length() - CHUNK_SIZE, 0));
 next(entity);
 }
 

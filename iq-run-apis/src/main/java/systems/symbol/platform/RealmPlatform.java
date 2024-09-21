@@ -35,9 +35,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static systems.symbol.Formats.HumanDate;
-
-//@ApplicationScoped
+// @ApplicationScoped
 @Singleton
 public class RealmPlatform implements I_Realms {
 protected static final Logger log = LoggerFactory.getLogger(RealmPlatform.class);
@@ -74,13 +72,12 @@ protected void onStart(@Observes StartupEvent ev) {
 try {
 Stopwatch stopwatch = new Stopwatch();
 I_Realm seed = realms.newRealm(I_Self.self().getSelf());
-log.info("realms.starting: {} @ :{}", seed.getSelf(), port);
+log.info("realms.starting: {} @ localhost:{}", seed.getSelf(), port);
 realms.start();
 log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getAbsolutePath(), realms.getRealms(),
 stopwatch);
 Realms.bootstrap(realms);
-// Realms.index(realms);
-// log.info("realms.indexed: {}", stopwatch.elapsed());
+
 for (IRI realm : realms.getRealms()) {
 I_Realm i_realm = getRealm(realm);
 start(i_realm);

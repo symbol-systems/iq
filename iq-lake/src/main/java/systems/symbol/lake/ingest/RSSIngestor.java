@@ -109,7 +109,8 @@ model.add(itemIRI, RDF.TYPE, clzzIRI, channel);
 add(itemIRI, toDCPredicate("title"), title, channel);
 add(itemIRI, toDCPredicate("description"), description, channel);
 add(itemIRI, toDCPredicate("link"), link, channel);
-if (next !=null) next.accept( new ContentEntity<String>(itemIRI, title+"\n"+description, "text/plain"));
+if (next != null)
+next.accept(new ContentEntity<String>(itemIRI, title + "\n" + description, "text/plain"));
 return itemIRI;
 }
 
@@ -137,14 +138,15 @@ return categories;
 }
 
 private void addCategories(IRI channelLink, Element item, IRI itemLink) {
-String schemaIRI = channelLink.stringValue()+"#";
+String schemaIRI = channelLink.stringValue() + "#";
 List<String> categories = getCategories(item);
 for (String category : categories) {
 String id = PrettyString.toPascalCase(category.trim());
-IRI conceptIRI = Values.iri(schemaIRI,id);
+IRI conceptIRI = Values.iri(schemaIRI, id);
 model.add(itemLink, RDF.TYPE, conceptIRI, channelLink);
 
-if (model.contains(conceptIRI,RDF.TYPE, SKOS.CONCEPT)) return;
+if (model.contains(conceptIRI, RDF.TYPE, SKOS.CONCEPT))
+return;
 
 model.add(conceptIRI, RDF.TYPE, SKOS.CONCEPT, channelLink);
 model.add(conceptIRI, SKOS.PREF_LABEL, Values.***REMOVED***(category), channelLink);
@@ -152,14 +154,16 @@ model.add(conceptIRI, SKOS.IN_SCHEME, Values.iri(schemaIRI), channelLink);
 }
 
 }
+
 private void add(Resource subject, IRI predicate, String object, IRI channel) {
-if (object==null) return;
+if (object == null)
+return;
 model.add(subject, predicate, Values.***REMOVED***(object), channel);
 }
 
-private IRI toRSSPredicate(String p) {
-return Values.iri("http://purl.org/rss/1.0/", p);
-}
+// private IRI toRSSPredicate(String p) {
+// return Values.iri("http://purl.org/rss/1.0/", p);
+// }
 private IRI toDCPredicate(String predicate) {
 return Values.iri("http://purl.org/dc/elements/1.1/" + predicate);
 }

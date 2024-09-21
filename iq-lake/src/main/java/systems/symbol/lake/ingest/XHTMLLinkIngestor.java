@@ -69,7 +69,7 @@ this.vfs.setBaseFile(new File(""));
  * @throws IOException If an I/O error occurs during processing.
  */
 protected void processXHTML(FileObject file) throws IOException, URISyntaxException {
-log.info("page: " + file.getURI());
+log.info("page: {}", file.getURI());
 extractLinks(model, file);
 // file.resolveFile("href://"+file.getPublicURIString());
 }
@@ -136,7 +136,7 @@ if (!isSeen(page.getURI())) {
 ContentEntity<String> entity = new ContentEntity<String>(page.getURI().toString(), link.text());
 processor.accept(entity);
 seen(page.getURI());
-log.info("link.seen: {} -> {}", entity.getSelf(), isSeen(page.getURI()));
+log.debug("link.seen: {} -> {}", entity.getSelf(), isSeen(page.getURI()));
 }
 }
 return href;

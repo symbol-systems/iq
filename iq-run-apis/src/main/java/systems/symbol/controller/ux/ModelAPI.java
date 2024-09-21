@@ -29,7 +29,8 @@ import java.io.IOException;
 
 /**
  * RESTful endpoint for executing SPARQL queries on RDF repositories.
- * The Queries are stored within the ScriptCatalog associated with the repository and context.
+ * The Queries are stored within the ScriptCatalog associated with the
+ * repository and context.
  */
 @Path("/ux/model")
 @Tag(name = "api.ux.model.name", description = "api.ux.model.description")
@@ -38,36 +39,40 @@ public class ModelAPI extends GuardedAPI {
 /**
  * Executes a SPARQL construct query on a specified RDF repository.
  *
- * @param _realm   The name of the RDF repository.
- * @param query   The query of a SPARQL construct query.
+ * @param _realm The name of the RDF repository.
+ * @param query  The query of a SPARQL construct query.
  * @return Response containing the results of the SPARQL query in JSON format.
  */
 @GET
-@Operation(
-summary = "api.ux.model.get.summary",
-description = "api.ux.model.get.description"
-)
+@Operation(summary = "api.ux.model.get.summary", description = "api.ux.model.get.description")
 @Path("{realm}/{query: .*}")
 @Produces("application/ld+json")
 public Response graph(@PathParam("realm") String _realm,
-  @PathParam("query") String query,
-  @Context UriInfo uriInfo,
-  @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+@PathParam("query") String query,
+@Context UriInfo uriInfo,
+@HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 log.info("ux.model: {} --> {} -> {}", _realm, query, uriInfo.getQueryParameters().keySet());
 
-if (!Validate.isBearer(auth))  return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+if (!Validate.isBearer(auth))
+return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
 I_Realm realm = platform.getRealm(_realm);
-if (realm==null) return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
+if (realm == null)
+return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
 DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+try {
+jwt = authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+}
 
 if (!Validate.isURN(query)) {
-query = query.isEmpty() ?realm.getSelf()+"ux/model":realm.getSelf()+query;
+query = query.isEmpty() ? realm.getSelf() + "ux/model" : realm.getSelf() + query;
 }
 log.info("ux.model.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
 Repository repository = realm.getRepository();
-if (repository == null) return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
+if (repository == null)
+return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
 
 IRI self = Values.iri(jwt.getSubject());
 try (RepositoryConnection connection = repository.getConnection()) {
@@ -77,7 +82,7 @@ Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
 Bindings my = MyFacade.rebind(self, params, jwt);
 
 String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
-log.debug("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
+log.info("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
 if (Validate.isMissing(sparql)) {
 return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).asJSON();
 }

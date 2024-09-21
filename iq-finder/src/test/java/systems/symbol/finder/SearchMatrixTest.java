@@ -32,10 +32,8 @@ IRI concept = Values.iri(BASE_IRI.stringValue() + "concept");
 IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 
-// Simulate embedding response
 searchMatrix.reindex(entity, content, concept);
 
-// Verify indexing
 Assert.assertNotNull(searchMatrix.byConcept(concept));
 Assert.assertTrue(searchMatrix.indexed(entity));
 }
@@ -47,13 +45,10 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content"; // Query matches the indexed content
 
-// Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
-// Perform search
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-// Verify search results
 Assert.assertNotNull(results);
 Assert.assertEquals(results.size(), 1); // Should find exactly one result
 I_Found<IRI> found = results.iterator().next();
@@ -75,27 +70,21 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
 assert queryResponse.content().vector().length == embedding.vector().length;
-// Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
-// Perform search
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-// Verify search results
 Assert.assertNotNull(results);
-Assert.assertTrue(results.isEmpty()); // No results returned
+Assert.assertTrue(results.isEmpty());
 }
 
 @Test
 public void testSearchWithNoResults() {
-String query = "Nonexistent content"; // Query should not match any indexed content
-
-// Perform search
+String query = "Nonexistent content";
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-// Verify search results
 Assert.assertNotNull(results);
-Assert.assertTrue(results.isEmpty()); // No results should be returned for non-existent content
+Assert.assertTrue(results.isEmpty());
 }
 
 @Test
@@ -105,13 +94,10 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content";
 
-// Reindex with mock data
 searchMatrix.reindex(entity, content, concept);
 
-// Perform search with a low score threshold
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.0);
 
-// Should still find the entity with the low threshold
 Assert.assertNotNull(results);
 Assert.assertEquals(results.size(), 1);
 System.out.println("search.matrix.score-low:" + results);

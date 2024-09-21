@@ -22,29 +22,27 @@ import java.security.cert.CertificateException;
 
 public class Genesis {
 
-public static void main(String [] args){
+public static void main(String[] args) {
 String certFile = "cacert.pem";
 String keyFile = "cakey.p8c";
 String message = "This is my secret message.";
 
 try {
 InputStream certStream = new FileInputStream(certFile);
-InputStream keyStream= new FileInputStream(keyFile);
-Locksmith locksmith = new Locksmith();
-locksmith.encrypt(certStream, keyStream, message);
+InputStream keyStream = new FileInputStream(keyFile);
+Locksmith.encrypt(certStream, keyStream, message);
 certStream.close();
 keyStream.close();
 
-}catch( IOException e ){
-System.out.println( "IOException:" + e );
-}catch( CertificateException e ){
-System.out.println( "CertificateException:" + e );
-}catch( NoSuchAlgorithmException e ){
-System.out.println( "NoSuchAlgorithmException:" + e );
+} catch (IOException e) {
+System.out.println("IOException:" + e);
+} catch (CertificateException e) {
+System.out.println("CertificateException:" + e);
+} catch (NoSuchAlgorithmException e) {
+System.out.println("NoSuchAlgorithmException:" + e);
 } catch (Exception e) {
-System.out.println( "Exception:" + e );
+System.out.println("Exception:" + e);
 }
 }
-
 
 }

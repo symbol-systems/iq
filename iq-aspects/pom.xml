@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.2</version>
+   <version>0.81.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -199,13 +199,11 @@
 <dependency>
 <groupId>commons-codec</groupId>
 <artifactId>commons-codec</artifactId>
-<version>${commons-codec.version}</version>
 </dependency>
 
 <dependency>
 <groupId>commons-io</groupId>
 <artifactId>commons-io</artifactId>
-<version>${commons-io.version}</version>
 </dependency>
 
 <dependency>

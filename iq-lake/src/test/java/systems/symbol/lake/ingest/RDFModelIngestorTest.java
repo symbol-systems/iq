@@ -2,6 +2,8 @@ package systems.symbol.lake.ingest;
 
 import systems.symbol.lake.crawl.VFSCrawler;
 import systems.symbol.rdf4j.io.RDFDump;
+
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -21,17 +23,17 @@ void testFileIntoModel() throws Exception {
 assert from.exists() && from.isFile();
 Model model = new LinkedHashModel();
 
-Consumer ingestor = new FileContentConverter(new RDFModelIngestor(model, RDFFormat.TURTLE));
+Consumer<FileObject> ingestor = new FileContentConverter(new RDFModelIngestor(model, RDFFormat.TURTLE));
 VFSCrawler crawler = new VFSCrawler(ingestor);
-System.out.println("model.crawl: "+from);
+System.out.println("model.crawl: " + from);
 
 assert model.isEmpty();
 IRI crawled = crawler.crawl(from.toURI());
 assert crawled != null;
 
 assert !model.isEmpty();
-assert model.size()>10;
-System.out.println("model.crawled: "+model.size());
+assert model.size() > 10;
+System.out.println("model.crawled: " + model.size());
 RDFDump.dump(model, new FileOutputStream(new File(moat, "fsm-model.ttl")), RDFFormat.TURTLE);
 }
 }

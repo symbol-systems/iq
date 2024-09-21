@@ -6,7 +6,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.2</version>
+   <version>0.81.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-lake</artifactId>
@@ -14,7 +14,7 @@
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-   <version>0.81.2</version>
+   <version>0.81.3</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -110,23 +110,23 @@
 <dependency>
 <groupId>io.quarkiverse.tika</groupId>
 <artifactId>quarkus-tika</artifactId>
-<version>2.0.2</version>
+<version>2.0.4</version>
 </dependency>
 <dependency>
 <groupId>org.apache.tika</groupId>
 <artifactId>tika-core</artifactId>
-<version>2.8.0</version>
+<version>2.9.2</version>
 </dependency>
 <dependency>
 <groupId>org.apache.tika</groupId>
 <artifactId>tika-parsers</artifactId>
-<version>2.8.0</version>
+<version>2.9.2</version>
 <type>pom</type>
 </dependency>
 <dependency>
 <groupId>org.apache.tika</groupId>
 <artifactId>tika-parsers-standard-package</artifactId>
-<version>2.8.0</version>
+<version>2.9.2</version>
 <type>pom</type>
 </dependency>
 

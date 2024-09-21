@@ -17,7 +17,6 @@ File to = new File("./tested/tika/");
 
 @Test
 void testIngest() throws RepositoryException, IOException {
-boolean[] done = { false };
 try (FileSystemManager vfs = VFS.getManager()) {
 FileObject fileObject = vfs.resolveFile(new File(from, "Example.pdf").toURI());
 TikaDocumentIngestor tika = new TikaDocumentIngestor();

@@ -1,7 +1,4 @@
 {
-// Use IntelliSense to learn about possible attributes.
-// Hover to view descriptions of existing attributes.
-// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 "version": "0.2.0",
 "configurations": [
 {
@@ -12,52 +9,24 @@
 },
 {
 "type": "java",
-"name": "RDF4EventsAPI",
+"name": "IQ APIs",
 "request": "launch",
-"mainClass": "systems.symbol.events.RDF4EventsAPI",
-"projectName": "iq-events"
-},
-{
-"type": "java",
-"name": "IQCamelBot",
-"request": "launch",
-"mainClass": "systems.symbol.IQCamelBot",
-"projectName": "iq-camel"
-},
-{
-"type": "java",
-"name": "PowerCLI",
-"request": "launch",
-"mainClass": "systems.symbol.PowerCLI",
-"projectName": "iq-cli-pro"
-},
-{
-"type": "java",
-"name": "CLI",
-"request": "launch",
-"mainClass": "systems.symbol.CLI",
-"projectName": "iq-cli"
-},
-{
-"type": "java",
-"name": "CamelCase",
-"request": "launch",
-"mainClass": "systems.symbol.string.CamelCase",
-"projectName": "iq-strings"
-},
-{
-"type": "java",
-"name": "LevenshteinDistance",
-"request": "launch",
-"mainClass": "systems.symbol.string.LevenshteinDistance",
-"projectName": "iq-strings"
-},
-{
-"type": "java",
-"name": "Tropes",
-"request": "launch",
-"mainClass": "iq.Tropes",
-"projectName": "iq-tropes"
+"mainClass": "systems.symbol.platform.RealmPlatform",
+"projectName": "iq-run-apis",
+"env": {
+"MY_DISCORD_BOT_TOKEN": "MTI0ODk3NjE3NjM2NjQ4OTYwMA.G7x6wl.GAz7KoJtq-MCXqr8knG0fAQDazPXWLBzJHqe2k",
+"MY_DISCORD_SECRET": "1248976176366489600:Lfzl9DRpfP-ZpvnRWs4Q74Lva00-auii",
+"MY_GROQ_API_KEY": "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",
+"MY_INFOBIP_SECRET": "45c85ae81b0be242aed173e8387e1856-bd0355c8-525b-47a1-bde6-0d1e925f2dbb",
+"MY_NOVITA_KEY": "ce3b6471-b6de-4aad-8e2a-67bf06d57c24",
+"MY_OPENAI_SECRET": "sk-localhost-R61SyPX4vF7dK35aVIDST3BlbkFJLWXo9HYqb1MRjR37gEQq",
+"MY_SEGMIND_SECRET": "SG_14a98d723df517f0",
+"MY_STRIPE_WH_SECRET": "whsec_591040f71629e49b649bb1f3cd93050383630f965ac8c2cfb1a5db62e2f38b07",
+"MY_TWILIO_SECRET": "AC2ed87319ddc6208265f03ced9d6f3782:ac0ce3c2b9867f4f109a52317c29d693",
+"MY_TWILIO_SID": "AC2ed87319ddc6208265f03ced9d6f3782",
+"MY_X_APP_SECRET": "bIB2LeARUJkd6pk5GYP26nZHj:7m66eh5h71mr6zPLqVdBYec2sf41TtGhUHaiWf9a50SB4h8DMA",
+"MY_X_OAUTH_SECRETS": "RFZvR0VVT1NkWE1PX24yVkNxYjc6MTpjaQ:iL3S4ufS6a6i4QTN_wVSn9uTEG5UfpyO0C-mJJZJenN218wYx1"
+}
 }
 ]
 }
