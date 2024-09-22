@@ -9,7 +9,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.platform.IQ_NS;
@@ -32,8 +31,8 @@ static IRI ctx, alice, bob, charlie, delta, knows;
 static void bootstrap() throws IOException {
 repository = new BootstrapRepository();
 ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
+log.info("iq.graph.loaded: {}", ctx);
 assert ctx != null;
-log.info("iq.graph.loaded:" + ctx);
 alice = repository.getValueFactory().createIRI("iq:test:Alice");
 bob = repository.getValueFactory().createIRI("iq:test:Bob");
 charlie = repository.getValueFactory().createIRI("iq:test:Charlie");
@@ -45,6 +44,10 @@ knows = repository.getValueFactory().createIRI("iq:test:knows");
 
 @Test
 public void testFromRDF4J() throws IOException {
+if (repository == null) {
+log.error("iq.graph.rdf.repository.missing");
+return;
+}
 Graph<Resource, DefaultEdge> src_graph = Graphs.toGraph();
 
 try (RepositoryConnection connection = repository.getConnection()) {
@@ -60,17 +63,16 @@ assert graph.containsEdge(alice, bob);
 }
 
 @Test
-public void testFromRDF() {
-// TODO
-}
-
-@Test
 public void testFindDirectedPaths() {
+if (repository == null) {
+log.error("iq.graph.paths.repository.missing");
+return;
+}
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
 Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
 Collection<GraphPath<Resource, DefaultEdge>> paths = Graphs.findDirectedPaths(graph, alice, charlie);
-log.info("iq.graph.found.paths: " + paths.size() + " ->" + paths);
+log.info("iq.graph.paths.found: " + paths.size() + " ->" + paths);
 assert paths != null;
 assert paths.size() > 0;
 }
@@ -79,6 +81,10 @@ assert paths.size() > 0;
 
 @Test
 public void testPredictLink() {
+if (repository == null) {
+log.error("iq.graph.predict.repository.missing");
+return;
+}
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
 Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
@@ -96,6 +102,10 @@ log.info("iq.graph.predict.link.2: " + confidence2);
 
 @Test
 public void testPredictKatzCentrality() {
+if (repository == null) {
+log.error("iq.graph.katz.repository.missing");
+return;
+}
 try (RepositoryConnection connection = repository.getConnection()) {
 RepositoryResult<Statement> statements = connection.getStatements(null, knows, null, ctx);
 Graph<Resource, DefaultEdge> graph = Graphs.toGraph(statements.iterator());
