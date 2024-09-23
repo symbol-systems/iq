@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
 <artifactId>iq-rdf4j</artifactId>
 <packaging>jar</packaging>
 
-<name>IQ Facts</name>
+<name>IQ RDF</name>
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
@@ -34,12 +34,6 @@
 <timezone>+11</timezone>
 </developer>
 </developers>
-<licenses>
-<license>
-<name>GNU Affero General Public License v3.0</name>
-<url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-<distribution>repo</distribution>
-</license></licenses>
 
 <scm>
 <url>github.com/symbol-systems/iq-rdf4j.git</url>
@@ -69,7 +63,8 @@
 <logback.version>1.5.3</logback.version>
 <camel.version>4.0.0-M1</camel.version>
 <handlebars.version>4.3.1</handlebars.version>
-<rdf4j.version>4.3.12</rdf4j.version>
+<!--  -->
+<rdf4j.version>5.0.2</rdf4j.version>
 <groovy.version>5.0.0-alpha-8</groovy.version>
 
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
@@ -137,25 +132,6 @@
 </goals>
 </execution>
 </executions>
-<dependencies>
-<!--<dependency>-->
-<!--<groupId>org.codehaus.groovy</groupId>-->
-<!--<artifactId>groovy-eclipse-compiler</artifactId>-->
-<!--<version>${groovy-eclipse-compiler.version}</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-<!--<groupId>org.codehaus.groovy</groupId>-->
-<!--<artifactId>groovy-eclipse-batch</artifactId>-->
-<!--<version>${groovy-eclipse-batch.version}</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-<!--<groupId>org.apache.groovy</groupId>-->
-<!--<artifactId>groovy-all</artifactId>-->
-<!--<version>${groovy.version}</version>-->
-<!--<type>pom</type>-->
-<!--</dependency>-->
-
-</dependencies>
 </plugin>
 </plugins>
 </build>
@@ -184,29 +160,20 @@
 <dependency>
 <groupId>org.eclipse.rdf4j</groupId>
 <artifactId>rdf4j-storage</artifactId>
-<version>${rdf4j.version}</version>
 <type>pom</type>
 </dependency>
 
 <dependency>
 <groupId>org.eclipse.rdf4j</groupId>
 <artifactId>rdf4j-model</artifactId>
-<version>${rdf4j.version}</version>
-<type>pom</type>
 </dependency>
 
 <dependency>
 <groupId>org.eclipse.rdf4j</groupId>
 <artifactId>rdf4j-client</artifactId>
-<version>${rdf4j.version}</version>
 <type>pom</type>
 </dependency>
-<!--<dependency>-->
-<!--<groupId>commons-codec</groupId>-->
-<!--<artifactId>commons-codec</artifactId>-->
-<!--<version>1.15</version>-->
-<!--<scope>compile</scope>-->
-<!--</dependency>-->
+
 <dependency>
 <groupId>org.springframework</groupId>
 <artifactId>spring-context</artifactId>
@@ -230,6 +197,14 @@
 <dependency>
 <groupId>org.jetbrains</groupId>
 <artifactId>annotations</artifactId>
+</dependency>
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-docker</artifactId>
+</dependency>
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-buildpack</artifactId>
 </dependency>
 <dependency>
 <groupId>org.testng</groupId>

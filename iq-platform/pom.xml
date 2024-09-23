@@ -1,20 +1,18 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
- xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-platform</artifactId>
-<name>IQ Platform </name>
+<name>IQ Platform</name>
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -92,29 +90,37 @@
 </dependency>
 <dependency>
 <groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-docker</artifactId>
+</dependency>
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-buildpack</artifactId>
+</dependency>
+
+<dependency>
+<groupId>io.quarkus</groupId>
 <artifactId>quarkus-junit5</artifactId>
 <scope>test</scope>
 </dependency>
+
 <dependency>
 <groupId>io.rest-assured</groupId>
 <artifactId>rest-assured</artifactId>
 <scope>test</scope>
+<!--<scope>test</scope>-->
 </dependency>
 
+<!--  Tika  -->
 <dependency>
 <groupId>com.squareup.okhttp3</groupId>
 <artifactId>okhttp</artifactId>
 <version>4.12.0</version>
 </dependency>
-
 <dependency>
 <groupId>com.squareup.okhttp3</groupId>
 <artifactId>mockwebserver</artifactId>
 <version>4.12.0</version>
-<!--<scope>test</scope>-->
 </dependency>
-
-<!--  Tika  -->
 <dependency>
 <groupId>io.quarkiverse.tika</groupId>
 <artifactId>quarkus-tika</artifactId>
@@ -124,18 +130,6 @@
 <groupId>org.apache.tika</groupId>
 <artifactId>tika-core</artifactId>
 <version>2.8.0</version>
-</dependency>
-<dependency>
-<groupId>org.apache.tika</groupId>
-<artifactId>tika-parsers</artifactId>
-<version>2.8.0</version>
-<type>pom</type>
-</dependency>
-<dependency>
-<groupId>org.apache.tika</groupId>
-<artifactId>tika-parsers-standard-package</artifactId>
-<version>2.8.0</version>
-<type>pom</type>
 </dependency>
 
 <!-- Virtual File System-->
@@ -150,6 +144,18 @@
 <!--<version>5.3.1</version>-->
 <!--</dependency>-->
 
+<dependency>
+<groupId>org.apache.tika</groupId>
+<artifactId>tika-parsers</artifactId>
+<version>2.8.0</version>
+<type>pom</type>
+</dependency>
+<dependency>
+<groupId>org.apache.tika</groupId>
+<artifactId>tika-parsers-standard-package</artifactId>
+<version>2.8.0</version>
+<type>pom</type>
+</dependency>
 <dependency>
 <groupId>org.apache.commons</groupId>
 <artifactId>commons-vfs2</artifactId>
@@ -305,11 +311,8 @@
 </goals>
 <configuration>
 <systemPropertyVariables>
-<native.image.path>
-${project.build.directory}/${project.build.finalName}-runner
-</native.image.path>
-<java.util.logging.manager>org.jboss.logmanager.LogManager
-</java.util.logging.manager>
+<native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 <!--<maven.home>${maven.home}</maven.home>-->
 </systemPropertyVariables>
 </configuration>

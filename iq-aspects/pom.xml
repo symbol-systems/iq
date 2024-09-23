@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -34,15 +34,9 @@
 <timezone>+11</timezone>
 </developer>
 </developers>
-<licenses>
-<license>
-<name>GNU Affero General Public License v3.0</name>
-<url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-<distribution>repo</distribution>
-</license></licenses>
 
 <scm>
-<url>github.com/symbol-systems/iq-todo.git</url>
+<url>github.com/symbol-systems/iq.git</url>
 <connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
 </scm>
 
@@ -223,7 +217,7 @@
 <version>2.1.0-alpha1</version>
 </dependency>
 
-<dependency>
+<!-- <dependency>
 <groupId>org.jboss.slf4j</groupId>
 <artifactId>slf4j-jboss-logmanager</artifactId>
 </dependency>
@@ -232,8 +226,16 @@
 <groupId>org.jboss.logmanager</groupId>
 <artifactId>jboss-logmanager</artifactId>
 <version>3.0.4.Final</version>
-</dependency>
+</dependency> -->
 
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-docker</artifactId>
+</dependency>
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-buildpack</artifactId>
+</dependency>
 <dependency>
 <groupId>org.testng</groupId>
 <artifactId>testng</artifactId>

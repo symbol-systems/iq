@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -34,12 +34,6 @@
 <timezone>+11</timezone>
 </developer>
 </developers>
-<licenses>
-<license>
-<name>GNU Affero General Public License v3.0</name>
-<url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-<distribution>repo</distribution>
-</license></licenses>
 
 <scm>
 <url>github.com/symbol-systems/iq-skeleton.git</url>
@@ -68,7 +62,7 @@
 <logback.version>1.5.3</logback.version>
 <camel.version>4.0.0-M1</camel.version>
 <handlebars.version>4.3.1</handlebars.version>
-<rdf4j.version>4.3.12</rdf4j.version>
+
 <groovy.version>5.0.0-alpha-8</groovy.version>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
@@ -156,7 +150,6 @@
 </plugin>
 </plugins>
 </build>
-<repositories></repositories>
 
 <!-- Project dependencies -->
 <dependencies>
@@ -204,14 +197,23 @@
 <version>${kotlin.version}</version>
 </dependency>
 <dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-docker</artifactId>
+</dependency>
+<dependency>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-container-image-buildpack</artifactId>
+</dependency>
+<dependency>
 <groupId>org.jetbrains.kotlin</groupId>
 <artifactId>kotlin-test</artifactId>
 <version>${kotlin.version}</version>
 <scope>test</scope>
 </dependency>
 <dependency>
-<groupId>org.testng</groupId>
-<artifactId>testng</artifactId>
+<groupId>io.quarkus</groupId>
+<artifactId>quarkus-junit5</artifactId>
+<scope>test</scope>
 </dependency>
 </dependencies>
 

@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The {@code FactFinder} class extends {@link TextFinder} and provides additional methods
+ * The {@code FactFinder} class extends {@link TextFinder} and provides
+ * additional methods
  * for searching facts in a RDF repository based on text embeddings.
  */
 public class FactFinder extends TextFinder {
@@ -43,24 +44,24 @@ this.repository = repository;
 }
 
 public FactFinder(Repository repository, File storeHome) {
-this(repository, loadStore(storeHome), null, 10, 0.8 );
+this(repository, loadStore(storeHome), null, 10, 0.8);
 this.storePath = storeHome;
 }
 
 public FactFinder(Repository repository, File storeHome, EmbeddingModel model, int maxResults, double relevancy) {
-this(repository, loadStore(storeHome), model, maxResults, relevancy );
+this(repository, loadStore(storeHome), model, maxResults, relevancy);
 this.storePath = storeHome;
 }
 
-public FactFinder(Repository repository, EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults, double minScore) {
-super(store,model, maxResults, minScore);
+public FactFinder(Repository repository, EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults,
+double minScore) {
+super(store, model, maxResults, minScore);
 this.repository = repository;
 }
 
 public Model search(String text, String query) {
 return search(text, query, maxResults, minScore);
 }
-
 
 /**
  * Searches for facts based on the provided text and SPARQL query.
@@ -72,14 +73,15 @@ return search(text, query, maxResults, minScore);
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(String text, String sparql, int maxResults, double minScore) {
-try ( RepositoryConnection connection = repository.getConnection()) {
+try (RepositoryConnection connection = repository.getConnection()) {
 GraphQuery query = connection.prepareGraphQuery(sparql);
 return search(text, query, maxResults, minScore);
 }
 }
 
 /**
- * Searches for facts based on the provided text, SPARQL query, and embedding model.
+ * Searches for facts based on the provided text, SPARQL query, and embedding
+ * model.
  *
  * @param text   The input text for embedding and searching.
  * @param query  The prepared SPARQL graph query.
@@ -93,9 +95,10 @@ return search(model, text, query, maxResults, minScore);
 }
 
 /**
- * Searches for facts based on the provided text then use SPARQL query to populate the model.
+ * Searches for facts based on the provided text then use SPARQL query to
+ * populate the model.
  *
- * @param model The model to query
+ * @param model  The model to query
  * @param text   The input text for embedding and searching.
  * @param query  The prepared SPARQL graph query.
  * @param maxResults The maximum number of results to retrieve.
@@ -103,28 +106,31 @@ return search(model, text, query, maxResults, minScore);
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(Model model, String text, GraphQuery query, int maxResults, double minScore) {
-List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
-if (found.isEmpty()) return model;
+List<EmbeddingMatch<TextSegment>> found = find(embed(text), maxResults, minScore);
+if (found.isEmpty())
+return model;
 
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
 String id = textSegmentEmbeddingMatch.embeddingId();
 log.info("search.match: {}", id);
 IRI iri = Values.iri(id);
 query.setBinding("this", iri);
-try (GraphQueryResult result = query.evaluate()){
-while(result.hasNext()) {
+try (GraphQueryResult result = query.evaluate()) {
+while (result.hasNext()) {
 model.add(result.next());
-};
+}
+;
 }
 }
-log.info("model.size: {}", model.size());
+log.info("search.count: {}", model.size());
 return model;
 }
 
 /**
- * Searches for facts based on the provided text then use SPARQL query to populate the model.
+ * Searches for facts based on the provided text then use SPARQL query to
+ * populate the model.
  *
- * @param model The model to query
+ * @param model  The model to query
  * @param text   The input text for embedding and searching.
  * @param connection The RepositoryConnection for graph lookup.
  * @param maxResults The maximum number of results to retrieve.
@@ -132,8 +138,9 @@ return model;
  * @return A RDF {@link Model} containing the found facts.
  */
 public Model search(Model model, String text, RepositoryConnection connection, int maxResults, double minScore) {
-List<EmbeddingMatch<TextSegment>>  found = find(embed(text), maxResults, minScore);
-if (found.isEmpty()) return model;
+List<EmbeddingMatch<TextSegment>> found = find(embed(text), maxResults, minScore);
+if (found.isEmpty())
+return model;
 Set<String> dupes = new HashSet<>();
 for (EmbeddingMatch<TextSegment> textSegmentEmbeddingMatch : found) {
 String id = textSegmentEmbeddingMatch.embeddingId();

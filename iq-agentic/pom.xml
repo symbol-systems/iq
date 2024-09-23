@@ -1,12 +1,10 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
- xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-agentic</artifactId>
@@ -14,7 +12,7 @@
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -46,7 +44,7 @@
 <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-persona</artifactId>
-   <version>0.81.3</version>
+   <version>0.81.5</version>
 </dependency>
 
 <dependency>
@@ -54,20 +52,12 @@
 <artifactId>quarkus-junit5</artifactId>
 <scope>test</scope>
 </dependency>
-<dependency>
-<groupId>org.testng</groupId>
-<artifactId>testng</artifactId>
-</dependency>
-<dependency>
-<groupId>org.testng</groupId>
-<artifactId>testng</artifactId>
-</dependency>
 </dependencies>
 <build>
 <plugins>
-<plugin>
+<!--<plugin>
 <groupId>io.quarkus</groupId>
-<artifactId>quarkus-maven-plugin</artifactId>
+<artifactId>quarkus-maven-plugin</artifactId> -->
 <!--<version>${quarkus.version}</version>-->
 <!--<extensions>true</extensions>-->
 <!--<executions>-->
@@ -79,7 +69,7 @@
 <!--</goals>-->
 <!--  </execution>-->
 <!--</executions>-->
-</plugin>
+<!-- </plugin> -->
 <plugin>
 <artifactId>maven-surefire-plugin</artifactId>
 <version>${surefire.plugin.version}</version>
@@ -179,11 +169,8 @@
 </goals>
 <configuration>
 <systemPropertyVariables>
-<native.image.path>
-${project.build.directory}/${project.build.finalName}-runner
-</native.image.path>
-<java.util.logging.manager>org.jboss.logmanager.LogManager
-</java.util.logging.manager>
+<native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 <!--<maven.home>${maven.home}</maven.home>-->
 </systemPropertyVariables>
 </configuration>

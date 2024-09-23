@@ -14,22 +14,24 @@ import java.util.Map;
 public class Display {
 protected static final Logger log = LoggerFactory.getLogger(Display.class);
 
-public static void display(List<Map<String,Object>> models) {
-if (models==null) return;
+public static void display(List<Map<String, Object>> models) {
+if (models == null)
+return;
 models.forEach(Display::display);
 }
 
-public static void display(Map<String,Object> model) {
+public static void display(Map<String, Object> model) {
 Object label = model.get("label");
-if (label!=null) {
-System.out.println("> " + label+" @ "+model.get(NS.KEY_AT_ID));
+if (label != null) {
+System.out.println("> " + label + " @ " + model.get(NS.KEY_AT_ID));
 } else {
 System.out.println("> " + model);
 }
 
 }
-public static void table(PrintStream out, List<Map<String,Object>> models) {
-table(out, models, "%30s %50s\n", new String[]{"@id", "label"});
+
+public static void table(PrintStream out, List<Map<String, Object>> models) {
+table(out, models, "%30s %50s\n", new String[] { "@id", "label" });
 }
 
 public static void table(PrintStream out, List<Map<String, Object>> models, String format, String[] fields) {
@@ -49,8 +51,7 @@ out.println();
 }
 }
 
-
-public static List<Map<String,Object>> models(IQ iq, String queryPath) {
+public static List<Map<String, Object>> models(IQ iq, String queryPath) {
 queryPath = normalizeQuery(queryPath);
 IRI queryIRI = iq.toIRI(queryPath);
 // log.info("iq.models.sparql: {} as {}" , queryPath, queryIRI);
@@ -60,10 +61,9 @@ return models.models(queryIRI);
 
 public static String normalizeQuery(String query) {
 if (!query.contains("/")) {
-query = "queries/"+query;
+query = "" + query;
 }
 return query;
 }
-
 
 }

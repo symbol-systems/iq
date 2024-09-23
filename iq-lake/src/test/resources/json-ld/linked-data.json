@@ -1,7 +1,8 @@
-{ "@context": "https://schema.org",
+{
+  "@context": "https://schema.org/",
   "@type": "Organization",
   "name": "Symbol Systems",
-  "legalName" : "Symbol Systems LLC",
+  "legalName": "Symbol Systems LLC",
   "url": "http://symbol.systems",
   "logo": "http://symbol.systems/logo.png",
   "foundingDate": "2024",
@@ -9,7 +10,8 @@
 {
   "@type": "Person",
   "name": "JO"
-}],
+}
+  ],
   "address": {
 "@type": "PostalAddress",
 "streetAddress": "123 Mild West Street",

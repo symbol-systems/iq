@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.io.StreamCopy;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.util.Stopwatch;
@@ -57,7 +57,7 @@ public class BootstrapLake implements I_Self {
 		this.forceDeployRDF = forceDeployRDF;
 	}
 
-	public BootstrapLake(IQ iq) throws RepositoryException {
+	public BootstrapLake(IQStore iq) throws RepositoryException {
 		init(iq.getSelf(), iq.getConnection());
 	}
 

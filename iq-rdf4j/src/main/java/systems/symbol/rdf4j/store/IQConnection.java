@@ -8,7 +8,7 @@ import static java.util.UUID.randomUUID;
 /**
  * For contextual queries
  */
-public class IQConnection implements IQ, AutoCloseable {
+public class IQConnection implements IQStore, AutoCloseable {
 RepositoryConnection connection;
 IRI id;
 
@@ -22,7 +22,6 @@ this.id = connection.getValueFactory().createIRI(id);
 this.connection = connection;
 }
 
-
 @Override
 public RepositoryConnection getConnection() {
 return connection;
@@ -30,7 +29,8 @@ return connection;
 
 @Override
 public void close() {
-if (connection!=null && connection.isOpen()) connection.close();
+if (connection != null && connection.isOpen())
+connection.close();
 }
 
 @Override
