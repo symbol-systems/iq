@@ -28,7 +28,7 @@ public class GraphsTest {
     // TripleSource triples;
 
     @BeforeAll
-    static void bootstrap() throws IOException {
+    public static void bootstrap() throws IOException {
         repository = new BootstrapRepository();
         ctx = repository.load(new File("src/test/resources/"), IQ_NS.TEST);
         log.info("iq.graph.loaded: {}", ctx);

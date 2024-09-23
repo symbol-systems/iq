@@ -1,12 +1,10 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-       <version>0.81.3</version>
+       <version>0.81.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>iq-run-apis</artifactId>
@@ -14,7 +12,7 @@
     <description>IQ - operating environment for cognitive AI.</description>
     <url>https://symbol.systems</url>
 
-   <version>0.81.3</version>
+   <version>0.81.5</version>
     <properties>
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -43,6 +41,12 @@
             <groupId>systems.symbol</groupId>
             <artifactId>iq-platform</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>systems.symbol</groupId>
+            <artifactId>iq-agentic</artifactId>
+           <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -88,25 +92,23 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-docker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-buildpack</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>mockwebserver</artifactId>
-            <version>4.12.0</version>
 <!--            <scope>test</scope>-->
         </dependency>
 <!--        <dependency>-->
@@ -121,15 +123,19 @@
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
         <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>systems.symbol</groupId>
-            <artifactId>iq-agentic</artifactId>
-           <version>0.81.3</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -244,12 +250,8 @@
                                 </goals>
                                 <configuration>
                                     <systemPropertyVariables>
-                                        <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner
-                                        </native.image.path>
-                                        <java.util.logging.manager>org.jboss.logmanager.LogManager
-                                        </java.util.logging.manager>
-                                        <!--                    <maven.home>${maven.home}</maven.home>-->
+                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>

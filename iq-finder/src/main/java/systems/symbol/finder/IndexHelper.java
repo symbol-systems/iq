@@ -2,6 +2,7 @@ package systems.symbol.finder;
 
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryResult;
@@ -46,6 +47,16 @@ public class IndexHelper {
             finder.store(s.getSubject().stringValue(), s.getObject().stringValue());
             // log.info("indexed.fact: {} -> {}", s.getSubject().stringValue(),
             // s.getObject());
+            count++;
+        }
+        return count;
+    }
+
+    public static long index(TextFinder finder, GraphQueryResult result) {
+        long count = 0;
+        while (result.hasNext()) {
+            Statement s = result.next();
+            finder.store(s.getSubject().stringValue(), s.getObject().stringValue());
             count++;
         }
         return count;

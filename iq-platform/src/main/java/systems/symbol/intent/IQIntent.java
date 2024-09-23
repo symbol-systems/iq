@@ -1,6 +1,6 @@
 package systems.symbol.intent;
 
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import org.eclipse.rdf4j.model.IRI;
@@ -19,18 +19,20 @@ import java.util.Set;
 
 public abstract class IQIntent implements I_Intent {
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    protected IQ iq;
+    protected IQStore iq;
     protected IQScriptCatalog library;
     protected Model model;
     static protected SimpleValueFactory vf = SimpleValueFactory.getInstance();
     protected IRI self;
-    protected IRI SELF = vf.createIRI("urn:"+getClass().getCanonicalName());
-    protected IQIntent() {}
+    protected IRI SELF = vf.createIRI("urn:" + getClass().getCanonicalName());
 
-    public void init(IQ iq, Model model, IRI self) throws IOException {
+    protected IQIntent() {
+    }
+
+    public void init(IQStore iq, Model model, IRI self) throws IOException {
         this.iq = iq;
         library = new IQScriptCatalog(iq);
-        this.model = model == null ? new DynamicModelFactory().createEmptyModel(): model;
+        this.model = model == null ? new DynamicModelFactory().createEmptyModel() : model;
         this.self = self;
     }
 
@@ -51,6 +53,6 @@ public abstract class IQIntent implements I_Intent {
     }
 
     public String toString() {
-        return this.self.stringValue()+"@"+ SELF;
+        return this.self.stringValue() + "@" + SELF;
     }
 }

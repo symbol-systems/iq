@@ -30,7 +30,7 @@ class JsonLdLinkExtractorTest {
     }
 
     // @Test
-    void testParseInlineBody() throws Exception {
+    public void testParseInlineBody() throws Exception {
         Model model = testParse(new File(testHome, "inline-body.xhtml"));
         assert !model.isEmpty();
         assert model.size() > 10;
@@ -40,7 +40,7 @@ class JsonLdLinkExtractorTest {
     }
 
     @Test
-    void testParseLinks() throws Exception {
+    public void testParseLinks() throws Exception {
         Model model = testParse(new File(testHome, "links.xhtml"));
         assert !model.isEmpty();
         assert model.size() > 10;
@@ -49,13 +49,15 @@ class JsonLdLinkExtractorTest {
         log.info("json-ld.dump.links: {} triples @ {}", model.size(), file);
     }
 
-    Model testParse(File from) throws Exception {
+    public Model testParse(File from) throws Exception {
         Model model = new LinkedHashModel();
         RDFModelIngestor rdfModelIngestor = new RDFModelIngestor(model, RDFFormat.JSONLD);
         log.info("json-ld.ingest: " + model.size() + " @ " + from);
 
         try (FileSystemManager vfs = new VFS()) {
             FileContentConverter ingest = new FileContentConverter(new JsonLdLinkExtractor(vfs, rdfModelIngestor));
+            System.out.printf("json-ld.ingest: %s -> {}", from, Arrays.toString(vfs.getSchemes()));
+
             log.info("json-ld.ingested: {} -> {}", from, Arrays.toString(vfs.getSchemes()));
             FileObject fileObject = vfs.toFileObject(from);
             ingest.accept(fileObject);

@@ -1,7 +1,6 @@
 package systems.symbol.finder;
 
 import dev.langchain4j.data.embedding.Embedding;
-import org.testng.annotations.Test;
 
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.io.File;
 
+import org.junit.jupiter.api.Test;
 //    mvn test -Dtest="TextFinderTest"
 
 public class TextFinderTest {
@@ -36,7 +36,7 @@ public class TextFinderTest {
 
     @Test
     public void testSaveStore() throws IOException {
-        File storePath = File.createTempFile("text","embed");
+        File storePath = File.createTempFile("text", "embed");
         TextFinder finder = new TextFinder(storePath);
 
         finder.store("simple", "This is an simple sentence");

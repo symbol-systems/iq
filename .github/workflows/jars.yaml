@@ -1,4 +1,4 @@
-name: Build IQ - Java
+name: Build IQ Jars
 
 on: [push]
 

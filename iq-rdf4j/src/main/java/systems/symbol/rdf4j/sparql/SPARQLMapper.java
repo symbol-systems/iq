@@ -2,7 +2,7 @@ package systems.symbol.rdf4j.sparql;
 
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.rdf4j.NS;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.rdf4j.util.UsefulSPARQL;
 import systems.symbol.rdf4j.util.ValueTypeConverter;
@@ -36,7 +36,7 @@ import static systems.symbol.rdf4j.NS.KEY_SELF;
 public class SPARQLMapper {
     private static final Logger log = LoggerFactory.getLogger(SPARQLMapper.class);
     private static final DynamicModelFactory dmf = new DynamicModelFactory();
-    protected IQ iq;
+    protected IQStore iq;
     protected int maxExecutionTime = 3000; // 3 seconds ??
     protected boolean inferred = true;
 
@@ -46,7 +46,7 @@ public class SPARQLMapper {
      *
      * @param iq The IQ object representing the connection to the RDF repository.
      */
-    public SPARQLMapper(IQ iq) {
+    public SPARQLMapper(IQStore iq) {
         this(iq, true);
     }
 
@@ -59,7 +59,7 @@ public class SPARQLMapper {
      * @param inferred A boolean flag indicating whether to include inferred
      *                 statements in queries.
      */
-    public SPARQLMapper(IQ iq, boolean inferred) {
+    public SPARQLMapper(IQStore iq, boolean inferred) {
         assert iq != null;
         this.iq = iq;
         this.inferred = inferred;
@@ -73,23 +73,20 @@ public class SPARQLMapper {
      * @return A map of SPARQL queries with associated IRI (Internationalized
      *         Resource Identifier) keys.
      */
-    public static Map<IRI, String> defaults(IQ iq) {
+    public static Map<IRI, String> defaults(IQStore iq) {
         Map<IRI, String> queries = new HashMap<>();
-        queries.put(iq.toIRI("queries/index"), UsefulSPARQL.COUNT);
-        queries.put(iq.toIRI("queries/a"), UsefulSPARQL.TYPES_OF);
-        queries.put(iq.toIRI("queries/types"), UsefulSPARQL.TYPES_OF);
-        queries.put(iq.toIRI("queries/concepts"), UsefulSPARQL.SKOS_CONCEPTS);
-        queries.put(iq.toIRI("queries/subjects"), UsefulSPARQL.SUBJECTS);
-        queries.put(iq.toIRI("queries/predicates"), UsefulSPARQL.PREDICATES);
-        queries.put(iq.toIRI("queries/objects"), UsefulSPARQL.OBJECTS);
-        queries.put(iq.toIRI("queries/contexts"), UsefulSPARQL.GRAPHS);
+        queries.put(iq.toIRI("a"), UsefulSPARQL.TYPES_OF);
+        queries.put(iq.toIRI("skos"), UsefulSPARQL.SKOS_CONCEPTS);
+        queries.put(iq.toIRI("subjects"), UsefulSPARQL.SUBJECTS);
+        queries.put(iq.toIRI("predicates"), UsefulSPARQL.PREDICATES);
+        queries.put(iq.toIRI("objects"), UsefulSPARQL.OBJECTS);
+        queries.put(iq.toIRI("contexts"), UsefulSPARQL.GRAPHS);
 
-        queries.put(iq.toIRI("queries/iq-scripts"), UsefulSPARQL.SCRIPTS); // any script
-        queries.put(iq.toIRI("queries/iq-models"), UsefulSPARQL.MODELS); // sparql mimes
-        queries.put(iq.toIRI("queries/iq-actions"), UsefulSPARQL.ACTIONS); // any executable
-        queries.put(iq.toIRI("queries/iq-meta-actions"), UsefulSPARQL.META_ACTIONS);
-        queries.put(iq.toIRI("queries/iq-render"), UsefulSPARQL.RENDER);
-        queries.put(iq.toIRI("queries/acl-authorized"), UsefulSPARQL.ACL_AUTHORIZED);
+        queries.put(iq.toIRI("index"), UsefulSPARQL.INDEXER);
+        queries.put(iq.toIRI("iq-count"), UsefulSPARQL.COUNT);
+        queries.put(iq.toIRI("iq-scripts"), UsefulSPARQL.SCRIPTS); // rdf:value mimes
+        queries.put(iq.toIRI("iq-models"), UsefulSPARQL.SPARQLS); // sparql mimes
+        queries.put(iq.toIRI("iq"), UsefulSPARQL.META_ACTIONS);
         return queries;
     }
 

@@ -18,7 +18,7 @@ import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
@@ -30,13 +30,17 @@ import java.util.Set;
 /**
  * An intent implementation that executes scripts using SPARQL.
  *
- * The Select intent executes SPARQL queries stored in the IQScriptCatalog and returns the results
+ * The Select intent executes SPARQL queries stored in the IQScriptCatalog and
+ * returns the results
  * as a named list of maps stored in the bindings object.
  *
- * It embodies an agent's capability to retrieve structured/tabular data from arbitrary RDF graphs.
+ * It embodies an agent's capability to retrieve structured/tabular data from
+ * arbitrary RDF graphs.
  *
- * This intent provides a versatile mechanism for querying RDF, allowing agents to dynamically
- * retrieve information based on their internal state, context, through interpolated queries.
+ * This intent provides a versatile mechanism for querying RDF, allowing agents
+ * to dynamically
+ * retrieve information based on their internal state, context, through
+ * interpolated queries.
  *
  * @author Symbol Systems
  * @see I_Intent
@@ -46,13 +50,14 @@ import java.util.Set;
 public class Construct implements I_Intent, I_Self {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final IQScriptCatalog catalog;
-    private final IQ iq;
+    private final IQStore iq;
 
     /**
-     * Constructs a new SPARQL intent with the provided Connection and self identity.
+     * Constructs a new SPARQL intent with the provided Connection and self
+     * identity.
      *
-     * @param self  The self identity of the agent.
-     * @param conn  The RepositoryConnection of the agent.
+     * @param self The self identity of the agent.
+     * @param conn The RepositoryConnection of the agent.
      */
     public Construct(IRI self, RepositoryConnection conn) {
         this.iq = new IQConnection(self, conn);
@@ -64,9 +69,9 @@ public class Construct implements I_Intent, I_Self {
      * Creates a new bindings object for script execution.
      * Executes the SPARQL query based on the provided actor and resource.
      *
-     * @param actor   The actor of the execution.
-     * @param state  The resource containing the script.
-     * @param my        Bindings used in query interpolation.
+     * @param actor The actor of the execution.
+     * @param state The resource containing the script.
+     * @param my    Bindings used in query interpolation.
      * @return A set of IRIs indicating the completion of execution.
      */
     @Override
@@ -79,7 +84,8 @@ public class Construct implements I_Intent, I_Self {
             MyFacade.dump(my, System.out);
             log.info("sparql.construct: {}", sparql);
             MyFacade.dump(bindings, System.out);
-            if (sparql==null||sparql.isEmpty()) return done;
+            if (sparql == null || sparql.isEmpty())
+                return done;
             GraphQuery updated = iq.getConnection().prepareGraphQuery(sparql);
 
             StringWriter writer = new StringWriter();

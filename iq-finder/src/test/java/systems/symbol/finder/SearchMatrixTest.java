@@ -6,12 +6,17 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.util.Collection;
 
 public class SearchMatrixTest {
@@ -20,7 +25,7 @@ public class SearchMatrixTest {
     private EmbeddingModel model;
     private static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() {
         model = new AllMiniLmL6V2EmbeddingModel();
         searchMatrix = new SearchMatrix(model);
@@ -34,8 +39,8 @@ public class SearchMatrixTest {
 
         searchMatrix.reindex(entity, content, concept);
 
-        Assert.assertNotNull(searchMatrix.byConcept(concept));
-        Assert.assertTrue(searchMatrix.indexed(entity));
+        assertNotNull(searchMatrix.byConcept(concept));
+        assertTrue(searchMatrix.indexed(entity));
     }
 
     @Test
@@ -49,12 +54,12 @@ public class SearchMatrixTest {
 
         Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-        Assert.assertNotNull(results);
-        Assert.assertEquals(results.size(), 1); // Should find exactly one result
+        assertNotNull(results);
+        assertEquals(results.size(), 1); // Should find exactly one result
         I_Found<IRI> found = results.iterator().next();
-        Assert.assertNotNull(found);
+        assertNotNull(found);
         System.out.println("search.matrix.found:" + found.intent() + " -> " + found.score());
-        Assert.assertEquals(found.intent(), entity);
+        assertEquals(found.intent(), entity);
     }
 
     @Test
@@ -74,8 +79,8 @@ public class SearchMatrixTest {
 
         Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-        Assert.assertNotNull(results);
-        Assert.assertTrue(results.isEmpty());
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -83,8 +88,8 @@ public class SearchMatrixTest {
         String query = "Nonexistent content";
         Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
-        Assert.assertNotNull(results);
-        Assert.assertTrue(results.isEmpty());
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -98,12 +103,12 @@ public class SearchMatrixTest {
 
         Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.0);
 
-        Assert.assertNotNull(results);
-        Assert.assertEquals(results.size(), 1);
+        assertNotNull(results);
+        assertEquals(results.size(), 1);
         System.out.println("search.matrix.score-low:" + results);
         I_Found<IRI> found = results.iterator().next();
-        Assert.assertNotNull(found);
+        assertNotNull(found);
         System.out.println("search.matrix.found:" + found.intent() + " -> " + found.score());
-        Assert.assertEquals(found.intent(), entity);
+        assertEquals(found.intent(), entity);
     }
 }

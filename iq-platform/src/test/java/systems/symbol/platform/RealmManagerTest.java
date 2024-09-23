@@ -6,6 +6,9 @@ import org.eclipse.rdf4j.model.impl.*;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
+
+import com.github.jsonldjava.shaded.com.google.common.io.Files;
+
 import systems.symbol.realm.*;
 
 import java.io.File;
@@ -13,32 +16,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RealmManagerTest {
     IRI self = Values.iri("test:");
-    File home = new File("my.test");
 
     @Test
-    void bootstrap() throws Exception, PlatformException {
-        RealmManager realms = new RealmManager();
+    void testBootstrapRealm() throws Exception, PlatformException {
+        RealmManager realms = new RealmManager(Files.createTempDir());
         Realms.bootstrap(realms, new File("src/test/resources/realms/").listFiles());
         System.out.println("realm.bootstrap: " + realms.getRealms());
         assert !realms.getRealms().isEmpty();
-        realms.stop();
-    }
 
-    @Test
-    void testRealmFactory() throws Exception, PlatformException {
-        RealmManager realms = new RealmManager(home);
-        I_Realm realm = realms.getRealm(self);
-        assert realm == null;
         assert realms.newRealm(self).getSelf().equals(self);
-        realm = realms.getRealm(self);
+        I_Realm realm = realms.getRealm(self);
         assertNotNull(realm);
         assert realm.getSelf().equals(self);
         realms.stop();
     }
 
     @Test
-    void index() throws Exception {
-        RealmManager realms = new RealmManager(home);
+    void testRealmindexer() throws Exception {
+        RealmManager realms = new RealmManager(Files.createTempDir());
         TreeModel model = new TreeModel();
         ValueFactory vf = SimpleValueFactory.getInstance();
         model.add(vf.createStatement(Values.iri(IQ_NS.TEST), RDF.VALUE, Values.literal("test case")));

@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.81.3</version>
+ <version>0.81.5</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -44,11 +43,11 @@
     <module>iq-rdf4j</module>
     <!-- <module>iq-actions</module> -->
     <!-- <module>iq-camel</module> -->
-    <module>iq-cli</module>
-    <module>iq-cli-devops</module>
-<!--    <module>iq-rdf4j-graphql</module>-->
-<!--    <module>iq-rdf4j-nlp</module>-->
-<!--    <module>iq-codehub</module>-->
+    <!-- <module>iq-cli</module> -->
+    <!-- <module>iq-cli-devops</module> -->
+    <!-- <module>iq-rdf4j-graphql</module> -->
+    <!-- <module>iq-rdf4j-nlp</module> -->
+    <!-- <module>iq-codehub</module> -->
     <module>iq-platform</module>
     <module>iq-lake</module>
     <module>iq-finder</module>
@@ -96,7 +95,7 @@
 
     <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
     <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-    <rdf4j.version>4.3.12</rdf4j.version>
+    <rdf4j.version>5.0.2</rdf4j.version>
 
     <handlebars.version>4.3.1</handlebars.version>
     <langchain4j.version>0.26.1</langchain4j.version>
@@ -122,7 +121,7 @@
         <artifactId>rdf4j-bom</artifactId>
         <version>${rdf4j.version}</version>
         <type>pom</type>
-        <scope>import</scope>
+        <!-- <scope>import</scope> -->
       </dependency>
         <dependency>
           <groupId>org.eclipse.rdf4j</groupId>
@@ -133,7 +132,20 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-client</artifactId>
-        <version>${rdf4j.version}</version>
+            <version>${rdf4j.version}</version>
+          <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+            <version>${rdf4j.version}</version>
+          <!-- <type>pom</type> -->
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model-api</artifactId>
+            <version>${rdf4j.version}</version>
+          <!-- <type>pom</type> -->
         </dependency>
       <dependency>
         <groupId>io.cloudevents</groupId>
@@ -151,11 +163,11 @@
         <artifactId>jaxb-api</artifactId>
         <version>2.3.0</version>
       </dependency>
-      <dependency>
+      <!-- <dependency>
         <groupId>com.apicatalog</groupId>
         <artifactId>titanium-json-ld</artifactId>
         <version>1.4.0</version>
-      </dependency>
+      </dependency> -->
       <dependency>
         <groupId>org.apache.groovy</groupId>
         <artifactId>groovy-all</artifactId>
@@ -350,6 +362,14 @@
 <!--      <groupId>org.webjars</groupId>-->
 <!--      <artifactId>jquery</artifactId>-->
 <!--    </dependency>-->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-buildpack</artifactId>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -558,6 +578,18 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+        <id>native</id>
+        <activation>
+            <property>
+                <name>native</name>
+            </property>
+        </activation>
+        <properties>
+            <skipITs>false</skipITs>
+            <quarkus.package.type>native</quarkus.package.type>
+        </properties>
+    </profile>
     <profile>
       <id>release-sign-artifacts</id>
       <activation>

@@ -12,7 +12,7 @@ import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
@@ -42,7 +42,7 @@ import java.util.Set;
 public class Update implements I_Intent, I_Self {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final IQScriptCatalog catalog;
-    private final IQ iq;
+    private final IQStore iq;
 
     /**
      * Constructs a new SPARQL intent with the provided Connection and self

@@ -17,7 +17,7 @@ public class IQRoutePolicy implements RoutePolicy {
     IRI allowIRI;
 
     public IQRoutePolicy(IQ iq) {
-        this( iq, iq.toIRI("queries/acl/allow.sparql") );
+        this( iq, iq.toIRI("acl/allow.sparql") );
     }
 
     public IQRoutePolicy(IQ iq, IRI queryIRI) {

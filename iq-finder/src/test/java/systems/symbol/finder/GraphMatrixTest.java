@@ -2,13 +2,14 @@ package systems.symbol.finder;
 
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GraphMatrixTest {
 
@@ -17,7 +18,7 @@ public class GraphMatrixTest {
     private BootstrapRepository repo;
     private File assets = new File("assets/triples");
 
-    @BeforeMethod
+    @BeforeEach
     public void setUp() throws IOException {
         model = new AllMiniLmL6V2EmbeddingModel();
         searchMatrix = new SearchMatrix(model);
