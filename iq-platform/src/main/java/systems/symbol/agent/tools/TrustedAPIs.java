@@ -20,7 +20,7 @@ public static I_Secrets trusted(Model model, IRI agent, I_Secrets _secrets) thro
 APISecrets secrets = new APISecrets(_secrets);
 Optional<IRI> name = Models.getPropertyIRI(model, agent, IQ_NS.SECRET);
 if (name.isEmpty()) {
-log.warn("trusted.missing: {}", agent);
+log.warn("trust.missing: {}", agent);
 return secrets;
 }
 String key = name.get().getLocalName();

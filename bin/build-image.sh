@@ -1,1 +1,1 @@
-./mvnw install -Dquarkus.container-image.build=true -D quarkus.container-image.builder=docker
+./mvnw install -Dquarkus.container-image.build=true -Dquarkus.container-image.builder=docker

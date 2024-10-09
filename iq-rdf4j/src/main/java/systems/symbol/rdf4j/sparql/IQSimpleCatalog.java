@@ -27,6 +27,7 @@ queries.put("iq-count", UsefulSPARQL.COUNT);
 queries.put("iq-scripts", UsefulSPARQL.SCRIPTS); // rdf:value mimes
 queries.put("iq-models", UsefulSPARQL.SPARQLS); // sparql mimes
 queries.put("iq", UsefulSPARQL.META_ACTIONS);
+queries.put("self", UsefulSPARQL.SELF);
 }
 
 public String getScript(String query) {

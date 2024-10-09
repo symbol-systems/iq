@@ -18,20 +18,21 @@ public class ModelAPITest {
 private static String VALID_AUTH_HEADER;
 private static final String INVALID_AUTH_HEADER = "Bearer invalid.token";
 private static final String REALM = "QRX";
-private static final String QUERY = "self/aware";
+private static final String QUERY = "ai/iq";
 
 @BeforeEach
 public void setup() throws IOException {
 File jwtFile = new File("./.iq/vault/jwt/" + REALM + ".jwt");
 if (jwtFile.exists()) {
-VALID_AUTH_HEADER = "Bearer "+IOCopier.load(jwtFile);
-System.out.println("test.setup.jwt: "+VALID_AUTH_HEADER);
+VALID_AUTH_HEADER = "Bearer " + IOCopier.load(jwtFile);
+System.out.println("test.setup.jwt: " + VALID_AUTH_HEADER);
 }
 }
 
 @Test
 public void testGraphValidRequest() throws IOException, SecretsException {
-if (VALID_AUTH_HEADER==null) return;;
+if (VALID_AUTH_HEADER == null)
+return;
 
 given()
 .header("Authorization", VALID_AUTH_HEADER)
@@ -46,7 +47,8 @@ given()
 
 @Test
 public void testGraphUnauthorized() {
-if (VALID_AUTH_HEADER==null) return;;
+if (VALID_AUTH_HEADER == null)
+return;
 given()
 .header("Authorization", INVALID_AUTH_HEADER)
 .pathParam("realm", REALM)
@@ -59,7 +61,8 @@ given()
 
 @Test
 public void testGraphRealmNotFound() {
-if (VALID_AUTH_HEADER==null) return;;
+if (VALID_AUTH_HEADER == null)
+return;
 given()
 .header("Authorization", VALID_AUTH_HEADER)
 .pathParam("realm", "oops")
@@ -72,11 +75,12 @@ given()
 
 @Test
 public void testGraphQueryMissing() {
-if (VALID_AUTH_HEADER==null) return;;
+if (VALID_AUTH_HEADER == null)
+return;
 given()
 .header("Authorization", VALID_AUTH_HEADER)
 .pathParam("realm", REALM)
-.pathParam("query", "")
+.pathParam("query", "oops")
 .when()
 .get("/ux/model/{realm}/{query}")
 .then()

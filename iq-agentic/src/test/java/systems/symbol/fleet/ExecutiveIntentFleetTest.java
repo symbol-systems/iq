@@ -12,7 +12,8 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.finder.Recommends;

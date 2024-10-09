@@ -6,10 +6,8 @@ import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.RioSetting;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
-import org.openjdk.nashorn.internal.scripts.JD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

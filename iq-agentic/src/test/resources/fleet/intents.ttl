@@ -65,7 +65,8 @@ iq:prompt "{{my.prompt}}".
 :think
 rdfs:label "You can generate new ideas, plans or thoughts";
 iq:think [
-rdf:value "Generate a plan using the SKOS vocabulary."];
+rdf:value "As an AI, generate your detailed to-do list using common RDF vocabularies."
+];
 .
 :webpage
 rdfs:label "You can visit a webpage vis URL";
