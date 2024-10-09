@@ -8,13 +8,29 @@ runs-on: ubuntu-latest
 
 steps:
   - uses: actions/checkout@v3
+
+  # Install Git LFS
+  - name: Install Git LFS
+run: |
+  sudo apt-get update
+  sudo apt-get install git-lfs
+  git lfs install
+  
+  # Pull the LFS files (like large model files)
+  - name: Pull LFS files
+run: git lfs pull
+
   - name: JDK 21
 uses: actions/setup-java@v3
 with:
   java-version: '21'
   distribution: 'adopt'
+  
+  # Build Maven package
   - name: Build Maven package
 run: mvn --batch-mode --update-snapshots package
+
+  # Publish to GitHub packages
   - name: Publish to GitHub packages
 run: mvn --batch-mode deploy
 env:
