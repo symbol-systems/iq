@@ -12,7 +12,6 @@
     <description>IQ - operating environment for cognitive AI.</description>
     <url>https://symbol.systems</url>
 
-   <version>0.81.5</version>
     <properties>
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>

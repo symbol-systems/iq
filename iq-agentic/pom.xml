@@ -5,6 +5,7 @@
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
         <relativePath>../pom.xml</relativePath>
+        <version>0.81.6</version>
     </parent>
     <artifactId>iq-agentic</artifactId>
     <name>Agentic IQ</name>
