@@ -1,7 +1,7 @@
 package systems.symbol.finder;
 
 import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import org.eclipse.rdf4j.model.*;
@@ -16,6 +16,7 @@ import java.util.*;
 
 public class Recommends {
     private final static Logger log = LoggerFactory.getLogger(Recommends.class);
+    static AllMiniLmL6V2EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
 
     // public static Map<Resource, float[]> index(Model model, IRI predicate) {
     // return index(model, predicate, new AllMiniLmL6V2EmbeddingModel());
@@ -37,7 +38,6 @@ public class Recommends {
     }
 
     public static Map<Resource, Double> similarity(Model model, IRI predicate, String prompt, double threshold) {
-        AllMiniLmL6V2EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
         Response<Embedding> match = embeddingModel.embed(prompt);
         return similarity(match, index(model, predicate, embeddingModel), threshold);
     }
