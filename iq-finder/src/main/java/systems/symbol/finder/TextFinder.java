@@ -2,7 +2,7 @@ package systems.symbol.finder;
 
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
@@ -29,18 +29,21 @@ public class TextFinder implements I_Finder, I_Search<IRI> {
 	public TextFinder() {
 		init(new InMemoryEmbeddingStore<>(), maxResults, minScore);
 	}
+
 	public TextFinder(File storePath) {
 		init(load(storePath), maxResults, minScore);
 		this.storePath = storePath;
 	}
 
 	public TextFinder(EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults, double minScore) {
-		if (model!=null) init(store,model,maxResults, minScore);
-		else init(store,maxResults, minScore);
+		if (model != null)
+			init(store, model, maxResults, minScore);
+		else
+			init(store, maxResults, minScore);
 	}
 
 	public void init(EmbeddingStore<TextSegment> store, int maxResults, double minScore) {
-		init(store,new AllMiniLmL6V2EmbeddingModel(),maxResults,minScore);
+		init(store, new AllMiniLmL6V2EmbeddingModel(), maxResults, minScore);
 	}
 
 	public void init(EmbeddingStore<TextSegment> store, EmbeddingModel model, int maxResults, double minScore) {
@@ -52,7 +55,7 @@ public class TextFinder implements I_Finder, I_Search<IRI> {
 
 	public Embedding embed(String text) {
 		TextSegment segment = TextSegment.from(text);
-return model.embed(segment).content();
+		return model.embed(segment).content();
 	}
 
 	public Embedding store(String id, String text) {
@@ -62,13 +65,16 @@ return model.embed(segment).content();
 	}
 
 	public List<EmbeddingMatch<TextSegment>> find(Embedding embedding, int maxResults, double relevancy) {
-		if (maxResults < 1) maxResults = this.maxResults;
-		if (relevancy < 0.1) relevancy = this.minScore;
+		if (maxResults < 1)
+			maxResults = this.maxResults;
+		if (relevancy < 0.1)
+			relevancy = this.minScore;
 		maxResults = clamp(maxResults, 1, this.maxResults);
 		relevancy = clamp(relevancy, 0.1, 1.0);
-		log.info("find.embedding: {} / {} ", maxResults,relevancy);
+		log.info("find.embedding: {} / {} ", maxResults, relevancy);
 		return store.findRelevant(embedding, maxResults, relevancy);
 	}
+
 	public List<EmbeddingMatch<TextSegment>> find(String text) {
 		return find(embed(text), maxResults, minScore);
 	}
@@ -86,7 +92,8 @@ return model.embed(segment).content();
 	public static EmbeddingStore<TextSegment> loadStore(File storeHome) {
 		if (storeHome.exists()) {
 			InMemoryEmbeddingStore<TextSegment> store = InMemoryEmbeddingStore.fromFile(Paths.get(storeHome.toURI()));
-			if (store!=null) return store;
+			if (store != null)
+				return store;
 		}
 		storeHome.getParentFile().mkdirs();
 		InMemoryEmbeddingStore<TextSegment> store = defaultEmbeddingStore();
@@ -115,10 +122,11 @@ return model.embed(segment).content();
 		}
 		return this.store = TextFinder.loadStore(storeHome);
 	}
+
 	public void save(File storeHome) {
 		storeHome.getParentFile().mkdirs();
 		if (store instanceof InMemoryEmbeddingStore) {
-			InMemoryEmbeddingStore<TextSegment> saveStore = (InMemoryEmbeddingStore<TextSegment>)store;
+			InMemoryEmbeddingStore<TextSegment> saveStore = (InMemoryEmbeddingStore<TextSegment>) store;
 			log.info("finder.text.save: {}", storeHome);
 			saveStore.serializeToFile(Paths.get(storeHome.toURI()));
 		}
@@ -128,7 +136,7 @@ return model.embed(segment).content();
 	public Collection<IRI> search(String text, int maxResults, double minScore) {
 		List<EmbeddingMatch<TextSegment>> embeddingMatches = find(embed(text), maxResults, minScore);
 		List<IRI> results = new ArrayList<>();
-		for(EmbeddingMatch<TextSegment> embeddingMatch: embeddingMatches) {
+		for (EmbeddingMatch<TextSegment> embeddingMatch : embeddingMatches) {
 			results.add(Values.iri(embeddingMatch.embeddingId()));
 		}
 		return results;

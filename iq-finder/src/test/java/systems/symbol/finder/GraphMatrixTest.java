@@ -1,6 +1,6 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.BootstrapRepository;
