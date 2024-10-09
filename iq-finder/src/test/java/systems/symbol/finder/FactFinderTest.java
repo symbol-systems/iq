@@ -4,7 +4,6 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 
 import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.io.BootstrapLake;

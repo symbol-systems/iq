@@ -20,9 +20,9 @@ import java.util.Collection;
 
 public class SearchMatrixTest {
 
-    SearchMatrix searchMatrix;
-    EmbeddingModel model;
-    static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
+    public SearchMatrix searchMatrix;
+    public EmbeddingModel model;
+    public static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
     @BeforeEach
     public void setUp() {
