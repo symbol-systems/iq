@@ -22,5 +22,6 @@ public class UsefulSPARQL {
 
     public static final String META_ACTIONS = "SELECT DISTINCT ?id ?type ?text ?target WHERE { ?that ?id ?target. ?id rdf:value ?text. BIND (datatype(?text) AS ?type)}";
     public static final String RENDER = "SELECT DISTINCT ?id ?type ?template WHERE { ?id a ?template. ?template rdf:value ?text. BIND (datatype(?text) AS ?type) }";
+    public static String SELF = "CONSTRUCT { ?self ?p ?o. } WHERE { ?self ?p ?o. BIND(<{{my.self}}> AS ?self) }";
 
 }

@@ -1,31 +1,37 @@
 package systems.symbol.controller.ux;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
+import java.io.IOException;
+
+import javax.script.Bindings;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import systems.symbol.agent.MyFacade;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.LDResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
-import systems.symbol.rdf4j.store.IQConnection;
-import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyStrings;
 import systems.symbol.string.Validate;
-
-import javax.script.Bindings;
-import java.io.IOException;
 
 /**
  * RESTful endpoint for executing SPARQL queries on RDF repositories.
@@ -53,11 +59,19 @@ public class ModelAPI extends GuardedAPI {
             @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         log.info("ux.model: {} --> {} -> {}", _realm, query, uriInfo.getQueryParameters().keySet());
 
+        if (query.isEmpty())
+            return new OopsResponse("api.ux.model.query", Response.Status.BAD_REQUEST).asJSON();
+        if (Validate.isNonAlphanumeric(_realm))
+            return new OopsResponse("api.ux.model.realm", Response.Status.BAD_REQUEST).asJSON();
         if (!Validate.isBearer(auth))
             return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
             return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
+        if (!Validate.isURN(query)) {
+            query = realm.getSelf() + query;
+        }
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -65,32 +79,31 @@ public class ModelAPI extends GuardedAPI {
             return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
         }
 
-        if (!Validate.isURN(query)) {
-            query = query.isEmpty() ? realm.getSelf() + "ux/model" : realm.getSelf() + query;
-        }
         log.info("ux.model.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
         Repository repository = realm.getRepository();
         if (repository == null)
             return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
 
-        IRI self = Values.iri(jwt.getSubject());
         try (RepositoryConnection connection = repository.getConnection()) {
-            IQConnection iq = new IQConnection(realm.getSelf(), connection);
-            IQScriptCatalog catalog = new IQScriptCatalog(iq);
+            IQScriptCatalog catalog = new IQScriptCatalog(realm.getSelf(), connection);
             Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
+            params.put("realm", realm.getSelf().stringValue());
+
+            IRI self = Values.iri(jwt.getSubject());
             Bindings my = MyFacade.rebind(self, params, jwt);
 
-            String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
-            log.info("ux.mind.sparql: {} -> {}", my.keySet(), sparql);
+            String sparql = catalog.getSPARQL(query, my);
+            System.out.printf("ux.mind.sparql: %s", sparql);
             if (Validate.isMissing(sparql)) {
                 return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).asJSON();
             }
+            log.info("ux.mind.query: {} -> {}", PrettyStrings.pretty(my), sparql);
             GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
             LDResponse response = new LDResponse(graphQuery);
             return response.asJSON();
         } catch (Exception e) {
-            log.error("ux.mind.failed: {} -> {} ==> {}", self, query, e.getMessage());
+            log.error("ux.mind.failed: {} -> {} ==> {}", jwt.getSubject(), query, e.getMessage());
             return new OopsResponse("api.ux.model.failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
         }
     }

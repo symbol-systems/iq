@@ -1,12 +1,13 @@
 package systems.symbol.agent;
 
+import org.junit.jupiter.api.Test;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.junit.jupiter.api.Test;
 import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
@@ -19,7 +20,7 @@ class LazyAgentTest {
     DynamicModelFactory dmf = new DynamicModelFactory();
     static ValueFactory vf = SimpleValueFactory.getInstance();
     static IRI self = vf.createIRI(IQ_NS.TEST);
-    static IRI workflow_0 = vf.createIRI(IQ_NS.TEST +"skill-0");
+    static IRI workflow_0 = vf.createIRI(IQ_NS.TEST + "skill-0");
 
     @Test
     void testFSM() throws StateException {
@@ -33,18 +34,16 @@ class LazyAgentTest {
         assert workflow_0.equals(agent.getStateMachine());
 
         Resource done = agent.getStateMachine().transition(wip);
-        System.out.println("agent.iq: "+done);
+        System.out.println("agent.fsm.next: " + done);
         assert agent.getStateMachine().getState().equals(wip);
         assert done != null;
-        System.out.println("agent.fsm.done: "+agent.getSelf()+ " -> "+agent.getStateMachine());
+        System.out.println("agent.fsm.state: " + agent.getSelf() + " -> " + agent.getStateMachine());
     }
-
-
 
     @Test
     void testTransition() throws StateException {
         Model model = dmf.createEmptyModel();
-        boolean[] acted = {false};
+        boolean[] acted = { false };
         LazyAgent agent = new LazyAgent(self, model) {
             @Override
             public boolean onTransition(Resource from, Resource to) {
@@ -54,10 +53,10 @@ class LazyAgentTest {
         ModelStateMachine workflow_0 = newMSM(model, LazyAgentTest.workflow_0);
         agent.setFSM(workflow_0);
 
-        System.out.println("agent.lazy.state: "+workflow_0.getState());
+        System.out.println("agent.lazy.state: " + workflow_0.getState());
         assert ideation.equals(workflow_0.getState());
         workflow_0.transition(wip);
-        System.out.println("agent.lazy.done: "+workflow_0.getState()+" => "+acted[0]);
+        System.out.println("agent.lazy.done: " + workflow_0.getState() + " => " + acted[0]);
         assert acted[0];
         assert workflow_0.getState().equals(wip);
     }

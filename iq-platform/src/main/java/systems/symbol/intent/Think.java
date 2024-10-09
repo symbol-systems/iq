@@ -112,8 +112,7 @@ public class Think extends AbstractIntent {
         String remodelled = HBSRenderer.template(template.stringValue(), bindings);
         log.info("think.raw: {} -> {}", format, remodelled);
 
-        I_Assist<String> thought = null;// Prompts.think(actor, state, intent, model, my, format);
-        thought = new Conversation();
+        I_Assist<String> thought = new Conversation();
         thought.user(remodelled);
         log.info("think.prompt: {}", thought);
         llm.complete(thought);

@@ -10,12 +10,17 @@ import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import systems.symbol.render.HBSRenderer;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyStrings;
 import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -38,7 +43,7 @@ public class MyFacade {
     public static final String AI = "ai";
     // private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd
     // HH:mm:ss");
-    private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss");
+    private static final DateFormat humanDateFormat = new SimpleDateFormat("EEEE, MM dd, yyyy HH:mm:ss");
 
     public static List<Map<String, Object>> results(Bindings bindings, List<Map<String, Object>> results) {
         Object o = bindings.get(MY);
@@ -64,11 +69,9 @@ public class MyFacade {
         if (my.containsKey(MY)) {
             bindings = my;
             my = (Bindings) bindings.get(MY);
-            log.debug("my.rebind: {} -> {}", my.keySet(), bindings.keySet());
         } else {
             bindings = new SimpleBindings();
             bindings.put(MY, my);
-            log.debug("my.bind: {}", my.keySet());
         }
         my.put(TIME, humanDateFormat.format(new Date()));
         my.put(SELF, self.stringValue());
@@ -97,28 +100,9 @@ public class MyFacade {
 
     public static void dump(Map<?, ?> bindings, OutputStream out) {
         PrintWriter writer = new PrintWriter(out);
-        writer.println("------");
-        if (bindings != null)
-            for (Map.Entry<?, ?> entry : bindings.entrySet()) {
-                writer.printf("\t%s == ", entry.getKey());
-
-                Object value = entry.getValue();
-                if (value instanceof List) {
-                    List<?> values = (List<?>) value;
-                    for (Object value1 : values) {
-                        writer.printf("- %s ", value1);
-                    }
-                } else if ((value instanceof Map)) {
-                    Map<?, ?> temp = (Map<?, ?>) value;
-                    writer.printf("%s\n", temp.keySet());
-                    writer.printf("\n\t\t[%s] => %s", entry.getKey(), temp.keySet());
-                    dump(temp, out);
-                } else {
-                    writer.printf("%s (%s)", value, value == null ? "NULL" : value.getClass().getCanonicalName());
-                }
-                writer.println();
-            }
-
+        writer.println("~ ~ ~ ~");
+        writer.println(PrettyStrings.pretty(bindings));
+        writer.println("~ ~ ~ ~");
         writer.flush();
         writer.close();
     }
@@ -161,5 +145,13 @@ public class MyFacade {
         Bindings my = rebind(self, params);
         my.put("jwt", jwt);
         return my;
+    }
+
+    public static String template(String template, Map<String, Object> bindings) {
+        try {
+            return template == null || bindings == null ? template : HBSRenderer.template(template, bindings);
+        } catch (IOException e) {
+            return template;
+        }
     }
 }

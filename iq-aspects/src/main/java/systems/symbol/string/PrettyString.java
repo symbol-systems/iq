@@ -47,7 +47,8 @@ public class PrettyString {
 	}
 
 	/**
-	 * Sanitizes the given object's string representation by replacing non-alphanumeric characters.
+	 * Sanitizes the given object's string representation by replacing
+	 * non-alphanumeric characters.
 	 *
 	 * @param orgString The original object's string representation.
 	 * @return Sanitized string.
@@ -57,7 +58,8 @@ public class PrettyString {
 	}
 
 	/**
-	 * Sanitizes the given object's string representation by replacing non-alphanumeric characters with a specified string.
+	 * Sanitizes the given object's string representation by replacing
+	 * non-alphanumeric characters with a specified string.
 	 *
 	 * @param orgString The original object's string representation.
 	 * @param replace   The string to replace non-alphanumeric characters.
@@ -68,81 +70,89 @@ public class PrettyString {
 	}
 
 	public static String unCamelCase(String label) {
-		if (label==null) return "";
-		return label.replaceAll(String.format("%s|%s|%s|%s","(?<=[A-Z])(?=[A-Z][a-z])","(?<=[^A-Z])(?=[A-Z])","(?<=[A-Za-z])(?=[^A-Za-z])","(?<=[A-Za-z])(?=[^A-Za-z])")," ");
+		if (label == null)
+			return "";
+		return label.replaceAll(String.format("%s|%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+				"(?<=[A-Za-z])(?=[^A-Za-z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
 	}
 
 	public static String lamaCase(String clean_string) {
 		clean_string = unCamelCase(clean_string);
-	    StringTokenizer words = new StringTokenizer(clean_string, " ");
-	    StringBuilder camelCase = new StringBuilder();
-	    boolean first = true;
-	    while (words.hasMoreTokens()) {
-	        String currentToken = sanitize(words.nextToken());
-	        if (first) currentToken = currentToken.toLowerCase();
-	        else currentToken = capitalize(currentToken);
-	        camelCase.append(currentToken);
-	        first = false;
-	    }
-	    return camelCase.toString().trim();
+		StringTokenizer words = new StringTokenizer(clean_string, " ");
+		StringBuilder camelCase = new StringBuilder();
+		boolean first = true;
+		while (words.hasMoreTokens()) {
+			String currentToken = sanitize(words.nextToken());
+			if (first)
+				currentToken = currentToken.toLowerCase();
+			else
+				currentToken = capitalize(currentToken);
+			camelCase.append(currentToken);
+			first = false;
+		}
+		return camelCase.toString().trim();
 	}
 
 	public static String toCamelCase(String word) {
 		String pascal = toPascalCase(word);
-		return pascal.substring(0,1).toLowerCase(Locale.ROOT) + pascal.substring(1);
+		return pascal.substring(0, 1).toLowerCase(Locale.ROOT) + pascal.substring(1);
 	}
 
 	public static String toPascalCase(String clean_string) {
-	    StringTokenizer words = new StringTokenizer(clean_string, " _-");
-	    StringBuilder camelCase = new StringBuilder();
-	    while (words.hasMoreTokens()) {
-	        String currentToken = words.nextToken();
-	        currentToken = capitalize(currentToken);
-	        camelCase.append(currentToken);
-	    }
-	    return camelCase.toString().trim();
+		StringTokenizer words = new StringTokenizer(clean_string, " _-");
+		StringBuilder camelCase = new StringBuilder();
+		while (words.hasMoreTokens()) {
+			String currentToken = words.nextToken();
+			currentToken = capitalize(currentToken);
+			camelCase.append(currentToken);
+		}
+		return camelCase.toString().trim();
 	}
 
 	public static String wikize(String clean_string) {
-	    StringTokenizer words = new StringTokenizer(clean_string, " ");
-	    StringBuilder camelCase = new StringBuilder();
-	    while (words.hasMoreTokens()) {
-	        String currentToken = words.nextToken();
-	        currentToken = capitalize(currentToken);
-	        camelCase.append(currentToken).append(" ");
-	    }
-	    return sanitize(camelCase.toString().trim());
+		StringTokenizer words = new StringTokenizer(clean_string, " ");
+		StringBuilder camelCase = new StringBuilder();
+		while (words.hasMoreTokens()) {
+			String currentToken = words.nextToken();
+			currentToken = capitalize(currentToken);
+			camelCase.append(currentToken).append(" ");
+		}
+		return sanitize(camelCase.toString().trim());
 	}
 
 	public static String capitalize(Object word) {
 		String _word = word.toString().trim();
-		return _word.substring(0,1).toUpperCase() + _word.substring(1).toLowerCase();
+		return _word.substring(0, 1).toUpperCase() + _word.substring(1).toLowerCase();
 	}
 
-    public static String slice(String word, String sep) {
-        int ix = word.lastIndexOf(sep);
-        if (ix<0) return word;
-        return word.substring(0,ix);
-    }
+	public static String slice(String word, String sep) {
+		int ix = word.lastIndexOf(sep);
+		if (ix < 0)
+			return word;
+		return word.substring(0, ix);
+	}
 
 	public static String upto(String word, String first) {
 		return between(word, first, null);
 	}
 
 	public static String between(String word, String first, String last) {
-        int ix_first = word.indexOf(first);
-        int len_first = first.length();
-        if (ix_first<0) return word;
-        if (last != null) {
-            int ix_last = word.lastIndexOf(last);
-            if (ix_last<0) return word.substring(ix_first+len_first);
-            if (ix_first>ix_last) return word;
-            return word.substring(ix_first+len_first,ix_last);
-        }
-        return word.substring(ix_first+len_first);
-    }
+		int ix_first = word.indexOf(first);
+		int len_first = first.length();
+		if (ix_first < 0)
+			return word;
+		if (last != null) {
+			int ix_last = word.lastIndexOf(last);
+			if (ix_last < 0)
+				return word.substring(ix_first + len_first);
+			if (ix_first > ix_last)
+				return word;
+			return word.substring(ix_first + len_first, ix_last);
+		}
+		return word.substring(ix_first + len_first);
+	}
 
-    public static String normalizeWhitespace(String str) {
+	public static String normalizeWhitespace(String str) {
 		return str.replaceAll("\\s+", " ").trim();
 	}
 
@@ -160,30 +170,34 @@ public class PrettyString {
 	}
 
 	public static String toString(Object[] objects) {
-		return toString(objects,LIST_SEP);
+		return toString(objects, LIST_SEP);
 	}
 
-	public static String toString(Collection<String>  objects) {
-		return toString(objects,LIST_SEP);
+	public static String toString(Collection<String> objects) {
+		return toString(objects, LIST_SEP);
 	}
 
-	public static String toString(Collection<String>  objects, String sep) {
-		if (objects==null) return null;
+	public static String toString(Collection<String> objects, String sep) {
+		if (objects == null)
+			return null;
 		StringBuilder sb = new StringBuilder();
-		for( String o: objects) {
-			if (sb.length()>0) sb.append(sep);
+		for (String o : objects) {
+			if (sb.length() > 0)
+				sb.append(sep);
 			sb.append(o);
 
 		}
 		return sb.toString();
 	}
 
-	public static String toString(Object[]  objects, String sep) {
-		if (objects==null) return null;
+	public static String toString(Object[] objects, String sep) {
+		if (objects == null)
+			return null;
 		StringBuilder sb = new StringBuilder();
-		for(int i=0;i<objects.length;i++) {
-			if (objects!=null) {
-				if (i>0 && sep!=null) sb.append(sep);
+		for (int i = 0; i < objects.length; i++) {
+			if (objects != null) {
+				if (i > 0 && sep != null)
+					sb.append(sep);
 				sb.append(objects[i]);
 			}
 		}
@@ -191,30 +205,37 @@ public class PrettyString {
 	}
 
 	public static String either(Object o, String s) {
-		if (o==null || o.toString().trim().isEmpty()) return s;
+		if (o == null || o.toString().trim().isEmpty())
+			return s;
 		return o.toString();
 	}
 
 	public static String truncate(String s, int i) {
-		if (s.length()<=i) return s;
-		return s.substring(0,i);
+		if (s.length() <= i)
+			return s;
+		return s.substring(0, i);
 	}
 
-    /**
-	 * Turns a non-negative number into an ordinal string used to denote the position in an ordered sequence, such as 1st, 2nd,
+	/**
+	 * Turns a non-negative number into an ordinal string used to denote the
+	 * position in an ordered sequence, such as 1st, 2nd,
 	 * 3rd, 4th.
 	 *
 	 * @param number the non-negative number
 	 * @return the string with the number and ordinal suffix
 	 */
-	public String ordinalize( int number ) {
+	public String ordinalize(int number) {
 		int remainder = number % 100;
 		String numberStr = Integer.toString(number);
-		if (11 <= number && number <= 13) return numberStr + "th";
+		if (11 <= number && number <= 13)
+			return numberStr + "th";
 		remainder = number % 10;
-		if (remainder == 1) return numberStr + "st";
-		if (remainder == 2) return numberStr + "nd";
-		if (remainder == 3) return numberStr + "rd";
+		if (remainder == 1)
+			return numberStr + "st";
+		if (remainder == 2)
+			return numberStr + "nd";
+		if (remainder == 3)
+			return numberStr + "rd";
 		return numberStr + "th";
 	}
 
@@ -223,7 +244,7 @@ public class PrettyString {
 			return null;
 		}
 
-		String[] delimiters = {":", "/", "v#"};
+		String[] delimiters = { ":", "/", "v#" };
 		int delimiterIndex = -1;
 
 		for (String delimiter : delimiters) {
@@ -239,4 +260,5 @@ public class PrettyString {
 			return iri;
 		}
 	}
+
 }

@@ -10,7 +10,6 @@ import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,9 +20,9 @@ import java.util.Collection;
 
 public class SearchMatrixTest {
 
-    private SearchMatrix searchMatrix;
-    private EmbeddingModel model;
-    private static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
+    SearchMatrix searchMatrix;
+    EmbeddingModel model;
+    static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
     @BeforeEach
     public void setUp() {
