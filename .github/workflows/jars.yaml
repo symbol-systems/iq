@@ -28,7 +28,9 @@ jobs:
       
       # Build Maven package
       - name: Build Maven package
-        run: mvn --batch-mode --update-snapshots package
+        run: mvn --batch-mode --update-snapshots package \
+              -Dquarkus.container-image.build=false \
+              -Dquarkus.container-image.push=false
 
       # Publish to GitHub packages
       - name: Publish to GitHub packages
