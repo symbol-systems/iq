@@ -20,18 +20,12 @@ import java.util.Collection;
 
 public class SearchMatrixTest {
 
-public SearchMatrix searchMatrix;
 public EmbeddingModel model;
 public static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
-@BeforeEach
-public void setUp() {
-model = new AllMiniLmL6V2EmbeddingModel();
-searchMatrix = new SearchMatrix(model);
-}
-
 @Test
 public void testReindex() {
+SearchMatrix searchMatrix = new SearchMatrix();
 IRI concept = Values.iri(BASE_IRI.stringValue() + "concept");
 IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
@@ -49,6 +43,7 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content"; // Query matches the indexed content
 
+SearchMatrix searchMatrix = new SearchMatrix();
 searchMatrix.reindex(entity, content, concept);
 
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
@@ -74,6 +69,7 @@ Embedding embedding = new Embedding(mockVector);
 Response<Embedding> queryResponse = new Response<>(embedding);
 
 assert queryResponse.content().vector().length == embedding.vector().length;
+SearchMatrix searchMatrix = new SearchMatrix();
 searchMatrix.reindex(entity, content, concept);
 
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
@@ -85,6 +81,7 @@ assertTrue(results.isEmpty());
 @Test
 public void testSearchWithNoResults() {
 String query = "Nonexistent content";
+SearchMatrix searchMatrix = new SearchMatrix();
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.5);
 
 assertNotNull(results);
@@ -98,6 +95,7 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content";
 
+SearchMatrix searchMatrix = new SearchMatrix();
 searchMatrix.reindex(entity, content, concept);
 
 Collection<I_Found<IRI>> results = searchMatrix.search(query, 10, 0.0);
