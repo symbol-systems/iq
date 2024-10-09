@@ -4,7 +4,6 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-       <version>0.81.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>iq-agentic</artifactId>
@@ -44,7 +43,7 @@
         <dependency>
             <groupId>systems.symbol</groupId>
             <artifactId>iq-persona</artifactId>
-           <version>0.81.5</version>
+           <version>${project.version}</version>
         </dependency>
 
         <dependency>

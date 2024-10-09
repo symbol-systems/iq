@@ -25,7 +25,9 @@ public class SearchMatrixTest {
 
     @Test
     public void testReindex() {
+        System.out.println("search.matrix.index.before");
         SearchMatrix searchMatrix = new SearchMatrix();
+        System.out.printf("search.matrix.index.after: %s\n", searchMatrix);
         IRI concept = Values.iri(BASE_IRI.stringValue() + "concept");
         IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
         String content = "Sample content";
