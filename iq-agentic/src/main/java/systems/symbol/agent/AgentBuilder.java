@@ -102,7 +102,7 @@ log.info("builder.chat: {} -> {}", self, chat.latest());
 return this;
 }
 
-public  AgentBuilder jwt(DecodedJWT jwt) {
+public AgentBuilder jwt(DecodedJWT jwt) {
 bindings.put("jwt", jwt);
 bindings.put("human", jwt.getClaim("name"));
 return this;
@@ -121,7 +121,7 @@ bindings.put(NAME, self.getLocalName());
 bindings.put(AGENT, self.stringValue());
 Date now = new Date();
 bindings.put(TIME, HumanDate.format(now));
-bindings.put(TODAY, "today:"+TodayDate.format(now));
+bindings.put(TODAY, "today:" + TodayDate.format(now));
 bindings.put(RESULTS, new ArrayList<>());
 bindings.put("size", thoughts.size());
 }
@@ -130,7 +130,8 @@ public I_Agent agent() throws SecretsException, StateException {
 return agentic(new ExecutiveAgent(self, getGround(), getThoughts(), intents, null, bindings));
 }
 
-public I_Agent agent(I_Assist<String> chat, I_Decide<Resource> manager, DecodedJWT jwt) throws SecretsException, StateException, APIException, IOException {
+public I_Agent agent(I_Assist<String> chat, I_Decide<Resource> manager, DecodedJWT jwt)
+throws SecretsException, StateException, APIException, IOException {
 chat(chat);
 jwt(jwt);
 ExecutiveAgent agent = new ExecutiveAgent(self, getGround(), getThoughts(), intents, manager, bindings);
@@ -138,7 +139,7 @@ return agentic(avatar(agent, chat));
 }
 
 public I_Agent agent(I_Decide<Resource> manager) throws SecretsException, StateException {
-return agentic( new ExecutiveAgent(self, getGround(), getThoughts(), intents, manager, bindings));
+return agentic(new ExecutiveAgent(self, getGround(), getThoughts(), intents, manager, bindings));
 }
 
 public Avatar avatar(Conversation chat) throws StateException, APIException, IOException {
@@ -150,7 +151,7 @@ public Avatar avatar(I_Agent agent, I_Assist<String> chat) throws APIException, 
 chat(chat);
 Avatar avatar = new Avatar(agent, chat, getGround(), secrets);
 intents.add(avatar);
-log.info("builder.avatar: {}", agent==null?"":agent.getSelf());
+log.info("builder.avatar: {}", agent == null ? "" : agent.getSelf());
 
 return avatar;
 }
@@ -187,7 +188,7 @@ return new IntentDecision(chat);
 }
 
 public SearchDecision searching(I_Search<IRI> finder, I_Assist<String> chat) {
-return new SearchDecision(finder, new Agentic<>(()->self, bindings, chat));
+return new SearchDecision(finder, new Agentic<>(() -> self, bindings, chat));
 }
 
 public AgentBuilder self(Conversation chat) throws APIException, IOException, StateException {
