@@ -37,11 +37,11 @@ public class JNLP {
     @Produces(MediaType.APPLICATION_XML)
     public Response launcher(@PathParam("app") String app) throws IOException {
         String host = uriInfo.getBaseUri().toString();
-        String codebase = host+"jnlp";
+        String codebase = host + "jnlp";
         InputStream jnlpStream = getClass().getResourceAsStream("/" + app + ".jnlp");
-        log.info("jnlp.app: {} => {} == {}", host, app, jnlpStream!=null);
+        log.info("jnlp.app: {} => {} == {}", host, app, jnlpStream != null);
         if (jnlpStream == null) {
-            return new OopsResponse("api.trust.jnlp.app", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("api.trust.jnlp.app", Response.Status.NOT_FOUND).build();
         }
 
         Bindings ctx = new SimpleBindings();

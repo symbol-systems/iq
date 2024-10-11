@@ -16,7 +16,6 @@ public class Upload extends GuardedAPI {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@PathParam("repo") String repo, @FormParam("file") InputStream input) {
 
-
-        return new DataResponse("ok").asJSON();
+        return new DataResponse("ok").build();
     }
 }

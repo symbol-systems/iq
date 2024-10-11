@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.81.7</version>
+ <version>0.81.8</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -519,8 +519,8 @@
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
-          <configuration>
+            <version>3.4.2</version>
+            <configuration>
             <excludes>
               <exclude>**/logback-test.xml</exclude>
             </excludes>
@@ -529,11 +529,12 @@
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                 <addClasspath>true</addClasspath>
                 <useUniqueVersions>true</useUniqueVersions>
-<!--                <mainClass>${main.class}</mainClass>-->
-                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               </manifest>
               <manifestEntries>
                 <Implementation-Build>${buildNumber}</Implementation-Build>
+                <Implementation-Version>${project.version}</Implementation-Version>
+                <Main-Class>${main.class}</Main-Class>
               </manifestEntries>
             </archive>
           </configuration>

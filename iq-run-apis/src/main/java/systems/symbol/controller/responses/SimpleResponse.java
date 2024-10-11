@@ -22,8 +22,9 @@ public class SimpleResponse implements I_Response {
         this.data = data;
     }
 
-    public Response asJSON() {
-        Response.ResponseBuilder builder = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON_TYPE).entity(data);
+    public Response build() {
+        Response.ResponseBuilder builder = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(data);
         return addCORS(builder).build();
     }
 }

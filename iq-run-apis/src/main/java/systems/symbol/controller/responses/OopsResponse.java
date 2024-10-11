@@ -6,10 +6,11 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OopsResponse  implements I_Response {
+public class OopsResponse implements I_Response {
     public Object message;
     public Map<String, Object> meta = new HashMap<>();
     private final int status;
+
     public OopsResponse(String message, Response.Status status) {
         this.status = status.getStatusCode();
         this.message = message;
@@ -27,8 +28,9 @@ public class OopsResponse  implements I_Response {
         this.status = status;
     }
 
-    public Response asJSON() {
-        Response.ResponseBuilder builder = Response.status(this.status).type(MediaType.APPLICATION_JSON_TYPE).entity(this);
+    public Response build() {
+        Response.ResponseBuilder builder = Response.status(this.status).type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(this);
         return addCORS(builder).build();
     }
 }

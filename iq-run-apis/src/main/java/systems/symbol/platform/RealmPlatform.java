@@ -198,4 +198,5 @@ public class RealmPlatform implements I_Realms {
             cnx.remove(realm.getSelf());
         }
     }
+
 }

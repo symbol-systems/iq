@@ -43,27 +43,34 @@ public class EchoAPI extends GuardedAPI {
      * @return JSON response containing language model results.
      */
     @POST
-    @Operation(
-            summary = "api.trust.chat.post.summary",
-            description = "api.trust.chat.post.description"
-    )
+    @Operation(summary = "api.trust.chat.post.summary", description = "api.trust.chat.post.description")
     @Path("{realm}/{actor:.*}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor, @HeaderParam("Authorization") String auth,
-                               Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
+    public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor,
+            @HeaderParam("Authorization") String auth,
+            Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
         Stopwatch stopwatch = new Stopwatch();
         log.info("trust.chat: {}", chat.messages());
-        if (chat.messages().isEmpty()) return new OopsResponse("api.trust.chat.empty", Response.Status.NOT_FOUND).asJSON();
-        if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.trust.chat.repository", Response.Status.BAD_REQUEST).asJSON();
-        if (Validate.isMissing(_actor)) return new OopsResponse("api.trust.chat.missing", Response.Status.BAD_REQUEST).asJSON();
+        if (chat.messages().isEmpty())
+            return new OopsResponse("api.trust.chat.empty", Response.Status.NOT_FOUND).build();
+        if (Validate.isNonAlphanumeric(_realm))
+            return new OopsResponse("api.trust.chat.repository", Response.Status.BAD_REQUEST).build();
+        if (Validate.isMissing(_actor))
+            return new OopsResponse("api.trust.chat.missing", Response.Status.BAD_REQUEST).build();
         IRI actor = Values.iri(_actor);
-        I_Realm realm = platform.getRealm(Values.iri(_realm+":"));
-        if (realm==null) return new OopsResponse("api.trust.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+        I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
+        if (realm == null)
+            return new OopsResponse("api.trust.chat.realm.missing", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
-        try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+        try {
+            jwt = authenticate(auth, realm);
+        } catch (OopsException e) {
+            return new OopsResponse(e.getMessage(), e.getStatus()).build();
+        }
         Repository repository = realm.getRepository();
-        if (repository == null) return new OopsResponse("api.trust.chat.repository.missing", Response.Status.NOT_FOUND).asJSON();
+        if (repository == null)
+            return new OopsResponse("api.trust.chat.repository.missing", Response.Status.NOT_FOUND).build();
 
         Bindings bindings = new SimpleBindings();
         I_Realm myRealm = platform.getRealm(Values.iri(jwt.getSubject()));
@@ -77,11 +84,11 @@ public class EchoAPI extends GuardedAPI {
             I_Agent agent = builder.avatar(chat);
             log.info("trust.chat.reply: {} @ {}", chat.messages().getLast(), stopwatch);
             agent.stop();
-            return new ChatResponse(chat).asJSON();
+            return new ChatResponse(chat).build();
         } catch (StateException e) {
-            return new OopsResponse("api.trust.chat.state", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("api.trust.chat.state", Response.Status.BAD_REQUEST).build();
         } catch (Exception e) {
-            return new OopsResponse("api.trust.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+            return new OopsResponse("api.trust.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
