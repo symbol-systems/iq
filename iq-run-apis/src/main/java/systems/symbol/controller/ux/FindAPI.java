@@ -34,14 +34,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * RESTful endpoint for searching facts in a knowledge base then hydrating the results from the knowledge base.
+ * RESTful endpoint for searching facts in a knowledge base then hydrating the
+ * results from the knowledge base.
  */
 @Path("ux/find")
 @Tag(name = "api.ux.find.name", description = "api.ux.find.description")
 public class FindAPI extends GuardedAPI {
 
 /**
- * Searches for facts in a knowledge base using a specified text finder and SPARQL query.
+ * Searches for facts in a knowledge base using a specified text finder and
+ * SPARQL query.
  * Hydrates the found items using the specified SPARQL query and returns as JSON
  *
  * @param repo   The name of the text finder.
@@ -52,10 +54,7 @@ public class FindAPI extends GuardedAPI {
  * @return Response containing the search results in JSON format.
  */
 @GET
-@Operation(
-summary = "api.ux.find.get.summary",
-description = "api.ux.find.get.description"
-)
+@Operation(summary = "api.ux.find.get.summary", description = "api.ux.find.get.description")
 @Path("{repo}/{model: .*}")
 @Produces(MediaType.APPLICATION_JSON)
 public Response search(
@@ -70,10 +69,7 @@ return doSearch(repo, model, query, maxResults, relevancy, uriInfo, auth);
 }
 
 @POST
-@Operation(
-summary = "api.ux.find.post.summary",
-description = "api.ux.find.post.description"
-)
+@Operation(summary = "api.ux.find.post.summary", description = "api.ux.find.post.description")
 @Path("{repo}/{model: .*}")
 @Produces(MediaType.APPLICATION_JSON)
 public Response searchModel(
@@ -100,27 +96,32 @@ Stopwatch stopwatch = new Stopwatch();
 log.info("ux.find: {} --> {} -> {}", repo, query, uriInfo.getQueryParameters().keySet());
 
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.ux.find#repository", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.find#repository", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = platform.getRealm(repo);
-if (realm==null) return new OopsResponse("api.ux.find.realm", Response.Status.NOT_FOUND).asJSON();
+if (realm == null)
+return new OopsResponse("api.ux.find.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+try {
+jwt = authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
+}
 
 if (!Validate.isURN(model)) {
-model = model.isEmpty() ?realm.getSelf()+"ux/find":realm.getSelf()+model;
+model = model.isEmpty() ? realm.getSelf() + "ux/find" : realm.getSelf() + model;
 }
 log.info("ux.find.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 FactFinder searcher = realm.getFinder();
 if (searcher == null) {
-return new OopsResponse("api.ux.find#finder-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.find#finder-missing", Response.Status.NOT_FOUND).build();
 }
 Repository repository = realm.getRepository();
 if (repository == null) {
-return new OopsResponse("api.ux.find#repository", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.find#repository", Response.Status.NOT_FOUND).build();
 }
 if (!repository.isInitialized()) {
-return new OopsResponse("api.ux.find#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+return new OopsResponse("api.ux.find#repository.offline", Response.Status.SERVICE_UNAVAILABLE).build();
 }
 
 log.info("timer.start: {}", stopwatch.summary());
@@ -130,7 +131,8 @@ IQConnection iq = new IQConnection(realm.getSelf(), connection);
 IQScriptCatalog library = new IQScriptCatalog(iq);
 
 // Set a default relevancy threshold if not provided
-if (relevancy < 0.1) relevancy = 0.5;
+if (relevancy < 0.1)
+relevancy = 0.5;
 
 // Find matches using the text finder
 List<EmbeddingMatch<TextSegment>> matches = searcher.find(query, maxResults, relevancy);
@@ -151,7 +153,7 @@ bindings.put("these", theseMatches.toString());
 String hydrateQuery = library.getSPARQL(model, bindings);
 log.info("ux.find.hydrate: {} -> {} @ {}", model, hydrateQuery, stopwatch.summary());
 if (hydrateQuery == null || hydrateQuery.isEmpty()) {
-return new OopsResponse("api.ux.find#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.find#hydrate-not-found", Response.Status.NOT_FOUND).build();
 }
 
 // Use model to synthesize an answer model
@@ -162,12 +164,12 @@ log.info("ux.find.done: {} @ {}", models.size(), stopwatch.summary());
 DataResponse response = new DataResponse(models);
 response.set("found", models.size());
 response.set("elapsed", stopwatch.elapsed());
-return response.asJSON();
+return response.build();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("api.ux.find#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.ux.find#query-failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 } catch (IOException e) {
-return new OopsResponse("api.ux.find#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.ux.find#failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 

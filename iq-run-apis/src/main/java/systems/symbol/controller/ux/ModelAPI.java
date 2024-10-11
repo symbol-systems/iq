@@ -60,15 +60,15 @@ public Response graph(@PathParam("realm") String _realm,
 log.info("ux.model: {} --> {} -> {}", _realm, query, uriInfo.getQueryParameters().keySet());
 
 if (query.isEmpty())
-return new OopsResponse("api.ux.model.query", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.model.query", Response.Status.BAD_REQUEST).build();
 if (Validate.isNonAlphanumeric(_realm))
-return new OopsResponse("api.ux.model.realm", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.model.realm", Response.Status.BAD_REQUEST).build();
 if (!Validate.isBearer(auth))
-return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.ux.model.unauthorized", Response.Status.UNAUTHORIZED).build();
 
 I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.model.realm", Response.Status.NOT_FOUND).build();
 if (!Validate.isURN(query)) {
 query = realm.getSelf() + query;
 }
@@ -76,14 +76,14 @@ DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
 } catch (OopsException e) {
-return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 
 log.info("ux.model.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.model.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 IQScriptCatalog catalog = new IQScriptCatalog(realm.getSelf(), connection);
@@ -96,15 +96,15 @@ Bindings my = MyFacade.rebind(self, params, jwt);
 String sparql = catalog.getSPARQL(query, my);
 System.out.printf("ux.mind.sparql: %s", sparql);
 if (Validate.isMissing(sparql)) {
-return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.model.query-missing", Response.Status.NOT_FOUND).build();
 }
 log.info("ux.mind.query: {} -> {}", PrettyStrings.pretty(my), sparql);
 GraphQuery graphQuery = connection.prepareGraphQuery(sparql);
 LDResponse response = new LDResponse(graphQuery);
-return response.asJSON();
+return response.build();
 } catch (Exception e) {
 log.error("ux.mind.failed: {} -> {} ==> {}", jwt.getSubject(), query, e.getMessage());
-return new OopsResponse("api.ux.model.failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.ux.model.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.81.7</version>
+   <version>0.81.8</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -141,20 +141,6 @@
 <phase>test-compile</phase>
 <goals>
 <goal>testCompile</goal>
-</goals>
-</execution>
-</executions>
-</plugin>
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-jar-plugin</artifactId>
-<version>3.2.0</version>
-<executions>
-<execution>
-<id>test-jar</id>
-<phase>test-compile</phase>
-<goals>
-<goal>test-jar</goal>
 </goals>
 </execution>
 </executions>

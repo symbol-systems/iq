@@ -30,7 +30,7 @@ bindings.put(name.substring("urn:".length()), statement.getObject().stringValue(
 }
 
 @Override
-public Response asJSON() {
+public Response build() {
 Response.ResponseBuilder build = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON)
 .entity(bindings);
 return addCORS(build).build();

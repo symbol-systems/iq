@@ -54,25 +54,25 @@ Conversation chat) throws APIException, IOException, SecretsException, PlatformE
 Stopwatch stopwatch = new Stopwatch();
 log.info("ux.chat: {}", chat.messages());
 if (chat.messages().isEmpty())
-return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).build();
 if (Validate.isNonAlphanumeric(_realm))
-return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).build();
 if (Validate.isMissing(_actor))
-return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).build();
 IRI actor = Values.iri(_actor);
 I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
 if (realm == null)
-return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
 } catch (OopsException e) {
 log.info("ux.chat.token");
-return new OopsResponse(e.getMessage(), e.getStatus()).asJSON();
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository realmRepository = realm.getRepository();
 if (realmRepository == null)
-return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).build();
 
 Bindings bindings = new SimpleBindings();
 IRI user = Values.iri(jwt.getSubject());
@@ -81,7 +81,7 @@ try (RepositoryConnection connection = realmRepository.getConnection()) {
 I_Realm myRealm = platform.getRealm(user);
 log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm != null);
 if (myRealm == null)
-return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
 log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
 builder.jwt(jwt).setThoughts(myRealm.getModel());
@@ -95,13 +95,13 @@ I_Agent agent = builder.avatar(chat);
 agent.start();
 agent.stop();
 log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
-return new ChatResponse(chat, agent).asJSON();
+return new ChatResponse(chat, agent).build();
 } catch (StateException e) {
 log.error("ux.chat.oops: {}", e.getMessage());
-return new OopsResponse("api.ux.chat.state", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.chat.state", Response.Status.BAD_REQUEST).build();
 } catch (Exception e) {
 log.error("ux.chat.fatal: {}", e.getMessage(), e);
-return new OopsResponse("api.ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

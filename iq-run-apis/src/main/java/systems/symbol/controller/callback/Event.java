@@ -11,15 +11,16 @@ import systems.symbol.string.Validate;
 import java.io.IOException;
 
 /**
- * RESTful endpoint for checking the event status of the platform and RDF repositories.
+ * RESTful endpoint for checking the event status of the platform and RDF
+ * repositories.
  */
 @Path("event")
 public class Event extends GuardedAPI {
 
 /**
- * Receives an event callback from a source, saves to  repository.
+ * Receives an event callback from a source, saves to repository.
  *
- * @param repo The name of the repository.
+ * @param repo   The name of the repository.
  * @param source The source of the event.
  * @return response indicating the repository's event status.
  */
@@ -30,15 +31,15 @@ public Response repositoryHealth(@PathParam("repo") String repo, @PathParam("sou
 @HeaderParam("Authorization") String auth) throws IOException {
 if (!Validate.isBearer(auth)) {
 log.info("event#protected-repository");
-return new OopsResponse("api.event#unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.event#unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.event#repository", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.event#repository", Response.Status.BAD_REQUEST).build();
 }
 if (Validate.isNonAlphanumeric(source)) {
-return new OopsResponse("api.event#source-missing", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.event#source-missing", Response.Status.BAD_REQUEST).build();
 }
-//Repository repository = this.platform.getRepository(repo);
-return new HealthCheck("api.event#todo").asJSON();
+// Repository repository = this.platform.getRepository(repo);
+return new HealthCheck("api.event#todo").build();
 }
 }

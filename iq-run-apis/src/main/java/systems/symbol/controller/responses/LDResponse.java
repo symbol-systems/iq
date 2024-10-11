@@ -15,6 +15,7 @@ public class LDResponse implements I_Response, I_Facade {
 protected final static Logger log = LoggerFactory.getLogger(LDResponse.class);
 
 GraphQuery query;
+
 public LDResponse(GraphQuery query) throws Exception {
 this.query = query;
 }
@@ -23,7 +24,7 @@ public Bindings getBindings() {
 return LDAdapter.toJSONLD(this.query.evaluate());
 }
 
-public Response asJSON() {
+public Response build() {
 Bindings jsonld = LDAdapter.toJSONLD(this.query.evaluate());
 Response.ResponseBuilder builder;
 

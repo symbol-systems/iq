@@ -32,7 +32,7 @@ meta.put("intents", Facts.toStrings(agent.getStateMachine().getTransitions()));
 meta.put("state", agent.getStateMachine().getState().stringValue());
 }
 
-public Response asJSON() {
+public Response build() {
 Response.ResponseBuilder builder = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON_TYPE)
 .entity(this);
 return addCORS(builder).build();

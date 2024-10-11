@@ -28,24 +28,30 @@ import javax.script.Bindings;
 public class DebugAPI extends RealmAPI {
 
 @GET
-@Operation(
-summary = "api.ux.debug.post.summary",
-description = "api.ux.debug.post.description"
-)
+@Operation(summary = "api.ux.debug.post.summary", description = "api.ux.debug.post.description")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces("application/ld+json")
 @Path("{realm}/{self: .*}")
-public Response debug(@PathParam("realm") String _realm, @PathParam("self") String _self, @HeaderParam("Authorization") String auth) throws Exception {
+public Response debug(@PathParam("realm") String _realm, @PathParam("self") String _self,
+@HeaderParam("Authorization") String auth) throws Exception {
 log.info("ux.debug: {} -> {}", _realm, _self);
-if (!Validate.isURN(_self)) return new OopsResponse("api.ux.debug.invalid", Response.Status.BAD_REQUEST).asJSON();
+if (!Validate.isURN(_self))
+return new OopsResponse("api.ux.debug.invalid", Response.Status.BAD_REQUEST).build();
 IRI self = Values.iri(_self);
 I_Realm realm = platform.getRealm(_realm);
-if (realm==null) return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).asJSON();
+if (realm == null)
+return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).build();
 log.debug("ux.debug.realm: {} -> {}", realm.getSelf(), realm.getSecrets());
 DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
-if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.debug.repository", Response.Status.BAD_REQUEST).asJSON();
-if (!entitled(jwt, _realm)) return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).asJSON();
+try {
+jwt = authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
+}
+if (Validate.isNonAlphanumeric(_realm))
+return new OopsResponse("api.ux.debug.repository", Response.Status.BAD_REQUEST).build();
+if (!entitled(jwt, _realm))
+return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).build();
 
 Repository repository = realm.getRepository();
 try (RepositoryConnection connection = repository.getConnection()) {
@@ -62,11 +68,11 @@ my.put("audience", jwt.getClaim("aud").asArray(String.class));
 my.put("roles", jwt.getClaim("roles").asArray(String.class));
 
 log.info("ux.debug.self: {} -> {}", self, my);
-return new SimpleResponse(my).asJSON();
+return new SimpleResponse(my).build();
 }
 }
 
-public boolean entitled(DecodedJWT jwt, String agent)  {
+public boolean entitled(DecodedJWT jwt, String agent) {
 log.info("ux.debug.entitled: {} -> {}", jwt.getAudience(), agent);
 return jwt.getAudience().contains(agent);
 }

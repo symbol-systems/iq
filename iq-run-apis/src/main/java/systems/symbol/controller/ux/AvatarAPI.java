@@ -31,24 +31,30 @@ import javax.script.SimpleBindings;
 public class AvatarAPI extends RealmAPI {
 
 @POST
-@Operation(
-summary = "api.ux.avatar.post.summary",
-description = "api.ux.avatar.post.description"
-)
+@Operation(summary = "api.ux.avatar.post.summary", description = "api.ux.avatar.post.description")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces("application/ld+json")
 @Path("{realm}/{agent: .*}")
-public Response chat(@PathParam("realm") String _realm, @PathParam("agent") String _agent, @HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
+public Response chat(@PathParam("realm") String _realm, @PathParam("agent") String _agent,
+@HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
 log.info("ux.avatar: {} -> {} -> {}", _realm, _agent, chat);
-if (Validate.isNonAlphanumeric(_realm)) return new OopsResponse("api.ux.avatar#repository", Response.Status.BAD_REQUEST).asJSON();
-if (Validate.isMissing(_agent)) return new OopsResponse("api.ux.avatar#missing", Response.Status.BAD_REQUEST).asJSON();
+if (Validate.isNonAlphanumeric(_realm))
+return new OopsResponse("api.ux.avatar#repository", Response.Status.BAD_REQUEST).build();
+if (Validate.isMissing(_agent))
+return new OopsResponse("api.ux.avatar#missing", Response.Status.BAD_REQUEST).build();
 IRI agent = Values.iri(_agent);
-I_Realm realm = platform.getRealm(Values.iri(_realm+":"));
-if (realm==null) return new OopsResponse("api.ux.avatar.realm", Response.Status.NOT_FOUND).asJSON();
+I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
+if (realm == null)
+return new OopsResponse("api.ux.avatar.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
+try {
+jwt = authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
+}
 Repository repository = realm.getRepository();
-if (repository == null) return new OopsResponse("api.ux.avatar#repository", Response.Status.NOT_FOUND).asJSON();
+if (repository == null)
+return new OopsResponse("api.ux.avatar#repository", Response.Status.NOT_FOUND).build();
 
 Stopwatch stopwatch = new Stopwatch();
 Bindings bindings = new SimpleBindings();
@@ -60,23 +66,25 @@ try (RepositoryConnection connection2 = myRepo.getConnection()) {
 AgentBuilder builder = new AgentBuilder(agent, connection, bindings, realm.getSecrets());
 builder.setThoughts(connection2).scripting().remodel().sparql(connection).self(chat);
 
-//SearchDecision search = builder.decision(realm.getFinder(), chat);
+// SearchDecision search = builder.decision(realm.getFinder(), chat);
 IntentDecision intents = builder.intention(chat);
 ChainOfCommand control = builder.control(intents);
-I_Agent avatar = builder.agent(chat,control,jwt);
+I_Agent avatar = builder.agent(chat, control, jwt);
 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
 
 avatar.start();
-log.info("ux.avatar.done: {} x {} facts", avatar.getStateMachine().getState(), avatar.getThoughts().size());
+log.info("ux.avatar.done: {} x {} facts", avatar.getStateMachine().getState(),
+avatar.getThoughts().size());
 
-log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(), stopwatch);
-return new ChatResponse(chat).asJSON();
+log.info("ux.avatar.reply: {}\n-> {} @ {}", chat.latest().getRole(), chat.latest().getContent(),
+stopwatch);
+return new ChatResponse(chat).build();
 }
 }
 }
 
 @Override
-public boolean entitled(DecodedJWT jwt, IRI agent)  {
+public boolean entitled(DecodedJWT jwt, IRI agent) {
 return jwt.getAudience().contains(agent.stringValue());
 }
 }

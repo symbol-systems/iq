@@ -67,7 +67,7 @@ provisioner.deploy(importsHome, true);
 this.keysStore = new SimpleKeyStore(vaultHome);
 log.info("platform.vault: {}", vaultHome.getAbsolutePath());
 
-//if (Validate.isUnGuarded())
+// if (Validate.isUnGuarded())
 System.out.printf("** OWNER TOKEN ** \nexport JWT='%s'\n****\n", generateJWT());
 }
 
@@ -78,7 +78,8 @@ return this.importsHome;
 protected String generateJWT() throws Exception {
 String self = workspace.getSelf().stringValue();
 // expires in an hour
-JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, new String[]{self}, 3600, I_Self.name(), new String[]{I_Self.name()});
+JWTCreator.Builder jwtBuilder = jwtGen.generate(self, self, new String[] { self }, 3600, I_Self.name(),
+new String[] { I_Self.name() });
 return jwtGen.sign(jwtBuilder, keys());
 }
 
@@ -121,7 +122,8 @@ return this.workspace.alwaysGetRepository(name);
  */
 public TextFinder getTextFinder(String key) {
 TextFinder finder = tfCache.get(key);
-if (finder != null) return finder;
+if (finder != null)
+return finder;
 finder = new TextFinder(new File(this.cacheHome, "tf/" + key));
 tfCache.put(key, finder);
 return finder;
@@ -135,7 +137,8 @@ return finder;
  */
 public FactFinder getFactFinder(String key) {
 FactFinder finder = ffCache.get(key);
-if (finder != null) return finder;
+if (finder != null)
+return finder;
 Repository repo = workspace.getCurrentRepository();
 finder = new FactFinder(repo, new File(this.cacheHome, "ff/" + key), null, 10, 0.8);
 ffCache.put(key, finder);

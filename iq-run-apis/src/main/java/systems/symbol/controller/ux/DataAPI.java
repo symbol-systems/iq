@@ -35,7 +35,8 @@ import java.util.Map;
 
 /**
  * RESTful endpoint for executing SPARQL queries on RDF repositories.
- * The Queries are stored within the ScriptCatalog associated with the repository and context.
+ * The Queries are stored within the ScriptCatalog associated with the
+ * repository and context.
  */
 @Path("/ux/data")
 @Tag(name = "api.ux.data.name", description = "api.ux.data.description")
@@ -43,16 +44,13 @@ public class DataAPI extends GuardedAPI {
 /**
  * Executes a SPARQL query on a specified RDF repository.
  *
- * @param _realm   The name of the RDF repository.
+ * @param _realm The name of the RDF repository.
  * @param query  The SPARQL query.
  * @param maxResults The maximum number of results to retrieve.
  * @return Response containing the results of the SPARQL query in JSON format.
  */
 @GET
-@Operation(
-summary = "api.ux.data.get.summary",
-description = "api.ux.data.get.description"
-)
+@Operation(summary = "api.ux.data.get.summary", description = "api.ux.data.get.description")
 @Path("{realm}/{query: .*}")
 @Produces(MediaType.APPLICATION_JSON)
 public Response query(
@@ -63,24 +61,30 @@ public Response query(
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("ux.data.protected");
-return new OopsResponse("api.ux.data.unauthorized", Response.Status.UNAUTHORIZED).asJSON();
+return new OopsResponse("api.ux.data.unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(_realm)) {
-return new OopsResponse("api.ux.data.repository", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("api.ux.data.repository", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = platform.getRealm(_realm);
-if (realm==null) return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).asJSON();
+if (realm == null)
+return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
-try { jwt = authenticate(auth, realm); } catch (OopsException e) { return new OopsResponse(e.getMessage(), e.getStatus()).asJSON(); }
-
-
-if (!Validate.isURN(query)) {
-query = realm.getSelf()+query;
+try {
+jwt = authenticate(auth, realm);
+} catch (OopsException e) {
+return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 
-if (maxResults<0) maxResults = 100;
+if (!Validate.isURN(query)) {
+query = realm.getSelf() + query;
+}
+
+if (maxResults < 0)
+maxResults = 100;
 Repository repository = realm.getRepository();
-if (repository == null) return new OopsResponse("api.ux.data.repository", Response.Status.NOT_FOUND).asJSON();
+if (repository == null)
+return new OopsResponse("api.ux.data.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 IRI self = Values.iri(jwt.getSubject());
@@ -92,7 +96,7 @@ MyFacade.dump(my, System.out);
 
 String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
 if (Validate.isMissing(sparql)) {
-return new OopsResponse("api.ux.data.query", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("api.ux.data.query", Response.Status.NOT_FOUND).build();
 }
 log.info("ux.data.sparql: {} --> {}", query, sparql);
 TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
@@ -103,9 +107,9 @@ DataResponse response = new DataResponse(models);
 List<String> columns = new ArrayList<>();
 response.set("columns", columns);
 columns.addAll(result.getBindingNames());
-return response.asJSON();
+return response.build();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("api.ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("api.ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

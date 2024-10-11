@@ -30,10 +30,11 @@ writer.setWriterConfig(getWriterConfig());
 writer.startRDF();
 Map<String, String> namespaces = RDFPrefixer.defaults();
 writer.handleNamespace(MyFacade.MY, iri);
-for(String ns: namespaces.keySet()) {
+for (String ns : namespaces.keySet()) {
 writer.handleNamespace(ns, namespaces.get(ns));
 }
-if (iri!=null&&!iri.isEmpty()) writer.handleNamespace("", iri);
+if (iri != null && !iri.isEmpty())
+writer.handleNamespace("", iri);
 long copied = 0;
 try (GraphQueryResult result = query.evaluate()) {
 for (Statement statement : result) {
@@ -42,7 +43,7 @@ copied++;
 }
 }
 log.info("found {} triples @ {}", copied, iri);
-writer.handleComment("found "+copied+" triples @ "+iri);
+writer.handleComment("found " + copied + " triples @ " + iri);
 writer.endRDF();
 }
 
@@ -52,10 +53,11 @@ writer.setWriterConfig(getWriterConfig());
 writer.startRDF();
 Map<String, String> namespaces = RDFPrefixer.defaults();
 writer.handleNamespace("my", iri);
-for(String ns: namespaces.keySet()) {
+for (String ns : namespaces.keySet()) {
 writer.handleNamespace(ns, namespaces.get(ns));
 }
-if (iri!=null&&!iri.isEmpty()) writer.handleNamespace("", iri);
+if (iri != null && !iri.isEmpty())
+writer.handleNamespace("", iri);
 for (Statement statement : model) {
 writer.handleStatement(statement);
 }
@@ -63,8 +65,9 @@ writer.endRDF();
 }
 
 @Override
-public Response asJSON() {
-Response.ResponseBuilder build = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(rdf$.toString());
+public Response build() {
+Response.ResponseBuilder build = Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON)
+.entity(rdf$.toString());
 return addCORS(build).build();
 }
 
@@ -77,7 +80,7 @@ public static WriterConfig getWriterConfig() {
 WriterConfig config = RDFDump.getWriterConfig();
 config.set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 config.set(JSONLDSettings.HIERARCHICAL_VIEW, Boolean.TRUE);
-//config.set(JSONLDSettings.OPTIMIZE, Boolean.TRUE);
+// config.set(JSONLDSettings.OPTIMIZE, Boolean.TRUE);
 return config;
 }
 }
