@@ -36,9 +36,9 @@ import java.util.Date;
 
 import static systems.symbol.Formats.HumanDate;
 import static systems.symbol.Formats.TodayDate;
-import static systems.symbol.agent.MyFacade.*;
+import static systems.symbol.agent.Facades.*;
 
-public class AgentBuilder implements I_Self {
+public class AgentBuilder implements I_Self, I_Facade {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 private final IRI self;
 private Model ground;
@@ -143,7 +143,7 @@ return agentic(new ExecutiveAgent(self, getGround(), getThoughts(), intents, man
 }
 
 public Avatar avatar(Conversation chat) throws StateException, APIException, IOException {
-ChainOfCommand control = control(intention(chat));
+ChainOfCommand control = control(intention(new Conversation(chat)));
 return avatar(new ExecutiveAgent(self, getGround(), getThoughts(), intents, control, bindings), chat);
 }
 
@@ -220,5 +220,10 @@ return self;
 
 public Model getGround() {
 return ground;
+}
+
+@Override
+public Bindings getBindings() {
+return bindings;
 }
 }

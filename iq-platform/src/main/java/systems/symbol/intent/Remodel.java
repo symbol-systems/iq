@@ -18,7 +18,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.RDF;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;
@@ -31,20 +31,25 @@ import java.io.StringReader;
 import java.util.*;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
-import static systems.symbol.agent.MyFacade.SELF;
+import static systems.symbol.agent.Facades.SELF;
 
 /**
  * Intent representing the act of remodeling RDF graph in IQ.
  *
- * This intent is responsible for dynamically generating RDF graph based on the provided template and
+ * This intent is responsible for dynamically generating RDF graph based on the
+ * provided template and
  * the SPARQL results then adding them into the model.
  *
- * Remodeling RDF graph involves generating a new RDF graph by binding SPARQL query results to templates
+ * Remodeling RDF graph involves generating a new RDF graph by binding SPARQL
+ * query results to templates
  * then rendering them using Handlebars.
  *
- * This class is designed to be instantiated with a self IRI, an RDF4J model containing the knowledge
- * graph, and a contents provider for accessing template contents. By adhering to the contract defined
- * in AbstractIntent, it seamlessly integrates with the IQ operating system and enables agents to leverage
+ * This class is designed to be instantiated with a self IRI, an RDF4J model
+ * containing the knowledge
+ * graph, and a contents provider for accessing template contents. By adhering
+ * to the contract defined
+ * in AbstractIntent, it seamlessly integrates with the IQ operating system and
+ * enables agents to leverage
  * its capabilities for symbolic cognition.
  *
  * @see systems.symbol.intent.AbstractIntent
@@ -58,11 +63,12 @@ I_Contents contents;
 
 /**
  * Constructor: Remodel
- * Description: Initializes a Remodel intent with the specified self IRI, model, and contents provider.
+ * Description: Initializes a Remodel intent with the specified self IRI, model,
+ * and contents provider.
  *
- * @param self  The IRI representing the self or identity of the intent.
- * @param model The RDF4J model containing the knowledge graph.
- * @param contents  The contents provider for accessing template contents.
+ * @param self The IRI representing the self or identity of the intent.
+ * @param modelThe RDF4J model containing the knowledge graph.
+ * @param contents The contents provider for accessing template contents.
  */
 public Remodel(IRI self, Model model, I_Contents contents) {
 boot(self, model);
@@ -72,13 +78,14 @@ this.contents = contents;
 
 /**
  * Protected Constructor: Remodel
- * Description: Initializes a Remodel intent with the specified self IRI, model, template MIME type, and contents provider.
- *  This constructor is primarily used for testing and internal purposes.
+ * Description: Initializes a Remodel intent with the specified self IRI, model,
+ * template MIME type, and contents provider.
+ * This constructor is primarily used for testing and internal purposes.
  *
- * @param self  The IRI representing the self or identity of the intent.
- * @param model The RDF4J model containing the knowledge graph.
- * @param templateMime  The MIME type of the template.
- * @param contents  The contents provider for accessing template contents.
+ * @param self The IRI representing the self or identity of the intent.
+ * @param modelThe RDF4J model containing the knowledge graph.
+ * @param templateMime The MIME type of the template.
+ * @param contents The contents provider for accessing template contents.
  */
 protected Remodel(IRI self, Model model, IRI templateMime, I_Contents contents) {
 boot(self, model);
@@ -88,19 +95,22 @@ this.contents = contents;
 
 /**
  * Method: remodel
- * Description: Binds SPARQL results as data and renders a single state into a new Literal.
+ * Description: Binds SPARQL results as data and renders a single state into a
+ * new Literal.
  *
- * @param actor The actor source of models.
- * @param state The state for each model.
- * @param bindings  Bindings containing additional parameters for the execution.
+ * @param actorThe actor source of models.
+ * @param stateThe state for each model.
+ * @param bindings Bindings containing additional parameters for the execution.
  * @return Set of one IRI for the new triple.
- * @throws IOException if an I/O error occurs while performing the remodeling operation.
+ * @throws IOException if an I/O error occurs while performing the remodeling
+ * operation.
  */
 public Set<IRI> remodel(IRI actor, Resource state, Bindings bindings) throws IOException {
 Set<IRI> done = new HashSet<>();
 Literal hbs = contents.getContent(state, templateMime);
 log.info("remodel: {} -> {} - {}", actor, state, hbs != null);
-if (hbs == null) return done;
+if (hbs == null)
+return done;
 done.addAll(remodel(actor, state, hbs, bindings, model));
 return done;
 }
@@ -113,10 +123,13 @@ return done;
  * @return A list of maps if the cast is successful, otherwise null.
  */
 public static List<Map<String, Object>> safeCast(Object rawResults) {
-if (rawResults == null) return null;
-if (!(rawResults instanceof List)) return null;
+if (rawResults == null)
+return null;
+if (!(rawResults instanceof List))
+return null;
 List<?> rawList = (List<?>) rawResults;
-if (rawList.isEmpty()) return new ArrayList<>();
+if (rawList.isEmpty())
+return new ArrayList<>();
 if (rawList.get(0) instanceof Map) {
 @SuppressWarnings("unchecked")
 List<Map<String, Object>> results = (List<Map<String, Object>>) rawResults;
@@ -135,11 +148,13 @@ return null;
  * @param myAdditional bindings for the execution.
  * @param model The RDF4J model containing the knowledge graph.
  * @return The set of learned facts.
- * @throws IOException if an I/O error occurs while performing the remodeling operation.
+ * @throws IOException if an I/O error occurs while performing the remodeling
+ * operation.
  */
 public Set<IRI> remodel(IRI actor, Resource state, Literal rdfString, Bindings my, Model model) throws IOException {
-Bindings bindings = MyFacade.rebind(actor, state, my);
-log.info("remodel.rdf: {} -> {} -> {}", rdfString.getDatatype(), bindings.keySet(), ((Map<?, ?>) bindings.get(MyFacade.MY)).keySet());
+Bindings bindings = Facades.rebind(actor, state, my);
+log.info("remodel.rdf: {} -> {} -> {}", rdfString.getDatatype(), bindings.keySet(),
+((Map<?, ?>) bindings.get(Facades.MY)).keySet());
 
 String remodelled = HBSRenderer.template(rdfString.stringValue(), bindings);
 
@@ -165,9 +180,9 @@ throw new IOException(e.getMessage(), e);
  * Method: execute
  * Description: Executes the remodeling intent.
  *
- * @param actor The actor/agent who is executing the intent.
- * @param state The current state of the actor/agent.
- * @param bindings  Additional bindings for the execution.
+ * @param actorThe actor/agent who is executing the intent.
+ * @param stateThe current state of the actor/agent.
+ * @param bindings Additional bindings for the execution.
  * @return The set of learned facts.
  * @throws StateException if an error occurs while executing the intent.
  */

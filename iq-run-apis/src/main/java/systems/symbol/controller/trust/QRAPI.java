@@ -59,13 +59,13 @@ public Response invite(@PathParam("repo") String repoName, @PathParam("code") St
 throws IOException, OopsException, SecretsException {
 log.info("trust.qr: {} -> {} @ {}", repoName, code, info.getBaseUri());
 if (code == null || code.length() < 4)
-return new OopsResponse("api.trust.qr.code", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.trust.qr.code", Response.Status.BAD_REQUEST).build();
 if (Validate.isMissing(repoName))
-return new OopsResponse("api.trust.qr.realm", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.trust.qr.realm", Response.Status.BAD_REQUEST).build();
 
 I_Realm realm = realms.getRealm(repoName);
 if (realm == null)
-return new OopsResponse("api.trust.qr.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.trust.qr.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
 try {
 jwt = authenticate(bearer, realm);
@@ -74,7 +74,7 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.ux.trust.qr.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.ux.trust.qr.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 
@@ -97,7 +97,7 @@ SimpleResponse response = new SimpleResponse("@trust", signed);
 return response.build();
 } catch (Exception e) {
 log.error(e.getMessage(), e);
-return new OopsResponse("api.trust.issuer.oops", Response.Status.FORBIDDEN).build();
+return new OopsResponse("ux.trust.issuer.oops", Response.Status.FORBIDDEN).build();
 }
 }
 
@@ -110,7 +110,7 @@ throws IOException, OopsException, SecretsException {
 log.info("trust.qr.learn: {} -> {} -> {}", bindings.keySet(), info.getBaseUri(), bearer);
 I_Realm realm = realms.getRealm(repoName);
 if (realm == null)
-return new OopsResponse("api.qr.learn.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.qr.learn.realm", Response.Status.NOT_FOUND).build();
 try {
 authenticate(bearer, realm);
 } catch (OopsException e) {
@@ -118,34 +118,34 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.qr.learn.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.qr.learn.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 Object qr = bindings.get("@trust");
 if (qr == null)
-return new OopsResponse("api.qr.learn.trust", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
+return new OopsResponse("ux.qr.learn.trust", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
 JWTGen jwtGen = new JWTGen();
 DecodedJWT verified = jwtGen.verify(realm.keys(), qr.toString());
 
 if (verified == null)
-return new OopsResponse("api.qr.learn.seal", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
+return new OopsResponse("ux.qr.learn.seal", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
 Claim claim = verified.getClaim("@trust");
 if (claim == null)
-return new OopsResponse("api.qr.learn.claim", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
+return new OopsResponse("ux.qr.learn.claim", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
 Map<String, Object> trust = claim.asMap();
 String graph = trust.get("@graph").toString();
 if (graph == null)
-return new OopsResponse("api.qr.learn.graph", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
+return new OopsResponse("ux.qr.learn.graph", Response.Status.UNAVAILABLE_FOR_LEGAL_REASONS).build();
 log.info("learn.qr.trust: {} -> {}", trust.keySet(), graph.getClass().getSimpleName());
 Model model = Rio.parse(new StringReader(graph), RDFFormat.JSONLD);
 if (model == null || model.isEmpty())
-return new OopsResponse("api.qr.learn.null", Response.Status.NO_CONTENT).build();
+return new OopsResponse("ux.qr.learn.null", Response.Status.NO_CONTENT).build();
 log.info("learn.qr.size: {}", model.size());
 connection.add(model);
 return new SimpleResponse().build();
 } catch (Exception e) {
 log.error("learn.qr.oops: {}", e.getMessage());
-return new OopsResponse("api.trust.qr.oops", Response.Status.FORBIDDEN).build();
+return new OopsResponse("ux.trust.qr.oops", Response.Status.FORBIDDEN).build();
 }
 }
 

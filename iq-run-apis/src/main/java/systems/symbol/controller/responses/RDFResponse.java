@@ -11,7 +11,7 @@ import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 
@@ -29,7 +29,7 @@ RDFWriter writer = Rio.createWriter(format, this.rdf$, iri);
 writer.setWriterConfig(getWriterConfig());
 writer.startRDF();
 Map<String, String> namespaces = RDFPrefixer.defaults();
-writer.handleNamespace(MyFacade.MY, iri);
+writer.handleNamespace(Facades.MY, iri);
 for (String ns : namespaces.keySet()) {
 writer.handleNamespace(ns, namespaces.get(ns));
 }

@@ -17,7 +17,7 @@ IRI self = Values.iri(IQ_NS.TEST);
 public void testFacade() {
 SimpleBindings params = new SimpleBindings();
 params.put("self", "oops");
-Bindings my = MyFacade.rebind(self, params);
+Bindings my = Facades.rebind(self, params);
 assert my.containsKey("my");
 assert my.get("my") instanceof Bindings;
 Bindings test = (Bindings) my.get("my");
@@ -25,7 +25,7 @@ assert test.containsKey("self");
 assert test.get("self") != null;
 assert test.get("self").toString().equals(self.stringValue());
 
-String sparql = MyFacade.template(UsefulSPARQL.SELF, my);
+String sparql = Facades.template(UsefulSPARQL.SELF, my);
 assert sparql != null;
 assert !sparql.contains("oops");
 assert sparql.contains(self.stringValue());

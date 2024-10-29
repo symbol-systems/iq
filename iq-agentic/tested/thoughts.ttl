@@ -1,3 +1,0 @@
-
-<iq:test:#f3716661-009e-494c-922c-53b247bffcf2Plan> a <http://www.w3.org/2004/02/skos/core#Concept>;
-  <http://www.w3.org/2004/02/skos/core#prefLabel> "Plan" .

@@ -43,6 +43,8 @@ protected static final Logger log = LoggerFactory.getLogger(RealmPlatform.class)
 int port;
 @ConfigProperty(name = "iq.realm.jwt.duration", defaultValue = "2628288") // 60*60*24*30 = 30 days
 int duration;
+@ConfigProperty(name = "iq.failfast", defaultValue = "true")
+boolean failfast;
 
 protected static RealmManager realms;
 protected static ThreadManager threads;
@@ -53,7 +55,7 @@ try {
 realms = new RealmManager();
 threads = new ThreadManager();
 } catch (Exception e) {
-log.info("realms.fatal", e);
+log.info("realms.init.fatal", e);
 }
 }
 
@@ -85,7 +87,8 @@ start(i_realm);
 threads.start();
 log.info("realms.running: {} @ {}", realms.getRealms(), stopwatch.elapsed());
 } catch (Exception e) {
-log.error("realms.error: {} @ {}", realms.getRealms(), e.getMessage());
+log.error("realms.error: {} @ {}", realms.getRealms(), e.getMessage(), e);
+if (failfast)
 System.exit(1);
 }
 }
@@ -96,7 +99,7 @@ log.info("realms.boot: {}", i_realm.getSelf().stringValue());
 trust(i_realm);
 index(i_realm);
 agent(i_realm);
-log.info("realms.matrix: {}", i_realm.search(i_realm.getSelf().stringValue(), 3, 0.8));
+backups();
 } catch (APIException e) {
 log.error("realms.oops.api: {} @ {}", i_realm.getSelf(), e.getMessage());
 } catch (IOException e) {
@@ -131,7 +134,6 @@ log.info("realms.trusted: {} -> {} -> {} until {}", self, name, file.getPath(), 
 
 protected void onStop(@Observes ShutdownEvent ev) {
 log.info("realms.onStop: {}", ev.isStandardShutdown());
-backups();
 threads.stop();
 realms.stop();
 for (IRI realm : cnx.keySet()) {
@@ -144,7 +146,8 @@ private void backups() {
 File backups = new File(realms.getHome(), "backups");
 backups.mkdirs();
 // String now = HumanDate.format(System.currentTimeMillis());
-for (IRI realm : cnx.keySet()) {
+log.info("realms.backups: {} @ {}", cnx.keySet(), backups.getAbsolutePath());
+for (IRI realm : realms.getRealms()) {
 File file = new File(backups, PrettyString.sanitize(realm.stringValue()) + "now.ttl");
 log.info("realms.backup: {} @ {}", realm, file.getAbsolutePath());
 try {
@@ -155,7 +158,7 @@ RDFDump.dump(connection, new FileOutputStream(file), RDFFormat.TURTLE);
 } catch (Exception e) {
 log.error("realms.backup.error: {}", file.getAbsolutePath());
 }
-cnx.get(realm).close();
+// cnx.get(realm).close();
 }
 }
 
@@ -179,7 +182,7 @@ public Set<IRI> getRealms() {
 return realms.getRealms();
 }
 
-protected void agent(I_Realm realm) throws Exception, APIException {
+protected I_Agent agent(I_Realm realm) throws Exception, APIException {
 Bindings bindings = new SimpleBindings();
 RepositoryConnection connection = realm.getRepository().getConnection();
 Conversation chat = new Conversation();
@@ -187,7 +190,7 @@ AgentBuilder builder = new AgentBuilder(realm.getSelf(), connection, bindings, r
 builder.setThoughts(realm.getModel()).scripting().remodel().sparql(connection).realm(realm).self(chat);
 I_Agent agent = builder.avatar(chat);
 if (agent == null)
-return;
+return null;
 Resource state = agent.getStateMachine().getState();
 if (state != null) {
 Thread thread = threads.add(agent.getSelf(), agent);
@@ -197,6 +200,7 @@ builder.getIntents().getIntents());
 connection.close();
 cnx.remove(realm.getSelf());
 }
+return agent;
 }
 
 }

@@ -15,7 +15,7 @@ import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
@@ -61,14 +61,14 @@ public Response query(
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("ux.data.protected");
-return new OopsResponse("api.ux.data.unauthorized", Response.Status.UNAUTHORIZED).build();
+return new OopsResponse("ux.ux.data.unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(_realm)) {
-return new OopsResponse("api.ux.data.repository", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.ux.data.repository", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.ux.data.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
@@ -84,19 +84,19 @@ if (maxResults < 0)
 maxResults = 100;
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.ux.data.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.ux.data.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 IRI self = Values.iri(jwt.getSubject());
 IQScriptCatalog catalog = new IQScriptCatalog(self, connection);
-Bindings params = MyFacade.bind(uriInfo.getQueryParameters(true));
-Bindings my = MyFacade.rebind(self, params, jwt);
+Bindings params = Facades.bind(uriInfo.getQueryParameters(true));
+Bindings my = Facades.rebind(self, params, jwt);
 log.info("ux.data.bind: {}", my.keySet());
-MyFacade.dump(my, System.out);
+Facades.dump(my, System.out);
 
 String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
 if (Validate.isMissing(sparql)) {
-return new OopsResponse("api.ux.data.query", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.ux.data.query", Response.Status.NOT_FOUND).build();
 }
 log.info("ux.data.sparql: {} --> {}", query, sparql);
 TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
@@ -109,7 +109,7 @@ response.set("columns", columns);
 columns.addAll(result.getBindingNames());
 return response.build();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("api.ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

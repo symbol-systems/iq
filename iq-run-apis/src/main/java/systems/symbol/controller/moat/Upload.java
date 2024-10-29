@@ -8,11 +8,11 @@ import systems.symbol.controller.responses.DataResponse;
 
 import java.io.InputStream;
 
-@Path("/moat")
+@Path("/moat/upload")
 public class Upload extends GuardedAPI {
 
 @POST
-@Path("/upload/{repo}")
+@Path("{repo}")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 public Response uploadFile(@PathParam("repo") String repo, @FormParam("file") InputStream input) {
 

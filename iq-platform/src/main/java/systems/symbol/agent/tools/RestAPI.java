@@ -98,7 +98,7 @@ if (this.secrets == null)
 throw new SecretsException("missing.basic.secrets");
 String credentials = this.secrets.getSecret(getURL());
 String encoded = Base64.encodeAsString(credentials.getBytes(StandardCharsets.UTF_8));
-log.info("api.basic.auth: {} -> {}", credentials, encoded);
+log.info("ux.basic.auth: {} -> {}", credentials, encoded);
 header("Authorization", "Basic " + encoded);
 return this;
 }
@@ -107,7 +107,7 @@ public RestAPI header(String name) throws SecretsException {
 if (this.secrets == null)
 throw new SecretsException("missing.header.secrets");
 String credentials = this.secrets.getSecret(getURL());
-log.info("api.header.auth: {} -> {}", name, credentials);
+log.info("ux.header.auth: {} -> {}", name, credentials);
 return header(name, credentials);
 }
 
@@ -213,7 +213,7 @@ String contentType = headers.get("Content-Type");
 if (contentType == null || contentType.isEmpty())
 contentType = "application/json";
 if (contentType.equalsIgnoreCase("application/x-www-form-urlencoded")) {
-log.info("api.form: {} -> {}", json.keySet(), getURL());
+log.info("ux.form: {} -> {}", json.keySet(), getURL());
 // MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 FormBody formBody = form(json).build();
@@ -221,7 +221,7 @@ builder.post(formBody);
 return executeRequest(builder.build());
 } else {
 RequestBody requestBody = RequestBody.create(jsonBody, MediaType.parse(contentType));
-log.debug("api.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
+log.debug("ux.post: {} -> {} / {}", getURL(), requestBody.contentType(), requestBody.contentLength());
 // MyFacade.dump(json, System.out);
 Request.Builder builder = createRequestBuilder().url(getURL());
 builder.post(requestBody);
@@ -270,7 +270,7 @@ Request.Builder builder = new Request.Builder();
 for (String n : headers.keySet()) {
 builder.header(n, headers.get(n));
 }
-log.debug("api.headers: {} -> {}", getURL(), headers);
+log.debug("ux.headers: {} -> {}", getURL(), headers);
 return builder;
 }
 
@@ -283,11 +283,11 @@ return builder;
  */
 private Response executeRequest(Request request) throws IOException {
 try {
-log.debug("api.request: {} -> {}", request.url(), request.headers().toMultimap().keySet());
+log.debug("ux.request: {} -> {}", request.url(), request.headers().toMultimap().keySet());
 return client.newCall(request).execute();
 } catch (java.net.SocketTimeoutException e) {
 // retry
-log.warn("api.retry: {}", request);
+log.warn("ux.retry: {}", request);
 return client.newCall(request).execute();
 }
 }
@@ -314,7 +314,7 @@ Request request = chain.request();
 // Buffer buffer = new Buffer();
 // copy.body().writeTo(buffer);
 // String requestBodyString = buffer.readUtf8();
-//// System.out.println("api.debug: " + requestBodyString);
+//// System.out.println("ux.debug: " + requestBodyString);
 // }
 
 return chain.proceed(request);

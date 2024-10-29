@@ -19,7 +19,8 @@ import java.util.*;
  * It allows indexing and searching of entities based on their textual content
  * embeddings.
  */
-public class SearchMatrix implements I_Search<I_Found<IRI>>, I_Indexer {
+// I_Search<I_Found<IRI>>,
+public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
 private static final Logger log = LoggerFactory.getLogger(SearchMatrix.class);
 
 private final EmbeddingModel model;
@@ -51,36 +52,6 @@ public boolean indexed(IRI iri) {
 return contentHashByThing.containsKey(iri);
 }
 
-// /**
-// * Static method to create and index a new SearchMatrix instance with default
-// settings.
-// *
-// * @param facts the collection of RDF statements to index.
-// * @param concept the IRI representing the concept for grouping.
-// * @return an instance of I_Search<IRI> containing the indexed data.
-// */
-// public static SearchMatrix index(Iterable<Statement> facts, IRI concept) {
-// SearchMatrix searchMatrix = new SearchMatrix();
-// searchMatrix.reindex(facts, concept);
-// return searchMatrix;
-// }
-
-// /**
-// * Static method to create and index a new SearchMatrix instance with a custom
-// EmbeddingModel.
-// *
-// * @param facts the collection of RDF statements to index.
-// * @param concept the IRI representing the concept for grouping.
-// * @param model the EmbeddingModel to use for embedding text.
-// * @return an instance of I_Search<IRI> containing the indexed data.
-// */
-// public static SearchMatrix index(Iterable<Statement> facts, IRI concept,
-// EmbeddingModel model) {
-// SearchMatrix searchMatrix = new SearchMatrix(model);
-// searchMatrix.reindex(facts, concept);
-// return searchMatrix;
-// }
-
 /**
  * Indexes a collection of RDF statements under a specific concept.
  *
@@ -89,12 +60,16 @@ return contentHashByThing.containsKey(iri);
  */
 public void reindex(Iterator<Statement> facts, IRI concept) {
 while (facts.hasNext()) {
-Statement fact = facts.next();
+reindex(facts.next(), concept);
+;
+}
+log.info("matrix.index: {} = {}", concept, vectorsById.size());
+}
+
+public void reindex(Statement fact, IRI concept) {
 if (fact.getSubject().isIRI() && fact.getObject().isLiteral()) {
 reindex((IRI) fact.getSubject(), fact.getObject().stringValue(), concept);
 }
-}
-log.info("matrix.indexed: {}", vectorsById.size());
 }
 
 /**
@@ -113,7 +88,6 @@ boolean contentUnchanged = contentHashByThing.containsKey(iri) && contentHashByT
 if (contentUnchanged)
 return;
 
-// log.info("matrix.embed: {} ==> {}", iri, content);
 Response<Embedding> embed = embed(content);
 float[] vector = embed.content().vector();
 contentHashByThing.put(iri, contentHash);
@@ -123,21 +97,7 @@ thingById.put(id, iri);
 vectorsById.put(id, vector);
 
 indexByThing.computeIfAbsent(concept, k -> new HashSet<>()).add(id);
-}
-
-/**
- * Searches for entities based on a text query, returning the top results based
- * on cosine similarity.
- *
- * @param text   the text query to search.
- * @param maxResults the maximum number of results to return.
- * @param minScore   the minimum similarity score required for a result to be
- *   included.
- * @return a collection of found entities with their scores.
- */
-@Override
-public Collection<I_Found<IRI>> search(String text, int maxResults, double minScore) {
-return performSearch(text, maxResults, minScore, null);
+log.info("matrix.indexed: {} -> {} ==> {}", id, iri, content.length());
 }
 
 /**
@@ -147,6 +107,7 @@ return performSearch(text, maxResults, minScore, null);
  * @param concept the IRI representing the concept to filter by.
  * @return an I_Search instance for the given concept.
  */
+@Override
 public I_Search<I_Found<IRI>> byConcept(IRI concept) {
 return (text, maxResults, minScore) -> performSearch(text, maxResults, minScore, concept);
 }
@@ -157,13 +118,15 @@ return (text, maxResults, minScore) -> performSearch(text, maxResults, minScore,
  *
  * @param text   the text query to search.
  * @param maxResults the maximum number of results to return.
- * @param minScore   the minimum similarity score required for a result to be
+ * @param minScore   the minimum similarity required for a result to be
  *   included.
  * @param conceptoptional filter for concept-specific searches; null for
  *   general search.
  * @return a collection of found entities with their scores.
  */
 private Collection<I_Found<IRI>> performSearch(String text, int maxResults, double minScore, IRI concept) {
+if (text == null || text.trim().isEmpty())
+return new ArrayList<>();
 Response<Embedding> queryEmbed = embed(text);
 float[] queryVector = queryEmbed.content().vector();
 
@@ -171,13 +134,15 @@ List<ScoredIRI> scoredResults = new ArrayList<>();
 Set<Integer> idsToSearch = (concept == null) ? vectorsById.keySet()
 : indexByThing.getOrDefault(concept, Collections.emptySet());
 
-log.info("matrix.search: {}", idsToSearch.size());
+log.info("matrix.search: {} --> {} == {} & {}", concept, text, idsToSearch.size(), vectorsById.size());
 for (Integer id : idsToSearch) {
 float[] vector = vectorsById.get(id);
 double score = cosineSimilarity(queryVector, vector);
 if (score >= minScore) {
 scoredResults.add(new ScoredIRI(thingById.get(id), score));
-}
+log.info("matrix.score: {} --> {}", thingById.get(id), score);
+} else
+log.info("matrix.score: {} <-- {}", thingById.get(id), score);
 }
 
 scoredResults.sort(Comparator.comparingDouble(ScoredIRI::score).reversed());
@@ -199,16 +164,23 @@ return results;
  */
 private double cosineSimilarity(float[] vectorA, float[] vectorB) {
 if (vectorA.length != vectorB.length) {
-return 0.0; // Return 0.0 if vectors are of different lengths
+return 0.0;
 }
+
 double dotProduct = 0.0;
 double normA = 0.0;
 double normB = 0.0;
+
 for (int i = 0; i < vectorA.length; i++) {
 dotProduct += vectorA[i] * vectorB[i];
-normA += Math.pow(vectorA[i], 2);
-normB += Math.pow(vectorB[i], 2);
+normA += vectorA[i] * vectorA[i];
+normB += vectorB[i] * vectorB[i];
 }
+
+if (normA == 0.0 || normB == 0.0) {
+return 0.0;
+}
+
 return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
@@ -245,4 +217,5 @@ public IRI intent() throws StateException {
 return iri;
 }
 }
+
 }

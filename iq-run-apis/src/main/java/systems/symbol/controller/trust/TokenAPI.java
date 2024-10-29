@@ -7,6 +7,8 @@ import io.vertx.ext.web.RoutingContext;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -35,6 +37,9 @@ import systems.symbol.trust.generate.JWTGen;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static systems.symbol.platform.IQ_NS.TRUSTS;
 
@@ -45,6 +50,8 @@ protected final Logger log = LoggerFactory.getLogger(getClass());
 RealmPlatform realms;
 @Context
 RoutingContext routing;
+@ConfigProperty(name = "iq.realm.token.duration", defaultValue = "600")
+int tokenDuration;
 
 @OPTIONS
 @Path("{path : .*}")
@@ -59,10 +66,10 @@ return new DataResponse().build();
 @Path("/key/{realm}")
 public Response publicKey(@PathParam("realm") String _realm) throws Exception {
 if (Validate.isMissing(_realm))
-return new OopsResponse("api.token.realm", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.token.realm", Response.Status.BAD_REQUEST).build();
 I_Realm realm = realms.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("api.token.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.realm", Response.Status.NOT_FOUND).build();
 String pkcs8 = SimpleKeyStore.toPKCS8(realm.keys().getPublic());
 return new SimpleResponse(pkcs8).build();
 }
@@ -74,20 +81,20 @@ public Response login(@PathParam("realm") String _realm, @PathParam("provider") 
 SimpleBindings params, @Context UriInfo info) throws SecretsException {
 log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
 if (provider == null || provider.length() < 4) {
-return new OopsResponse("api.token.provider", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.token.provider", Response.Status.BAD_REQUEST).build();
 }
 if (Validate.isMissing(_realm)) {
-return new OopsResponse("api.token.realm", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.token.realm", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = realms.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("api.token.realm." + _realm, Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.realm." + _realm, Response.Status.NOT_FOUND).build();
 // TODO: authenticate (subject is a user, subject known to issuer)
 // TODO: authorize (subject known to audience)
 
 Repository repo = realm.getRepository();
 if (repo == null)
-return new OopsResponse("api.token.repository." + _realm, Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.repository." + _realm, Response.Status.NOT_FOUND).build();
 try (RepositoryConnection connection = repo.getConnection()) {
 connection.begin();
 
@@ -115,16 +122,17 @@ agent.stop();
 Object identity = bindings.get("identity");
 log.info("trust.identity: {} == {} @ {}", agent.getSelf(), identity, state);
 if (identity == null)
-return new OopsResponse("api.token.identity", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.identity", Response.Status.NOT_FOUND).build();
 if (!identity.toString().startsWith(agent.getSelf().stringValue())
 || identity.toString().length() == agent.getSelf().stringValue().length())
-return new OopsResponse("api.token.fraud", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.token.fraud", Response.Status.INTERNAL_SERVER_ERROR).build();
 
 IRI self = Values.iri(identity.toString());
 Object human = bindings.get("human");
 log.info("trust.human: {} == {}", human == null ? "ANON" : human, self);
 if (human == null || human.toString().isEmpty())
-return new OopsResponse("api.token.human.name", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.human.name", Response.Status.NOT_FOUND).build();
+boolean newUser = realms.getRealm(self) != null;
 I_Realm myRealm = realms.getInstance().newRealm(self);
 log.info("trust.realm: {}", myRealm.getSelf());
 
@@ -136,9 +144,15 @@ myConnection.add(agent.getThoughts());
 myConnection.commit();
 }
 String[] roles = { _realm + "role:user", _realm + "role:" + provider };
-String[] aud = { identity.toString(), _realm };
-int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", 600); // 10 mins
-String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), aud, realm,
+List<String> aud = new ArrayList<>();
+aud.add(realm.getSelf().stringValue());
+aud.add(self.stringValue());
+Iterable<IRI> trusts = Realms.trusts(builder.getGround(), self, new IRIs(), true);
+trusts.forEach(trust -> aud.add(trust.stringValue()));
+
+int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
+String[] _aud = aud.toArray(new String[0]);
+String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), _aud, realm,
 duration);
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
 connection.commit();
@@ -149,7 +163,7 @@ log.warn("trust.oops: {} == {}", e.getMessage(), oops.getStatus(), e);
 return new SimpleResponse(oops.getMessage(), oops.getStatus()).build();
 }
 log.error("trust.failed: {}", e.getMessage(), e);
-return new OopsResponse("api.token.oops", Response.Status.FORBIDDEN).build();
+return new OopsResponse("ux.token.oops", Response.Status.FORBIDDEN).build();
 }
 }
 
@@ -178,13 +192,21 @@ public Response reissue(@PathParam("realm") String _realm, @HeaderParam("Authori
 throws SecretsException, OopsException {
 I_Realm realm = realms.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("api.token.realm." + _realm, Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
 if (jwt == null)
-return new OopsResponse("api.token.token", Response.Status.FORBIDDEN).build();
+return new OopsResponse("ux.token.bearer", Response.Status.FORBIDDEN).build();
 JWTGen jwtGen = new JWTGen();
-Claim claims = jwt.getClaims().get("aud");
-String[] aud = claims.asArray(String.class);
+Map<String, Claim> claims = jwt.getClaims();
+if (claims == null)
+return new OopsResponse("ux.token.claims", Response.Status.FORBIDDEN).build();
+Claim aud_claims = claims.get("aud");
+String[] aud = aud_claims.asArray(String.class);
+if (aud == null || aud.length == 0)
+return new OopsResponse("ux.token.aud", Response.Status.FORBIDDEN).build();
+if (!Validate.contains(aud, realm.getSelf().stringValue()))
+return new OopsResponse("ux.token.self", Response.Status.FORBIDDEN).build();
+
 log.info("trust.refresh: {} -> {} -> {}", jwt.getSubject(), jwt.getIssuer(), aud);
 
 JWTCreator.Builder generator = jwtGen.generate(jwt.getIssuer(), jwt.getSubject(), aud, 600);

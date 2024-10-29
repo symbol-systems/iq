@@ -20,8 +20,14 @@ super(vc);
 @Override
 public I_LLMessage<String> deserialize(JsonParser jp, DeserializationContext ctx) throws IOException {
 JsonNode node = jp.getCodec().readTree(jp);
-String role = node.get("role").asText();
-String content = node.get("content").asText();
-return new TextMessage(role, content);
+String role = node.get("role").asText("user");
+String type = node.get("type").asText("text");
+switch (type) {
+case "image_url":
+return new ImageMessage(role, node.get("image_url"));
+case "text":
+default:
+return new TextMessage(role, node.get("content").asText());
+}
 }
 }

@@ -33,8 +33,8 @@ import java.io.IOException;
 /**
  * REST-ful API for Large Language Model (LLM) endpoints.
  */
-@Tag(name = "api.trust.chat.name", description = "api.trust.chat.description")
-@Path("trust/chat")
+@Tag(name = "api.trust.echo.name", description = "api.trust.echo.description")
+@Path("trust/echo")
 public class EchoAPI extends GuardedAPI {
 
 /**
@@ -43,7 +43,7 @@ public class EchoAPI extends GuardedAPI {
  * @return JSON response containing language model results.
  */
 @POST
-@Operation(summary = "api.trust.chat.post.summary", description = "api.trust.chat.post.description")
+@Operation(summary = "api.trust.echo.post.summary", description = "api.trust.echo.post.description")
 @Path("{realm}/{actor:.*}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -53,15 +53,15 @@ Conversation chat) throws APIException, IOException, SecretsException, PlatformE
 Stopwatch stopwatch = new Stopwatch();
 log.info("trust.chat: {}", chat.messages());
 if (chat.messages().isEmpty())
-return new OopsResponse("api.trust.chat.empty", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.trust.echo.empty", Response.Status.NOT_FOUND).build();
 if (Validate.isNonAlphanumeric(_realm))
-return new OopsResponse("api.trust.chat.repository", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.trust.echo.repository", Response.Status.BAD_REQUEST).build();
 if (Validate.isMissing(_actor))
-return new OopsResponse("api.trust.chat.missing", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.trust.echo.missing", Response.Status.BAD_REQUEST).build();
 IRI actor = Values.iri(_actor);
 I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
 if (realm == null)
-return new OopsResponse("api.trust.chat.realm.missing", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.trust.echo.realm.missing", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
@@ -70,25 +70,24 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.trust.chat.repository.missing", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.trust.echo.repository.missing", Response.Status.NOT_FOUND).build();
 
 Bindings bindings = new SimpleBindings();
 I_Realm myRealm = platform.getRealm(Values.iri(jwt.getSubject()));
-log.info("trust.chat.realm: {} @ {} & {}", actor, realm.getSelf(), myRealm.getSelf());
+log.info("trust.echo.realm: {} @ {} & {}", actor, realm.getSelf(), myRealm.getSelf());
 
 try (RepositoryConnection connection = repository.getConnection()) {
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets());
 builder.self(chat).scripting();
 Avatar avatar = builder.avatar(chat);
-avatar.start();
-I_Agent agent = builder.avatar(chat);
-log.info("trust.chat.reply: {} @ {}", chat.messages().getLast(), stopwatch);
-agent.stop();
+// execute agentic LLM without state transition/actions
+avatar.execute(builder.getBindings());
+log.info("trust.echo.reply: {} @ {}", chat.messages().getLast(), stopwatch);
 return new ChatResponse(chat).build();
 } catch (StateException e) {
-return new OopsResponse("api.trust.chat.state", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.trust.echo.state", Response.Status.BAD_REQUEST).build();
 } catch (Exception e) {
-return new OopsResponse("api.trust.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.trust.echo.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

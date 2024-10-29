@@ -13,10 +13,14 @@ public class Files {
 static Pattern any_slash = compile("(?<![:/])[/\\\\]+");
 
 public static IRI toIRI(ValueFactory vf, IRI baseIRI, File parentFile, File file) {
+return toIRI(vf, baseIRI, parentFile, file, "/");
+}
+
+public static IRI toIRI(ValueFactory vf, IRI baseIRI, File parentFile, File file, String seperator) {
 if (!file.toString().startsWith(parentFile.toString()))
 return null;
 String path = file.getAbsolutePath().substring((parentFile.getAbsolutePath().length() + 1));
-String iri = (baseIRI + path).replaceAll(any_slash.pattern(), "/");
+String iri = (baseIRI + path).replaceAll(any_slash.pattern(), seperator);
 int ix = iri.lastIndexOf(".");
 if (ix < 0)
 return vf.createIRI(iri);

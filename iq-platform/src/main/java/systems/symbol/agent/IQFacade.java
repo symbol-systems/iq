@@ -40,7 +40,7 @@ import java.util.Optional;
  * A simplified string-friendly wrapper for scripting an agent, model and state
  * machine.
  */
-public class IQFacade {
+public class IQFacade implements I_FacadeAPI {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 private final Model model;
 private final IRI self;
@@ -66,7 +66,7 @@ this.secrets = secrets;
 protected void enableVFS() throws FileSystemException {
 this.vfs = VFS.getManager();
 // LocalFileSystemConfigBuilder.getInstance().setBaseFile(opts, baseFile);
-log.info("api.vfs: {} ", vfs.getBaseFile());
+log.info("ux.vfs: {} ", vfs.getBaseFile());
 }
 
 public RestAPI api(String url) throws SecretsException {
@@ -91,6 +91,7 @@ return gson.fromJson(body.string(), type);
  * @return The ScriptFacade instance.
  */
 public IQFacade value(Object value) {
+model.remove(self, RDF.VALUE, null);
 model.add(self, RDF.VALUE, Values.***REMOVED***(value), this.self);
 return this;
 }
@@ -112,6 +113,7 @@ return label.orElse(Values.***REMOVED***("")).stringValue();
  * @return The ScriptFacade instance.
  */
 public IQFacade set(String key, Object value) {
+model.remove(self, toIRI(key), null);
 model.add(self, toIRI(key), Values.***REMOVED***(value), this.self);
 return this;
 }
@@ -175,4 +177,5 @@ return file;
 throw new StateException(e.getMessage(), self, e);
 }
 }
+
 }

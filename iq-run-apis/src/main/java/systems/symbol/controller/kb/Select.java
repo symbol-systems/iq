@@ -47,23 +47,23 @@ public Response query(
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("iq.select#protected");
-return new OopsResponse("api.select.unauthorized", Response.Status.UNAUTHORIZED).build();
+return new OopsResponse("ux.select.unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.iq.select.repository", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.iq.select.repository", Response.Status.BAD_REQUEST).build();
 }
 if (Validate.isMissing(query)) {
-return new OopsResponse("api.iq.select.query-invalid", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.iq.select.query-invalid", Response.Status.BAD_REQUEST).build();
 }
 
 if (maxResults < 0)
 maxResults = 10000;
 I_Realm realm = platform.getRealm(repo);
 if (realm == null)
-return new OopsResponse("api.select.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.select.realm", Response.Status.NOT_FOUND).build();
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.select.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.select.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 IQConnection iq = new IQConnection(realm.getSelf(), connection);
@@ -71,14 +71,14 @@ IQScriptCatalog library = new IQScriptCatalog(iq);
 String sparql = library.getSPARQL(query);
 
 if (sparql == null || sparql.isEmpty()) {
-return new OopsResponse("api.iq.select.query-missing", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.iq.select.query-missing", Response.Status.NOT_FOUND).build();
 }
 TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
 try (TupleQueryResult result = tupleQuery.evaluate()) {
 List<Map<String, Object>> models = SPARQLMapper.toMaps(result);
 return new DataResponse(models).build();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("api.iq.select#query-failed", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.iq.select#query-failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

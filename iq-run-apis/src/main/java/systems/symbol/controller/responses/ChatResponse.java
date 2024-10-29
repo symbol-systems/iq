@@ -7,9 +7,12 @@ import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLMessage;
 import systems.symbol.realm.Facts;
 
+import java.util.Collection;
 import java.util.List;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+
+import org.eclipse.rdf4j.model.Resource;
 
 public class ChatResponse implements I_Response {
 public Bindings meta = null;
@@ -28,7 +31,9 @@ public ChatResponse(I_Assist<String> chat, I_Agent agent) {
 this.messages = chat.messages();
 this.meta = new SimpleBindings();
 meta.put("self", agent.getSelf().stringValue());
-meta.put("intents", Facts.toStrings(agent.getStateMachine().getTransitions()));
+Collection<Resource> intents = agent.getStateMachine().getTransitions();
+if (intents.size() > 1)
+meta.put("intents", Facts.toStrings(intents));
 meta.put("state", agent.getStateMachine().getState().stringValue());
 }
 

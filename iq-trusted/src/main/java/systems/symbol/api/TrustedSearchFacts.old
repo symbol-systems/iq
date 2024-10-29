@@ -61,24 +61,24 @@ public Response search(
 
 // Initialize and perform sanity checks
 if (Validate.isNonAlphanumeric(finder)) {
-return new OopsResponse("api.search.facts#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("ux.search.facts#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
 }
 
 // Get the text finder instance from the platform
 FactFinder searcher = platform.getFactFinder(finder);
 if (searcher == null) {
-return new OopsResponse("api.search.facts#finder-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("ux.search.facts#finder-missing", Response.Status.NOT_FOUND).asJSON();
 }
 
 // Get the RDF repository instance from the platform
 Repository repository = platform.getRepository(repo);
 if (repository == null) {
-return new OopsResponse("api.search.facts#repository", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("ux.search.facts#repository", Response.Status.NOT_FOUND).asJSON();
 }
 
 // Check if the repository is initialized
 if (!repository.isInitialized()) {
-return new OopsResponse("api.search.facts#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+return new OopsResponse("ux.search.facts#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
 }
 
 // Use the platform SPARQL repository
@@ -107,10 +107,10 @@ bindings.put("these", theseMatches.toString());
 // The query is interpolated to respect {{these}} VALUES bindings
 String hydrateQuery = library.getSPARQL(sparql, bindings);
 if (hydrateQuery == null || hydrateQuery.isEmpty()) {
-return new OopsResponse("api.search.facts#query-missing", Response.Status.NOT_FOUND).asJSON();
+return new OopsResponse("ux.search.facts#query-missing", Response.Status.NOT_FOUND).asJSON();
 }
 
-System.out.println("api.search.facts.hydrate: " + hydrateQuery);
+System.out.println("ux.search.facts.hydrate: " + hydrateQuery);
 
 // Execute SPARQL query against the repository
 TupleQuery tupleQuery = connection.prepareTupleQuery(hydrateQuery);
@@ -118,10 +118,10 @@ try (TupleQueryResult evaluate = tupleQuery.evaluate()) {
 List<Map<String, Object>> models = SPARQLMapper.toMaps(evaluate);
 return new SimpleResponse(models).asJSON();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("api.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("ux.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 }
 } catch (IOException e) {
-return new OopsResponse("api.search.facts#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+return new OopsResponse("ux.search.facts#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
 }
 }
 }

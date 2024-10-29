@@ -20,9 +20,9 @@ APIPlatform platform;
 public Response search(@PathParam("provider") String provider, @QueryParam("query") String query,
 @QueryParam("maxResults") int maxResults , @QueryParam("relevancy") double relevancy) {
 if (Validate.isNonAlphanumeric(provider)) {
-return new OopsResponse("api.search.web#provider-invalid", Response.Status.BAD_REQUEST).asJSON();
+return new OopsResponse("ux.search.web#provider-invalid", Response.Status.BAD_REQUEST).asJSON();
 }
-return new DataResponse("api.search.web:"+provider+"?query="+query).asJSON();
+return new DataResponse("ux.search.web:"+provider+"?query="+query).asJSON();
 }
 }
 

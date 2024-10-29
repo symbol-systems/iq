@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import org.slf4j.Logger;
@@ -25,7 +26,8 @@ protected static final int keyLength = 256;
 
 public static I_Secrets unlock(InputStream fileInputStream, String password)
 throws IOException, ClassNotFoundException, InvalidAlgorithmParameterException, NoSuchPaddingException,
-IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException,
+InvalidKeySpecException {
 ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(fileInputStream));
 byte[] encryptedData = (byte[]) ois.readObject();
 return decrypt(encryptedData, password);
@@ -33,7 +35,7 @@ return decrypt(encryptedData, password);
 
 public static void lock(I_Secrets ownerSecrets, OutputStream fileOutputStream, String password)
 throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException,
-NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
 ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(fileOutputStream));
 byte[] encryptedData = encrypt(ownerSecrets, password);
 oos.writeObject(encryptedData);
@@ -48,25 +50,71 @@ return keyFactory.generateSecret(keySpec);
 public static byte[] encrypt(I_Secrets data, String password)
 throws NoSuchPaddingException, NoSuchAlgorithmException,
 InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException,
-IOException {
-byte[] key = password.getBytes(StandardCharsets.UTF_8);
+IOException, InvalidKeySpecException {
+
+// Generate salt and key from password
+byte[] salt = new byte[16];
+SecureRandom random = new SecureRandom();
+random.nextBytes(salt);
+SecretKey secretKey = new SecretsHelper().toKey(password, salt);
 
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-SecretKey secretKey = new SecretKeySpec(key, ALGORITHM);
-cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-return cipher.doFinal(serialize(data));
+
+// Generate a random IV
+byte[] iv = new byte[cipher.getBlockSize()];
+random.nextBytes(iv);
+IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+
+// Serialize the data and encrypt it
+byte[] encryptedData = cipher.doFinal(serialize(data));
+
+// Combine salt, IV, and encrypted data
+ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+outputStream.write(salt);
+outputStream.write(iv);
+outputStream.write(encryptedData);
+
+return outputStream.toByteArray();
 }
 
-public static I_Secrets decrypt(byte[] encryptedData, String password) throws NoSuchAlgorithmException,
-InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IOException,
-ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException {
+public static I_Secrets decrypt(byte[] encryptedData, String password)
+throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
+BadPaddingException,
+IOException, ClassNotFoundException, NoSuchPaddingException, IllegalBlockSizeException,
+InvalidKeySpecException {
+ByteArrayInputStream inputStream = new ByteArrayInputStream(encryptedData);
+return decrypt(inputStream, password);
+}
 
-byte[] key = password.getBytes(StandardCharsets.UTF_8);
+public static I_Secrets decrypt(ByteArrayInputStream inputStream, String password)
+throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException,
+IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException,
+ClassNotFoundException {
+
+// Extract salt
+byte[] salt = new byte[16];
+inputStream.read(salt);
+
+// Derive key from password and salt
+SecretKey secretKey = new SecretsHelper().toKey(password, salt);
+
+// Extract IV
+byte[] iv = new byte[16]; // AES block size
+inputStream.read(iv);
+IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+// Read encrypted data
+byte[] cipherText = inputStream.readAllBytes();
+
+// Initialize cipher for decryption
 Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-SecretKey secretKey = new SecretKeySpec(key, ALGORITHM);
-cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-byte[] decryptedData = cipher.doFinal(encryptedData);
-return (I_Secrets) Deserialize(decryptedData);
+cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+
+byte[] decryptedData = cipher.doFinal(cipherText);
+
+return (I_Secrets) deserialize(decryptedData);
 }
 
 public static byte[] serialize(I_Secrets obj) throws IOException {
@@ -77,7 +125,7 @@ return bos.toByteArray();
 }
 }
 
-public static Object Deserialize(byte[] data) throws IOException, ClassNotFoundException {
+public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
 try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
 ObjectInputStream ois = new ObjectInputStream(bis)) {
 return ois.readObject();

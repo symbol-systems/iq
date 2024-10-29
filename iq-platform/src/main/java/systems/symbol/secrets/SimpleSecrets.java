@@ -10,10 +10,9 @@ import java.util.Map;
  */
 public class SimpleSecrets implements I_Secrets, Serializable {
 private static final long serialVersionUID = 2462762779494608930L;
-//private final Logger log = LoggerFactory.getLogger(getClass());
+// private final Logger log = LoggerFactory.getLogger(getClass());
 
 private final Map<String, String> secretStore = new HashMap<>();
-
 
 /**
  * Set a secret for the specified key.
@@ -28,7 +27,7 @@ secretStore.put(key, secret);
 /**
  * Get the secret for the specified key if access is granted.
  *
- * @param key   The key for which the secret is requested.
+ * @param key The key for which the secret is requested.
  * @return The secret associated with the key.
  */
 @Override
@@ -37,7 +36,8 @@ return secretStore.get(key);
 }
 
 /**
- * Provide a string representation of the secrets and access control information.
+ * Provide a string representation of the secrets and access control
+ * information.
  *
  * @return A string representation of the secrets and access control.
  */

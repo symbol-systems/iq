@@ -33,26 +33,26 @@ public Response find(@PathParam("finder") String finder, @PathParam("repo") Stri
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("kb.find#protected");
-return new OopsResponse("api.iq.find#unauthorized", Response.Status.UNAUTHORIZED).build();
+return new OopsResponse("ux.iq.find#unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(repo)) {
-return new OopsResponse("api.iq.find.indexer#repository", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.iq.find.indexer#repository", Response.Status.BAD_REQUEST).build();
 }
 if (Validate.isNonAlphanumeric(finder)) {
-return new OopsResponse("api.iq.find.indexer#finder-invalid", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.iq.find.indexer#finder-invalid", Response.Status.BAD_REQUEST).build();
 }
 if (Validate.isMissing(query)) {
-return new OopsResponse("api.iq.find.indexer#query-missing", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.iq.find.indexer#query-missing", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = platform.getRealm(repo);
 if (realm == null)
-return new OopsResponse("api.iq.find.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.iq.find.realm", Response.Status.NOT_FOUND).build();
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("api.iq.find#repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.iq.find#repository", Response.Status.NOT_FOUND).build();
 FactFinder factFinder = realm.getFinder();
 if (factFinder == null) {
-return new OopsResponse("api.iq.find.indexer#finder-missing", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.iq.find.indexer#finder-missing", Response.Status.NOT_FOUND).build();
 }
 
 max = max == 0 ? 10 : Math.min(Math.max(max, 1), 10); // clamp 1-10
@@ -68,7 +68,7 @@ model = factFinder.search(dmf.createEmptyModel(), query, connection, max, DEFAUL
 return new RDFResponse(null, model, RDFFormat.JSONLD).build();
 
 } catch (Exception e) {
-return new OopsResponse("api.iq.find.indexer#query-failed", e).build();
+return new OopsResponse("ux.iq.find.indexer#query-failed", e).build();
 }
 }
 

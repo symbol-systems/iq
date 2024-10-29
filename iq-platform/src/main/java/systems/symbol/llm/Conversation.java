@@ -18,8 +18,8 @@ public List<I_LLMessage<String>> messages = new ArrayList<>();
 public Conversation() {
 }
 
-public Conversation(I_Assist<String> thread) {
-messages.addAll(thread.messages());
+public Conversation(I_Assist<String> chat) {
+messages.addAll(chat.messages());
 }
 
 public Conversation add(I_LLMessage<String> msg) {

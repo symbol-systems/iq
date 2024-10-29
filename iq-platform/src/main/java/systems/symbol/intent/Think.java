@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.rio.ParserConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.RDF;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.eclipse.rdf4j.rio.ntriples.NTriplesParserSettings.FAIL_ON_INVALID_LINES;
-import static systems.symbol.agent.MyFacade.SELF;
+import static systems.symbol.agent.Facades.SELF;
 
 /**
  * An intent that processes and renders structured content into a format
@@ -98,7 +98,7 @@ return done;
 
 protected Set<IRI> thinks(IRI actor, Resource state, Literal template, Bindings my, Model model)
 throws IOException, APIException {
-Bindings bindings = MyFacade.rebind(actor, state, my);
+Bindings bindings = Facades.rebind(actor, state, my);
 String intent = my.containsKey(SELF) ? my.get(SELF).toString() : IdentityHelper.uuid(actor.stringValue() + "#");
 
 log.info("think.bindings: {} -> {}", template.getDatatype(), bindings.keySet());
