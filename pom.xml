@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.81.8</version>
+ <version>0.81.9</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -13,13 +13,8 @@
   </organization>
   <licenses>
     <license>
-      <name>Symbol Systems License</name>
+      <name>Proprietary License</name>
       <url>https://symbol.systems/about/license</url>
-      <distribution>repo</distribution>
-    </license>
-    <license>
-      <name>GNU Affero General Public License v3.0</name>
-      <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
       <distribution>repo</distribution>
     </license>
   </licenses>

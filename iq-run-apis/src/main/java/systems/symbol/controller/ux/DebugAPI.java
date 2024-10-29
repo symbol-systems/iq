@@ -36,11 +36,11 @@ public class DebugAPI extends RealmAPI {
             @HeaderParam("Authorization") String auth) throws Exception {
         log.info("ux.debug: {} -> {}", _realm, _self);
         if (!Validate.isURN(_self))
-            return new OopsResponse("api.ux.debug.invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.debug.invalid", Response.Status.BAD_REQUEST).build();
         IRI self = Values.iri(_self);
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.ux.data.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.data.realm", Response.Status.NOT_FOUND).build();
         log.debug("ux.debug.realm: {} -> {}", realm.getSelf(), realm.getSecrets());
         DecodedJWT jwt;
         try {
@@ -49,9 +49,9 @@ public class DebugAPI extends RealmAPI {
             return new OopsResponse(e.getMessage(), e.getStatus()).build();
         }
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("api.ux.debug.repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.debug.repository", Response.Status.BAD_REQUEST).build();
         if (!entitled(jwt, _realm))
-            return new OopsResponse("api.ux.debug.trust", Response.Status.FORBIDDEN).build();
+            return new OopsResponse("ux.ux.debug.trust", Response.Status.FORBIDDEN).build();
 
         Repository repository = realm.getRepository();
         try (RepositoryConnection connection = repository.getConnection()) {

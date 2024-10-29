@@ -9,9 +9,10 @@ public class AbstractMessage<T> implements I_LLMessage<T> {
 
     public AbstractMessage() {
     }
+
     MessageType type = MessageType.error;
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    String name;
+    // @JsonInclude(JsonInclude.Include.NON_NULL)
+    // String name;
     RoleType role;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     T content;
@@ -36,13 +37,12 @@ public class AbstractMessage<T> implements I_LLMessage<T> {
         return role;
     }
 
-
     @Override
     public T getContent() {
         return content;
     }
 
     public String toString() {
-        return "{role: "+role+", content: "+content+"}";
+        return "{type: " + type + ", role: " + role + ", content: " + content + "}";
     }
 }

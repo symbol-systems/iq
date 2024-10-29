@@ -27,8 +27,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MyFacade {
-    protected final static Logger log = LoggerFactory.getLogger(MyFacade.class);
+public class Facades {
+    protected final static Logger log = LoggerFactory.getLogger(Facades.class);
 
     public static final String SELF = "self";
     public static final String STATE = "state";

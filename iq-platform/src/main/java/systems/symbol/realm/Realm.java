@@ -11,7 +11,6 @@ import systems.symbol.secrets.I_Secrets;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyPair;
-import java.util.Collection;
 import java.util.Iterator;
 
 public class Realm implements I_Realm {
@@ -91,7 +90,7 @@ public class Realm implements I_Realm {
     }
 
     @Override
-    public Collection<I_Found<IRI>> search(String text, int maxResults, double minScore) {
-        return this.search.byConcept(getSelf()).search(text, maxResults, minScore);
+    public I_Search<I_Found<IRI>> byConcept(IRI concept) {
+        return search.byConcept(concept);
     }
 }

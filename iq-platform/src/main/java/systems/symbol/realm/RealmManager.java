@@ -69,6 +69,10 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         return vaultHome;
     }
 
+    public File getLakeHome() {
+        return lakeHome;
+    }
+
     public I_Realm getRealm(String self) throws SecretsException {
         return getRealm(Values.iri(self.contains(":") ? self : self + ":"));
     }

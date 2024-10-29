@@ -18,8 +18,8 @@ public class Conversation implements I_Assist<String> {
     public Conversation() {
     }
 
-    public Conversation(I_Assist<String> thread) {
-        messages.addAll(thread.messages());
+    public Conversation(I_Assist<String> chat) {
+        messages.addAll(chat.messages());
     }
 
     public Conversation add(I_LLMessage<String> msg) {

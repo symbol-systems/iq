@@ -75,6 +75,16 @@ public class Avatar implements I_Selfie {
         }
     }
 
+    // Executes the agent's current/default state
+
+    public Set<IRI> execute(Bindings bindings) {
+        try {
+            return llm(getSelf(), getStateMachine().getState(), bindings);
+        } catch (APIException | Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // Handles the flow between agent and the LLM, then updating state
     public Set<IRI> llm(IRI actor, Resource assistant, Bindings bindings) throws APIException, Exception {
         Set<IRI> done = new HashSet<>();
@@ -97,16 +107,16 @@ public class Avatar implements I_Selfie {
     protected boolean prompts(IRI actor, Resource assistant, I_LLM<String> llm, Bindings bindings)
             throws Exception, APIException {
         Resource state = agent.getStateMachine().getState();
-        bindings.put(MyFacade.AI, actor.getLocalName());
+        bindings.put(Facades.AI, actor.getLocalName());
         Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
         if (wrapper.isEmpty())
             return false;
         log.info("avatar.prompt.{}: {} @ {}", assistant, actor, state);
 
-        String prompt$ = value(agent.getSelf()) + " " + value(agent.getStateMachine().getState());
+        String prompt$ = value(agent.getSelf()) + "\n" + value(agent.getStateMachine().getState());
         if (prompt$.trim().isEmpty())
             return false;
-        Bindings my = MyFacade.rebind(agent.getSelf(), bindings);
+        Bindings my = Facades.rebind(agent.getSelf(), bindings);
         SimplePrompt prompt = new SimplePrompt(wrapper.get().stringValue(), my);
         PromptChain chain = new PromptChain(prompt);
 
@@ -147,10 +157,10 @@ public class Avatar implements I_Selfie {
         if (latest.getRole() == I_LLMessage.RoleType.user) {
             chat.messages().removeLast();
             intent = new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.user, latest.getContent());
-            log.info("avatar.user: {}", intent);
+            log.info("avatar.intent: {}", intent);
         }
         chat.add(intent);
-        if (intent.getSelf() != null && !agent.getStateMachine().getState().equals(intent.getSelf())) {
+        if (intent.intent() != null && !agent.getStateMachine().getState().equals(intent.intent())) {
             IRI todo = next(agent, intent);
             log.info("avatar.NEXT..? {} => {} @ {}", intent.getIntent(), agent.getSelf(), todo);
         }
@@ -161,7 +171,7 @@ public class Avatar implements I_Selfie {
     private IRI next(I_Agent agent, IntentMessage message) throws StateException {
         I_StateMachine<Resource> fsm = agent.getStateMachine();
         Collection<Resource> transitions = fsm.getTransitions();
-        String intentLocalName = message.getSelf().getLocalName().toLowerCase();
+        String intentLocalName = message.intent().getLocalName().toLowerCase();
 
         // match agnostic to namespace and case
         for (Resource transition : transitions) {

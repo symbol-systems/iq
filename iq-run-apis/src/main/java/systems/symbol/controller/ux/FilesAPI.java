@@ -27,18 +27,18 @@ public class FilesAPI extends GuardedAPI {
     public Response download(@PathParam("realm") String _realm, @PathParam("ipfs") String ipfs,
             @HeaderParam("Authorization") String auth) throws SecretsException {
         if (Validate.isMissing(ipfs)) {
-            return new OopsResponse("api.ipfs#missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ipfs#missing", Response.Status.BAD_REQUEST).build();
         }
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.ipfs.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ipfs.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
         } catch (OopsException e) {
             return new OopsResponse(e.getMessage(), e.getStatus()).build();
         }
-        log.info("api.ipfs: {} -> {}", ipfs, jwt.getSubject());
+        log.info("ux.ipfs: {} -> {}", ipfs, jwt.getSubject());
 
         File home = new File(platform.getInstance().getHome(), "vfs");
         File file = new File(home, ipfs);

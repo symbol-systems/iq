@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.*;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.DataResponse;
 import systems.symbol.controller.responses.OopsException;
@@ -36,10 +36,10 @@ public class IntentAPI extends GuardedAPI {
             @HeaderParam("Authorization") String auth) throws IOException, SecretsException, StateException {
 
         if (_realm == null || _realm.isEmpty())
-            return new OopsResponse("api.ux.intent.repo-missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.intent.repo-missing", Response.Status.BAD_REQUEST).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.ux.intent.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.intent.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -48,31 +48,31 @@ public class IntentAPI extends GuardedAPI {
         }
         Repository repo = realm.getRepository();
         if (repo == null)
-            return new OopsResponse("api.ux.intent.repo-unknown-" + _realm, Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.intent.repo-unknown-" + _realm, Response.Status.NOT_FOUND).build();
 
         log.info("ux.intent.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
         if (action == null) {
-            return new OopsResponse("api.ux.intent.missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.intent.missing", Response.Status.BAD_REQUEST).build();
         }
         log.info("ux.intent.action: {} => {}", action.getActor(), action.intent());
         if (action.getActor() == null || action.intent() == null) {
-            return new OopsResponse("api.ux.intent.invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.intent.invalid", Response.Status.BAD_REQUEST).build();
         }
 
         try (RepositoryConnection connection = repo.getConnection()) {
 
             log.info("ux.intent.action: {} -> {}", repo, action);
             // MyFacade.dump(params, System.out);
-            Bindings my = MyFacade.rebind(action.getActor(), action.getBindings(), jwt);
+            Bindings my = Facades.rebind(action.getActor(), action.getBindings(), jwt);
 
             AgentService service = new AgentService(action.getActor(), connection, realm.getSecrets(), my);
 
             if (service.getAgent() == null) {
-                return new OopsResponse("api.ux.intent.agent-unknown", Response.Status.NOT_FOUND).build();
+                return new OopsResponse("ux.ux.intent.agent-unknown", Response.Status.NOT_FOUND).build();
             }
             Resource current = service.getAgent().getStateMachine().getState();
             if (current == null) {
-                return new OopsResponse("api.ux.intent.state-unknown", Response.Status.NOT_FOUND).build();
+                return new OopsResponse("ux.ux.intent.state-unknown", Response.Status.NOT_FOUND).build();
             }
             Collection<Resource> todo = service.getAgent().getStateMachine().getTransitions();
             log.info("ux.intent.before: {} -> {} @ {} ==> {}", action.getActor(), action.intent(), current, todo);
@@ -88,7 +88,7 @@ public class IntentAPI extends GuardedAPI {
 
             // RDFDump.dump(new LiveModel(connection));
             if (state == null) {
-                return new OopsResponse("api.ux.intent.failed", Response.Status.NOT_ACCEPTABLE).build();
+                return new OopsResponse("ux.ux.intent.failed", Response.Status.NOT_ACCEPTABLE).build();
             }
 
             Collection<Resource> intents = service.getAgent().getStateMachine().getTransitions();
@@ -98,7 +98,7 @@ public class IntentAPI extends GuardedAPI {
             return response.build();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new OopsResponse("api.ux.intent.oops", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.intent.oops", Response.Status.BAD_REQUEST).build();
 
         }
     }

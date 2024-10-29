@@ -31,15 +31,15 @@ public class Event extends GuardedAPI {
             @HeaderParam("Authorization") String auth) throws IOException {
         if (!Validate.isBearer(auth)) {
             log.info("event#protected-repository");
-            return new OopsResponse("api.event#unauthorized", Response.Status.UNAUTHORIZED).build();
+            return new OopsResponse("ux.event#unauthorized", Response.Status.UNAUTHORIZED).build();
         }
         if (Validate.isNonAlphanumeric(repo)) {
-            return new OopsResponse("api.event#repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.event#repository", Response.Status.BAD_REQUEST).build();
         }
         if (Validate.isNonAlphanumeric(source)) {
-            return new OopsResponse("api.event#source-missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.event#source-missing", Response.Status.BAD_REQUEST).build();
         }
         // Repository repository = this.platform.getRepository(repo);
-        return new HealthCheck("api.event#todo").build();
+        return new HealthCheck(true).build();
     }
 }

@@ -22,13 +22,13 @@ public class SearchText {
     public Response search(@PathParam("finder") String finder, @QueryParam("query") String query,
             @QueryParam("maxResults") int maxResults , @QueryParam("relevancy") double relevancy) {
         if (Validate.isNonAlphanumeric(finder)) {
-            return new OopsResponse("api.search.text#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("ux.search.text#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
         TextFinder search = platform.getTextFinder(finder);
         if (search==null) {
-            return new OopsResponse("api.search.text#finder-missing", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("ux.search.text#finder-missing", Response.Status.NOT_FOUND).asJSON();
         }
-        return new OopsResponse("api.search.text#todo", Response.Status.EXPECTATION_FAILED).asJSON();
+        return new OopsResponse("ux.search.text#todo", Response.Status.EXPECTATION_FAILED).asJSON();
     }
 
 }

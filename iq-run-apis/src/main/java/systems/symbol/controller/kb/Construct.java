@@ -41,17 +41,17 @@ public class Construct extends GuardedAPI {
             @PathParam("query") String query,
             @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
         if (!Validate.isBearer(auth))
-            return new OopsResponse("api.llm.openai#unauthorized", Response.Status.UNAUTHORIZED).build();
+            return new OopsResponse("ux.llm.openai#unauthorized", Response.Status.UNAUTHORIZED).build();
         if (Validate.isNonAlphanumeric(repo))
-            return new OopsResponse("api.construct#repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.construct#repository", Response.Status.BAD_REQUEST).build();
         if (Validate.isMissing(query))
-            return new OopsResponse("api.construct#query-invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.construct#query-invalid", Response.Status.BAD_REQUEST).build();
         I_Realm realm = platform.getRealm(repo);
         if (realm == null)
-            return new OopsResponse("api.construct.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.construct.realm", Response.Status.NOT_FOUND).build();
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("api.construct#repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.construct#repository", Response.Status.NOT_FOUND).build();
 
         try (RepositoryConnection connection = repository.getConnection()) {
 
@@ -65,7 +65,7 @@ public class Construct extends GuardedAPI {
             RDFResponse rdfResponse = new RDFResponse(iq.getSelf().stringValue(), graphQuery, RDFFormat.JSONLD);
             return rdfResponse.asJSONLD();
         } catch (URISyntaxException e) {
-            return new OopsResponse("api.construct#query-invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.construct#query-invalid", Response.Status.BAD_REQUEST).build();
         }
     }
 }

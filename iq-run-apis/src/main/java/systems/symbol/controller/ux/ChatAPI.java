@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -29,6 +32,7 @@ import systems.symbol.util.Stopwatch;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -37,6 +41,10 @@ import java.util.Collection;
 @Tag(name = "api.ux.chat.name", description = "api.ux.chat.description")
 @Path("ux/chat")
 public class ChatAPI extends GuardedAPI {
+    @ConfigProperty(name = "iq.realm.chat.minScore", defaultValue = "0.2")
+    double minScore;
+    @ConfigProperty(name = "iq.realm.chat.maxResults", defaultValue = "5")
+    int maxResults;
 
     /**
      * Endpoint for answering queries using LLM Language Models.
@@ -54,15 +62,15 @@ public class ChatAPI extends GuardedAPI {
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.chat: {}", chat.messages());
         if (chat.messages().isEmpty())
-            return new OopsResponse("api.ux.chat.empty", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.chat.empty", Response.Status.NOT_FOUND).build();
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("api.ux.chat.repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.chat.repository", Response.Status.BAD_REQUEST).build();
         if (Validate.isMissing(_actor))
-            return new OopsResponse("api.ux.chat.missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.chat.missing", Response.Status.BAD_REQUEST).build();
         IRI actor = Values.iri(_actor);
         I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
         if (realm == null)
-            return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -72,7 +80,7 @@ public class ChatAPI extends GuardedAPI {
         }
         Repository realmRepository = realm.getRepository();
         if (realmRepository == null)
-            return new OopsResponse("api.ux.chat.repository.missing", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.chat.repository.missing", Response.Status.NOT_FOUND).build();
 
         Bindings bindings = new SimpleBindings();
         IRI user = Values.iri(jwt.getSubject());
@@ -81,27 +89,66 @@ public class ChatAPI extends GuardedAPI {
             I_Realm myRealm = platform.getRealm(user);
             log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm != null);
             if (myRealm == null)
-                return new OopsResponse("api.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
+                return new OopsResponse("ux.ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
             log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
             AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
             builder.jwt(jwt).setThoughts(myRealm.getModel());
 
-            Collection<I_Found<IRI>> search = myRealm.search(chat.context(), 5, 0.1);
-            log.info("ux.chat.search: {} -> {}", chat.context(), search);
-
             bindings.put("realm", _realm);
             bindings.put("capacity", connection.size());
             I_Agent agent = builder.avatar(chat);
-            agent.start();
+
+            log.info("ux.chat.timer.1: {}", stopwatch.summary());
+            Resource state = agent.getStateMachine().getState();
+            if (state.isIRI()) {
+                Collection<I_Found<IRI>> search = realm.byConcept((IRI) state).search(chat.toString(), maxResults,
+                        minScore);
+                log.info("ux.chat.search: {} -> {} == {}", state, search.size(), chat.context());
+                log.info("ux.chat.timer.2: {}", stopwatch.summary());
+                if ((search == null || search.isEmpty()) && state != null) {
+                    search = realm.byConcept(null).search(chat.context(), maxResults,
+                            minScore);
+                    log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
+                    log.info("ux.chat.timer.3: {}", stopwatch.summary());
+                }
+                Collection<Resource> cando = agent.getStateMachine().getTransitions();
+                final IRI[] _intent = new IRI[1]; // Using an array to hold the intent value
+
+                search.forEach(found -> {
+                    try {
+                        IRI intent = found.intent();
+                        if (intent != null && cando.contains(intent)) {
+                            _intent[0] = intent;
+
+                        }
+                    } catch (StateException e) {
+                        log.error("Error processing intent: {}. State machine transition failed: {}", _intent[0],
+                                e.getMessage(), e);
+                        connection.rollback();
+                    } catch (Exception e) {
+                        log.error("Unexpected error: {}", e.getMessage(), e);
+                    }
+                });
+                if (_intent[0] != null) {
+                    synchronized (connection) {
+                        agent.getStateMachine().transition(_intent[0]);
+                        connection.commit();
+                    }
+                } else {
+                    agent.start();
+                }
+                log.info("ux.chat.  : {} == {}", _intent[0], agent.getStateMachine().getState());
+            }
+            log.info("ux.chat.timer.4: {}", stopwatch.summary());
             agent.stop();
             log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
             return new ChatResponse(chat, agent).build();
         } catch (StateException e) {
             log.error("ux.chat.oops: {}", e.getMessage());
-            return new OopsResponse("api.ux.chat.state", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.chat.state", Response.Status.BAD_REQUEST).build();
         } catch (Exception e) {
             log.error("ux.chat.fatal: {}", e.getMessage(), e);
-            return new OopsResponse("api.ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
+            return new OopsResponse("ux.ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

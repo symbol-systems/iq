@@ -3,6 +3,8 @@ package systems.symbol.string;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.script.Bindings;
+
 /**
  * Utility class for manipulating and formatting strings.
  */
@@ -272,5 +274,19 @@ public class PrettyString {
         } catch (Exception e) {
             return _default;
         }
+    }
+
+    public static int get(Bindings bindings, String name, int _default) {
+        if (!bindings.containsKey(name))
+            return _default;
+        return Integer.parseInt(bindings.get(name).toString());
+
+    }
+
+    public static double get(Bindings bindings, String name, double _default) {
+        if (!bindings.containsKey(name))
+            return _default;
+        return Double.parseDouble(bindings.get(name).toString());
+
     }
 }

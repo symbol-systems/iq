@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.RDF;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
@@ -71,9 +71,9 @@ public class Update implements I_Intent, I_Self {
     public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
         Set<IRI> done = new HashSet<>();
         try {
-            Bindings bindings = MyFacade.rebind(actor, state, my);
+            Bindings bindings = Facades.rebind(actor, state, my);
             log.info("sparql.execute: {} -> {}", state.stringValue(), bindings.keySet());
-            MyFacade.dump(bindings, System.out);
+            Facades.dump(bindings, System.out);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
             log.info("sparql.update: {}", sparql);
             if (sparql == null || sparql.isEmpty())

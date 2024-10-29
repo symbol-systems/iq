@@ -7,7 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.RDF;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
@@ -75,14 +75,14 @@ public class Select implements I_Intent, I_Self {
     public Set<IRI> execute(IRI actor, Resource state, Bindings my) throws StateException {
         Set<IRI> done = new HashSet<>();
         try {
-            Bindings bindings = MyFacade.rebind(actor, state, my);
+            Bindings bindings = Facades.rebind(actor, state, my);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
             log.info("sparql.select: {}", sparql);
             if (sparql == null || sparql.isEmpty())
                 return done;
             TupleQuery prepared = iq.getConnection().prepareTupleQuery(sparql);
             List<Map<String, Object>> results = SPARQLMapper.toMaps(prepared.evaluate());
-            MyFacade.results(bindings, results);
+            Facades.results(bindings, results);
             done.add((IRI) state);
         } catch (IOException e) {
             throw new RuntimeException(e);

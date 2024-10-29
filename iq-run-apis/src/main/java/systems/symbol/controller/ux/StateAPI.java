@@ -13,7 +13,7 @@ import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import systems.symbol.agent.MyFacade;
+import systems.symbol.agent.Facades;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.*;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
@@ -39,10 +39,10 @@ public class StateAPI extends GuardedAPI {
     public Response state(@PathParam("realm") String _realm, @PathParam("thing") String _agent,
             @HeaderParam("Authorization") String auth) throws Exception {
         if (!Validate.isBearer(auth))
-            return new OopsResponse("api.ux.state.unauthorized", Response.Status.UNAUTHORIZED).build();
+            return new OopsResponse("ux.ux.state.unauthorized", Response.Status.UNAUTHORIZED).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.ux.state.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.state.realm", Response.Status.NOT_FOUND).build();
         try {
             authenticate(auth, realm);
         } catch (OopsException e) {
@@ -50,14 +50,14 @@ public class StateAPI extends GuardedAPI {
         }
 
         if (!Validate.isURN(_agent))
-            return new OopsResponse("api.ux.state#invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.state#invalid", Response.Status.BAD_REQUEST).build();
 
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.state.agent: {}", _agent);
         IRI thing = Values.iri(_agent);
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("api.ux.state.repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.state.repository", Response.Status.NOT_FOUND).build();
 
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery graphQuery = RDFPrefixer.describe(connection, thing);
@@ -86,10 +86,10 @@ public class StateAPI extends GuardedAPI {
         log.info("ux.update: {} --> {} -> {}", _realm, query, state.keySet());
 
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("api.ux.update.realm", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.update.realm", Response.Status.BAD_REQUEST).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.ux.update.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.update.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -97,23 +97,23 @@ public class StateAPI extends GuardedAPI {
             return new OopsResponse(e.getMessage(), e.getStatus()).build();
         }
         if (!Validate.isURN(query))
-            return new OopsResponse("api.ux.update.query", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.ux.update.query", Response.Status.BAD_REQUEST).build();
 
         log.info("ux.update.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("api.ux.update.repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.ux.update.repository", Response.Status.NOT_FOUND).build();
         IRI self = Values.iri(jwt.getSubject());
         try (RepositoryConnection connection = repository.getConnection()) {
             IQScriptCatalog catalog = new IQScriptCatalog(realm.getSelf(), connection);
-            Bindings params = MyFacade.rebind(self, state);
-            Bindings my = MyFacade.rebind(self, params, jwt);
+            Bindings params = Facades.rebind(self, state);
+            Bindings my = Facades.rebind(self, params, jwt);
             log.info("ux.update.bind: {}", my.keySet());
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
             if (Validate.isMissing(sparql))
-                return new OopsResponse("api.ux.update#query-missing", Response.Status.NOT_FOUND).build();
+                return new OopsResponse("ux.ux.update#query-missing", Response.Status.NOT_FOUND).build();
 
             log.info("ux.update.query: {} --> {}", query, sparql);
             Update graphQuery = connection.prepareUpdate(sparql);

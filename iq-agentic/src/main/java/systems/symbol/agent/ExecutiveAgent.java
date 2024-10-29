@@ -111,7 +111,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      * (choices) of the state machine.
      * If a single choice exists, the decision is simply made.
      * If multiple choices are available, we delegate the decision-making process to
-     * the manager.
+     * the manager, if one exists.
      *
      * @return the selected resource
      * @throws StateException if there is an issue with the state machine

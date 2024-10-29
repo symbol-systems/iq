@@ -66,7 +66,7 @@ public class SearchFacts {
 
         Stopwatch stopwatch = new Stopwatch();
         if (Validate.isMissing(query)) {
-            return new OopsResponse("api.search.facts#query-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("ux.search.facts#query-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
 
         if (Validate.isMissing(sparql)) {
@@ -75,24 +75,24 @@ public class SearchFacts {
 
         // Initialize and perform sanity checks
         if (Validate.isNonAlphanumeric(finder)) {
-            return new OopsResponse("api.search.facts#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
+            return new OopsResponse("ux.search.facts#finder-invalid", Response.Status.BAD_REQUEST).asJSON();
         }
 
         // Get the text finder instance from the platform
         FactFinder searcher = platform.getFactFinder(finder);
         if (searcher == null) {
-            return new OopsResponse("api.search.facts#finder-missing", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("ux.search.facts#finder-missing", Response.Status.NOT_FOUND).asJSON();
         }
 
         // Get the RDF repository instance from the platform
         Repository repository = platform.getRepository(repo);
         if (repository == null) {
-            return new OopsResponse("api.search.facts#repository", Response.Status.NOT_FOUND).asJSON();
+            return new OopsResponse("ux.search.facts#repository", Response.Status.NOT_FOUND).asJSON();
         }
 
         // Check if the repository is initialized
         if (!repository.isInitialized()) {
-            return new OopsResponse("api.search.facts#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
+            return new OopsResponse("ux.search.facts#repository.offline", Response.Status.SERVICE_UNAVAILABLE).asJSON();
         }
 
 
@@ -125,7 +125,7 @@ public class SearchFacts {
             String hydrateQuery = library.getSPARQL(sparql, bindings);
             log.info("search.facts.hydrate: {} -> {} @ {}", sparql, hydrateQuery, stopwatch.summary());
             if (hydrateQuery == null || hydrateQuery.isEmpty()) {
-                return new OopsResponse("api.search.facts#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
+                return new OopsResponse("ux.search.facts#hydrate-not-found", Response.Status.NOT_FOUND).asJSON();
             }
 
 
@@ -136,10 +136,10 @@ public class SearchFacts {
                 log.info("search.facts.done: {} @ {}", models.size(), stopwatch.summary());
                 return new DataResponse(models).asJSON();
             } catch (QueryEvaluationException e) {
-                return new OopsResponse("api.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+                return new OopsResponse("ux.search.facts#query-failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
             }
         } catch (IOException e) {
-            return new OopsResponse("api.search.facts#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
+            return new OopsResponse("ux.search.facts#failed", Response.Status.INTERNAL_SERVER_ERROR).asJSON();
         }
     }
 }

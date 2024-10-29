@@ -43,10 +43,10 @@ public class TextIndexer extends GuardedAPI {
 
     public Response doImport(String _realm, String finder, String query, String auth) throws SecretsException {
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("api.iq.text.indexer#repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.iq.text.indexer#repository", Response.Status.BAD_REQUEST).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("api.iq.text.indexer.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.iq.text.indexer.realm", Response.Status.NOT_FOUND).build();
         try {
             authenticate(auth, realm);
         } catch (OopsException e) {
@@ -56,27 +56,27 @@ public class TextIndexer extends GuardedAPI {
         log.info("text.index: {} -> {} -> {}", _realm, finder, query);
 
         if (Validate.isNonAlphanumeric(finder)) {
-            return new OopsResponse("api.iq.text.indexer#finder-invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.iq.text.indexer#finder-invalid", Response.Status.BAD_REQUEST).build();
         }
         if (Validate.isNonAlphanumeric(_realm)) {
-            return new OopsResponse("api.iq.text.indexer#repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.iq.text.indexer#repository", Response.Status.BAD_REQUEST).build();
         }
         if (!Validate.isURN(query)) {
-            return new OopsResponse("api.iq.text.indexer#query-invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.iq.text.indexer#query-invalid", Response.Status.BAD_REQUEST).build();
         }
 
         FactFinder factFinder = realm.getFinder();
         if (factFinder == null) {
-            return new OopsResponse("api.iq.text.indexer#finder-missing", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.iq.text.indexer#finder-missing", Response.Status.NOT_FOUND).build();
         }
         Repository repository = realm.getRepository();
         if (repository == null) {
-            return new OopsResponse("api.iq.text.indexer#repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.iq.text.indexer#repository", Response.Status.NOT_FOUND).build();
         }
         log.info("iq.text.indexer.repository: {} @ {}", repository.isInitialized(),
                 repository.getDataDir().getAbsolutePath());
         if (!repository.isInitialized()) {
-            return new OopsResponse("api.iq.text.indexer#repository-offline", Response.Status.SERVICE_UNAVAILABLE)
+            return new OopsResponse("ux.iq.text.indexer#repository-offline", Response.Status.SERVICE_UNAVAILABLE)
                     .build();
         }
         Stopwatch stopwatch = new Stopwatch();
@@ -84,7 +84,7 @@ public class TextIndexer extends GuardedAPI {
             IQScriptCatalog library = new IQScriptCatalog(realm.getSelf(), connection);
             String sparql = library.getSPARQL(query);
             if (sparql.isEmpty()) {
-                return new OopsResponse("api.iq.text.indexer#query-missing", Response.Status.NO_CONTENT).build();
+                return new OopsResponse("ux.iq.text.indexer#query-missing", Response.Status.NO_CONTENT).build();
             }
             log.info("iq.text.index.sparql: {}", sparql);
             // SPARQL query used to populate index
@@ -104,7 +104,7 @@ public class TextIndexer extends GuardedAPI {
 
         } catch (Exception e) {
             log.error("iq.text.indexer.failed", e);
-            return new OopsResponse("api.iq.text.indexer#failed", e).build();
+            return new OopsResponse("ux.iq.text.indexer#failed", e).build();
         }
     }
 
