@@ -39,13 +39,13 @@ public class AvatarAPI extends RealmAPI {
             @HeaderParam("Authorization") String auth, Conversation chat) throws Exception, APIException {
         log.info("ux.avatar: {} -> {} -> {}", _realm, _agent, chat);
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("ux.ux.avatar#repository", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.avatar#repository", Response.Status.BAD_REQUEST).build();
         if (Validate.isMissing(_agent))
-            return new OopsResponse("ux.ux.avatar#missing", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.avatar#missing", Response.Status.BAD_REQUEST).build();
         IRI agent = Values.iri(_agent);
         I_Realm realm = platform.getRealm(Values.iri(_realm + ":"));
         if (realm == null)
-            return new OopsResponse("ux.ux.avatar.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.avatar.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -54,7 +54,7 @@ public class AvatarAPI extends RealmAPI {
         }
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("ux.ux.avatar#repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.avatar#repository", Response.Status.NOT_FOUND).build();
 
         Stopwatch stopwatch = new Stopwatch();
         Bindings bindings = new SimpleBindings();

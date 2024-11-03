@@ -13,23 +13,31 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * The ExecutiveIntent class represents an intent executor capable of executing sets of operations based on the
+ * The ExecutiveIntent class represents an intent executor capable of executing
+ * sets of operations based on the
  * I_Intents it is constructed with.
  *
- * When transitioning to a new state, it automatically executes the intents associated with that state.
- * If the state has exactly one next step, it automatically attempts to transition to the next step in its workflow.
+ * When transitioning to a new state, it automatically executes the intents
+ * associated with that state.
+ * If the state has exactly one next step, it automatically attempts to
+ * transition to the next step in its workflow.
  *
- * An ExecutiveIntent is composed of a collection of I_Intent implementations, each associated with a specific
+ * An ExecutiveIntent is composed of a collection of I_Intent implementations,
+ * each associated with a specific
  * action or operation.
  *
- * It has the capability to learn or forget facts and execute scripts and/or other intents in other states through indirection.
+ * It has the capability to learn or forget facts and execute scripts and/or
+ * other intents in other states through indirection.
  */
 public class ExecutiveIntent extends AbstractIntent implements I_Intents {
     Map<IRI, I_Intent> intents = new HashMap<>();
     Model facts;
+
     /**
-     * An executive represents a set of I_Intents. During execution, matching intents are executed.
-     * All Executives have the ability to learn/forget facts and `execute` Intents in other states (indirection).
+     * An executive represents a set of I_Intents. During execution, matching
+     * intents are executed.
+     * All Executives have the ability to learn/forget facts and `execute` Intents
+     * in other states (indirection).
      *
      * @param self The IRI identifier for the Executive itself.
      */
@@ -41,9 +49,10 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
 
     /**
      * An executive able to execute specified intents, and follow next-steps.
-     * @param self The IRI identifier for the Executive itself.
+     * 
+     * @param self     The IRI identifier for the Executive itself.
      * @param thoughts The working memory
-     * @param intent The I_Intent to perform we undergo a state transitions
+     * @param intent   The I_Intent to perform we undergo a state transitions
      */
     public ExecutiveIntent(IRI self, Model facts, Model thoughts, I_Intent intent) {
         boot(self, thoughts);
@@ -67,7 +76,8 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
      * @throws RuntimeException if a duplicate IRI is encountered.
      */
     public IRI add(I_Intent intent) {
-        if (intent == null) return null;
+        if (intent == null)
+            return null;
         Method[] methods = intent.getClass().getDeclaredMethods();
         log.debug("executive.intents: {}", this.intents);
         // Add annotated methods
@@ -77,7 +87,8 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
                 RDF methodRdfAnnotation = method.getAnnotation(RDF.class);
                 IRI methodIRI = Values.iri(methodRdfAnnotation.value());
                 log.debug("executive.method.rdf: {} -> {}", method.getName(), methodIRI);
-//                if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI + "#duplicate");
+                // if (this.intents.containsKey(methodIRI)) throw new RuntimeException(methodIRI
+                // + "#duplicate");
                 this.intents.put(methodIRI, intent);
                 return methodIRI;
             }
@@ -89,6 +100,7 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
     public Set<IRI> getIntents() {
         return intents.keySet();
     }
+
     /**
      * Performs an intent based on the provided IRIs (RDF triple).
      *
@@ -96,11 +108,13 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
      * @param actor The subject IRI - the input/source for the intent.
      * @param p     The predicate IRI - used to identify the intent.
      * @param o     The object IRI - the object/target of the intent.
-     * @return A Set of IRIs representing the result of the intent or null if no intent.
+     * @return A Set of IRIs representing the result of the intent or null if no
+     *         intent.
      */
     protected void executeIntent(IRIs done, IRI actor, IRI p, Resource o, Bindings bindings) throws StateException {
         I_Intent intent = this.intents.get(p);
-        if (intent == null) return;
+        if (intent == null)
+            return;
         log.info("execute.intent: {} == {} -> {} == {}", actor, p, o, intent.getClass().getSimpleName());
         Set<IRI> executed = intent.execute(actor, o, bindings);
         done.addAll(executed);
@@ -115,16 +129,16 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
             Resource s = maybe.getSubject();
             IRI p = maybe.getPredicate();
             Value o = maybe.getObject();
-//            log.info("execute.todo ?: {} -> {}", maybe, todo);
+            // log.info("execute.todo ?: {} -> {}", maybe, todo);
             if (s.isIRI() && o.isResource() && p.isIRI() && this.intents.containsKey(p)) {
-                todo.add( maybe );
+                todo.add(maybe);
             }
         }
-//        List<Statement> maybeList = new ArrayList<>();
-//        for (Statement statement : maybes) {
-//            maybeList.add(statement);
-//        }
-//        log.info("execute.maybe: {} -> {}", maybeList, todo);
+        // List<Statement> maybeList = new ArrayList<>();
+        // for (Statement statement : maybes) {
+        // maybeList.add(statement);
+        // }
+        // log.info("execute.maybe: {} -> {}", maybeList, todo);
     }
 
     @Override
@@ -133,21 +147,21 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         IRIs done = new IRIs();
         List<Statement> todo = new ArrayList<>();
         findIntents(facts.getStatements(state, null, null), todo);
-        if (model!=facts)
+        if (model != facts)
             findIntents(model.getStatements(state, null, null), todo);
         log.info("execute.todo: {} @ {} <-- {}", actor, state, todo);
-        for(Statement s : todo) {
-            if (!s.getPredicate().getLocalName().equals("a"))
+        for (Statement s : todo) {
+            if (!s.getPredicate().getLocalName().equals("ai"))
                 executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
         }
-        for(Statement s : todo) {
-            if (s.getPredicate().getLocalName().equals("a"))
+        for (Statement s : todo) {
+            if (s.getPredicate().getLocalName().equals("ai"))
                 executeIntent(done, actor, s.getPredicate(), (Resource) s.getObject(), bindings);
         }
         return done;
     }
 
     public String toString() {
-        return getClass().getSimpleName()+" "+this.intents.keySet();
+        return getClass().getSimpleName() + " " + this.intents.keySet();
     }
 }

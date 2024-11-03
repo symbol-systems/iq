@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class SimplePrompt extends AbstractPrompt<String> {
     StringBuilder msg = new StringBuilder();
-    I_LLMessage.RoleType role ;
+    I_LLMessage.RoleType role;
 
     public SimplePrompt(String msg, Bindings my) {
         this(I_LLMessage.RoleType.system, msg, my);
@@ -29,7 +29,7 @@ public class SimplePrompt extends AbstractPrompt<String> {
     @Override
     public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
         String txt = bind(msg.toString());
-        log.info("prompt.complete: {}", txt);
+        // log.info("prompt.complete: {}", txt);
         chat.add(new TextMessage(role, txt));
         return chat;
     }

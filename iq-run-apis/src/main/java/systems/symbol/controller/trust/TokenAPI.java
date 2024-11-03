@@ -143,7 +143,9 @@ public class TokenAPI {
                 myConnection.add(agent.getThoughts());
                 myConnection.commit();
             }
-            String[] roles = { _realm + "role:user", _realm + "role:" + provider };
+            String[] roles = newUser
+                    ? new String[] { "noob", _realm + "role:user", _realm + "role:" + provider }
+                    : new String[] { _realm + "role:user", _realm + "role:" + provider };
             List<String> aud = new ArrayList<>();
             aud.add(realm.getSelf().stringValue());
             aud.add(self.stringValue());

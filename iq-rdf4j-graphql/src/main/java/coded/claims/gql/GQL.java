@@ -25,7 +25,7 @@ import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 /*
  *  symbol.systems2
  *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  */
 public class GQL {
 	private static final Logger log = LoggerFactory.getLogger(GQL.class);

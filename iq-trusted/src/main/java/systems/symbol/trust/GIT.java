@@ -16,7 +16,7 @@ import java.util.Date;
 /*
  *  symbol.systems
  *  Copyright (c) 2009-2015, 2021-2023 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  *
  * See also: https://github.com/hub4j/github-api/tree/main/src/test/java/org/kohsuke/github
  */

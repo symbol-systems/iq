@@ -71,6 +71,10 @@ public class IntentMessage extends TextMessage implements I_Facade, I_Delegate<I
 
     @Override
     public IRI intent() throws StateException {
-        return intent == null ? null : Values.iri(intent);
+        try {
+            return intent == null ? null : Values.iri(intent);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

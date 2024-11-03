@@ -16,6 +16,8 @@ import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
 import javax.script.*;
+
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -90,7 +92,7 @@ public class JSR233 extends AbstractIntent {
             done.add(actor);
             log.info("script.done: {} -> {} x {}", state, result, done.size());
             //
-            Facades.dump(my, System.err);
+            Facades.dump(my, System.out);
         } catch (ScriptException e) {
             log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getCause().getMessage());
             throw new StateException(e.getCause().getMessage(), state, e.getCause());
@@ -119,8 +121,12 @@ public class JSR233 extends AbstractIntent {
             return null;
         }
         ScriptContext sc = new SimpleScriptContext();
+        StringWriter out = new StringWriter();
+        sc.setWriter(out);
         sc.setBindings(Facades.trust(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
-        log.debug("script.eval: {} @ {}", script.stringValue(), state.stringValue());
-        return engine.eval(script.stringValue(), sc);
+        Object eval = engine.eval(script.stringValue(), sc);
+        log.debug("script.eval: {} @ {} ==> {}\n==={}", script.stringValue(), state.stringValue(), eval,
+                out.getBuffer().toString());
+        return eval;
     }
 }

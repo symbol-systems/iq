@@ -97,7 +97,7 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
         vectorsById.put(id, vector);
 
         indexByThing.computeIfAbsent(concept, k -> new HashSet<>()).add(id);
-        log.info("matrix.indexed: {} -> {} ==> {}", id, iri, content.length());
+        log.debug("matrix.indexed: {} -> {} ==> {}", id, iri, content.length());
     }
 
     /**

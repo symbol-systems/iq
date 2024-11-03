@@ -2,7 +2,7 @@ package systems.symbol.bean;
 /*
  *  symbol.systems
  *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  */
 
 import systems.symbol.util.DateXSD;

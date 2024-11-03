@@ -3,9 +3,12 @@ package systems.symbol.prompt;
 import com.github.jknack.handlebars.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import systems.symbol.agent.Facades;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
+import systems.symbol.string.PrettyStrings;
 
 import javax.script.Bindings;
 import java.io.IOException;
@@ -24,7 +27,7 @@ public abstract class AbstractPrompt<T> implements I_LLM<T> {
     }
 
     public String bind(String prompt, Bindings bindings) throws IOException {
-        log.info("prompt.bind: {} -> {}", prompt, bindings.keySet());
+        log.debug("prompt.bind: {} -> {}\n\n{}\n", prompt, bindings.keySet(), PrettyStrings.pretty(bindings));
         return hbs.compileInline(prompt).apply(bindings);
     }
 

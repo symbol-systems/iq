@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.fsm.I_StateMachine;
+import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLMessage;
 import systems.symbol.llm.IntentMessage;
@@ -26,6 +27,7 @@ public class IntentDecision implements I_Decide<Resource>, I_Delegate<Resource> 
     @Override
     /**
      * Act as a manager
+     * 
      * @param agent
      * @return
      */
@@ -34,14 +36,14 @@ public class IntentDecision implements I_Decide<Resource>, I_Delegate<Resource> 
         CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
         try {
             Resource decided = intent();
-            if (decided!=null && !seen.contains(decided)) {
+            if (decided != null && !seen.contains(decided)) {
                 log.info("intent.decided: {} -> {} == {}", fsm.getState(), decided, seen);
-                future.complete(()->decided);
+                future.complete(() -> decided);
                 seen.add(decided);
                 return future;
             }
             seen.add(fsm.getState());
-            future.complete(()->agent.getStateMachine().getState());
+            future.complete(() -> agent.getStateMachine().getState());
         } catch (Exception e) {
             CompletableFuture.failedFuture(e);
         }
@@ -52,7 +54,11 @@ public class IntentDecision implements I_Decide<Resource>, I_Delegate<Resource> 
     public Resource intent() {
         I_LLMessage<String> latest = chat.latest();
         if (latest instanceof IntentMessage) {
-            return ((IntentMessage) latest).getSelf();
+            try {
+                return ((IntentMessage) latest).intent();
+            } catch (StateException e) {
+                log.error("agent.decide.intent: %o", latest, e);
+            }
         }
         return null;
     }

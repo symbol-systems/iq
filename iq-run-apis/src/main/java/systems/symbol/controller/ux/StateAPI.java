@@ -39,10 +39,10 @@ public class StateAPI extends GuardedAPI {
     public Response state(@PathParam("realm") String _realm, @PathParam("thing") String _agent,
             @HeaderParam("Authorization") String auth) throws Exception {
         if (!Validate.isBearer(auth))
-            return new OopsResponse("ux.ux.state.unauthorized", Response.Status.UNAUTHORIZED).build();
+            return new OopsResponse("ux.state.unauthorized", Response.Status.UNAUTHORIZED).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("ux.ux.state.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.state.realm", Response.Status.NOT_FOUND).build();
         try {
             authenticate(auth, realm);
         } catch (OopsException e) {
@@ -50,14 +50,14 @@ public class StateAPI extends GuardedAPI {
         }
 
         if (!Validate.isURN(_agent))
-            return new OopsResponse("ux.ux.state#invalid", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.state#invalid", Response.Status.BAD_REQUEST).build();
 
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.state.agent: {}", _agent);
         IRI thing = Values.iri(_agent);
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("ux.ux.state.repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.state.repository", Response.Status.NOT_FOUND).build();
 
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery graphQuery = RDFPrefixer.describe(connection, thing);
@@ -86,10 +86,10 @@ public class StateAPI extends GuardedAPI {
         log.info("ux.update: {} --> {} -> {}", _realm, query, state.keySet());
 
         if (Validate.isNonAlphanumeric(_realm))
-            return new OopsResponse("ux.ux.update.realm", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.update.realm", Response.Status.BAD_REQUEST).build();
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("ux.ux.update.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.update.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = authenticate(auth, realm);
@@ -97,13 +97,13 @@ public class StateAPI extends GuardedAPI {
             return new OopsResponse(e.getMessage(), e.getStatus()).build();
         }
         if (!Validate.isURN(query))
-            return new OopsResponse("ux.ux.update.query", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("ux.update.query", Response.Status.BAD_REQUEST).build();
 
         log.info("ux.update.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
         Repository repository = realm.getRepository();
         if (repository == null)
-            return new OopsResponse("ux.ux.update.repository", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("ux.update.repository", Response.Status.NOT_FOUND).build();
         IRI self = Values.iri(jwt.getSubject());
         try (RepositoryConnection connection = repository.getConnection()) {
             IQScriptCatalog catalog = new IQScriptCatalog(realm.getSelf(), connection);
@@ -113,7 +113,7 @@ public class StateAPI extends GuardedAPI {
 
             String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
             if (Validate.isMissing(sparql))
-                return new OopsResponse("ux.ux.update#query-missing", Response.Status.NOT_FOUND).build();
+                return new OopsResponse("ux.update#query-missing", Response.Status.NOT_FOUND).build();
 
             log.info("ux.update.query: {} --> {}", query, sparql);
             Update graphQuery = connection.prepareUpdate(sparql);
