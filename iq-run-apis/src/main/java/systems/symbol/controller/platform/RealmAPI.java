@@ -73,19 +73,19 @@ throw new OopsException("ux.realm.unauthorized", Response.Status.UNAUTHORIZED);
 
 DecodedJWT jwt = authenticate(auth, keys);
 if (jwt == null)
-throw new OopsException("ux.ux.realm.token-invalid", Response.Status.FORBIDDEN);
+throw new OopsException("ux.realm.token-invalid", Response.Status.FORBIDDEN);
 
 Claim claims = jwt.getClaim(claim);
 if (claims == null || claims.isMissing())
-throw new OopsException("ux.ux.realm.claims-missing", Response.Status.FORBIDDEN);
+throw new OopsException("ux.realm.claims-missing", Response.Status.FORBIDDEN);
 
 String[] roles = claims.asArray(String.class);
 if (roles == null || roles.length == 0)
-throw new OopsException("ux.ux.realm.roles-missing", Response.Status.FORBIDDEN);
+throw new OopsException("ux.realm.roles-missing", Response.Status.FORBIDDEN);
 
 for (String n : needs) {
 if (!Arrays.asList(roles).contains(n))
-throw new OopsException("ux.ux.realm.claims-invalid", Response.Status.FORBIDDEN);
+throw new OopsException("ux.realm.claims-invalid", Response.Status.FORBIDDEN);
 }
 return jwt;
 }

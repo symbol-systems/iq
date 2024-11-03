@@ -1,7 +1,7 @@
 package systems.symbol.rdf4j.io;
 /*
  *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  */
 
 import org.eclipse.rdf4j.model.IRI;

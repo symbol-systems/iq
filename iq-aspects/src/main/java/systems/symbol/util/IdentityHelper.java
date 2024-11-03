@@ -2,7 +2,7 @@ package systems.symbol.util;
 /*
  *  symbol.systems
  *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  */
 
 import org.slf4j.Logger;
@@ -14,9 +14,10 @@ import java.security.NoSuchAlgorithmException;
 /**
  * symbol.systems (c) 2013-2021
  * Module: systems.symbol.util
+ * 
  * @author Symbol Systems
- * Date  : 28/10/2013
- * Time  : 12:34 PM
+ * Date : 28/10/2013
+ * Time : 12:34 PM
  */
 public class IdentityHelper {
 private static final Logger log = LoggerFactory.getLogger(IdentityHelper.class);
@@ -24,11 +25,11 @@ private static final Logger log = LoggerFactory.getLogger(IdentityHelper.class);
 public IdentityHelper() {
 }
 
-public static String password(String salt,String password) {
+public static String password(String salt, String password) {
 try {
 return Fingerprint.toMD5(salt + ":" + password);
 } catch (NoSuchAlgorithmException e) {
-log.error(e.getMessage(),e);
+log.error(e.getMessage(), e);
 return null;
 }
 }
@@ -38,11 +39,11 @@ return uuid("urn:");
 }
 
 public static String uuid(String prefix) {
-return (prefix==null?"":prefix)+(java.util.UUID.randomUUID()).toString();
+return (prefix == null ? "" : prefix) + (java.util.UUID.randomUUID()).toString();
 }
 
 public static String uuid(String prefix, String localName) {
-return (prefix==null?"":prefix)+(java.util.UUID.nameUUIDFromBytes(localName.getBytes()));
+return (prefix == null ? "" : prefix) + (java.util.UUID.nameUUIDFromBytes(localName.getBytes()));
 }
 
 // Copyright (c) 2011, Google Inc.

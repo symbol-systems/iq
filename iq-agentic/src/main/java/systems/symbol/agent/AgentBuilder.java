@@ -110,7 +110,7 @@ return this;
 
 public AgentBuilder realm(I_Realm realm) {
 bindings.put("realm", realm);
-bindings.put("model", realm.getModel());
+// bindings.put("model", realm.getModel());
 return this;
 }
 

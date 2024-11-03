@@ -14,82 +14,82 @@ import static systems.symbol.cli.CLIContext.CODENAME;
 
 /*
  *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
- *  Licence: https://systems.symbol/about/license
+ *  Licence: https://symbol.systems/about/license
  */
 @CommandLine.Command(name = "iq", description = "IQ: applied knowledge")
 public class CLI implements Callable<Number> {
-	protected static final Logger log = LoggerFactory.getLogger(CLI.class);
-	@CommandLine.Option(names = "--home", required = false, description = "Location of workspace files ")
-	File home = null;
+protected static final Logger log = LoggerFactory.getLogger(CLI.class);
+@CommandLine.Option(names = "--home", required = false, description = "Location of workspace files ")
+File home = null;
 
-	public CLI() {
-	}
+public CLI() {
+}
 
-	public CommandLine getCommandLine(CLIContext context) throws IOException, CLIException {
-		try {
-			CommandLine cli = new CommandLine(this);
+public CommandLine getCommandLine(CLIContext context) throws IOException, CLIException {
+try {
+CommandLine cli = new CommandLine(this);
 
-			cli.addSubcommand(new InitCommand(context));
-			if (context.isInitialized()) {
-				cli.addSubcommand(new AboutCommand(context));
-				cli.addSubcommand(new ListCommand(context));
-				cli.addSubcommand(new ScriptCommand(context));
-				cli.addSubcommand(new SPARQLCommand(context));
-				cli.addSubcommand(new RenderCommand(context));
-				cli.addSubcommand(new InferCommand(context));
+cli.addSubcommand(new InitCommand(context));
+if (context.isInitialized()) {
+cli.addSubcommand(new AboutCommand(context));
+cli.addSubcommand(new ListCommand(context));
+cli.addSubcommand(new ScriptCommand(context));
+cli.addSubcommand(new SPARQLCommand(context));
+cli.addSubcommand(new RenderCommand(context));
+cli.addSubcommand(new InferCommand(context));
 
-				cli.addSubcommand(new ImportCommand(context));
-				cli.addSubcommand(new ExportCommand(context));
-				cli.addSubcommand(new BackupCommand(context));
-				cli.addSubcommand(new RecoverCommand(context));
-			} else {
-				context.display("run `iq init`");
-			}
+cli.addSubcommand(new ImportCommand(context));
+cli.addSubcommand(new ExportCommand(context));
+cli.addSubcommand(new BackupCommand(context));
+cli.addSubcommand(new RecoverCommand(context));
+} else {
+context.display("run `iq init`");
+}
 
-			cli.setAbbreviatedOptionsAllowed(true);
-			cli.setAbbreviatedSubcommandsAllowed(true);
-			cli.setCaseInsensitiveEnumValuesAllowed(true);
-			cli.setExpandAtFiles(true);
-			cli.setInterpolateVariables(false);
-			return cli;
-		} catch (Exception e) {
-			log.error("A problem occurred: {}", e.getMessage(), e);
-		}
-		context.close();
-		return null;
-	}
+cli.setAbbreviatedOptionsAllowed(true);
+cli.setAbbreviatedSubcommandsAllowed(true);
+cli.setCaseInsensitiveEnumValuesAllowed(true);
+cli.setExpandAtFiles(true);
+cli.setInterpolateVariables(false);
+return cli;
+} catch (Exception e) {
+log.error("A problem occurred: {}", e.getMessage(), e);
+}
+context.close();
+return null;
+}
 
-	public File getHomeFolder() {
-		if (home != null)
-			return home;
-		String HOME_FOLDER = System.getenv("IQ_HOME");
-		if (HOME_FOLDER == null || HOME_FOLDER.isEmpty())
-			HOME_FOLDER = "." + CODENAME;
-		return new File(HOME_FOLDER);
-	}
+public File getHomeFolder() {
+if (home != null)
+return home;
+String HOME_FOLDER = System.getenv("IQ_HOME");
+if (HOME_FOLDER == null || HOME_FOLDER.isEmpty())
+HOME_FOLDER = "." + CODENAME;
+return new File(HOME_FOLDER);
+}
 
-	public static void main(String[] args) {
-		CLI cli = new CLI();
-		try {
-			File home = cli.getHomeFolder();
-			log.info("iq.cli.home: {}", home.getAbsolutePath());
-			CLIContext context = new CLIContext(home);
-			CommandLine commands = cli.getCommandLine(context);
-			if (commands == null) {
-				System.exit(1);
-				return;
-			}
-			int exitCode = commands.execute(args);
-			System.exit(exitCode);
-		} catch (IOException e) {
-			log.error("iq.cli.io.error: {} -> {}", e, e.getStackTrace());
-		} catch (CLIException e) {
-			throw new RuntimeException(e);
-		}
-	}
+public static void main(String[] args) {
+CLI cli = new CLI();
+try {
+File home = cli.getHomeFolder();
+log.info("iq.cli.home: {}", home.getAbsolutePath());
+CLIContext context = new CLIContext(home);
+CommandLine commands = cli.getCommandLine(context);
+if (commands == null) {
+System.exit(1);
+return;
+}
+int exitCode = commands.execute(args);
+System.exit(exitCode);
+} catch (IOException e) {
+log.error("iq.cli.io.error: {} -> {}", e, e.getStackTrace());
+} catch (CLIException e) {
+throw new RuntimeException(e);
+}
+}
 
-	@Override
-	public Number call() throws Exception {
-		return 0;
-	}
+@Override
+public Number call() throws Exception {
+return 0;
+}
 }

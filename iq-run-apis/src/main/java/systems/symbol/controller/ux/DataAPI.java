@@ -61,14 +61,14 @@ public Response query(
 @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("ux.data.protected");
-return new OopsResponse("ux.ux.data.unauthorized", Response.Status.UNAUTHORIZED).build();
+return new OopsResponse("ux.data.unauthorized", Response.Status.UNAUTHORIZED).build();
 }
 if (Validate.isNonAlphanumeric(_realm)) {
-return new OopsResponse("ux.ux.data.repository", Response.Status.BAD_REQUEST).build();
+return new OopsResponse("ux.data.repository", Response.Status.BAD_REQUEST).build();
 }
 I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
-return new OopsResponse("ux.ux.data.realm", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.data.realm", Response.Status.NOT_FOUND).build();
 DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
@@ -84,7 +84,7 @@ if (maxResults < 0)
 maxResults = 100;
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("ux.ux.data.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.data.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 IRI self = Values.iri(jwt.getSubject());
@@ -96,7 +96,7 @@ Facades.dump(my, System.out);
 
 String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
 if (Validate.isMissing(sparql)) {
-return new OopsResponse("ux.ux.data.query", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.data.query", Response.Status.NOT_FOUND).build();
 }
 log.info("ux.data.sparql: {} --> {}", query, sparql);
 TupleQuery tupleQuery = connection.prepareTupleQuery(sparql);
@@ -109,7 +109,7 @@ response.set("columns", columns);
 columns.addAll(result.getBindingNames());
 return response.build();
 } catch (QueryEvaluationException e) {
-return new OopsResponse("ux.ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.data.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

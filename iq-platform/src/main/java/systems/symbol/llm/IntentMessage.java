@@ -71,6 +71,10 @@ return meta;
 
 @Override
 public IRI intent() throws StateException {
+try {
 return intent == null ? null : Values.iri(intent);
+} catch (IllegalArgumentException e) {
+return null;
+}
 }
 }

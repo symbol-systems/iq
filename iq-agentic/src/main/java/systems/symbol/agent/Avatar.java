@@ -109,11 +109,12 @@ throws Exception, APIException {
 Resource state = agent.getStateMachine().getState();
 bindings.put(Facades.AI, actor.getLocalName());
 Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
+log.debug("avatar.system.{}: {} @ {} == {}", assistant, actor, state, wrapper);
 if (wrapper.isEmpty())
 return false;
-log.info("avatar.prompt.{}: {} @ {}", assistant, actor, state);
 
 String prompt$ = value(agent.getSelf()) + "\n" + value(agent.getStateMachine().getState());
+log.debug("avatar.prompt: {}", prompt$);
 if (prompt$.trim().isEmpty())
 return false;
 Bindings my = Facades.rebind(agent.getSelf(), bindings);
@@ -123,11 +124,11 @@ PromptChain chain = new PromptChain(prompt);
 bindings.put("prompt", prompt.bind(prompt$));
 // log.info("avatar.state: {}", prompt$);
 I_Assist<String> prompted = chain.complete(chat);
-log.info("avatar.prompted: {} -> {}", bindings.keySet(), prompted);
+// log.debug("avatar.prompted: {} -> {}", bindings.keySet(), prompted);
 I_Assist<String> answer = llm.complete(prompted);
-log.info("avatar.answer: {}", answer);
+// log.info("avatar.answer: {}", answer);
 answered(agent, chat, answer);
-log.info("avatar.done: {}", actor);
+log.debug("avatar.done: {} -> {}", actor, answer);
 return true;
 }
 

@@ -74,7 +74,7 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository repository = realm.getRepository();
 if (repository == null)
-return new OopsResponse("ux.ux.trust.qr.repository", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.trust.qr.repository", Response.Status.NOT_FOUND).build();
 
 try (RepositoryConnection connection = repository.getConnection()) {
 
