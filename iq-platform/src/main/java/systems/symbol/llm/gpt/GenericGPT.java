@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.tools.APIException;
 import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;
 
 import javax.script.SimpleBindings;
@@ -109,7 +110,8 @@ log.info("llm.gpt.fatal # {}: {}", attempts, e.getMessage());
 return chats;
 }
 
-private void processMessage(I_Assist<String> chat, GPTResponse.Message message) throws JsonProcessingException {
+private void processMessage(I_Assist<String> chat, GPTResponse.Message message)
+throws JsonProcessingException, StateException {
 I_LLMessage.RoleType role = I_LLMessage.RoleType.assistant;
 if (!message.content.startsWith("{")) {
 chat.add(new TextMessage(role, message.content));
@@ -117,8 +119,9 @@ return;
 }
 try {
 SimpleBindings json = om.readValue(message.content, SimpleBindings.class);
-chat.add(new IntentMessage(json));
-log.info("llm.gpt.intent: {}", chat.latest());
+IntentMessage intent = new IntentMessage(json);
+chat.add(intent);
+log.info("llm.gpt.intent: {}", intent.intent());
 } catch (JsonProcessingException e) {
 log.error("llm.gpt.error: {}", message.content, e);
 chat.add(new TextMessage(role, message.content));

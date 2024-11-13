@@ -57,7 +57,8 @@ keysHome = new File(vaultHome, "keys");
 keysHome.mkdirs();
 File secretsHome = new File(vaultHome, "secrets");
 secretsHome.mkdirs();
-this.secrets = new PlainPasswordVault(secretsHome);
+// this.secrets = new PlainPasswordVault(secretsHome);
+this.secrets = new VFSPasswordVault();
 log.info("realms.boot: {}", new Date());
 }
 

@@ -14,13 +14,19 @@ import java.util.function.Consumer;
 
 public class VFSCrawler implements I_Crawler<FileObject> {
 private static final Logger log = LoggerFactory.getLogger(VFSCrawler.class);
-DefaultFileSystemManager vfs;
+FileSystemManager vfs;
 FileSystemOptions opts = new FileSystemOptions();
 Consumer<FileObject> processor;
 
 public VFSCrawler(Consumer<FileObject> processor) throws FileSystemException {
 this.vfs = new VFS();
 log.info("VFS.init: {}", processor);
+this.processor = processor;
+}
+
+public VFSCrawler(DefaultFileSystemManager vfs, Consumer<FileObject> processor) throws FileSystemException {
+this.vfs = vfs;
+log.info("VFS.init: {} -> {}", vfs.getBaseUri(), processor);
 this.processor = processor;
 }
 

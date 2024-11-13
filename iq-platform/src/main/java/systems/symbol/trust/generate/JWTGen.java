@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import systems.symbol.trust.SimpleKeyStore;
-
 import java.security.*;
 import java.util.Date;
 

@@ -1,0 +1,2 @@
+mvn compile -pl iq-run-apis -am -Dorg.eclipse.rdf4j.repository.debug="false"
+
