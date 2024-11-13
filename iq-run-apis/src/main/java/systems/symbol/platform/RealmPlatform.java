@@ -123,7 +123,7 @@ public class RealmPlatform implements I_Realms {
         String self = realm.getSelf().stringValue();
         String[] roles = { self };
         String name = realm.getSelf().getNamespace().substring(0, realm.getSelf().getNamespace().length() - 1);
-        String token = Realms.tokenize(realm.getSelf(), roles, self, name, roles, realm, duration);
+        String token = Realms.tokenize(realm.getSelf().stringValue(), roles, self, name, roles, realm, duration);
         File jwtHome = new File(realms.getVaultHome(), "jwt");
         jwtHome.mkdirs();
         File file = new File(jwtHome, name + ".jwt");

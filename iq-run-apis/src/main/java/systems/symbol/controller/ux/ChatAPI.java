@@ -4,8 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
@@ -57,6 +56,7 @@ public class ChatAPI extends GuardedAPI {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor,
             @HeaderParam("Authorization") String auth,
+            @Context UriInfo uriInfo,
             Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.chat: {}", chat.messages());
@@ -111,7 +111,7 @@ public class ChatAPI extends GuardedAPI {
                     log.info("ux.chat.timer.3: {}", stopwatch.summary());
                 }
                 Collection<Resource> cando = agent.getStateMachine().getTransitions();
-                final IRI[] _intent = new IRI[1]; // Using an array to hold the intent value
+                final IRI[] _intent = new IRI[1];
 
                 search.forEach(found -> {
                     try {
@@ -130,16 +130,15 @@ public class ChatAPI extends GuardedAPI {
                 });
                 if (_intent[0] != null) {
                     synchronized (connection) {
-                        agent.getStateMachine().transition(_intent[0]);
-                        connection.commit();
-                        log.info("ux.chat.matrix.1: {} == {} <- {}", _intent[0], agent.getStateMachine().getState(),
+                        agent.getStateMachine().setInitial(_intent[0]);
+                        log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0], agent.getStateMachine().getState(),
                                 agent.getStateMachine().getTransitions());
                     }
                 } else {
-                    agent.start();
-                    log.info("ux.chat.matrix.2: {} == {}", _intent[0], agent.getStateMachine().getState());
+                    log.info("ux.chat.matrix.null: {}", state);
                 }
             }
+            agent.start();
             log.info("ux.chat.timer.4: {}", stopwatch.summary());
             agent.stop();
             log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);

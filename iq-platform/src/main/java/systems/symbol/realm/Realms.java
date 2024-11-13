@@ -18,6 +18,7 @@ import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.trust.I_Keys;
 import systems.symbol.trust.generate.JWTGen;
+import systems.symbol.util.IdentityHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,11 +95,12 @@ public class Realms {
         return Facts.find(model, focus, trusts, recurse, IQ_NS.TRUSTS);
     }
 
-    public static String tokenize(IRI issuer, String[] roles, String self, String name, String[] audience, I_Keys keys,
+    public static String tokenize(String issuer, String[] roles, String self, String name, String[] audience, I_Keys keys,
             int durationSeconds) throws SecretsException {
         JWTGen jwtGen = new JWTGen();
-        JWTCreator.Builder generator = jwtGen.generate(issuer.stringValue(), self, audience, durationSeconds);
+        JWTCreator.Builder generator = jwtGen.generate(issuer, self, audience, durationSeconds);
         generator.withClaim("name", name);
+        generator.withClaim("jti", IdentityHelper.uuid());
         if (roles.length > 0)
             generator.withArrayClaim("roles", roles);
         return jwtGen.sign(generator, keys.keys());

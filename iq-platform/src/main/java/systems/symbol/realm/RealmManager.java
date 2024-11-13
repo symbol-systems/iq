@@ -57,7 +57,8 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         keysHome.mkdirs();
         File secretsHome = new File(vaultHome, "secrets");
         secretsHome.mkdirs();
-        this.secrets = new PlainPasswordVault(secretsHome);
+        // this.secrets = new PlainPasswordVault(secretsHome);
+        this.secrets = new VFSPasswordVault();
         log.info("realms.boot: {}", new Date());
     }
 

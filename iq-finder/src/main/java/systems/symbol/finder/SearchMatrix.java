@@ -140,9 +140,8 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
             double score = cosineSimilarity(queryVector, vector);
             if (score >= minScore) {
                 scoredResults.add(new ScoredIRI(thingById.get(id), score));
-                log.info("matrix.score: {} --> {}", thingById.get(id), score);
-            } else
-                log.info("matrix.score: {} <-- {}", thingById.get(id), score);
+            }
+            log.debug("matrix.score: {} <-- {}", thingById.get(id), score);
         }
 
         scoredResults.sort(Comparator.comparingDouble(ScoredIRI::score).reversed());

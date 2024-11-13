@@ -132,9 +132,8 @@ public class TokenAPI {
             log.info("trust.human: {} == {}", human == null ? "ANON" : human, self);
             if (human == null || human.toString().isEmpty())
                 return new OopsResponse("ux.token.human.name", Response.Status.NOT_FOUND).build();
-            boolean newUser = realms.getRealm(self) != null;
+            boolean newUser = realms.getRealm(self) == null;
             I_Realm myRealm = realms.getInstance().newRealm(self);
-            log.info("trust.realm: {}", myRealm.getSelf());
 
             // RDFDump.dump(myRealm.getModel());
             try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
@@ -144,20 +143,21 @@ public class TokenAPI {
                 myConnection.commit();
             }
             String[] roles = newUser
-                    ? new String[] { "noob", _realm + "role:user", _realm + "role:" + provider }
+                    ? new String[] { _realm + "role:noob", _realm + "role:user", _realm + "role:" + provider }
                     : new String[] { _realm + "role:user", _realm + "role:" + provider };
             List<String> aud = new ArrayList<>();
-            aud.add(realm.getSelf().stringValue());
-            aud.add(self.stringValue());
+            // aud.add(realm.getSelf().stringValue());
+            // aud.add(self.stringValue());
             Iterable<IRI> trusts = Realms.trusts(builder.getGround(), self, new IRIs(), true);
             trusts.forEach(trust -> aud.add(trust.stringValue()));
 
             int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
             String[] _aud = aud.toArray(new String[0]);
-            String signedToken = Realms.tokenize(issuer, roles, self.stringValue(), human.toString(), _aud, realm,
+            String signedToken = Realms.tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(), _aud, realm,
                     duration);
             SimpleResponse response = new SimpleResponse("access_token", signedToken);
             connection.commit();
+            log.info("trust.realm: {} = {}", self.stringValue(), duration);
             return response.build();
         } catch (Exception e) {
             if (e instanceof OopsException oops) {
@@ -209,12 +209,18 @@ public class TokenAPI {
         if (!Validate.contains(aud, realm.getSelf().stringValue()))
             return new OopsResponse("ux.token.self", Response.Status.FORBIDDEN).build();
 
-        log.info("trust.refresh: {} -> {} -> {}", jwt.getSubject(), jwt.getIssuer(), aud);
+        int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
 
-        JWTCreator.Builder generator = jwtGen.generate(jwt.getIssuer(), jwt.getSubject(), aud, 600);
-        generator.withArrayClaim("roles", jwt.getClaims().get("roles").asArray(String.class));
-        generator.withClaim("name", jwt.getClaim("name").asString());
-        String signedToken = jwtGen.sign(generator, realm.keys());
+        log.info("trust.refresh: {} -> {} -> {} == {}", jwt.getSubject(), jwt.getIssuer(), aud, duration);
+        String[] roles = jwt.getClaims().get("roles").asArray(String.class);
+        String human = jwt.getClaim("name").asString();
+        String signedToken = Realms.tokenize(jwt.getIssuer(), roles, jwt.getSubject(), human, aud, realm,
+                duration);
+
+        // JWTCreator.Builder generator = jwtGen.generate(jwt.getIssuer(), jwt.getSubject(), aud, duration);
+        // generator.withArrayClaim("roles", jwt.getClaims().get("roles").asArray(String.class));
+        // generator.withClaim("name", jwt.getClaim("name").asString());
+        // String signedToken = jwtGen.sign(generator, realm.keys());
         SimpleResponse response = new SimpleResponse("access_token", signedToken);
         return response.build();
     }

@@ -180,8 +180,8 @@ public class Avatar implements I_Selfie {
                 decision = state;
             }
         }
-        log.info("avatar.next: {} => {}", message, decision);
-        return decision;
+        log.info("avatar.next: {} @ {} => {}", message, agent.getStateMachine().getState(), decision);
+        return decision == null ? (IRI) agent.getStateMachine().getState() : decision;
     }
 
     // Returns the current identity of the agent

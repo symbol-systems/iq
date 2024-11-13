@@ -1,4 +1,4 @@
-package systems.symbol.lake.crawl;
+package systems.symbol.io;
 
 import com.github.vfss3.S3FileProvider;
 import org.apache.commons.vfs2.CacheStrategy;
@@ -11,10 +11,9 @@ import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
 
 import java.io.File;
 
-public class
-VFS extends DefaultFileSystemManager  {
+public class MyVFS extends DefaultFileSystemManager  {
 
-    public VFS() throws FileSystemException {
+    public MyVFS() throws FileSystemException {
         init();
     }
 
