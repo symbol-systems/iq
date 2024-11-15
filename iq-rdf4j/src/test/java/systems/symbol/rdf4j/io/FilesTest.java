@@ -5,7 +5,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import java.io.File;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 class FilesTest {
 

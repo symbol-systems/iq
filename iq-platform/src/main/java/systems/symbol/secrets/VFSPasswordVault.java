@@ -9,18 +9,20 @@ import java.io.*;
 import java.net.URISyntaxException;
 
 /**
- * Implementation of a Secrets Vault that stores secrets in plain text files in a VFS Filesystem.
+ * Implementation of a Secrets Vault that stores secrets in plain text files in
+ * a VFS Filesystem.
  */
 public class VFSPasswordVault extends MemoryVault implements I_LoadSave {
     protected FileObject vaultHome;
     protected FileSystemManager fsm;
 
     public VFSPasswordVault() throws FileSystemException, IOException {
-        this(new systems.symbol.io.MyVFS(), "file://.iq/vfs.vault");
+        this(new systems.symbol.vfs.MyVFS(), "vfs.vault");
     }
 
     /**
-     * Constructor that takes the VFS file system, vault home directory as a parameter.
+     * Constructor that takes the VFS file system, vault home directory as a
+     * parameter.
      *
      * @param vaultHomeURI The URI of the directory where secrets will be stored.
      * @throws FileSystemException If the vault home cannot be accessed or created.
@@ -40,7 +42,8 @@ public class VFSPasswordVault extends MemoryVault implements I_LoadSave {
     @Override
     public I_Secrets getSecrets(IRI agent) {
         I_Secrets iSecrets = store.get(agent);
-        if (iSecrets != null) return iSecrets;
+        if (iSecrets != null)
+            return iSecrets;
         return new EnvsAsSecrets();
     }
 
@@ -72,7 +75,7 @@ public class VFSPasswordVault extends MemoryVault implements I_LoadSave {
     /**
      * Save secrets to a plain text file in VFS.
      *
-     * @param agent     The name of the owner for whom secrets are being saved.
+     * @param agent    The name of the owner for whom secrets are being saved.
      * @param iSecrets The secrets to be saved.
      * @throws IOException If an I/O error occurs during the save operation.
      */

@@ -2,7 +2,7 @@ package systems.symbol.lake.ingest;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
-import systems.symbol.lake.crawl.VFS;
+import systems.symbol.vfs.MyVFS;
 import systems.symbol.rdf4j.io.RDFDump;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -54,7 +54,7 @@ class JsonLdLinkExtractorTest {
         RDFModelIngestor rdfModelIngestor = new RDFModelIngestor(model, RDFFormat.JSONLD);
         log.info("json-ld.ingest: " + model.size() + " @ " + from);
 
-        try (FileSystemManager vfs = new VFS()) {
+        try (FileSystemManager vfs = new MyVFS()) {
             FileContentConverter ingest = new FileContentConverter(new JsonLdLinkExtractor(vfs, rdfModelIngestor));
             System.out.printf("json-ld.ingest: %s -> {}", from, Arrays.toString(vfs.getSchemes()));
 

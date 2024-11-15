@@ -1,6 +1,6 @@
 package systems.symbol.string;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class PrettyStringTest {
 
@@ -41,14 +41,14 @@ public class PrettyStringTest {
     @Test
     public void testToCamelCase() {
         String hello_world = PrettyString.toCamelCase("hello world");
-System.out.println("testToCamelCase: "+hello_world);
+        System.out.println("testToCamelCase: " + hello_world);
         assert hello_world.equals("helloWorld");
     }
 
     @Test
     public void testToPascalCase() {
         String hello_world = PrettyString.toPascalCase("hello world");
-System.out.println("testToPascalCase: "+hello_world);
+        System.out.println("testToPascalCase: " + hello_world);
         assert hello_world.equals("HelloWorld");
     }
 
@@ -59,7 +59,7 @@ System.out.println("testToPascalCase: "+hello_world);
     @Test
     public void testCapitalize() {
         String hello_world = PrettyString.capitalize("hello world");
-System.out.println("testCapitalise: "+hello_world);
+        System.out.println("testCapitalise: " + hello_world);
         assert hello_world.equals("Hello world");
     }
 }

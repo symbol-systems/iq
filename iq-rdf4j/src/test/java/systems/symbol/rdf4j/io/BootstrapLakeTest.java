@@ -4,7 +4,7 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.MemoryRDFSRepository;
 import java.io.File;

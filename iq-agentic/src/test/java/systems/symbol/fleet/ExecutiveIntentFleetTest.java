@@ -49,7 +49,7 @@ class ExecutiveIntentFleetTest {
     Gson gson = new Gson();
     private static final Resource selfIntent = Values.iri(TEST, "self");
     private static final File testedFolder = new File("tested/");
-    private static final Resource aware = Values.iri(TEST, "aware");;
+    private static final Resource aware = Values.iri(TEST, "aware");
     private static final Resource think = Values.iri(TEST, "think");
 
     @BeforeAll

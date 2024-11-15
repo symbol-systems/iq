@@ -1,11 +1,12 @@
 package systems.symbol.rdf4j.fn;
 
 import org.eclipse.rdf4j.model.Value;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class HBSTest extends CustomFunctionsTest{
+public class HBSTest extends CustomFunctionsTest {
 
     public HBSTest() throws IOException {
         super();

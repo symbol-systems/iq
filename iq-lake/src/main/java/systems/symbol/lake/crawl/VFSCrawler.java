@@ -3,7 +3,7 @@ package systems.symbol.lake.crawl;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.util.function.Consumer;
 
+import systems.symbol.vfs.MyVFS;
+
 public class VFSCrawler implements I_Crawler<FileObject> {
     private static final Logger log = LoggerFactory.getLogger(VFSCrawler.class);
     FileSystemManager vfs;
@@ -19,15 +21,13 @@ public class VFSCrawler implements I_Crawler<FileObject> {
     Consumer<FileObject> processor;
 
     public VFSCrawler(Consumer<FileObject> processor) throws FileSystemException {
-        this.vfs = new VFS();
-        log.info("VFS.init: {}", processor);
-        this.processor = processor;
+        this(new MyVFS(), processor);
     }
 
-    public VFSCrawler(DefaultFileSystemManager vfs, Consumer<FileObject> processor) throws FileSystemException {
+    public VFSCrawler(FileSystemManager vfs, Consumer<FileObject> processor) throws FileSystemException {
         this.vfs = vfs;
-        log.info("VFS.init: {} -> {}", vfs.getBaseUri(), processor);
         this.processor = processor;
+        log.info("VFS.init: {} -> {}", vfs, processor);
     }
 
     public IRI crawl(URI from) {
