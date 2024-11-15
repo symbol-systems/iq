@@ -1,6 +1,6 @@
 package systems.symbol.lake.ingest;
 
-import systems.symbol.lake.crawl.VFS;
+import systems.symbol.vfs.MyVFS;
 import systems.symbol.lake.crawl.VFSCrawler;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -13,7 +13,7 @@ class FileCloneIngestorTest {
 
 @Test
 void copyFileToFolder() throws FileSystemException, URISyntaxException {
-VFS vfs = new VFS();
+MyVFS vfs = new MyVFS();
 String from = "./src/test/resources/docs/Example.pdf";
 FileObject to = vfs.resolveFile("./tested/");
 

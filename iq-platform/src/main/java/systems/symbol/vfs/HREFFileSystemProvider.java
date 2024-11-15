@@ -1,4 +1,4 @@
-package systems.symbol.lake.crawl;
+package systems.symbol.vfs;
 
 import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.provider.AbstractOriginatingFileProvider;

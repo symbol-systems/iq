@@ -4,7 +4,7 @@ import systems.symbol.rdf4j.store.AbstractTripleTest;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class IRIsTest extends AbstractTripleTest {
 

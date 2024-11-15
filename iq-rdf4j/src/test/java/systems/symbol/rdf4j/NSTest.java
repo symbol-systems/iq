@@ -1,7 +1,7 @@
 package systems.symbol.rdf4j;
 
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import systems.symbol.platform.IQ_NS;
 
 public class NSTest {
@@ -26,7 +26,7 @@ assert NS.defaults().baseNS.equalsIgnoreCase(IQ_NS.TEST);
 
 @Test
 public void testDefaultPrefixes() {
-   assert NS.defaults().prefix2ns.size()>0; // SKOS, DCT + default
+assert NS.defaults().prefix2ns.size() > 0; // SKOS, DCT + default
 }
 
 @Test
@@ -48,11 +48,11 @@ assert NS.defaults().localize(SKOS.PREF_LABEL.stringValue()).equals("skos:prefLa
 @Test
 public void testGlobalize() {
 String globalize = NS.defaults().globalize("skos:prefLabel");
-System.out.println("rdf4j.ns.globalize: "+globalize+" = "+SKOS.PREF_LABEL);
+System.out.println("rdf4j.ns.globalize: " + globalize + " = " + SKOS.PREF_LABEL);
 assert globalize.equals(SKOS.PREF_LABEL.stringValue());
 
 globalize = NS.defaults().globalize(IQ_NS.TEST);
-System.out.println("rdf4j.ns.globalize.root: "+globalize);
+System.out.println("rdf4j.ns.globalize.root: " + globalize);
 assert globalize.equals(IQ_NS.TEST);
 }
 
@@ -62,7 +62,7 @@ public void testAdd() {
 
 @Test
 public void testFindPrefix() {
-assert NS.defaults().findPrefix(SKOS.PREF_LABEL.stringValue() ) == "skos";
+assert NS.defaults().findPrefix(SKOS.PREF_LABEL.stringValue()) == "skos";
 }
 
 @Test

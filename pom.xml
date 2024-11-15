@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.82.1</version>
+ <version>0.82.2</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -198,6 +198,20 @@
 <version>${jackson.version}</version>
   </dependency>
 
+  <!-- Bouncycastle Crypto-->
+
+<dependency>
+<groupId>org.bouncycastle</groupId>
+<artifactId>bcprov-jdk18on</artifactId>
+<version>1.79</version>
+</dependency>
+
+<dependency>
+<groupId>org.bouncycastle</groupId>
+<artifactId>bcpkix-jdk18on</artifactId>
+<version>1.79</version>
+</dependency>
+
   <!-- Quarkus -->
   <dependency>
 <groupId>io.quarkus</groupId>
@@ -277,13 +291,38 @@
 <artifactId>commons-codec</artifactId>
 <version>1.17.0</version>
   </dependency>
+<dependency>
+<groupId>commons-httpclient</groupId>
+<artifactId>commons-httpclient</artifactId>
+<version>3.1</version>
+</dependency>
 
-  <dependency>
+<!-- VFS2-->
+
+<dependency>
+<groupId>org.apache.commons</groupId>
+<artifactId>commons-vfs2</artifactId>
+<version>2.9.0</version>
+</dependency>
+<dependency>
+<groupId>com.github.abashev</groupId>
+<artifactId>vfs-s3</artifactId>
+<version>4.3.6</version>
+</dependency>
+
+<dependency>
+<groupId>com.amazonaws</groupId>
+<artifactId>aws-java-sdk-s3</artifactId>
+<version>1.12.773</version>
+</dependency>
+
+<!-- Test -->
+  <!-- <dependency>
 <groupId>org.testng</groupId>
 <artifactId>testng</artifactId>
 <version>7.9.0</version>
 <scope>test</scope>
-  </dependency>
+  </dependency> -->
   <dependency>
 <groupId>junit</groupId>
 <artifactId>junit</artifactId>

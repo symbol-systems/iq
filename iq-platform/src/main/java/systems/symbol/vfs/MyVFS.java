@@ -1,4 +1,4 @@
-package systems.symbol.io;
+package systems.symbol.vfs;
 
 import com.github.vfss3.S3FileProvider;
 import org.apache.commons.vfs2.CacheStrategy;
@@ -28,7 +28,6 @@ addProvider("file", new DefaultLocalFileProvider());
 
 super.init();
 setBaseFile(new File("."));
-
 }
 
 }

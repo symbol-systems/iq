@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class PromptChain implements I_LLM<String> {
-Collection<I_LLM<String>> chain  = new ArrayList<>();;
+Collection<I_LLM<String>> chain = new ArrayList<>();
 Collection<I_LLMessage.RoleType> types = new ArrayList<>();
 
 public PromptChain() {
@@ -37,7 +37,7 @@ I_Assist<java.lang.String> ai = new Conversation();
 for (I_LLM<String> prompter : chain) {
 ai = prompter.complete(ai);
 }
-for(I_LLMessage<String> m: chat.messages()) {
+for (I_LLMessage<String> m : chat.messages()) {
 if (types.contains(m.getRole())) {
 ai.add(m);
 }

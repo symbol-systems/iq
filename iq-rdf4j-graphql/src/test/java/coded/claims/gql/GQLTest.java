@@ -9,7 +9,8 @@ import org.eclipse.rdf4j.common.io.IOUtil;
 import org.eclipse.rdf4j.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
+;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
