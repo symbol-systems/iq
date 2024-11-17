@@ -109,14 +109,17 @@ throws Exception, APIException {
 Resource state = agent.getStateMachine().getState();
 bindings.put(Facades.AI, actor.getLocalName());
 Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
-log.debug("avatar.system.{}: {} @ {} == {}", assistant, actor, state, wrapper);
-if (wrapper.isEmpty())
+if (wrapper.isEmpty()) {
+log.warn("avatar.system.{}: {} @ {} == {}", assistant, actor, state, wrapper);
 return false;
+}
 
 String prompt$ = value(agent.getSelf()) + "\n" + value(agent.getStateMachine().getState());
-log.debug("avatar.prompt: {}", prompt$);
-if (prompt$.trim().isEmpty())
+if (prompt$.trim().isEmpty()) {
+log.warn("avatar.prompt.empty: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
 return false;
+}
+
 Bindings my = Facades.rebind(agent.getSelf(), bindings);
 SimplePrompt prompt = new SimplePrompt(wrapper.get().stringValue(), my);
 PromptChain chain = new PromptChain(prompt);

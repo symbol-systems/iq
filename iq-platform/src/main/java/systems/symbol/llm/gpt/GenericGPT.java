@@ -61,6 +61,12 @@ return config;
 
 @Override
 public I_Assist<String> complete(I_Assist<String> chats) throws APIException, IOException {
+return complete(chats, 0);
+}
+
+protected I_Assist<String> complete(I_Assist<String> chats, int attempt) throws APIException, IOException {
+if (attempt >= retryCount)
+return chats;
 log.debug("llm.gpt.url: {} -> {}", config.getName(), config.getURL());
 RestAPI api = new RestAPI(config.getURL());
 api.header("Authorization", "Bearer " + token);
@@ -68,9 +74,6 @@ api.header("Authorization", "Bearer " + token);
 Map<String, Object> json = toPayload(chats.messages());
 
 String body;
-int attempts = 0;
-while (attempts < retryCount) {
-attempts++;
 try (okhttp3.Response response = api.post(json)) {
 log.debug("llm.gpt.response: {} -> {}", response.code(), response.message());
 
@@ -93,19 +96,21 @@ return chats;
 if (completion.error.failed_generation != null) {
 log.info("llm.gpt.oops: {} / {} => {}", response.code(), completion.error.code,
 completion.error.failed_generation);
-chats.add(new TextMessage(I_LLMessage.RoleType.assistant,
-completion.error.failed_generation));
+complete(chats, attempt++);
+// chats.add(new TextMessage(I_LLMessage.RoleType.assistant,
+// completion.error.failed_generation));
 } else {
 log.info("llm.gpt.OOPS: {} -> {} => {}", completion.error.code, completion.error.message,
 completion.error.type);
-log.info("llm.dump: {}", chats.messages());
-chats.add(new TextMessage(I_LLMessage.RoleType.assistant, "llm.oops." + completion.error));
+complete(chats, attempt++);
+// chats.add(new TextMessage(I_LLMessage.RoleType.assistant, "llm.oops." +
+// completion.error));
 }
 }
 }
 } catch (Exception e) {
-log.info("llm.gpt.fatal # {}: {}", attempts, e.getMessage());
-}
+log.info("llm.gpt.fatal # {}: {}", attempt, e.getMessage());
+complete(chats, attempt++);
 }
 return chats;
 }
