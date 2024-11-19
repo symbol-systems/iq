@@ -33,8 +33,10 @@ public class VFSPasswordVault extends MemoryVault implements I_LoadSave {
 
         if (!vaultHome.exists()) {
             vaultHome.createFolder();
-        } else if (!vaultHome.isFolder()) {
-            throw new FileSystemException("Vault home must be a folder, not a file: " + vaultHome.getName().getURI());
+        }
+        log.info("vault.vfs.home: {} -> {}", vaultHome.getName().getURI(), vaultHome.exists());
+        if (!vaultHome.isFolder()) {
+            throw new FileSystemException("Vault home must be a folder: " + vaultHome.getName().getURI());
         }
         load();
     }

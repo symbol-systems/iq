@@ -22,10 +22,12 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
      * Constructor that takes the vault home directory as a parameter.
      *
      * @param vaultHome The directory where secrets will be stored.
-     * @throws FileNotFoundException If the vault home is not a directory or cannot be created.
+     * @throws FileNotFoundException If the vault home is not a directory or cannot
+     *                               be created.
      */
     public PlainPasswordVault(File vaultHome) throws IOException {
         vaultHome.mkdirs();
+        log.info("vault.home: {} -> {}", vaultHome.getAbsolutePath(), vaultHome.exists());
         if ((!vaultHome.exists() || vaultHome.isFile())) {
             throw new FileNotFoundException("Vault home must be a folder, not a file: " + vaultHome.getAbsolutePath());
         }
@@ -33,11 +35,11 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
         load();
     }
 
-
     @Override
     public I_Secrets getSecrets(IRI agent) {
         I_Secrets iSecrets = store.get(agent);
-        if (iSecrets!=null) return iSecrets;
+        if (iSecrets != null)
+            return iSecrets;
         return new EnvsAsSecrets();
     }
 
@@ -57,7 +59,7 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
     /**
      * Load secrets from plain text files.
      *
-     * @throws IOException              If an I/O error occurs during the load operation.
+     * @throws IOException If an I/O error occurs during the load operation.
      */
     public void load() throws IOException {
         checkVaultHome();
@@ -72,7 +74,7 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
     /**
      * Save secrets to a plain text file.
      *
-     * @param agent     The name of the owner for whom secrets are being saved.
+     * @param agent    The name of the owner for whom secrets are being saved.
      * @param iSecrets The secrets to be saved.
      * @throws IOException If an I/O error occurs during the save operation.
      */
@@ -89,7 +91,7 @@ public class PlainPasswordVault extends MemoryVault implements I_LoadSave {
      * Load secrets from a plain text file.
      *
      * @param agent The agent of the owner for whom secrets are being loaded.
-     * @throws IOException              If an I/O error occurs during the load operation.
+     * @throws IOException If an I/O error occurs during the load operation.
      */
     protected void load(IRI agent) throws IOException {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(
