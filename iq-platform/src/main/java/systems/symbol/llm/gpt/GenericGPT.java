@@ -65,7 +65,7 @@ return complete(chats, 0);
 }
 
 protected I_Assist<String> complete(I_Assist<String> chats, int attempt) throws APIException, IOException {
-if (attempt >= retryCount)
+if (attempt > retryCount)
 return chats;
 log.debug("llm.gpt.url: {} -> {}", config.getName(), config.getURL());
 RestAPI api = new RestAPI(config.getURL());
@@ -82,7 +82,7 @@ if (responseBody != null) {
 body = responseBody.string();
 GPTResponse completion = om.readValue(body, GPTResponse.class);
 int tokens = completion.usage == null ? -1 : completion.usage.total_tokens;
-log.info("llm.gpt.reply: {} == {} x {} tokens", config.getName(), response.code(), tokens);
+log.info("llm.gpt.reply: [ #{} ] {} x {} tokens", attempt, response.code(), tokens);
 if (completion.choices != null && !completion.choices.isEmpty()) {
 for (int c = 0; c < completion.choices.size(); c++) {
 GPTResponse.Choice choice = completion.choices.get(c);
