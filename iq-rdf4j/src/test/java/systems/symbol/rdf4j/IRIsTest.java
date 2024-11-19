@@ -1,12 +1,11 @@
 package systems.symbol.rdf4j;
 
-import systems.symbol.rdf4j.store.AbstractTripleTest;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.junit.jupiter.api.Test;
 
-public class IRIsTest extends AbstractTripleTest {
+public class IRIsTest {
 
     @Test
     public void testForLabels() {
