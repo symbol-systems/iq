@@ -13,7 +13,6 @@ public class AbstractTripleTest {
 public BootstrapRepository assets;
 public ValueFactory vf;
 public IRI ctx, iriSparqlQuery, iriTestCase;
-// public TripleSource triples;
 public IRI iriHBSTemplate;
 
 @BeforeAll
