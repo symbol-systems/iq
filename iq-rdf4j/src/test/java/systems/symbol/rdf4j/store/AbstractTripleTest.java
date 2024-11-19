@@ -4,15 +4,11 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-
 import systems.symbol.platform.IQ_NS;
 
 import java.io.File;
 import java.io.IOException;
 
-@TestInstance(Lifecycle.PER_METHOD)
 public class AbstractTripleTest {
 public BootstrapRepository assets;
 public ValueFactory vf;
