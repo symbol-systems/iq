@@ -18,26 +18,34 @@ import systems.symbol.rdf4j.store.BootstrapRepository;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.store.LiveModel;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class IQScriptCatalogTest {
-    public BootstrapRepository assets;
-    public ValueFactory vf;
-    public IRI ctx, iriSparqlQuery, iriTestCase;
-    public IRI iriHBSTemplate;
+
+    private static BootstrapRepository assets;
+    private static ValueFactory vf;
+    private static IRI ctx, iriSparqlQuery;
 
     @BeforeAll
-    public void setUp() throws IOException {
+    public static void setUp() throws IOException {
         assets = new BootstrapRepository();
         ctx = assets.load(new File("src/test/resources/assets"), IQ_NS.TEST);
         vf = assets.getValueFactory();
-
-        iriTestCase = vf.createIRI(IQ_NS.TEST + "TestCase");
         iriSparqlQuery = vf.createIRI("iq:test:queries/all");
-        iriHBSTemplate = vf.createIRI("iq:test:hbs/index");
     }
 
     @AfterAll
-    public void tearDown() {
-        assets.shutDown();
+    public static void tearDown() {
+        if (assets != null) {
+            assets.shutDown();
+        }
+    }
+
+    @Test
+    public void testIRIs() {
+        assert ctx != null;
+        assert ctx.stringValue().equals(IQ_NS.TEST);
     }
 
     @Test
@@ -45,20 +53,32 @@ public class IQScriptCatalogTest {
         try (RepositoryConnection connection = assets.getConnection()) {
             IQScriptCatalog library = new IQScriptCatalog(new IQConnection(IQ_NS.TEST, connection));
             String sparql = library.getSPARQL(iriSparqlQuery);
-            assert sparql != null && !sparql.isEmpty();
-            assert sparql.contains("SELECT ");
+
+            assertNotNull(sparql, "SPARQL query should not be null");
+            assertTrue(!sparql.isEmpty(), "SPARQL query should not be empty");
+            assertTrue(sparql.contains("SELECT "), "SPARQL query should contain 'SELECT'");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while testing SPARQL retrieval from connection", e);
         }
     }
 
     @Test
-    public void testGetSPARQLWithIRIFromModel() throws Exception {
+    public void testGetSPARQLWithIRIFromModel() {
         try (RepositoryConnection connection = assets.getConnection()) {
             LiveModel liveModel = new LiveModel(connection);
             RDFDump.dump(liveModel, System.out, RDFFormat.TURTLE);
-            Literal sparql = IQScripts.findScript(liveModel, iriSparqlQuery, vf.createIRI("urn:" + COMMONS.MIME_SPARQL),
+
+            Literal sparql = IQScripts.findScript(
+                    liveModel,
+                    iriSparqlQuery,
+                    vf.createIRI("urn:" + COMMONS.MIME_SPARQL),
                     null);
-            assert sparql != null && !sparql.stringValue().isEmpty();
-            assert sparql.stringValue().contains("SELECT ");
+
+            assertNotNull(sparql, "SPARQL script should not be null");
+            assertTrue(!sparql.stringValue().isEmpty(), "SPARQL script should not be empty");
+            assertTrue(sparql.stringValue().contains("SELECT "), "SPARQL script should contain 'SELECT'");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while testing SPARQL retrieval from model", e);
         }
     }
 }
