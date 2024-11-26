@@ -1,0 +1,61 @@
+@prefix : <iq:test:>.
+
+# Canonical Vocabularies (e.g. W3C standards)
+
+@prefix dbr:  <https://dbpedia.org/page/>.
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+
+# a conversation between a human and an AI agent.
+# uses SKOS and Schema.org vocabularies.
+
+:AI_Capability a skos:Concept;
+    skos:prefLabel "AI Capability";
+.
+
+:Greetings a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Greetings";
+    skos:definition "Introducing user and agent." ;
+.
+:Assistance a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Assistance";
+    skos:definition "Providing generic help or support to the user." ;
+.
+:DataRetrieval a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Data Retrieval";
+    skos:definition "Ability to retrieve data sets from various sources." ;
+.
+:KnowledgeBase a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Information Query";
+    skos:definition "Seeking information or answers to questions from knowledge base." ;
+.
+:NaturalLanguage a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Natural Language";
+    skos:definition "Ability to understand and generate human language." ;
+.
+:CreativeServices a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Creative Services";
+    skos:definition "Ability to generate imagery and visual creative." ;
+.
+:TaskAutomation a skos:Concept;
+    skos:related :AI_Capability;
+    skos:prefLabel "Task Automation";
+    skos:definition "Capability to automate repetitive tasks." ;
+.
