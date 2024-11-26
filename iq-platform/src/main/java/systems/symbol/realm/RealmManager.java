@@ -151,7 +151,8 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     }
 
     protected I_KeyStore getKeyStore(IRI self) throws Exception {
-        return new VFSKeyStore(vfs, "keys/" + toID(self));
+        FileObject keysHome = getHome().resolveFile("keys/" + toID(self));
+        return new VFSKeyStore(vfs, keysHome);
     }
 
     protected String toID(IRI self) {

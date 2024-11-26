@@ -22,7 +22,7 @@ public class ModelAPITest {
 
     @BeforeEach
     public void setup() throws IOException {
-        File jwtFile = new File("./.iq/vault/jwt/" + REALM + ".jwt");
+        File jwtFile = new File("./.iq/jwt/" + REALM + ".jwt");
         if (jwtFile.exists()) {
             VALID_AUTH_HEADER = "Bearer " + IOCopier.load(jwtFile);
             System.out.println("test.setup.jwt: " + VALID_AUTH_HEADER);

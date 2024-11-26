@@ -9,8 +9,8 @@ import org.apache.commons.vfs2.*;
 public class VFSKeyStore extends AbstractKeyStore {
     private final FileObject keysHome;
 
-    public VFSKeyStore(FileSystemManager fsm, String keysHomePath) throws Exception {
-        this.keysHome = fsm.resolveFile(keysHomePath);
+    public VFSKeyStore(FileSystemManager fsm, FileObject keysHome) throws Exception {
+        this.keysHome = keysHome;
         if (!this.keysHome.exists()) {
             this.keysHome.createFolder();
         }
