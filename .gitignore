@@ -1,6 +1,7 @@
 .secrets
 model
 XXX
+QRX
 
 .DS_Store
 .thumbs.db
@@ -9,7 +10,7 @@ target
 *todo
 local
 old
-.iq
+iq-run-apis/.iq
 tmp
 *.class
 
