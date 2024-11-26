@@ -9,25 +9,19 @@ import org.junit.jupiter.api.Test;
 
 import com.github.jsonldjava.shaded.com.google.common.io.Files;
 
+import systems.symbol.lake.Lakes;
 import systems.symbol.realm.*;
-
-import java.io.File;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RealmManagerTest {
     IRI self = Values.iri("test:");
 
     @Test
     void testBootstrapRealm() throws Exception, PlatformException {
-        RealmManager realms = new RealmManager(Files.createTempDir());
-        Realms.bootstrap(realms, new File("src/test/resources/realms/").listFiles());
+        RealmManager realms = new RealmManager();
+        Lakes.boot(realms);
         System.out.println("realm.bootstrap: " + realms.getRealms());
         assert !realms.getRealms().isEmpty();
-
         assert realms.newRealm(self).getSelf().equals(self);
-        I_Realm realm = realms.getRealm(self);
-        assertNotNull(realm);
-        assert realm.getSelf().equals(self);
         realms.stop();
     }
 

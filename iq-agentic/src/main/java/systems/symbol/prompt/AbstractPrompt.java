@@ -4,8 +4,7 @@ import com.github.jknack.handlebars.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import systems.symbol.agent.Facades;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.string.PrettyStrings;

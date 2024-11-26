@@ -2,15 +2,21 @@ package systems.symbol.rdf4j.fn;
 
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.util.Values;
+import org.eclipse.rdf4j.query.algebra.evaluation.TripleSource;
+import org.eclipse.rdf4j.repository.evaluation.RepositoryTripleSource;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 public class AlikeTest extends CustomFunctionsTest {
 
-    Literal bob = vf.createLiteral("Bob");
-    Literal alec = vf.createLiteral("Alec");
-    Literal alice = vf.createLiteral("Alice");
+    Literal bob = Values.literal("Bob");
+    Literal alec = Values.literal("Alec");
+    Literal alice = Values.literal("Alice");
 
     public AlikeTest() throws IOException {
     }
@@ -19,17 +25,22 @@ public class AlikeTest extends CustomFunctionsTest {
     public void testEvaluate() {
         CustomFunction alike = new Alike();
         assert alike.getFunctionName().equals("alike");
-        Value text = alike.evaluate(tripleSource, bob, alice);
-        System.out.println("alike: " + text);
-        assert text != null;
-        assert text.isLiteral();
-        assert ((Literal) text).booleanValue() == false;
 
-        text = alike.evaluate(tripleSource, alec, alice);
-        System.out.println("alike: " + text);
-        assert text != null;
-        assert text.isLiteral();
-        assert ((Literal) text).booleanValue() == true;
+        SailRepository repo = new SailRepository(new MemoryStore());
+        try (SailRepositoryConnection conn = repo.getConnection()) {
+            TripleSource tripleSource = new RepositoryTripleSource(repo.getConnection(), true);
+            Value text = alike.evaluate(tripleSource, bob, alice);
+            System.out.println("alike: " + text);
+            assert text != null;
+            assert text.isLiteral();
+            assert ((Literal) text).booleanValue() == false;
+
+            text = alike.evaluate(tripleSource, alec, alice);
+            System.out.println("alike: " + text);
+            assert text != null;
+            assert text.isLiteral();
+            assert ((Literal) text).booleanValue() == true;
+        }
 
     }
 }

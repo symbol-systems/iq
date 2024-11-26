@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-       <version>0.82.2</version>
+       <version>0.82.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>iq-lake</artifactId>
@@ -24,8 +24,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <cloudevents.version>2.4.0</cloudevents.version>
-
-
         <skipITs>true</skipITs>
         <surefire.plugin.version>3.2.5</surefire.plugin.version>
         <kotlin.version>1.9.23</kotlin.version>
@@ -33,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>systems.symbol</groupId>
-            <artifactId>iq-platform</artifactId>
+            <artifactId>iq-rdf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

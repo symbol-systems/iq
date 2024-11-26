@@ -1,0 +1,42 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix iq: <iq:> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix cnt: <http://www.w3.org/2011/content#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix my: <urn:my:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix : <iq:test:> .
+
+<iq:test:> a <iq:Agent>, <iq:Workflow>;
+  <iq:initial> <iq:test:intents>;
+  <iq:state> <iq:test:rdf> .
+
+<iq:test:intents> <iq:to> <iq:test:search>, <iq:test:find>, <iq:test:select>,
+    <iq:test:remodel>, <iq:test:prompt>, <iq:test:script>, <iq:test:webpage>,
+    <iq:test:rdf> .
+
+<iq:test:find> <iq:find> "{{my.prompt}}" .
+
+<iq:test:search> <iq:search> "{{my.prompt}}" .
+
+<iq:test:select> <iq:select> "{{my.prompt}}" .
+
+<iq:test:remodel> <iq:remodel> "{{my.prompt}}" .
+
+<iq:test:prompt> <iq:prompt> "{{my.prompt}}" .
+
+<iq:test:script> <iq:script> <iq:test:scripts/hello> .
+
+<iq:test:webpage> <iq:webpage> <https://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+<iq:test:rdf> <iq:rdf> <https://www.w3.org/1999/02/22-rdf-syntax-ns> .
+
+<iq:test:agent> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "agent.ttl" .

@@ -28,8 +28,12 @@ public class VFSPasswordVault extends MemoryVault implements I_LoadSave {
      * @throws FileSystemException If the vault home cannot be accessed or created.
      */
     public VFSPasswordVault(FileSystemManager fsm, String vaultHomeURI) throws FileSystemException, IOException {
+        this(fsm, fsm.resolveFile(vaultHomeURI));
+    }
+
+    public VFSPasswordVault(FileSystemManager fsm, FileObject vaultHome) throws FileSystemException, IOException {
         this.fsm = fsm;
-        this.vaultHome = fsm.resolveFile(vaultHomeURI);
+        this.vaultHome = vaultHome;
 
         if (!vaultHome.exists()) {
             vaultHome.createFolder();

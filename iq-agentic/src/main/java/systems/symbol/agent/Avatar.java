@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;

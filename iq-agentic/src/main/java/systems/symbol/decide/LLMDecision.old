@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.agent.MyFacade;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;

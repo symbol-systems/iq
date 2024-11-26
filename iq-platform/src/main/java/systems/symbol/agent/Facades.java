@@ -7,7 +7,6 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +54,7 @@ public class Facades {
         return results;
     }
 
-    public static Bindings rebind(IRI self, Resource state, @NotNull Bindings my) {
+    public static Bindings rebind(IRI self, Resource state, Bindings my) {
         Bindings bindings = rebind(self, my);
         if (!my.containsKey(SELF))
             my.put(SELF, IdentityHelper.uuid(self + "#"));
@@ -64,7 +63,7 @@ public class Facades {
         return bindings;
     }
 
-    public static Bindings rebind(IRI self, @NotNull Bindings my) {
+    public static Bindings rebind(IRI self, Bindings my) {
         Bindings bindings;
         if (my.containsKey(MY)) {
             bindings = my;
@@ -78,7 +77,7 @@ public class Facades {
         return bindings;
     }
 
-    public static Bindings trust(IRI agent, Resource state, Model model, @NotNull Bindings my, I_Secrets trusted)
+    public static Bindings trust(IRI agent, Resource state, Model model, Bindings my, I_Secrets trusted)
             throws SecretsException {
         IQFacade facade = new IQFacade(agent, model, trusted);
         try {
@@ -89,7 +88,7 @@ public class Facades {
         return trust(agent, state, my, facade);
     }
 
-    public static Bindings trust(IRI agent, Resource state, @NotNull Bindings my, IQFacade facade)
+    public static Bindings trust(IRI agent, Resource state, Bindings my, IQFacade facade)
             throws SecretsException {
         log.debug("iq.trust: {} @ {} --> {}", agent, state, my.keySet());
         Bindings bindings = rebind(agent, state, my);
@@ -121,7 +120,7 @@ public class Facades {
         return queryParamsMap;
     }
 
-    public static Bindings bind(@NotNull Bindings bindings, MultivaluedMap<String, String> queryParameters) {
+    public static Bindings bind(Bindings bindings, MultivaluedMap<String, String> queryParameters) {
         for (Map.Entry<String, java.util.List<String>> entry : queryParameters.entrySet()) {
             String key = entry.getKey();
             java.util.List<String> values = entry.getValue();
@@ -141,7 +140,7 @@ public class Facades {
         return bind(new SimpleBindings(), queryParameters);
     }
 
-    public static Bindings rebind(IRI self, @NotNull Bindings params, DecodedJWT jwt) {
+    public static Bindings rebind(IRI self, Bindings params, DecodedJWT jwt) {
         Bindings my = rebind(self, params);
         my.put("jwt", jwt);
         return my;

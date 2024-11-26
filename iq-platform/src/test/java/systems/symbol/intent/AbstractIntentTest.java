@@ -4,8 +4,9 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+
+import systems.symbol.lake.BootstrapRepository;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import java.io.File;
 import java.io.IOException;

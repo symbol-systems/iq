@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-       <version>0.82.2</version>
+       <version>0.82.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>iq-platform</artifactId>
@@ -12,7 +12,7 @@
     <description>IQ - operating environment for cognitive AI.</description>
     <url>https://symbol.systems</url>
 
-   <version>0.82.2</version>
+   <version>0.82.3</version>
     <properties>
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -41,11 +41,6 @@
         <dependency>
             <groupId>systems.symbol</groupId>
             <artifactId>iq-rdf4j</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>systems.symbol</groupId>
-            <artifactId>iq-finder</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -82,6 +77,16 @@
             <artifactId>bcpkix-jdk18on</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkiverse.tika</groupId>
+            <artifactId>quarkus-tika</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>2.9.2</version>
+        </dependency>
 
       <dependency>
           <groupId>org.jsoup</groupId>
@@ -105,7 +110,17 @@
             <artifactId>aws-java-sdk-s3</artifactId>
         </dependency>
 
-<!--Quarkus -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
+        </dependency>
+
+        <!--Quarkus -->
 
         <dependency>
             <groupId>io.quarkus</groupId>

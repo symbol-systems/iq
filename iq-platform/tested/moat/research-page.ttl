@@ -1,0 +1,52 @@
+@prefix iq: <iq:> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <iq:test:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix iq: <iq:> .
+@prefix my: <http://:systems.symbol/v0/my#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<iq:test:> a <iq:Agent>, <http://www.w3.org/ns/prov#Agent>;
+  <iq:research-rss> <https://machinelearningmastery.com/blog/feed/>;
+  <iq:research-page> <https://machinelearningmastery.com/>;
+  :workflow_0 :ideation;
+  <http://www.w3.org/ns/prov#generated> <https://machinelearningmastery.com/> .
+
+:workflow_0 a <iq:Workflow>;
+  <iq:initial> :ideation .
+
+:agent.ttl a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "agent.ttl" .
+
+<https://machinelearningmastery.com/> a <http://www.w3.org/ns/prov#Entity>, <urn:symbol.systems.intent.Performer>;
+  dc:description "Making developers awesome at machine learning. Machine learning is taught by academics, for academics. Developers need to know what works and how to use it. Discover how to get better results, faster.";
+  dc:title "Machine Learning Mastery";
+  skos:narrower <my:Attention>, <my:DeepLearning>, <my:ComputerVision>, <my:NLP>, <my:TimeSeries>,
+    <my:LSTMs>, <my:XGBoost>, <my:Statistics>, <my:PythonML>;
+  skos:prefLabel "Machine Learning Mastery";
+  <http://www.w3.org/ns/prov#wasGeneratedBy> <iq:test:> .
+
+<my:Attention> skos:prefLabel "Attention" .
+
+<my:DeepLearning> skos:prefLabel "Deep Learning" .
+
+<my:ComputerVision> skos:prefLabel "Computer Vision" .
+
+<my:NLP> skos:prefLabel "Natural Language Processing" .
+
+<my:TimeSeries> skos:prefLabel "Time Series" .
+
+<my:LSTMs> skos:prefLabel "LSTMs" .
+
+<my:XGBoost> skos:prefLabel "XGBoost" .
+
+<my:Statistics> skos:prefLabel "Statistics" .
+
+<my:PythonML> skos:prefLabel "Python for Machine Learning" .
+
+<urn:symbol.systems.research.PageToLLMToRDF> a <http://www.w3.org/ns/prov#Activity>;
+  <http://www.w3.org/ns/prov#generated> <https://machinelearningmastery.com/> .

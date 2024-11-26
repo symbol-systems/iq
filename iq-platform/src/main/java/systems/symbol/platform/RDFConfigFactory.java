@@ -17,7 +17,7 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.io.IOCopier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,35 +35,38 @@ public class RDFConfigFactory {
      * @param template the TTL template for repository
      * @param ctx      the key/values for template interpolation
      */
-    public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format) throws IOException {
-            final ConfigTemplate configTemplate = new ConfigTemplate(template);
-            final String configString = configTemplate.render(ctx);
-            log.debug("repository.config: {} -> {}", self.stringValue(), configString);
+    public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format)
+            throws IOException {
+        final ConfigTemplate configTemplate = new ConfigTemplate(template);
+        final String configString = configTemplate.render(ctx);
+        log.debug("repository.config: {} -> {}", self.stringValue(), configString);
 
-            ValueFactory vf = SimpleValueFactory.getInstance();
-            final RDFParser rdfParser = Rio.createParser(format, vf);
+        ValueFactory vf = SimpleValueFactory.getInstance();
+        final RDFParser rdfParser = Rio.createParser(format, vf);
 
-            final Model graph = new LinkedHashModel();
-            rdfParser.setRDFHandler(new StatementCollector(graph));
-            rdfParser.parse(new StringReader(configString), self.stringValue());
+        final Model graph = new LinkedHashModel();
+        rdfParser.setRDFHandler(new StatementCollector(graph));
+        rdfParser.parse(new StringReader(configString), self.stringValue());
 
-            Resource repositoryType = vf.createIRI(TYPEOF_REPOSITORY);
-            final Resource repositoryNode = Models
-                    .subject(graph.filter(null, RDF.TYPE, repositoryType))
-                    .orElseThrow(() -> new RepositoryConfigException(
-                            "missing type: " + repositoryType.stringValue()));
+        Resource repositoryType = vf.createIRI(TYPEOF_REPOSITORY);
+        final Resource repositoryNode = Models
+                .subject(graph.filter(null, RDF.TYPE, repositoryType))
+                .orElseThrow(() -> new RepositoryConfigException(
+                        "missing type: " + repositoryType.stringValue()));
 
-            final RepositoryConfig repConfig = RepositoryConfig.create(graph, repositoryNode);
-            repConfig.validate();
-            return repConfig;
+        final RepositoryConfig repConfig = RepositoryConfig.create(graph, repositoryNode);
+        repConfig.validate();
+        return repConfig;
     }
+
     /**
      * Create a new RepositoryConfig based on a template and parameters
      *
-     * @param storeType     Name of a TTL template in ./resources/rdf4j/
-     * @param ctx          the key/values for template interpolation
+     * @param storeType Name of a TTL template in ./resources/rdf4j/
+     * @param ctx       the key/values for template interpolation
      */
-    static public RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx) throws IOException {
+    static public RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx)
+            throws IOException {
         String resourcePath = "rdf4j/" + storeType + ".ttl";
         log.info("repository.type: {}", resourcePath);
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
@@ -74,6 +77,6 @@ public class RDFConfigFactory {
         Map<String, String> ctx = new HashMap<>();
         ctx.put("id", id);
         return toConfig(self, storeType, ctx);
-    }  
+    }
 
 }

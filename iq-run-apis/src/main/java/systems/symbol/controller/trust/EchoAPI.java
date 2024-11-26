@@ -13,7 +13,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.Avatar;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;

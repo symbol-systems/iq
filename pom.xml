@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.82.2</version>
+ <version>0.82.3</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -33,9 +33,19 @@
     </developer>
   </developers>
   <modules>
-    <module>iq-aspects</module>
     <module>iq-abstract</module>
+    <module>iq-aspects</module>
     <module>iq-rdf4j</module>
+    <module>iq-intents</module>
+    <module>iq-platform</module>
+    <!-- <module>iq-lake</module> -->
+    <!-- <module>iq-finder</module> -->
+    <module>iq-agentic</module>
+    <module>iq-run-apis</module>
+    <module>iq-persona</module>
+    <module>iq-analytics</module>
+      <module>iq-test-apis</module>
+      <!--    <module>iq-dao</module>-->
     <!-- <module>iq-actions</module> -->
     <!-- <module>iq-camel</module> -->
     <!-- <module>iq-cli</module> -->
@@ -43,15 +53,6 @@
     <!-- <module>iq-rdf4j-graphql</module> -->
     <!-- <module>iq-rdf4j-nlp</module> -->
     <!-- <module>iq-codehub</module> -->
-    <module>iq-platform</module>
-    <module>iq-lake</module>
-    <module>iq-finder</module>
-    <module>iq-agentic</module>
-    <module>iq-run-apis</module>
-    <module>iq-persona</module>
-    <module>iq-analytics</module>
-      <module>iq-test-apis</module>
-      <!--    <module>iq-dao</module>-->
   </modules>
   <scm>
     <url>github.com/symbol-systems/iq.git</url>
@@ -141,6 +142,16 @@
             <artifactId>rdf4j-model-api</artifactId>
             <version>${rdf4j.version}</version>
           <!-- <type>pom</type> -->
+        </dependency>
+    <dependency>
+        <groupId>com.auth0</groupId>
+        <artifactId>java-jwt</artifactId>
+        <version>4.4.0</version>
+    </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
         </dependency>
       <dependency>
         <groupId>io.cloudevents</groupId>

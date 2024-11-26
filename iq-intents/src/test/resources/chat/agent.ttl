@@ -1,0 +1,91 @@
+@prefix : <iq:test:>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema: <http://schema.org/>.
+@prefix iq: <iq:>.
+
+: a iq:Agent;
+   rdfs:label """
+You follow a strict workflow.
+1) write a terse response confirming the user's intention.
+2) Identify the `intent` that will fulfil the user's request.
+3) For example: I want to fly to Timbuktu = "action: update_destination".
+4) Only use these explicit intentions. if user is off-topic or you are confused the intent is 'oops'.
+
+    """;
+    iq:initial :chit_chat;
+.
+:consult
+    rdfs:label "Guide the user to help, change or decide.";
+    iq:to :chit_chat;
+    iq:to :update_origin;
+    iq:to :update_destinations;
+    iq:to :update_travellers;
+    iq:to :update_fare_class;
+    iq:to :update_traveller_ages;
+    iq:to :check_availability;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+:inappropriate
+    rdfs:label "Reply to inappropriate";
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+
+:chit_chat
+    rdfs:label "Reply politely to smalltalk";
+    iq:to :chit_chat;
+    iq:to :consult;
+    iq:to :update_destinations;
+    iq:to :update_travellers;
+.
+:update_origin
+    rdfs:label "Set Departure Location";
+    iq:slot :trip_origin;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+:update_destinations
+    rdfs:label "Set Destination Location";
+    iq:slot :trip_destination;
+    iq:to :inappropriate;
+    iq:to :consult;
+.
+:update_travellers
+    rdfs:label "Set Travellers Names and/or Details";
+    iq:slot :traveller_details;
+    iq:to :update_destinations;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+:update_fare_class
+    rdfs:label "Select Fare Class";
+    iq:slot :fare_class;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+:update_traveller_ages
+    rdfs:label "Select Ages of Travelers";
+    iq:slot :traveller_details;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+
+:traveller_details
+    iq:slot :traveller_name;
+    iq:slot :traveller_age_class;
+.
+
+:check_availability
+    rdfs:label "Check Flight Availability";
+    schema:url "https://check.flightapi.com/{origin}/{destination}/{fare_class}";
+    iq:to :update_missing_info;
+    iq:to :consult;
+    iq:to :inappropriate;
+.
+
+:update_missing_info
+    rdfs:label "Prompt for Missing Information";
+    iq:to :consult;
+.

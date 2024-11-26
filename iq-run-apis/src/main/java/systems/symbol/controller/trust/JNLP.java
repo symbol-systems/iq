@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.io.IOCopier;
 import systems.symbol.render.HBSRenderer;
 
 import javax.script.Bindings;

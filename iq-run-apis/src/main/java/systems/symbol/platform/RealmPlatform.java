@@ -9,6 +9,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -18,11 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
+import systems.symbol.finder.I_Corpus;
+import systems.symbol.finder.SearchMatrix;
 import systems.symbol.llm.Conversation;
-import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.io.IOCopier;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.realm.*;
+import systems.symbol.lake.Lakes;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.PrettyString;
 import systems.symbol.util.Stopwatch;
@@ -39,8 +43,8 @@ import java.util.*;
 @Singleton
 public class RealmPlatform implements I_Realms {
     protected static final Logger log = LoggerFactory.getLogger(RealmPlatform.class);
-    @ConfigProperty(name = "quarkus.http.port", defaultValue = "8080")
-    int port;
+    // @ConfigProperty(name = "quarkus.http.port", defaultValue = "8080")
+    // int port;
     @ConfigProperty(name = "iq.realm.jwt.duration", defaultValue = "2628288") // 60*60*24*30 = 30 days
     int duration;
     @ConfigProperty(name = "iq.failfast", defaultValue = "true")
@@ -74,18 +78,18 @@ public class RealmPlatform implements I_Realms {
         try {
             Stopwatch stopwatch = new Stopwatch();
             I_Realm seed = realms.newRealm(I_Self.self().getSelf());
-            log.info("realms.starting: {} @ localhost:{}", seed.getSelf(), port);
+            log.info("realms.start: {}", seed.getSelf());
             realms.start();
-            log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getAbsolutePath(), realms.getRealms(),
+            log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getName().getPath(), realms.getRealms(),
                     stopwatch);
-            Realms.bootstrap(realms);
+            Lakes.boot(realms);
 
             for (IRI realm : realms.getRealms()) {
                 I_Realm i_realm = getRealm(realm);
                 start(i_realm);
             }
             threads.start();
-            log.info("realms.running: {} @ {}", realms.getRealms(), stopwatch.elapsed());
+            log.info("realms.running: {} @ {}s", realms.getRealms(), stopwatch.elapsed());
         } catch (Exception e) {
             log.error("realms.error: {} @ {}", realms.getRealms(), e.getMessage(), e);
             if (failfast)
@@ -97,9 +101,9 @@ public class RealmPlatform implements I_Realms {
         try {
             log.info("realms.boot: {}", i_realm.getSelf().stringValue());
             trust(i_realm);
-            index(i_realm);
             agent(i_realm);
             backups();
+            getInstance().index(i_realm);
         } catch (APIException e) {
             log.error("realms.oops.api: {} @ {}", i_realm.getSelf(), e.getMessage());
         } catch (IOException e) {
@@ -111,20 +115,12 @@ public class RealmPlatform implements I_Realms {
         }
     }
 
-    private void index(I_Realm realm) {
-        try (RepositoryConnection connection = realm.getRepository().getConnection()) {
-            try (RepositoryResult<Statement> contents = connection.getStatements(null, RDF.VALUE, null)) {
-                realm.reindex(contents.iterator(), realm.getSelf());
-            }
-        }
-    }
-
     protected void trust(I_Realm realm) throws SecretsException, IOException {
         String self = realm.getSelf().stringValue();
         String[] roles = { self };
         String name = realm.getSelf().getNamespace().substring(0, realm.getSelf().getNamespace().length() - 1);
         String token = Realms.tokenize(realm.getSelf().stringValue(), roles, self, name, roles, realm, duration);
-        File jwtHome = new File(realms.getVaultHome(), "jwt");
+        File jwtHome = new File(realms.getHome().getName().getPath(), "jwt");
         jwtHome.mkdirs();
         File file = new File(jwtHome, name + ".jwt");
         IOCopier.save(token, file);
@@ -143,7 +139,7 @@ public class RealmPlatform implements I_Realms {
     }
 
     private void backups() {
-        File backups = new File(realms.getHome(), "backups");
+        File backups = new File(realms.getHome().getName().getPath(), "backups");
         backups.mkdirs();
         // String now = HumanDate.format(System.currentTimeMillis());
         log.info("realms.backups: {} @ {}", cnx.keySet(), backups.getAbsolutePath());
@@ -173,11 +169,6 @@ public class RealmPlatform implements I_Realms {
     }
 
     @Override
-    public I_Realm getRealm(IRI self, Model model) throws SecretsException {
-        return realms.getRealm(self, model);
-    }
-
-    @Override
     public Set<IRI> getRealms() {
         return realms.getRealms();
     }
@@ -201,6 +192,12 @@ public class RealmPlatform implements I_Realms {
             cnx.remove(realm.getSelf());
         }
         return agent;
+    }
+
+    @Override
+    public I_Corpus<IRI> searcher(IRI realm) {
+        log.info("realm.searcher: {} -> {}", realm.stringValue(), realms.searcher(realm));
+        return realms.searcher(realm);
     }
 
 }

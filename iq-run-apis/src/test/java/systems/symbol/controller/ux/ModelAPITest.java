@@ -4,7 +4,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.io.IOCopier;
 import systems.symbol.secrets.SecretsException;
 
 import java.io.File;

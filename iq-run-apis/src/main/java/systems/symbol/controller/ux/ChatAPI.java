@@ -14,11 +14,12 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.finder.I_Corpus;
 import systems.symbol.finder.I_Found;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
@@ -100,12 +101,13 @@ public class ChatAPI extends GuardedAPI {
             log.info("ux.chat.timer.1: {}", stopwatch.summary());
             Resource state = agent.getStateMachine().getState();
             if (state.isIRI()) {
-                Collection<I_Found<IRI>> search = realm.byConcept((IRI) state).search(chat.toString(), maxResults,
+                I_Corpus<IRI> searcher = platform.searcher(realm.getSelf());
+                Collection<I_Found<IRI>> search = searcher.byConcept((IRI) state).search(chat.toString(), maxResults,
                         minScore);
                 log.info("ux.chat.search: {} -> {} == {}", state, search.size(), chat.context());
                 log.info("ux.chat.timer.2: {}", stopwatch.summary());
                 if ((search == null || search.isEmpty()) && state != null) {
-                    search = realm.byConcept(null).search(chat.context(), maxResults,
+                    search = searcher.byConcept(null).search(chat.context(), maxResults,
                             minScore);
                     log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
                     log.info("ux.chat.timer.3: {}", stopwatch.summary());
