@@ -22,14 +22,16 @@ protected Model model;
 protected IRI self;
 
 /**
- * Constructs a new AbstractIntent with the provided RDF4J model and self identity.
+ * Constructs a new AbstractIntent with the provided RDF4J model and self
+ * identity.
  *
  */
 protected AbstractIntent() {
 }
 
 /**
- * Initializes the AbstractIntent with the provided RDF4J model and self identity.
+ * Initializes the AbstractIntent with the provided RDF4J model and self
+ * identity.
  *
  * @param model The RDF4J model associated with the intent.
  * @param self  The self identity of the intent.
@@ -52,7 +54,7 @@ return model;
  * Executes the intent based on the provided subject and object.
  *
  * @param actor The subject of the execution.
- * @param state  The object of the execution.
+ * @param state The object of the execution.
  * @return A set of IRIs resulting from the execution.
  */
 @Override

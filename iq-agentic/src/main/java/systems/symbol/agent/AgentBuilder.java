@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.decide.IntentDecision;
 import systems.symbol.decide.ChainOfCommand;
 import systems.symbol.decide.I_Decide;
@@ -158,7 +158,7 @@ return avatar;
 
 protected I_Agent agentic(I_Agent agent) {
 bindings.put(STATE, agent.getStateMachine().getState());
-log.info("builder.agent: {} -> {}", agent.getSelf(), agent.getStateMachine().getState());
+log.info("builder.agentic: {} -> {}", agent.getSelf(), agent.getStateMachine().getState());
 return agent;
 }
 

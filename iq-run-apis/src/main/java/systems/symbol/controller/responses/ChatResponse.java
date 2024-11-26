@@ -5,7 +5,7 @@ import jakarta.ws.rs.core.Response;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLMessage;
-import systems.symbol.realm.Facts;
+import systems.symbol.rdf4j.Facts;
 
 import java.util.Collection;
 import java.util.List;

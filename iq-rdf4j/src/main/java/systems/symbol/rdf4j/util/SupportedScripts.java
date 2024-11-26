@@ -15,6 +15,7 @@ private final Set<String> supportedMimeTypes = new HashSet<>();
 public boolean supports(String mime) {
 return supportedMimeTypes.contains(mime);
 }
+
 public Set<String> getTypes() {
 return supportedMimeTypes;
 }
@@ -23,8 +24,8 @@ public boolean supports(IRI mime) {
 return supportedMimeTypes.contains(mime.stringValue());
 }
 
-public SupportedScripts() {}
-
+public SupportedScripts() {
+}
 
 public void supportSPARQL() {
 supportedMimeTypes.add(COMMONS.MIME_SPARQL);
@@ -52,12 +53,13 @@ return getScriptMimeTypes().get(ext);
 }
 
 public static String toMimeType(IRI datatype) {
-if (datatype==null) return null;
+if (datatype == null)
+return null;
 String value = datatype.stringValue();
-if (value.contains("/") && value.startsWith("urn:")) return value.substring(4);
+if (value.contains("/") && value.startsWith("urn:"))
+return value.substring(4);
 return null;
 }
-
 
 public static Collection<String> getMimeTypes() {
 List<String> mimes = new ArrayList<>();

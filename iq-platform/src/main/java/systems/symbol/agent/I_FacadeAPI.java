@@ -3,8 +3,8 @@ package systems.symbol.agent;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.commons.vfs2.*;
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.tools.APIException;
+import systems.symbol.tools.RestAPI;
 import systems.symbol.fsm.StateException;
 import systems.symbol.secrets.SecretsException;
 

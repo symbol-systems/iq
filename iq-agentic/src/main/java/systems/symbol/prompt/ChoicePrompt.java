@@ -3,7 +3,7 @@ package systems.symbol.prompt;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.llm.I_Assist;
 
 import javax.script.Bindings;
@@ -29,7 +29,8 @@ this.agent = agent;
 public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
 String prompt = prompt(agent.getThoughts(), agent.getStateMachine().getTransitions());
 log.info("prompt.choices: {}", prompt);
-if (!prompt.isEmpty()) chat.system(bind(prompt));
+if (!prompt.isEmpty())
+chat.system(bind(prompt));
 return chat;
 }
 
@@ -41,20 +42,23 @@ return hbs.compileInline(wrapper).apply(my);
 }
 
 public static String prompt(Model facts, Collection<Resource> choices) throws IOException {
-if (choices.isEmpty()) return "";
+if (choices.isEmpty())
+return "";
 StringBuilder intent$ = new StringBuilder();
-choices.forEach( c -> {
+choices.forEach(c -> {
 Iterable<Statement> options = facts.getStatements(c, RDFS.LABEL, null);
-options.forEach( o -> intent$.append("\n- [").append(o.getSubject().stringValue()).append("](").append(o.getObject().stringValue()).append(")"));
+options.forEach(o -> intent$.append("\n- [").append(o.getSubject().stringValue()).append("](")
+.append(o.getObject().stringValue()).append(")"));
 });
 return intent$.toString();
 }
 
 protected String prompt(Iterable<IRI> found) {
 StringBuilder p$ = new StringBuilder();
-found.forEach( c -> {
+found.forEach(c -> {
 Iterable<Statement> options = agent.getThoughts().getStatements(c, RDFS.LABEL, null);
-options.forEach( o -> p$.append("[").append(o.getSubject().stringValue()).append("](").append(o.getObject().stringValue()).append("), "));
+options.forEach(o -> p$.append("[").append(o.getSubject().stringValue()).append("](")
+.append(o.getObject().stringValue()).append("), "));
 });
 return p$.toString();
 }

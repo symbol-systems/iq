@@ -1,0 +1,22 @@
+
+[] a <http://schema.org/Organization>;
+  <http://schema.org/address> [ a <http://schema.org/PostalAddress>;
+  <http://schema.org/addressCountry> "USA";
+  <http://schema.org/addressLocality> "Cheyene";
+  <http://schema.org/addressRegion> "WY";
+  <http://schema.org/postalCode> "33444";
+  <http://schema.org/streetAddress> "123 Mild West Street"
+];
+  <http://schema.org/contactPoint> [ a <http://schema.org/ContactPoint>;
+  <http://schema.org/contactType> "customer support";
+  <http://schema.org/email> "example@symbol.systems";
+  <http://schema.org/telephone> "[+555-123-8457]"
+];
+  <http://schema.org/founders> [ a <http://schema.org/Person>;
+  <http://schema.org/name> "JO"
+];
+  <http://schema.org/foundingDate> "2024"^^<http://schema.org/Date>;
+  <http://schema.org/legalName> "Symbol Systems LLC";
+  <http://schema.org/logo> <http://symbol.systems/logo.png>;
+  <http://schema.org/name> "Symbol Systems";
+  <http://schema.org/url> <http://symbol.systems> .

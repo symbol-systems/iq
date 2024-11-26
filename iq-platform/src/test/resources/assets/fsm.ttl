@@ -3,6 +3,13 @@
 @prefix iq: <iq:>.
 @prefix : <iq:test:>.
 
+:
+a iq:Agent;
+iq:workflow :workflow_0.
+
+:workflow_0
+a   iq:Workflow;
+iq:initial :ideation.
 
 :ideation iq:to :work-in-progress.
 
@@ -13,4 +20,6 @@
 
 :revision iq:to :ideation ,
   :work-in-progress .
+
+[] a :work-in-progress.
 

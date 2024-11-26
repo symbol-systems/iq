@@ -40,14 +40,14 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 log.info("ux.vision: {} -> {}", path, jwt.getSubject());
 
-File home = new File(platform.getInstance().getHome(), "vision");
-File file = new File(home, path);
-log.info("vision.upload: {} @ {} == {}", path, file, file.exists());
-if (!file.exists()) {
-return Response.status(Response.Status.NOT_FOUND)
-.entity(new SimpleResponse("error", "File not found").build())
-.build();
-}
+// File home = new File(platform.getInstance().getHome(), "vision");
+// File file = new File(home, path);
+// log.info("vision.upload: {} @ {} == {}", path, file, file.exists());
+// if (!file.exists()) {
+// return Response.status(Response.Status.NOT_FOUND)
+// .entity(new SimpleResponse("error", "File not found").build())
+// .build();
+// }
 return Response.ok().build();
 }
 

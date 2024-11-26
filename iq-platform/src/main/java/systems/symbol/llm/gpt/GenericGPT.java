@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.tools.APIException;
+import systems.symbol.tools.RestAPI;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;
 

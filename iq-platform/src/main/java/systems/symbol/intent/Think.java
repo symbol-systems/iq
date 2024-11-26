@@ -10,7 +10,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import systems.symbol.RDF;
 import systems.symbol.agent.Facades;
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;

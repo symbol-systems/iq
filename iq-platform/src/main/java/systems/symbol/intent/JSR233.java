@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.RDF;
 import systems.symbol.agent.Facades;
-import systems.symbol.agent.tools.TrustedAPIs;
+import systems.symbol.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Contents;

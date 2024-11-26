@@ -1,0 +1,84 @@
+{
+"@context": {},
+"@graph": [
+{
+"@id": "KF:Stella",
+"@type": "Hero",
+"label": "Kinky AI Companions",
+"comment": "Our kinky AI is only for the most open-minded of adult roleplayers.",
+"image": "/art/stella.png",
+"to": [
+"KF:Companions"
+]
+},
+{
+"@id": "KF:Companions",
+"@type": "Features",
+"label": "Surrender To Our Goddesses",
+"comment": "Let your Domme guide you and they will introduce you to new levels of sensuality.",
+"image": "/art/stella.png",
+"to": [
+"KF:Mistress_Lilith",
+"KF:Goddess_Kali",
+"KF:Mistress_Melissa"
+]
+},
+{
+"@id": "KF:Mistress_Lilith",
+"@type": "Avatar",
+"label": "Mistress Lilith",
+"comment": "Mistress Lilith specializes in feminization and sissification, helping you embrace your truth.",
+"image": "/art/lilith.png",
+"fetish": "Feminization, Sissification",
+"to": [
+"KF:Mistress_Lilith_Pink_Boudoir"
+]
+},
+{
+"@id": "KF:Mistress_Lilith_Pink_Boudoir",
+"@type": "Place",
+"label": "Mistress Lilith's Pink Boudoir",
+"comment": "Enter the exclusive suite where Mistress Lilith conducts her transformations.",
+"image": "/art/lilith_bg.png",
+"to": []
+},
+{
+"@id": "KF:Goddess_Kali",
+"@type": "Avatar",
+"label": "Goddess Kali",
+"comment": "Goddess Kali demands worship and submission, embodying the ultimate power and control.",
+"image": "/art/kali.png",
+"fetish": "Worship, Submission",
+"to": [
+"KF:Goddess_Kali_Temple"
+]
+},
+{
+"@id": "KF:Goddess_Kali_Temple",
+"@type": "Place",
+"label": "Goddess Kali's Temple",
+"comment": "Experience the Her sacred realm where Goddess Kali is revered by her submissive followers.",
+"image": "/art/kali_bg.png",
+"to": []
+},
+{
+"@id": "KF:Mistress_Melissa",
+"@type": "Avatar",
+"label": "Mistress Melissa",
+"comment": "Mistress Melissa relishes in BDSM and pain play, ensuring her subjects submit to her desires.",
+"image": "/art/melissa.png",
+"fetish": "BDSM, Pain Play",
+"to": [
+"KF:Mistress_Melissa_Dungeon"
+]
+},
+{
+"@id": "KF:Mistress_Melissa_Dungeon",
+"@type": "Place",
+"label": "Mistress Melissa's Dungeon",
+"comment": "Surrender yourself to Mistress Melissa and her delicious BDSM kinks.",
+"image": "/art/melissa_bg.png",
+"to": []
+}
+]
+}

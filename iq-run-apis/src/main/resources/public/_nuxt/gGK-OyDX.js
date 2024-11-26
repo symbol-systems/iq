@@ -1,0 +1,1 @@
+import{g as t,o as a,c as s,b as c,w as _,d as i,B as r}from"./CLgCPQXA.js";const m=t({__name:"Login",setup(l){const n=()=>{console.log("onLogin"),window.location.href="/"};return(p,o)=>{const e=r;return a(),s("div",null,[c(e,{onClick:n},{default:_(()=>o[0]||(o[0]=[i("Login")])),_:1})])}}});export{m as default};

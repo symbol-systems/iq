@@ -11,8 +11,9 @@ import org.jgrapht.graph.DefaultEdge;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import systems.symbol.lake.BootstrapRepository;
 import systems.symbol.platform.IQ_NS;
-import systems.symbol.rdf4j.store.BootstrapRepository;
 
 import java.io.File;
 import java.io.IOException;

@@ -40,7 +40,7 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 log.info("ux.ipfs: {} -> {}", ipfs, jwt.getSubject());
 
-File home = new File(platform.getInstance().getHome(), "vfs");
+File home = new File(platform.getInstance().getHome().getPath().toString(), "vfs");
 File file = new File(home, ipfs);
 log.info("ipfs.download: {} @ {} == {}", ipfs, file, file.exists());
 if (!file.exists()) {

@@ -10,7 +10,7 @@ import static java.util.***REMOVED***.Pattern.compile;
 
 public class Files {
 
-static Pattern any_slash = compile("(?<![:/])[/\\\\]+");
+public static Pattern any_slash = compile("(?<![:/])[/\\\\]+");
 
 public static IRI toIRI(ValueFactory vf, IRI baseIRI, File parentFile, File file) {
 return toIRI(vf, baseIRI, parentFile, file, "/");

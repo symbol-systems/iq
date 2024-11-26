@@ -22,17 +22,20 @@ import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.*;
-import systems.symbol.realm.Facts;
 import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
+import systems.symbol.rdf4j.Facts;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.Realms;
+// import systems.symbol.realm.Realms;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.PrettyString;
 import systems.symbol.string.Validate;
+import systems.symbol.trust.I_Keys;
 import systems.symbol.trust.SimpleKeyStore;
 import systems.symbol.trust.generate.JWTGen;
+import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
@@ -153,7 +156,8 @@ trusts.forEach(trust -> aud.add(trust.stringValue()));
 
 int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
 String[] _aud = aud.toArray(new String[0]);
-String signedToken = Realms.tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(), _aud, realm,
+String signedToken = tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(),
+_aud, realm,
 duration);
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
 connection.commit();
@@ -214,11 +218,13 @@ int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 m
 log.info("trust.refresh: {} -> {} -> {} == {}", jwt.getSubject(), jwt.getIssuer(), aud, duration);
 String[] roles = jwt.getClaims().get("roles").asArray(String.class);
 String human = jwt.getClaim("name").asString();
-String signedToken = Realms.tokenize(jwt.getIssuer(), roles, jwt.getSubject(), human, aud, realm,
+String signedToken = tokenize(jwt.getIssuer(), roles, jwt.getSubject(), human, aud, realm,
 duration);
 
-// JWTCreator.Builder generator = jwtGen.generate(jwt.getIssuer(), jwt.getSubject(), aud, duration);
-// generator.withArrayClaim("roles", jwt.getClaims().get("roles").asArray(String.class));
+// JWTCreator.Builder generator = jwtGen.generate(jwt.getIssuer(),
+// jwt.getSubject(), aud, duration);
+// generator.withArrayClaim("roles",
+// jwt.getClaims().get("roles").asArray(String.class));
 // generator.withClaim("name", jwt.getClaim("name").asString());
 // String signedToken = jwtGen.sign(generator, realm.keys());
 SimpleResponse response = new SimpleResponse("access_token", signedToken);
@@ -231,5 +237,17 @@ return response.build();
 // return Realms.tokenize(issuer, roles, self, name, claims, keys, 600); // 10
 // mins
 // }
+
+public static String tokenize(String issuer, String[] roles, String self, String name, String[] audience,
+I_Keys keys,
+int durationSeconds) throws SecretsException {
+JWTGen jwtGen = new JWTGen();
+JWTCreator.Builder generator = jwtGen.generate(issuer, self, audience, durationSeconds);
+generator.withClaim("name", name);
+generator.withClaim("jti", IdentityHelper.uuid());
+if (roles.length > 0)
+generator.withArrayClaim("roles", roles);
+return jwtGen.sign(generator, keys.keys());
+}
 
 }

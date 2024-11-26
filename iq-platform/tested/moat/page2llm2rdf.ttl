@@ -1,0 +1,26 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix iq: <iq:> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix cnt: <http://www.w3.org/2011/content#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix my: <urn:my:> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix : <iq:test:> .
+
+<iq:test:> a <iq:Agent>;
+  <iq:test:workflow_0> <iq:test:ideation>;
+  <iq:research-rss> <https://www.w3.org/blog/feed/>;
+  <iq:research-page> <https://exmaple.com/> .
+
+<iq:test:workflow_0> a <iq:Workflow>;
+  <iq:initial> <iq:test:ideation> .
+
+<iq:test:agent> a <http://www.w3.org/ns/formats/Turtle>;
+  rdfs:label "agent.ttl" .

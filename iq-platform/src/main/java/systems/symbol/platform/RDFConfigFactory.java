@@ -17,7 +17,7 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.symbol.rdf4j.io.IOCopier;
+import systems.symbol.io.IOCopier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,8 @@ static final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repositor
  * @param template the TTL template for repository
  * @param ctx  the key/values for template interpolation
  */
-public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format) throws IOException {
+public static RepositoryConfig toConfig(IRI self, final String template, Map<String, String> ctx, RDFFormat format)
+throws IOException {
 final ConfigTemplate configTemplate = new ConfigTemplate(template);
 final String configString = configTemplate.render(ctx);
 log.debug("repository.config: {} -> {}", self.stringValue(), configString);
@@ -57,13 +58,15 @@ final RepositoryConfig repConfig = RepositoryConfig.create(graph, repositoryNode
 repConfig.validate();
 return repConfig;
 }
+
 /**
  * Create a new RepositoryConfig based on a template and parameters
  *
  * @param storeType Name of a TTL template in ./resources/rdf4j/
- * @param ctx  the key/values for template interpolation
+ * @param ctx   the key/values for template interpolation
  */
-static public RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx) throws IOException {
+static public RepositoryConfig toConfig(IRI self, final String storeType, Map<String, String> ctx)
+throws IOException {
 String resourcePath = "rdf4j/" + storeType + ".ttl";
 log.info("repository.type: {}", resourcePath);
 InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
@@ -74,6 +77,6 @@ static public RepositoryConfig toConfig(IRI self, String id, String storeType) t
 Map<String, String> ctx = new HashMap<>();
 ctx.put("id", id);
 return toConfig(self, storeType, ctx);
-}  
+}
 
 }

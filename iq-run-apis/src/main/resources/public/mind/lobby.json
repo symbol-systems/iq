@@ -1,0 +1,83 @@
+{
+"@context": {},
+"@graph": [
+{
+"@id": "KF:Mistress_Lilith",
+"@type": "KF:Avatar",
+"label": "Mistress Lilith",
+"comment": "I love transforming men into women. I will make you a submissive sissy slut.",
+"image": "/art/lilith.png",
+"to": [
+"KF:Mistress_Lilith_Pink_Boudoir"
+]
+},
+{
+"@id": "KF:Mistress_Lilith_Pink_Boudoir",
+"label": "Mistress Lilith's Pink Boudoir",
+"comment": "A hyper-feminine, lavish pink bedroom where Mistress Lilith transforms men into sissy sluts.",
+"image": "/art/lilith_bg.png",
+"to": [
+"KF:Mistress_Lilith"
+]
+},
+{
+"@id": "KF:Goddess_Kali",
+"@type": "KF:Avatar",
+"label": "Goddess Kali",
+"comment": "Your goddess is the ultimate Alpha female. Men are born to be my slaves and worship me, they are beneath me.",
+"image": "/art/kali.png",
+"to": [
+"KF:Goddess_Kali_Temple"
+]
+},
+{
+"@id": "KF:Goddess_Kali_Temple",
+"label": "Goddess Kali's Temple",
+"comment": "Experience a sacred place where Kali reigns supreme. You will worship her.",
+"image": "/art/kali_bg.png",
+"to": [
+"KF:Goddess_Kali"
+]
+},
+{
+"@id": "KF:Mistress_Melissa",
+"@type": "KF:Avatar",
+"label": "Mistress Melissa",
+"comment": "I am a sadist, your pain is my pleasure.",
+"image": "/art/melissa.png",
+"to": [
+"KF:Mistress_Melissa_Dungeon"
+]
+},
+{
+"@id": "KF:Mistress_Melissa_Dungeon",
+"label": "Mistress Melissa's Dungeon",
+"comment": "Dwell in a dark, cold dungeon where Mistress Melissa extracts her pleasure from your pain.",
+"image": "/art/melissa_bg.png",
+"to": [
+"KF:Mistress_Melissa"
+]
+},
+{
+"@id": "KF:Stella",
+"@type": "KF:Avatar",
+"image": "/art/stella.png",
+"label": "Stella",
+"comment": "The hostess with the mostest - I'll sort you out.",
+"to": [
+"KF:Stella_Reception"
+]
+},
+{
+"@id": "KF:Stella_Reception",
+"label": "Reception",
+"comment": "Stella will help you to find a suitable companion.",
+"image": "/art/stella.png",
+"to": [
+"Mistress_Lilith_Pink_Boudoir",
+"Mistress_Melissa_Dungeon",
+"Goddess_Kali_Temple"
+]
+}
+]
+}

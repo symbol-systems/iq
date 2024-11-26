@@ -1,6 +1,6 @@
 package systems.symbol.prompt;
 
-import systems.symbol.agent.tools.APIException;
+import systems.symbol.tools.APIException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLMessage;
 import systems.symbol.llm.TextMessage;

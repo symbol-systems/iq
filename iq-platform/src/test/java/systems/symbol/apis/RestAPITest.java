@@ -1,7 +1,7 @@
 package systems.symbol.apis;
 
-import systems.symbol.agent.tools.APIException;
-import systems.symbol.agent.tools.RestAPI;
+import systems.symbol.tools.APIException;
+import systems.symbol.tools.RestAPI;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
