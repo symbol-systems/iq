@@ -1,1 +1,0 @@
-function o(){if(!navigator)return{language:"en",locale:"en",userAgent:""};const a=navigator.language,n=navigator.languages?navigator.languages[0]:navigator.language||a,g=navigator.userAgent,e=navigator.geolocation;return{language:a,locale:n,userAgent:g,geo:e}}export{o as a};

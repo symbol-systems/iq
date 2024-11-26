@@ -1,1 +1,0 @@
-import{bd as a,v as u,G as n}from"./CLgCPQXA.js";const c=a((e,o)=>{console.log("auth.check: (%s) %o -> %o","c",o,e);const t=u();if(console.log("auth.ok: %s",t.authenticated),!t.authenticated)return n("/login")});export{c as default};

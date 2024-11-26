@@ -1,1 +1,0 @@
-import{v as a,p as n,x as c,c as s,o as l}from"./CLgCPQXA.js";const _={__name:"login",setup(u){const o=a(),e=n();return c(async()=>{console.log("callback.login: %o -> %o",e.query.token,!!o);const t=await o.authorized(e.query.token);console.log("callback.login.ok: %o -> %o",t,o.authenticated)}),(t,r)=>(l(),s("div"))}};export{_ as default};
