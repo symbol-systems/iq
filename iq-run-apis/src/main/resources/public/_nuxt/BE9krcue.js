@@ -1,1 +1,0 @@
-import{g as o,v as s,o as n,c as r,j as c,aa as t}from"./CLgCPQXA.js";const _=o({__name:"gate",setup(l){const a=s();return(e,u)=>(n(),r("div",null,[c(a).authenticated?t(e.$slots,"unlocked",{key:0}):t(e.$slots,"locked",{key:1})]))}});export{_};

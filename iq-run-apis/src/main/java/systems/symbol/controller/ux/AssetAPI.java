@@ -10,7 +10,6 @@ import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
