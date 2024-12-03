@@ -60,7 +60,7 @@ public class TokenAPI {
     @Path("{path : .*}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
-        log.info("preflight.trust: {} @ {}", path, info.getBaseUri());
+        log.debug("preflight.trust: {} @ {}", path, info.getBaseUri());
         return new DataResponse().build();
     }
 
@@ -199,10 +199,12 @@ public class TokenAPI {
         I_Realm realm = realms.getRealm(_realm);
         if (realm == null)
             return new OopsResponse("ux.token.realm", Response.Status.NOT_FOUND).build();
-        DecodedJWT jwt = GuardedAPI.decode(bearer, realm);
-        if (jwt == null)
-            return new OopsResponse("ux.token.bearer", Response.Status.FORBIDDEN).build();
-        JWTGen jwtGen = new JWTGen();
+        DecodedJWT jwt;
+        try {
+            jwt = GuardedAPI.decode(bearer, realm);
+        } catch (OopsException e) {
+            return new OopsResponse(e.getMessage(), Response.Status.FORBIDDEN).build();
+        }
         Map<String, Claim> claims = jwt.getClaims();
         if (claims == null)
             return new OopsResponse("ux.token.claims", Response.Status.FORBIDDEN).build();

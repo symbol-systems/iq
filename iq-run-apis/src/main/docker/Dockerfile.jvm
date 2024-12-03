@@ -86,12 +86,26 @@ COPY --chown=185 target/quarkus-app/app/ /deployments/app/
 COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
 
 USER root
-
 RUN chmod -R 755 /deployments
 RUN chown -R 185 /deployments
+USER 185
 
 EXPOSE 8080
-USER 185
 ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
 
+# Pass the arguments as environment variables to the container
+ENV MY_TWILIO_SID=$MY_TWILIO_SID
+ENV MY_INFOBIP_SECRET=$MY_INFOBIP_SECRET
+ENV MY_STRIPE_WH_SECRET=$MY_STRIPE_WH_SECRET
+ENV MY_DISCORD_SECRET=$MY_DISCORD_SECRET
+ENV MY_SEGMIND_SECRET=$MY_SEGMIND_SECRET
+ENV MY_NOVITA_KEY=$MY_NOVITA_KEY
+ENV MY_GROQ_API_KEY=$MY_GROQ_API_KEY
+ENV MY_OPENAI_SECRET=$MY_OPENAI_SECRET
+ENV MY_GROK_API_KEY=$MY_GROK_API_KEY
+ENV MY_TWILIO_SECRET=$MY_TWILIO_SECRET
+ENV MY_X_APP_SECRET=$MY_X_APP_SECRET
+ENV MY_GITHUB_CLIENT_ID=$MY_GITHUB_CLIENT_ID
+ENV MY_GITHUB_SECRET=$MY_GITHUB_SECRET
+ENV MY_IQ_API=$MY_IQ_API

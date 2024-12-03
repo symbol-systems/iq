@@ -83,6 +83,7 @@ public class RealmPlatform implements I_Realms {
             log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getName().getPath(), realms.getRealms(),
                     stopwatch);
             Lakes.boot(realms);
+            backups();
 
             for (IRI realm : realms.getRealms()) {
                 I_Realm i_realm = getRealm(realm);
@@ -102,7 +103,6 @@ public class RealmPlatform implements I_Realms {
             log.info("realms.boot: {}", i_realm.getSelf().stringValue());
             trust(i_realm);
             agent(i_realm);
-            backups();
             getInstance().index(i_realm);
         } catch (APIException e) {
             log.error("realms.oops.api: {} @ {}", i_realm.getSelf(), e.getMessage());

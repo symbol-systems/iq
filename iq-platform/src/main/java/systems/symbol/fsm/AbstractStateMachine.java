@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * An abstract implementation of the State Machine interface providing common functionalities.
+ * An abstract implementation of the State Machine interface providing common
+ * functionalities.
  *
  * @param <T> The type representing states in the state machine.
  */
@@ -27,7 +28,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
     @Override
     public I_StateMachine<T> setInitial(T initialState) {
         setCurrentState(this.initialState = initialState);
-        assert initialState!=null && this.initialState == this.currentState;
+        assert initialState != null && this.initialState == this.currentState;
         return this;
     }
 
@@ -60,20 +61,21 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      */
     @Override
     public T transition(T targetState) throws StateException {
-        if (targetState == null) return getState();
+        if (targetState == null)
+            return getState();
         boolean allowed = isAllowed(targetState);
         if (allowed) {
             T fromState = currentState;
             setCurrentState(targetState);
             boolean ok = notifyListeners(fromState, targetState);
-//            log.debug("allowed: {} @ {} => {}", ok, getState(), targetState);
+            log.info("transition?: {} @ {} => {}", ok, fromState, targetState);
             if (!ok) {
-                log.warn("veto: {} -> {}", fromState, targetState);
+                log.warn("veto: {} -> {} @ {}", fromState, targetState, getState());
                 setCurrentState(fromState);
             }
             return getState();
         }
-        throw new StateException("from: " + getState() + " to: " + targetState + " denied.", targetState );
+        throw new StateException("from: " + getState() + " to: " + targetState + " denied.", targetState);
     }
 
     /**
@@ -127,8 +129,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
         boolean ok = true;
         for (I_StateListener<T> listener : listeners) {
             boolean _ok = listener.onTransition(from, to);
-            if (ok) log.debug("state.ok: {} -> {}", from, to);
-            else log.warn("state.oops: {} -> {}", from, to);
+            log.info("state.notify: {} -> {} -> {} @ {}", _ok, from, to, getState());
             ok = ok & _ok;
         }
         return ok;

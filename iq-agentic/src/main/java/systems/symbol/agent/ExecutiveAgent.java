@@ -74,8 +74,9 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public boolean onTransition(Resource from, Resource to) throws StateException {
         if (seen.contains(to)) {
-            log.debug("agent.noTransition: {} @ {} ==> {}", self, from, to);
-            return false;
+            log.info("agent.seen: {} @ {} ==> {}", self, from, to);
+            getStateMachine().setInitial(to);
+            return true;
         }
         seen.add(to);
         if (to.isIRI() && IQ_NS.TO.equals(to)) {
@@ -93,8 +94,8 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
                 return false; // don't veto, we may try again
             }
             if (getStateMachine().getState().equals(next)) {
-                log.info("agent.same: {}", next);
-                return false;
+                log.info("agent.same: {} =? {}", next, from);
+                return !next.equals(from);
             }
             Resource transitioned = getStateMachine().transition(next);
             log.info("agent.transitioned: {} --> {}", from, transitioned);
