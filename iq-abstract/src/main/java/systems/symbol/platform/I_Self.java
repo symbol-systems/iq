@@ -3,8 +3,6 @@ package systems.symbol.platform;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 
-import io.smallrye.common.classloader.ClassPathUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

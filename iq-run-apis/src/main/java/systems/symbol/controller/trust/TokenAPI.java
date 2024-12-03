@@ -125,16 +125,16 @@ agent.stop();
 Object identity = bindings.get("identity");
 log.info("trust.identity: {} == {} @ {}", agent.getSelf(), identity, state);
 if (identity == null)
-return new OopsResponse("ux.token.identity", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.identity", Response.Status.UNAUTHORIZED).build();
 if (!identity.toString().startsWith(agent.getSelf().stringValue())
 || identity.toString().length() == agent.getSelf().stringValue().length())
-return new OopsResponse("ux.token.fraud", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.token.fraud", Response.Status.FORBIDDEN).build();
 
 IRI self = Values.iri(identity.toString());
 Object human = bindings.get("human");
 log.info("trust.human: {} == {}", human == null ? "ANON" : human, self);
 if (human == null || human.toString().isEmpty())
-return new OopsResponse("ux.token.human.name", Response.Status.NOT_FOUND).build();
+return new OopsResponse("ux.token.human.name", Response.Status.UNAUTHORIZED).build();
 boolean newUser = realms.getRealm(self) == null;
 I_Realm myRealm = realms.getInstance().newRealm(self);
 
