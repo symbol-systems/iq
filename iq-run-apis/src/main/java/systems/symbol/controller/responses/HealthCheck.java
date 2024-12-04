@@ -13,6 +13,10 @@ public class HealthCheck implements I_Response {
     public boolean ok;
     public String now, message, version, host;
 
+    public HealthCheck(boolean status) {
+        this(status, status ? "ok" : "oops");
+    }
+
     public HealthCheck(boolean status, HttpServletRequest request) {
         this(status, status ? "ok" : "oops");
         host = RealmAPI.getBaseURL(request);
