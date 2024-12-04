@@ -105,7 +105,7 @@ return new OopsResponse("ux.token.repository." + _realm, Response.Status.NOT_FOU
 IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
 
 String baseUrl = RealmAPI.getBaseURL(request) + "/";
-log.info("trust.issuer: {} @ {}", issuer, baseUrl);
+log.info("ux.trust.issuer: {} @ {}", issuer, baseUrl);
 
 try (RepositoryConnection connection = repo.getConnection()) {
 connection.begin();

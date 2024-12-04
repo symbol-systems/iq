@@ -1,6 +1,7 @@
 package systems.symbol.controller.platform;
 
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -13,6 +14,8 @@ import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * RESTful endpoint for checking the health of the platform and realms.
@@ -27,8 +30,8 @@ public class HealthCheckAPI extends GuardedAPI {
  */
 @GET
 @Produces(MediaType.APPLICATION_JSON)
-public Response check() {
-return new HealthCheck(true).build();
+public Response check(@Context HttpServletRequest request) {
+return new HealthCheck(true, request).build();
 }
 
 /**
@@ -41,7 +44,8 @@ return new HealthCheck(true).build();
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 public Response check(@PathParam("realm") String _realm,
-@HeaderParam("Authorization") String auth) throws IOException, SecretsException {
+@HeaderParam("Authorization") String auth, @Context HttpServletRequest request)
+throws IOException, SecretsException {
 if (!Validate.isBearer(auth)) {
 log.info("health.protected-repository");
 return new OopsResponse("ux.health.unauthorized", Response.Status.UNAUTHORIZED).build();
@@ -55,6 +59,6 @@ return new OopsResponse("ux.health.realm", Response.Status.NOT_FOUND).build();
 Repository repository = realm.getRepository();
 boolean healthy = (repository != null && repository.isInitialized());
 log.info("healthy.realm: {}", healthy);
-return new HealthCheck(healthy).build();
+return new HealthCheck(healthy, request).build();
 }
 }
