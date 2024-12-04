@@ -111,7 +111,7 @@ String baseUrl = requestUri.getScheme() + "://" + requestUri.getHost()
 bindings.put("host", baseUrl);
 bindings.put("issuer", issuer);
 bindings.put("provider", provider);
-log.info("trust.issuer: {} x {} <-- {}", issuer, connection.size(), baseUrl);
+log.info("trust.issuer: {} @ {} --> {}", issuer, requestUri.toASCIIString(), baseUrl);
 
 AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
 builder.setThoughts(realm.getModel()).scripting().sparql(connection);
