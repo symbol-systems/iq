@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-       <version>0.82.4</version>
+       <version>0.82.5</version>
     </parent>
 
     <artifactId>iq-test-apis</artifactId>
