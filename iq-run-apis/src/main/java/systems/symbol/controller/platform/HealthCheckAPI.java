@@ -2,20 +2,20 @@ package systems.symbol.controller.platform;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 import org.eclipse.rdf4j.repository.Repository;
 
 import systems.symbol.controller.responses.HealthCheck;
 import systems.symbol.controller.responses.OopsResponse;
+import systems.symbol.platform.WebURLs;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
-
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * RESTful endpoint for checking the health of the platform and realms.
@@ -30,8 +30,9 @@ public class HealthCheckAPI extends GuardedAPI {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response check(@Context HttpServletRequest request) {
-        return new HealthCheck(true, request).build();
+    public Response check(@Context UriInfo info, @Context HttpHeaders headers) {
+        log.info("health.ok");
+        return new HealthCheck(true, WebURLs.getBaseURL(info, headers)).build();
     }
 
     /**
@@ -44,7 +45,7 @@ public class HealthCheckAPI extends GuardedAPI {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response check(@PathParam("realm") String _realm,
-            @HeaderParam("Authorization") String auth, @Context HttpServletRequest request)
+            @HeaderParam("Authorization") String auth, @Context UriInfo info, @Context HttpHeaders headers)
             throws IOException, SecretsException {
         if (!Validate.isBearer(auth)) {
             log.info("health.protected-repository");
@@ -58,7 +59,7 @@ public class HealthCheckAPI extends GuardedAPI {
             return new OopsResponse("ux.health.realm", Response.Status.NOT_FOUND).build();
         Repository repository = realm.getRepository();
         boolean healthy = (repository != null && repository.isInitialized());
-        log.info("healthy.realm: {}", healthy);
-        return new HealthCheck(healthy, request).build();
+        log.info("healthy.realm: {} == {}", _realm, healthy);
+        return new HealthCheck(healthy, WebURLs.getBaseURL(info, headers)).build();
     }
 }
