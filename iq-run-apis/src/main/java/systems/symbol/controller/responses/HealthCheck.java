@@ -2,16 +2,20 @@ package systems.symbol.controller.responses;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import systems.symbol.controller.platform.RealmAPI;
 import systems.symbol.platform.I_Self;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class HealthCheck implements I_Response {
     public boolean ok;
-    public String now, message, version;
+    public String now, message, version, host;
 
-    public HealthCheck(boolean status) {
+    public HealthCheck(boolean status, HttpServletRequest request) {
         this(status, status ? "ok" : "oops");
+        host = RealmAPI.getBaseURL(request);
     }
 
     public HealthCheck(boolean status, String message) {
