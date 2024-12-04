@@ -59,7 +59,7 @@ public class TokenAPI {
     @Path("{path : .*}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response preflight(@PathParam("path") String path, @Context UriInfo info) {
-        log.debug("preflight.trust: {} @ {}", path, info.getBaseUri());
+        log.debug("trust.token.preflight: {} @ {}", path, info.getBaseUri());
         return new DataResponse().build();
     }
 
@@ -68,10 +68,10 @@ public class TokenAPI {
     @Path("/key/{realm}")
     public Response publicKey(@PathParam("realm") String _realm) throws Exception {
         if (Validate.isMissing(_realm))
-            return new OopsResponse("ux.token.realm", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("trust.token.realm", Response.Status.BAD_REQUEST).build();
         I_Realm realm = realms.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("ux.token.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.realm", Response.Status.NOT_FOUND).build();
         String pkcs8 = SimpleKeyStore.toPKCS8(realm.keys().getPublic());
         return new SimpleResponse(pkcs8).build();
     }
@@ -81,27 +81,27 @@ public class TokenAPI {
     @Path("token/{realm}/{provider}")
     public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider,
             SimpleBindings params, @Context UriInfo info, @Context HttpHeaders headers) throws SecretsException {
-        log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
+        log.info("trust.token.login: {} -> {} @ {}", _realm, provider, params.keySet());
         if (provider == null || provider.length() < 4) {
-            return new OopsResponse("ux.token.provider", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("trust.token.provider", Response.Status.BAD_REQUEST).build();
         }
         if (Validate.isMissing(_realm)) {
-            return new OopsResponse("ux.token.realm", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("trust.token.realm", Response.Status.BAD_REQUEST).build();
         }
         I_Realm realm = realms.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("ux.token.realm." + _realm, Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.realm." + _realm, Response.Status.NOT_FOUND).build();
         // TODO: authenticate (subject is a user, subject known to issuer)
         // TODO: authorize (subject known to audience)
 
         Repository repo = realm.getRepository();
         if (repo == null)
-            return new OopsResponse("ux.token.repository." + _realm, Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.repository." + _realm, Response.Status.NOT_FOUND).build();
 
         IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
 
-        String baseUrl = WebURLs.getBaseURL(info, headers) + "/";
-        log.info("ux.trust.issuer: {} @ {}", issuer, baseUrl);
+        String baseUrl = WebURLs.getBaseURL(info, headers);
+        log.info("trust.token.issuer: {} @ {}", issuer, baseUrl);
 
         try (RepositoryConnection connection = repo.getConnection()) {
             connection.begin();
@@ -124,18 +124,18 @@ public class TokenAPI {
             Resource state = agent.getStateMachine().transition(initial);
             agent.stop();
             Object identity = bindings.get("identity");
-            log.info("trust.identity: {} == {} @ {}", agent.getSelf(), identity, state);
+            log.info("trust.token.identity: {} == {} @ {}", agent.getSelf(), identity, state);
             if (identity == null)
-                return new OopsResponse("ux.token.identity", Response.Status.UNAUTHORIZED).build();
+                return new OopsResponse("trust.token.identity", Response.Status.UNAUTHORIZED).build();
             if (!identity.toString().startsWith(agent.getSelf().stringValue())
                     || identity.toString().length() == agent.getSelf().stringValue().length())
-                return new OopsResponse("ux.token.fraud", Response.Status.FORBIDDEN).build();
+                return new OopsResponse("trust.token.fraud", Response.Status.FORBIDDEN).build();
 
             IRI self = Values.iri(identity.toString());
             Object human = bindings.get("human");
-            log.info("trust.human: {} == {}", human == null ? "ANON" : human, self);
+            log.info("trust.token.human: {} == {}", human == null ? "ANON" : human, self);
             if (human == null || human.toString().isEmpty())
-                return new OopsResponse("ux.token.human.name", Response.Status.UNAUTHORIZED).build();
+                return new OopsResponse("trust.token.human.name", Response.Status.UNAUTHORIZED).build();
             boolean newUser = realms.getRealm(self) == null;
             I_Realm myRealm = realms.getInstance().newRealm(self);
 
@@ -162,15 +162,15 @@ public class TokenAPI {
                     duration);
             SimpleResponse response = new SimpleResponse("access_token", signedToken);
             connection.commit();
-            log.info("trust.realm: {} = {}", self.stringValue(), duration);
+            log.info("trust.token.realm: {} = {}", self.stringValue(), duration);
             return response.build();
         } catch (Exception e) {
             if (e instanceof OopsException oops) {
-                log.warn("trust.oops: {} == {}", e.getMessage(), oops.getStatus(), e);
+                log.warn("trust.token.oops: {} == {}", e.getMessage(), oops.getStatus(), e);
                 return new SimpleResponse(oops.getMessage(), oops.getStatus()).build();
             }
-            log.error("trust.failed: {}", e.getMessage(), e);
-            return new OopsResponse("ux.token.oops", Response.Status.FORBIDDEN).build();
+            log.error("trust.token.failed: {}", e.getMessage(), e);
+            return new OopsResponse("trust.token.oops", Response.Status.FORBIDDEN).build();
         }
     }
 
@@ -199,7 +199,7 @@ public class TokenAPI {
             throws SecretsException, OopsException {
         I_Realm realm = realms.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("ux.token.realm", Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.realm", Response.Status.NOT_FOUND).build();
         DecodedJWT jwt;
         try {
             jwt = GuardedAPI.decode(bearer, realm);
@@ -208,13 +208,13 @@ public class TokenAPI {
         }
         Map<String, Claim> claims = jwt.getClaims();
         if (claims == null)
-            return new OopsResponse("ux.token.claims", Response.Status.FORBIDDEN).build();
+            return new OopsResponse("trust.token.claims", Response.Status.FORBIDDEN).build();
         Claim aud_claims = claims.get("aud");
         String[] aud = aud_claims.asArray(String.class);
         if (aud == null || aud.length == 0)
-            return new OopsResponse("ux.token.aud", Response.Status.FORBIDDEN).build();
+            return new OopsResponse("trust.token.aud", Response.Status.FORBIDDEN).build();
         if (!Validate.contains(aud, realm.getSelf().stringValue()))
-            return new OopsResponse("ux.token.self", Response.Status.FORBIDDEN).build();
+            return new OopsResponse("trust.token.self", Response.Status.FORBIDDEN).build();
 
         int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
 
