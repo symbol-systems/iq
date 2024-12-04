@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.controller.platform.GuardedAPI;
+import systems.symbol.controller.platform.RealmAPI;
 import systems.symbol.controller.responses.*;
 import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
@@ -39,6 +40,8 @@ import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+import javax.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +84,7 @@ public class TokenAPI {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("token/{realm}/{provider}")
     public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider,
-            SimpleBindings params, @Context UriInfo info) throws SecretsException {
+            SimpleBindings params, @Context HttpServletRequest request) throws SecretsException {
         log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
         if (provider == null || provider.length() < 4) {
             return new OopsResponse("ux.token.provider", Response.Status.BAD_REQUEST).build();
@@ -98,20 +101,22 @@ public class TokenAPI {
         Repository repo = realm.getRepository();
         if (repo == null)
             return new OopsResponse("ux.token.repository." + _realm, Response.Status.NOT_FOUND).build();
+
+        IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
+
+        String baseUrl = RealmAPI.getBaseURL(request) + "/";
+        log.info("trust.issuer: {} @ {}", issuer, baseUrl);
+
         try (RepositoryConnection connection = repo.getConnection()) {
             connection.begin();
 
-            IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
             _realm = realm.getSelf().stringValue();
 
             Bindings bindings = new SimpleBindings(params);
-            URI requestUri = info.getRequestUri();
-            String baseUrl = requestUri.getScheme() + "://" + requestUri.getHost()
-                    + (requestUri.getPort() != -1 ? ":3000/" : "/");
+
             bindings.put("host", baseUrl);
             bindings.put("issuer", issuer);
             bindings.put("provider", provider);
-            log.info("trust.issuer: {} @ {} --> {}", issuer, requestUri.toASCIIString(), baseUrl);
 
             AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
             builder.setThoughts(realm.getModel()).scripting().sparql(connection);
