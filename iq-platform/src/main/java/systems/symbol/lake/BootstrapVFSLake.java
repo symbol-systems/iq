@@ -68,7 +68,7 @@ protected void deployFile(FileObject home, FileObject file) throws IOException {
 String name = file.getName().getBaseName();
 RDFFormat format = Rio.getWriterFormatForFileName(name).orElse(null);
 IRI mediatype = FileFormats.toMime(name);
-log.info("lake.file: {} @ {} --> {} & {}", name, file.getPath(), format, mediatype);
+log.debug("lake.file: {} @ {} --> {} & {}", name, file.getPath(), format, mediatype);
 if (mediatype == null && format == null) {
 log.warn("lake.skipped: {}", file.getPublicURIString());
 return;
@@ -92,7 +92,7 @@ inStream.close();
 }
 
 public IRI toIRI(IRI baseIRI, FileObject parentFile, FileObject file) {
-log.info("lake.iri: {} -> {} -> {}", baseIRI, parentFile.getPublicURIString(), file.getPublicURIString());
+log.debug("lake.iri: {} -> {} -> {}", baseIRI, parentFile.getPublicURIString(), file.getPublicURIString());
 if (!file.getPublicURIString().startsWith(parentFile.getPublicURIString()))
 return null;
 String path = file.getPublicURIString().substring((parentFile.getPublicURIString().length() + 1));

@@ -20,11 +20,8 @@ import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 import systems.symbol.trust.I_Keys;
 import systems.symbol.trust.generate.JWTGen;
-// import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Abstract endpoint for realm-based APIs
@@ -115,43 +112,4 @@ throw new OopsException("ux.realm.trust.reject", Response.Status.FORBIDDEN);
 }
 }
 
-public static String getFullRequestUri(HttpServletRequest request) {
-String baseUrl = getBaseURL(request);
-
-// Append the request URI
-String fullUri = baseUrl + request.getRequestURI();
-
-// Add query string if present
-if (request.getQueryString() != null) {
-fullUri += "?" + request.getQueryString();
-}
-
-return fullUri;
-}
-
-public static String getBaseURL(HttpServletRequest request) {
-// Determine the scheme (e.g., HTTP/HTTPS)
-String scheme = request.getHeader("X-Forwarded-Proto") != null
-? request.getHeader("X-Forwarded-Proto")
-: request.getScheme();
-
-// Determine the host
-String host = request.getHeader("X-Forwarded-Host") != null
-? request.getHeader("X-Forwarded-Host")
-: request.getServerName();
-
-// Determine the port
-String port;
-if (request.getHeader("X-Forwarded-Port") != null) {
-port = request.getHeader("X-Forwarded-Port");
-} else {
-int serverPort = request.getServerPort();
-port = (serverPort == 80 && "http".equalsIgnoreCase(scheme)) ||
-(serverPort == 443 && "https".equalsIgnoreCase(scheme))
-? ""
-: ":" + serverPort;
-}
-
-return scheme + "://" + host + port;
-}
 }

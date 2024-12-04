@@ -21,15 +21,14 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.controller.platform.GuardedAPI;
-import systems.symbol.controller.platform.RealmAPI;
 import systems.symbol.controller.responses.*;
 import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
+import systems.symbol.platform.WebURLs;
 import systems.symbol.rdf4j.Facts;
 import systems.symbol.rdf4j.IRIs;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.Realms;
-// import systems.symbol.realm.Realms;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.PrettyString;
 import systems.symbol.string.Validate;
@@ -40,9 +39,6 @@ import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
-import javax.servlet.http.HttpServletRequest;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +80,7 @@ return new SimpleResponse(pkcs8).build();
 @Produces(MediaType.APPLICATION_JSON)
 @Path("token/{realm}/{provider}")
 public Response login(@PathParam("realm") String _realm, @PathParam("provider") String provider,
-SimpleBindings params, @Context HttpServletRequest request) throws SecretsException {
+SimpleBindings params, @Context UriInfo info, @Context HttpHeaders headers) throws SecretsException {
 log.info("trust.login: {} -> {} @ {}", _realm, provider, params.keySet());
 if (provider == null || provider.length() < 4) {
 return new OopsResponse("ux.token.provider", Response.Status.BAD_REQUEST).build();
@@ -104,7 +100,7 @@ return new OopsResponse("ux.token.repository." + _realm, Response.Status.NOT_FOU
 
 IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
 
-String baseUrl = RealmAPI.getBaseURL(request) + "/";
+String baseUrl = WebURLs.getBaseURL(info, headers) + "/";
 log.info("ux.trust.issuer: {} @ {}", issuer, baseUrl);
 
 try (RepositoryConnection connection = repo.getConnection()) {
