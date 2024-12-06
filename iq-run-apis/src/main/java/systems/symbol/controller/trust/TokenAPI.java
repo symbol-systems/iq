@@ -48,22 +48,10 @@ import static systems.symbol.platform.IQ_NS.TRUSTS;
 
 @Path("trust")
 public class TokenAPI extends RealmAPI {
-    // protected final Logger log = LoggerFactory.getLogger(getClass());
-    // @Inject
-    // RealmPlatform realms;
     @Context
     RoutingContext routing;
     @ConfigProperty(name = "iq.realm.token.duration", defaultValue = "600")
     int tokenDuration;
-
-    // @OPTIONS
-    // @Path("{path : .*}")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response preflight(@PathParam("path") String path, @Context UriInfo
-    // info) {
-    // log.debug("trust.token.preflight: {} @ {}", path, info.getBaseUri());
-    // return new DataResponse().build();
-    // }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
