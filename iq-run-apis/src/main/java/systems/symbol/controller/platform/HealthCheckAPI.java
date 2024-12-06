@@ -31,7 +31,7 @@ public class HealthCheckAPI extends GuardedAPI {
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 public Response check(@Context UriInfo info, @Context HttpHeaders headers) {
-log.info("health.ok");
+// log.info("health.ok");
 return new HealthCheck(true, WebURLs.getBaseURL(info, headers)).build();
 }
 
