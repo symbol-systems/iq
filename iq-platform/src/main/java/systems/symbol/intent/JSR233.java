@@ -90,9 +90,8 @@ public class JSR233 extends AbstractIntent {
         try {
             Object result = executeScript(script, actor, state, my);
             done.add(actor);
-            log.info("script.done: {} -> {} x {}", state, result, done.size());
-            //
-            Facades.dump(my, System.out);
+            log.info("script.done: {}", state, result, done.size());
+            // Facades.dump(my, System.out);
         } catch (ScriptException e) {
             log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getCause().getMessage());
             throw new StateException(e.getCause().getMessage(), state, e.getCause());
@@ -121,6 +120,7 @@ public class JSR233 extends AbstractIntent {
             return null;
         }
         ScriptContext sc = new SimpleScriptContext();
+        sc.setAttribute("log", log, ScriptContext.ENGINE_SCOPE);
         StringWriter out = new StringWriter();
         sc.setWriter(out);
         sc.setBindings(Facades.trust(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);

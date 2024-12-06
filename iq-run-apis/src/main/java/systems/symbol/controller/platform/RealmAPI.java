@@ -95,7 +95,7 @@ public abstract class RealmAPI {
      *
      * @return HealthCheck response indicating the platform's health status.
      */
-    public static DecodedJWT decode(String bearer, I_Keys keys) throws OopsException, SecretsException {
+    public DecodedJWT decode(String bearer, I_Keys keys) throws OopsException, SecretsException {
         if (bearer == null || bearer.isEmpty())
             throw new OopsException("ux.realm.bearer.missing", Response.Status.UNAUTHORIZED);
         boolean isValid = Validate.isBearer(bearer);
@@ -107,7 +107,7 @@ public abstract class RealmAPI {
             String token = bearer.substring("BEARER ".length());
             return jwtGen.verify(keys.keys(), token);
         } catch (Exception e) {
-            // log.warn("aou,realm.trust: {}", e.getMessage());
+            log.warn("ux.realm.token.verify: {}", e.getMessage());
             throw new OopsException("ux.realm.trust.reject", Response.Status.FORBIDDEN);
         }
     }
