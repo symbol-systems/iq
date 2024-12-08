@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +34,7 @@ return new OopsResponse("ux.path#missing", Response.Status.BAD_REQUEST).build();
 String resourcePath = "public/" + path;
 log.info("Attempting to load resource: {}", resourcePath);
 
-ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-URL resourceURL = classLoader.getResource(resourcePath);
+URL resourceURL = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
 
 if (resourceURL == null) {
 log.error("Resource not found: {}", resourcePath);

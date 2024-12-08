@@ -73,7 +73,7 @@ DecodedJWT jwt;
 try {
 jwt = authenticate(auth, realm);
 } catch (OopsException e) {
-log.info("ux.chat.token");
+log.info("ux.chat.token.oops: {} -> {} ==> {}", actor, auth, e.getMessage());
 return new OopsResponse(e.getMessage(), e.getStatus()).build();
 }
 Repository realmRepository = realm.getRepository();
@@ -96,6 +96,22 @@ bindings.put("realm", _realm);
 bindings.put("capacity", connection.size());
 I_Agent agent = builder.avatar(chat);
 
+stateful(chat, agent, realm, connection);
+agent.start();
+// log.info("ux.chat.timer.4: {}", stopwatch.summary());
+agent.stop();
+log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
+return new ChatResponse(chat, agent).build();
+} catch (StateException e) {
+log.error("ux.chat.oops: {}", e.getMessage());
+return new OopsResponse("ux.chat.state", Response.Status.BAD_REQUEST).build();
+} catch (Exception e) {
+log.error("ux.chat.fatal: {}", e.getMessage(), e);
+return new OopsResponse("ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
+}
+}
+
+private void stateful(Conversation chat, I_Agent agent, I_Realm realm, RepositoryConnection connection) {
 // log.info("ux.chat.timer.1: {}", stopwatch.summary());
 Resource state = agent.getStateMachine().getState();
 if (state.isIRI()) {
@@ -137,18 +153,6 @@ cando);
 } else {
 log.info("ux.chat.matrix.null: {}", state);
 }
-}
-agent.start();
-// log.info("ux.chat.timer.4: {}", stopwatch.summary());
-agent.stop();
-log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
-return new ChatResponse(chat, agent).build();
-} catch (StateException e) {
-log.error("ux.chat.oops: {}", e.getMessage());
-return new OopsResponse("ux.chat.state", Response.Status.BAD_REQUEST).build();
-} catch (Exception e) {
-log.error("ux.chat.fatal: {}", e.getMessage(), e);
-return new OopsResponse("ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 }

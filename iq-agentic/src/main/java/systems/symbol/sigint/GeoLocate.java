@@ -112,7 +112,7 @@ modelBuilder.subject(self)
 .add(Values.iri(SCHEMA_PREFIX + "address"), place)
 .add(Values.iri(SCHEMA_PREFIX + "postalCode"), postalCode != null ? postalCode : "")
 .add(Values.iri(SCHEMA_PREFIX + "addressCountry"), country != null ? country.getName() : "")
-.add(Values.iri(SCHEMA_PREFIX + "geoNameId"), geoNameId.toString())
+.add(Values.iri(SCHEMA_PREFIX + "geoNameId"), geoNameId != null ? geoNameId.toString() : "")
 .add(Values.iri(SCHEMA_PREFIX + "metroCode"), metroCode != null ? metroCode.toString() : "")
 .add(Values.iri(SCHEMA_PREFIX + "populationDensity"),
 populationDensity != null ? populationDensity.toString() : "0")
