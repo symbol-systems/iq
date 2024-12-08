@@ -130,7 +130,7 @@ public class ChatAPI extends GuardedAPI {
                 });
                 if (_intent[0] != null) {
                     synchronized (connection) {
-                        agent.getStateMachine().setInitial(_intent[0]);
+                        agent.getStateMachine().setCurrentState(_intent[0]);
                         log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0], agent.getStateMachine().getState(),
                                 cando);
                     }
