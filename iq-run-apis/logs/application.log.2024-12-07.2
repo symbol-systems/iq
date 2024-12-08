@@ -1,0 +1,54 @@
+2024-12-07 10:50:15 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.home: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq
+2024-12-07 10:50:15 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.lake: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/lake
+2024-12-07 10:50:15 INFO  [sy.sy.se.VFSPasswordVault] (Quarkus Main Thread) vault.vfs.home: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/vault/secrets -> true
+2024-12-07 10:50:15 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.boot: Sat Dec 07 10:50:15 AEDT 2024
+2024-12-07 10:50:15 ERROR [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.error: [] @ SAIL is already locked by: 8260@Gnomad16 in .iq\repositories\iq-: org.eclipse.rdf4j.repository.RepositoryLockedException: SAIL is already locked by: 8260@Gnomad16 in .iq\repositories\iq-
+	at org.eclipse.rdf4j.repository.sail.SailRepository.initializeInternal(SailRepository.java:163)
+	at org.eclipse.rdf4j.repository.base.AbstractRepository.init(AbstractRepository.java:36)
+	at org.eclipse.rdf4j.repository.manager.LocalRepositoryManager.createRepository(LocalRepositoryManager.java:213)
+	at org.eclipse.rdf4j.repository.manager.RepositoryManager.getRepository(RepositoryManager.java:326)
+	at systems.symbol.realm.SafeRepositoryManager.getRepository(SafeRepositoryManager.java:21)
+	at systems.symbol.realm.RealmManager.addRepository(RealmManager.java:115)
+	at systems.symbol.realm.RealmManager.getRepository(RealmManager.java:110)
+	at systems.symbol.realm.RealmManager.newRealm(RealmManager.java:99)
+	at systems.symbol.platform.RealmPlatform.onStart(RealmPlatform.java:74)
+	at systems.symbol.platform.RealmPlatform_Observer_onStart_vEU7el6uuTpkgCT0eCuvV-SEMs8.notify(Unknown Source)
+	at io.quarkus.arc.impl.EventImpl$Notifier.notifyObservers(EventImpl.java:351)
+	at io.quarkus.arc.impl.EventImpl$Notifier.notify(EventImpl.java:333)
+	at io.quarkus.arc.impl.EventImpl.fire(EventImpl.java:80)
+	at io.quarkus.arc.runtime.ArcRecorder.fireLifecycleEvent(ArcRecorder.java:156)
+	at io.quarkus.arc.runtime.ArcRecorder.handleLifecycleEvents(ArcRecorder.java:107)
+	at io.quarkus.deployment.steps.LifecycleEventsBuildStep$startupEvent1144526294.deploy_0(Unknown Source)
+	at io.quarkus.deployment.steps.LifecycleEventsBuildStep$startupEvent1144526294.deploy(Unknown Source)
+	at io.quarkus.runner.ApplicationImpl.doStart(Unknown Source)
+	at io.quarkus.runtime.Application.start(Application.java:101)
+	at io.quarkus.runtime.ApplicationLifecycleManager.run(ApplicationLifecycleManager.java:119)
+	at io.quarkus.runtime.Quarkus.run(Quarkus.java:71)
+	at io.quarkus.runtime.Quarkus.run(Quarkus.java:44)
+	at io.quarkus.runtime.Quarkus.run(Quarkus.java:124)
+	at io.quarkus.runner.GeneratedMain.main(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at io.quarkus.runner.bootstrap.StartupActionImpl$1.run(StartupActionImpl.java:116)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.eclipse.rdf4j.sail.SailLockedException: SAIL is already locked by: 8260@Gnomad16 in .iq\repositories\iq-
+	at org.eclipse.rdf4j.sail.helpers.DirectoryLockManager.lockOrFail(DirectoryLockManager.java:133)
+	at org.eclipse.rdf4j.sail.nativerdf.NativeStore.initializeInternal(NativeStore.java:330)
+	at org.eclipse.rdf4j.sail.helpers.AbstractSail.init(AbstractSail.java:183)
+	at org.eclipse.rdf4j.repository.sail.SailRepository.initializeInternal(SailRepository.java:158)
+	... 27 more
+
+2024-12-07 10:50:15 ERROR [io.qu.bo.cl.QuarkusClassLoader] (Quarkus Shutdown Thread) Failed to run close task: java.util.NoSuchElementException: devui-continuous-testing.getResults
+	at io.quarkus.dev.console.DevConsoleManager.invoke(DevConsoleManager.java:144)
+	at io.quarkus.dev.console.DevConsoleManager.invoke(DevConsoleManager.java:130)
+	at io.quarkus.devui.runtime.continuoustesting.ContinuousTestingJsonRPCService.accept(ContinuousTestingJsonRPCService.java:38)
+	at io.quarkus.devui.runtime.continuoustesting.ContinuousTestingJsonRPCService.accept(ContinuousTestingJsonRPCService.java:14)
+	at io.quarkus.devui.runtime.continuoustesting.ContinuousTestingJsonRPCService_ClientProxy.accept(Unknown Source)
+	at io.quarkus.dev.testing.ContinuousTestingSharedStateManager.setLastState(ContinuousTestingSharedStateManager.java:36)
+	at io.quarkus.dev.testing.ContinuousTestingSharedStateManager.reset(ContinuousTestingSharedStateManager.java:26)
+	at io.quarkus.bootstrap.classloading.QuarkusClassLoader.close(QuarkusClassLoader.java:649)
+	at io.quarkus.bootstrap.app.CuratedApplication.close(CuratedApplication.java:429)
+	at io.quarkus.deployment.dev.IsolatedDevModeMain.close(IsolatedDevModeMain.java:357)
+	at io.quarkus.deployment.dev.IsolatedDevModeMain$5.run(IsolatedDevModeMain.java:450)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+

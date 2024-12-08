@@ -24,10 +24,13 @@ private final Model model, state;
 protected IRI self;
 
 /**
- * A finite state machine backed by an RDF4J Model to store information about states, transitions, and guards.
- * The class initializes with a specified RDF model and self-reference IRI, extracting the initial state.
+ * A finite state machine backed by an RDF4J Model to store information about
+ * states, transitions, and guards.
+ * The class initializes with a specified RDF model and self-reference IRI,
+ * extracting the initial state.
  * Checks if transitions are allowed based on defined guards.
- * Guards are "exemplars" meaning their predicates/objects must be matched by `self` statements
+ * Guards are "exemplars" meaning their predicates/objects must be matched by
+ * `self` statements
  *
  * @param model RDF4J Model containing state machine information.
  * @param self  IRI representing the self-reference of the state machine.
@@ -80,7 +83,8 @@ sync();
 
 @Override
 public boolean isAllowed(Resource target) {
-if (this.currentState != null && this.currentState.equals(target)) return true;
+if (this.currentState != null && this.currentState.equals(target))
+return true;
 Iterable<Statement> transitions = model.getStatements(getState(), TO, target);
 
 boolean hasTransitions = transitions.iterator().hasNext();
@@ -89,9 +93,11 @@ log.debug("msm.allowed.transition?: {} -> {} == {}", getState(), target, hasTran
 return false; // No transitions
 }
 
-log.info("msm.updated (final/guarded): {} ---> {} / {}", isAllowedByGuard(self,target), isFinal(getState()), isGuarded(target));
-//if (isFinal(getState())) return false; // No states
-if (!isGuarded(target)) return true; // Not guarded
+log.info("msm.updated (final/guarded): {} ---> {} / {}", isAllowedByGuard(self, target), isFinal(getState()),
+isGuarded(target));
+// if (isFinal(getState())) return false; // No states
+if (!isGuarded(target))
+return true; // Not guarded
 return isAllowedByGuard(self, target); // Ask the guards ...
 }
 
@@ -102,15 +108,16 @@ return !find(state, model, hasGuard).isEmpty();
 /**
  * Check if the transition is allowed based on guard rules
  *
- * @param subject   The subject resource.
- * @param targetThe target state resource.
+ * @param subject The subject resource.
+ * @param target  The target state resource.
  * @return true if the transition is allowed, false otherwise.
  */
 public boolean isAllowedByGuard(Resource subject, Resource target) {
 Collection<Resource> guards = find(target, model, hasGuard);
 Iterator<Resource> iGuards = guards.iterator();
 log.debug("msm.guarded?: {} @ {} -> {}", iGuards.hasNext(), subject, target);
-if (!iGuards.hasNext()) return true; // No guards, we're good
+if (!iGuards.hasNext())
+return true; // No guards, we're good
 
 while (iGuards.hasNext()) {
 Resource guard = iGuards.next();
@@ -122,9 +129,10 @@ log.info("msm.guard: {} --> {} = {}", subject, guard, iRules.hasNext());
 while (iRules.hasNext()) {
 Statement rule = iRules.next();
 log.info("msm.guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
-if ( ! hasGuard.equals(rule.getPredicate()) ) {
+if (!hasGuard.equals(rule.getPredicate())) {
 // ensure rules tuples match the subject
-Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(), rule.getObject());
+Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(),
+rule.getObject());
 boolean matches = statements.iterator().hasNext();
 if (!matches) {
 log.info("msm.guard.block: {} == {}", subject, rule.getPredicate());
@@ -139,19 +147,22 @@ return true; // All rules must have matched
 
 /**
  * set the current state on the instance and in the model [idempotent]
+ * 
  * @param target Resource
  */
 @Override
 public void setCurrentState(Resource target) {
-boolean initialized = getState()!=null;
+boolean initialized = getState() != null;
 super.setCurrentState(target);
-if (initialized) sync();
+if (initialized)
+sync();
 }
 
 @Override
 protected Collection<Resource> getTransitions(Resource state) {
 Collection<Resource> transitions = find(state, model, TO);
-if (!isGuarded(state)) return transitions;
+if (!isGuarded(state))
+return transitions;
 
 return transitions.stream()
 .filter(transition -> isAllowedByGuard(self, transition))
@@ -165,8 +176,8 @@ return transitions.stream()
  * @param to   The target state.
  */
 public void add(Resource from, Resource to) {
-log.debug("msm.add: [{}/{}] -> {} ==> {} == {}",model.size(), model.isEmpty(), from, to, getState());
-if (initialState==null) {
+log.debug("msm.add: [{}/{}] -> {} ==> {} == {}", model.size(), model.isEmpty(), from, to, getState());
+if (initialState == null) {
 this.setInitial(from);
 log.debug("msm.initial: {} == {}", this.initialState, this.currentState);
 }
@@ -174,7 +185,8 @@ model.add(from, TO, to);
 }
 
 /**
- * Adds a transition from one state to another and attaches a guard with the specified predicate/object tuple.
+ * Adds a transition from one state to another and attaches a guard with the
+ * specified predicate/object tuple.
  *
  * @param from  The source state.
  * @param toThe target state.

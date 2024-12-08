@@ -97,10 +97,10 @@ return jwt;
  */
 public DecodedJWT decode(String bearer, I_Keys keys) throws OopsException, SecretsException {
 if (bearer == null || bearer.isEmpty())
-throw new OopsException("ux.realm.bearer.missing", Response.Status.UNAUTHORIZED);
+throw new OopsException("ux.realm.token.missing", Response.Status.UNAUTHORIZED);
 boolean isValid = Validate.isBearer(bearer);
 if (!isValid) {
-throw new OopsException("ux.realm.bearer.trust", Response.Status.UNAUTHORIZED);
+throw new OopsException("ux.realm.bearer.missing", Response.Status.UNAUTHORIZED);
 }
 JWTGen jwtGen = new JWTGen();
 try {
@@ -111,5 +111,4 @@ log.warn("ux.realm.token.verify: {}", e.getMessage());
 throw new OopsException("ux.realm.trust.reject", Response.Status.FORBIDDEN);
 }
 }
-
 }

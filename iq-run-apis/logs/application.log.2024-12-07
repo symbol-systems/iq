@@ -1,0 +1,566 @@
+2024-12-07 13:26:34 WARN  [io.qu.config] (Quarkus Main Thread) Unrecognized configuration key "quarkus.log.manager" was provided; it will be ignored; verify that the dependency extension for this configuration is set or that you did not make a typo
+2024-12-07 13:26:34 WARN  [io.qu.config] (Quarkus Main Thread) Unrecognized configuration key "quarkus.management.endpoints.enabled" was provided; it will be ignored; verify that the dependency extension for this configuration is set or that you did not make a typo
+2024-12-07 13:26:34 WARN  [io.qu.config] (Quarkus Main Thread) Unrecognized configuration key "quarkus.management.endpoints.web.expose" was provided; it will be ignored; verify that the dependency extension for this configuration is set or that you did not make a typo
+2024-12-07 13:26:34 WARN  [io.qu.config] (Quarkus Main Thread) Unrecognized configuration key "quarkus.arc.scan-packages" was provided; it will be ignored; verify that the dependency extension for this configuration is set or that you did not make a typo
+2024-12-07 13:26:36 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.home: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq
+2024-12-07 13:26:36 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.lake: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/lake
+2024-12-07 13:26:36 INFO  [sy.sy.se.VFSPasswordVault] (Quarkus Main Thread) vault.vfs.home: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/vault/secrets -> true
+2024-12-07 13:26:36 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realms.boot: Sat Dec 07 13:26:36 AEDT 2024
+2024-12-07 13:26:37 WARN  [or.ec.rd.sa.he.DirectoryLockManager] (Quarkus Main Thread) Removing invalid lock 5912@Gnomad16
+2024-12-07 13:26:37 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: iq: -> iq- -> true
+2024-12-07 13:26:37 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.repo.get: iq:
+2024-12-07 13:26:37 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: iq: -> iq- -> true
+2024-12-07 13:26:37 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.secrets: iq: x 0 == true
+2024-12-07 13:26:39 INFO  [ai.dj.ut.Platform] (Quarkus Main Thread) Found matching platform from: jar:file:///C:/Users/Lee/.m2/repository/ai/djl/huggingface/tokenizers/0.28.0/tokenizers-0.28.0.jar!/native/lib/tokenizers.properties
+2024-12-07 13:26:39 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.start: iq: -> Sat Dec 07 13:26:39 AEDT 2024
+2024-12-07 13:26:39 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.iq: null -> 4.0.1
+2024-12-07 13:26:39 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.start
+2024-12-07 13:26:39 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.bootstrap: /Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq -> [iq:] @ 2396ms
+2024-12-07 13:26:39 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.init: file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/lake -> [file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/lake/QRX, file:///C:/Users/Lee/Desktop/GitHub/iq/iq-run-apis/.iq/lake/XXX]
+2024-12-07 13:26:39 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.new: QRX:
+2024-12-07 13:26:39 WARN  [or.ec.rd.sa.he.DirectoryLockManager] (Quarkus Main Thread) Removing invalid lock 5912@Gnomad16
+2024-12-07 13:26:39 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: QRX: -> qrx- -> true
+2024-12-07 13:26:39 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.repo.get: QRX:
+2024-12-07 13:26:39 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: QRX: -> qrx- -> true
+2024-12-07 13:26:39 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.secrets: QRX: x 1473 == true
+2024-12-07 13:26:39 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.boot: QRX: @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX x 1473  facts
+2024-12-07 13:26:39 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.deploy: C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX, exists: true
+2024-12-07 13:26:40 INFO  [sy.sy.rd.io.FileFormats] (Quarkus Main Thread) script.support: Groovy v5.0.0-alpha-8
+2024-12-07 13:26:40 INFO  [sy.sy.rd.io.FileFormats] (Quarkus Main Thread) script.default: groovy -> application/x-groovy
+2024-12-07 13:26:40 INFO  [sy.sy.rd.io.FileFormats] (Quarkus Main Thread) script.support: ECMAScript vECMA - 262 Edition 5.1
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai/aware @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai\aware.sparql -> 429 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai/intents @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai\intents.sparql -> 384 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai/iq @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai\iq.sparql -> 427 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai/lobby @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai\lobby.sparql -> 480 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai/mind @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai\mind.sparql -> 1608 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ai @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ai.ttl -> 8680 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\index.sparql -> 134 --> x-sparql-query
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\index.ttl -> 2664 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:iq @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\iq.ttl -> 3013 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/grok @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\grok.ttl -> 975 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/llama-70b-lab @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\llama-70b-lab.md -> 559 --> markdown
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/llama-lab @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\llama-lab.md -> 467 --> markdown
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/llama @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\llama.md -> 568 --> markdown
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/novita @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\novita.ttl -> 892 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:llm/openai @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\llm\openai.ttl -> 615 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/1337 @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\1337.ttl -> 601 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/ada @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\ada.ttl -> 9726 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/ai @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\ai.ttl -> 1749 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:40 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/echo @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\echo.ttl -> 9784 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/gpt @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\gpt.ttl -> 1038 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\index.ttl -> 612 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/llama @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\llama.ttl -> 9995 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/lumina @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\lumina.ttl -> 10144 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/mia @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\mia.ttl -> 4079 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/nyx @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\nyx.ttl -> 2119 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/omega @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\omega.ttl -> 10031 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:mind/qrx @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\mind\qrx.ttl -> 1385 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/chit_chat @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\chit_chat.groovy -> 28 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/hello_realm @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\hello_realm.groovy -> 42 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/identity @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\identity.groovy -> 34 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\index.sparql -> 198 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/NSFW @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\NSFW.groovy -> 1062 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/search_web @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\search_web.groovy -> 376 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/segmind_imager @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\segmind_imager.groovy -> 714 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:script/self @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\script\self.groovy -> 539 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:standards/rdf @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\standards\rdf.ttl -> 6399 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:standards/rdfs @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\standards\rdfs.ttl -> 3900 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/discord/authorize @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\discord\authorize.sparql -> 1220 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/discord/discord @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\discord\discord.groovy -> 1228 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/discord/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\discord\index.ttl -> 820 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/identify @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\identify.sparql -> 66 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\index.ttl -> 467 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/mobile/authorize @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\mobile\authorize.sparql -> 488 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/mobile/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\mobile\index.ttl -> 670 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/mobile/messenger @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\mobile\messenger.groovy -> 1840 --> x-groovy
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:trust/trusts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\trust\trusts.sparql -> 53 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/agent/intents @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\agent\intents.sparql -> 159 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/agent/prompts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\agent\prompts.sparql -> 146 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/agents @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\agents.sparql -> 121 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/debug @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\debug.sparql -> 59 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/export @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\export.sparql -> 59 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/find @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\find.sparql -> 250 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/intents @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\intents.sparql -> 88 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/memes @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\memes.sparql -> 313 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/mind @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\mind.sparql -> 143 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/prompts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\prompts.sparql -> 193 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/qualia @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\qualia.ttl -> 1162 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: QRX:ux/trusts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\QRX\ux\trusts.sparql -> 247 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.done: 58 in 1s (rdf: 24, assets: 34) errors: 0
+2024-12-07 13:26:41 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.deployed: QRX: x 1473 facts
+2024-12-07 13:26:41 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.new: XXX:
+2024-12-07 13:26:41 WARN  [or.ec.rd.sa.he.DirectoryLockManager] (Quarkus Main Thread) Removing invalid lock 5912@Gnomad16
+2024-12-07 13:26:41 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: XXX: -> xxx- -> true
+2024-12-07 13:26:41 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.repo.get: XXX:
+2024-12-07 13:26:41 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.get: XXX: -> xxx- -> true
+2024-12-07 13:26:41 INFO  [sy.sy.re.RealmManager] (Quarkus Main Thread) realm.secrets: XXX: x 1253 == true
+2024-12-07 13:26:41 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.boot: XXX: @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX x 1253  facts
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.deploy: C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX, exists: true
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/debug @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\debug.sparql -> 59 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/find @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\find.sparql -> 582 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/lobby @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\lobby.sparql -> 460 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/memes @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\memes.sparql -> 1183 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/mind @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\mind.sparql -> 1750 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:ai/trusts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\ai\trusts.sparql -> 279 --> x-sparql-query
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Apollo @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Apollo.md -> 123 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Apollo_Self @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Apollo_Self.md -> 118 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Goddess_Kali @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Goddess_Kali.md -> 1870 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Goddess_Kali_Temple @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Goddess_Kali_Temple.md -> 673 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Kinks @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Kinks.md -> 4890 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/grok-ux @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\grok-ux.md -> 782 --> markdown
+2024-12-07 13:26:41 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/grok @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\grok.md -> 569 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/groq @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\groq.ttl -> 1719 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama-70b-iq @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama-70b-iq.md -> 677 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama-70b-ux @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama-70b-ux.md -> 298 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama-iq @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama-iq.md -> 178 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama-ux-full @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama-ux-full.md -> 1100 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama-ux @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama-ux.md -> 1254 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/llama @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\llama.md -> 569 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/novita @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\novita.ttl -> 896 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/openai @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\openai.ttl -> 619 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:llm/xai-grok @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\llm\xai-grok.ttl -> 679 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Mistress_Lilith @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Mistress_Lilith.md -> 4211 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Mistress_Lilith_Pink_Boudoir @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Mistress_Lilith_Pink_Boudoir.md -> 798 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Mistress_Melissa @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Mistress_Melissa.md -> 2422 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Mistress_Melissa_Dungeon @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Mistress_Melissa_Dungeon.md -> 714 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:nyx @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\nyx.ttl -> 1547 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:NYX @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\NYX.txt -> 190 --> plain
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:NYX_Self @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\NYX_Self.txt -> 4186 --> plain
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:qualia @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\qualia.ttl -> 4067 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:README @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\README.md -> 3488 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Apollo @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Apollo.ttl -> 874 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Ava @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Ava.ttl -> 10981 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Goddess_Kali @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Goddess_Kali.ttl -> 9839 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Goddess_Natasha @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Goddess_Natasha.ttl -> 4432 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/JO_CEO @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\JO_CEO.ttl -> 6567 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/JO_ICO @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\JO_ICO.ttl -> 16667 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Master_Mateo @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Master_Mateo.ttl -> 4468 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/MIA @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\MIA.ttl -> 4082 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Mistress_Lilith @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Mistress_Lilith.ttl -> 7967 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Mistress_May @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Mistress_May.ttl -> 15344 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Mistress_Melissa @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Mistress_Melissa.ttl -> 3624 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm/Stella @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm\Stella.ttl -> 925 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:realm @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\realm.ttl -> 2065 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:RITA @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\RITA.md -> 1308 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:RITA @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\RITA.ttl -> 833 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:RITA_Self @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\RITA_Self.md -> 1870 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/avatar @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\avatar.groovy -> 569 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/chit_chat @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\chit_chat.groovy -> 28 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/hello_realm @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\hello_realm.groovy -> 42 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/identity @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\identity.groovy -> 34 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\index.sparql -> 198 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/NSFW @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\NSFW.groovy -> 1062 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/search_web @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\search_web.groovy -> 376 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/segmind_imager @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\segmind_imager.groovy -> 714 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:script/self @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\script\self.groovy -> 539 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Stella @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Stella.md -> 715 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:Stella_Reception @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\Stella_Reception.md -> 1088 --> markdown
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/discord/authorize @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\discord\authorize.sparql -> 1188 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/discord/discord @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\discord\discord.groovy -> 1197 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/discord/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\discord\index.ttl -> 820 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/github/authorize @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\github\authorize.sparql -> 1150 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/github/github @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\github\github.groovy -> 1278 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/github/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\github\index.ttl -> 744 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/identify @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\identify.sparql -> 66 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\index.ttl -> 471 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/mobile/authorize @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\mobile\authorize.sparql -> 489 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/mobile/index @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\mobile\index.ttl -> 670 --> Turtle (mimeTypes=text/turtle, application/x-turtle; ext=ttl)
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/mobile/messenger @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\mobile\messenger.groovy -> 1828 --> x-groovy
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.stream: XXX:trust/trusts @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\lake\XXX\trust\trusts.sparql -> 53 --> x-sparql-query
+2024-12-07 13:26:42 INFO  [sy.sy.la.BootstrapVFSLake] (Quarkus Main Thread) lake.done: 71 in 1s (rdf: 24, assets: 47) errors: 0
+2024-12-07 13:26:42 INFO  [sy.sy.la.Lakes] (Quarkus Main Thread) lake.realm.deployed: XXX: x 1253 facts
+2024-12-07 13:26:42 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.backups: [] @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\backups
+2024-12-07 13:26:42 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.backup: iq: @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\backups\iq-now.ttl
+2024-12-07 13:26:42 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.backup: QRX: @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\backups\qrx-now.ttl
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.backup: XXX: @ C:\Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\backups\xxx-now.ttl
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.boot: iq:
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.trusted: iq: -> iq -> \Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\jwt\iq.jwt until 2025-01-06T23:31:31.525402100
+2024-12-07 13:26:43 INFO  [sy.sy.in.ExecutiveIntent] (Quarkus Main Thread) exec.intent: iq: -> 0 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 13:26:43 WARN  [sy.sy.to.TrustedAPIs] (Quarkus Main Thread) trust.missing: iq:
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: iq: x 0
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: iq: -> null
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: iq:
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: iq: x 0
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: iq: -> null
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: iq:
+2024-12-07 13:26:43 INFO  [sy.sy.fi.SearchMatrix] (Quarkus Main Thread) matrix.index: iq: = 0
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.boot: QRX:
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.trusted: QRX: -> QRX -> \Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\jwt\QRX.jwt until 2025-01-06T23:31:31.762354
+2024-12-07 13:26:43 INFO  [sy.sy.in.ExecutiveIntent] (Quarkus Main Thread) exec.intent: QRX: -> 1473 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 13:26:43 INFO  [sy.sy.to.TrustedAPIs] (Quarkus Main Thread) trusted.grant: MY_SEGMIND_SECRET -> [QRX:MY_BRAVE_SECRET, QRX:, QRX:MY_11LABS_SECRET, https://api.search.brave.com, https://api.elevenlabs.com, https://api.segmind.com, QRX:MY_SEGMIND_SECRET]
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: QRX: x 1473
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.fsm: QRX: == QRX:QRX
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: QRX: -> null
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: QRX:
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: QRX: x 1473
+2024-12-07 13:26:43 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.fsm: QRX: == QRX:QRX
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: QRX: -> null
+2024-12-07 13:26:43 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: QRX:
+2024-12-07 13:26:43 INFO  [sy.sy.pl.ThreadManager] (Quarkus Main Thread) threads.add: QRX:
+2024-12-07 13:26:43 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realm.aware: NEW -> QRX:QRX -> [iq:forget, iq:select, iq:ai, iq:update, iq:do, iq:learn, iq:self, iq:script, iq:remodel, iq:construct]
+2024-12-07 13:26:46 INFO  [sy.sy.fi.SearchMatrix] (Quarkus Main Thread) matrix.index: QRX: = 113
+2024-12-07 13:26:46 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.boot: XXX:
+2024-12-07 13:26:46 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.trusted: XXX: -> XXX -> \Users\Lee\Desktop\GitHub\iq\iq-run-apis\.iq\jwt\XXX.jwt until 2025-01-06T23:31:34.424762600
+2024-12-07 13:26:46 INFO  [sy.sy.in.ExecutiveIntent] (Quarkus Main Thread) exec.intent: XXX: -> 1253 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 13:26:46 WARN  [sy.sy.to.TrustedAPIs] (Quarkus Main Thread) trust.missing: XXX:
+2024-12-07 13:26:46 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: XXX: x 1253
+2024-12-07 13:26:46 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: XXX: -> null
+2024-12-07 13:26:46 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: XXX:
+2024-12-07 13:26:46 INFO  [sy.sy.ag.ExecutiveAgent] (Quarkus Main Thread) agent.boot: XXX: x 1253
+2024-12-07 13:26:46 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.chat: XXX: -> null
+2024-12-07 13:26:46 INFO  [sy.sy.ag.AgentBuilder] (Quarkus Main Thread) builder.avatar: XXX:
+2024-12-07 13:26:50 INFO  [sy.sy.fi.SearchMatrix] (Quarkus Main Thread) matrix.index: XXX: = 150
+2024-12-07 13:26:50 INFO  [sy.sy.pl.ThreadManager] (Quarkus Main Thread) threads.starting: x[QRX:]
+2024-12-07 13:26:50 INFO  [sy.sy.pl.ThreadManager] (Quarkus Main Thread) threads.start: QRX: == false
+2024-12-07 13:26:50 INFO  [sy.sy.pl.RealmPlatform] (Quarkus Main Thread) realms.running: [iq:, QRX:, XXX:] @ 10806s
+2024-12-07 13:26:50 INFO  [sy.sy.pl.ThreadManager] (QRX:) threads.run: QRX:
+2024-12-07 13:26:50 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.onIntent: QRX:QRX ==> QRX:QRX @ QRX:
+2024-12-07 13:26:50 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.execute: QRX: @ QRX:QRX
+2024-12-07 13:26:50 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:ai, iq:update, iq:do, iq:learn, iq:self, iq:script, iq:remodel, iq:construct] <-- QRX: @ QRX:QRX
+2024-12-07 13:26:50 INFO  [sy.sy.in.ExecutiveIntent] (QRX:) execute.todo: QRX: @ QRX:QRX <-- [(QRX:QRX, iq:script, QRX:script/hello_realm) [QRX:]]
+2024-12-07 13:26:50 INFO  [sy.sy.in.ExecutiveIntent] (QRX:) execute.intent: QRX: == iq:script -> QRX:script/hello_realm == JSR233
+2024-12-07 13:26:50 INFO  [sy.sy.rd.sp.IQScripts] (QRX:) findScript.model: QRX:script/hello_realm -> null @ null -> true
+2024-12-07 13:26:50 INFO  [sy.sy.ag.IQFacade] (QRX:) ux.vfs: null 
+2024-12-07 13:26:50 INFO  [io.quarkus] (Quarkus Main Thread) iq-run-apis 0.82.8 on JVM (powered by Quarkus 3.15.0) started in 57.978s. Listening on: http://localhost:8080
+2024-12-07 13:26:50 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2024-12-07 13:26:50 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [awt, cdi, poi, rest, rest-jackson, smallrye-context-propagation, smallrye-openapi, swagger-ui, tika, vertx]
+2024-12-07 13:26:51 INFO  [sy.sy.in.JSR233] (QRX:) script.done: QRX:script/hello_realm
+2024-12-07 13:26:51 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.deciding: ChainOfCommand -> [QRX:Ada, QRX:Echo, QRX:LlaMa, QRX:Lumina, QRX:1337, QRX:MIA, QRX:AI, QRX:Omega]
+2024-12-07 13:26:51 INFO  [sy.sy.de.ChainOfCommand] (QRX:) command.delegated: QRX: @ CompletableFuture
+2024-12-07 13:26:51 INFO  [sy.sy.de.ChainOfCommand] (QRX:) command.default: QRX: @ QRX:QRX
+2024-12-07 13:26:51 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.decided: QRX:QRX --> QRX:QRX <-- [QRX:]
+2024-12-07 13:26:51 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.same: QRX:QRX =? QRX:QRX
+2024-12-07 13:26:51 INFO  [sy.sy.fs.ModelStateMachine] (QRX:) state.notify: false -> QRX:QRX -> QRX:QRX @ QRX:QRX
+2024-12-07 13:26:51 INFO  [sy.sy.fs.ModelStateMachine] (QRX:) transition?: false @ QRX:QRX => QRX:QRX
+2024-12-07 13:26:51 WARN  [sy.sy.fs.ModelStateMachine] (QRX:) veto: QRX:QRX -> QRX:QRX @ QRX:QRX
+2024-12-07 13:26:51 INFO  [sy.sy.ag.ExecutiveAgent] (QRX:) agent.stopped: QRX: @ QRX:QRX
+2024-12-07 13:26:51 INFO  [sy.sy.pl.ThreadManager] (QRX:) threads.done: QRX:
+2024-12-07 22:52:34 INFO  [sy.sy.co.tr.TokenAPI] (executor-thread-1) trust.token.login: XXX -> github @ [code]
+2024-12-07 22:52:34 INFO  [sy.sy.co.tr.TokenAPI] (executor-thread-1) trust.token.issuer: XXX:trust/github/ @ http://localhost:8080/
+2024-12-07 22:52:34 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) exec.intent: XXX:trust/github/ -> 1253 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 22:52:34 INFO  [sy.sy.to.TrustedAPIs] (executor-thread-1) trusted.grant: MY_GITHUB_SECRET -> [XXX:trust/github/smart-trust, XXX:Stella, https://github.com, XXX:MY_GITHUB_SECRET, XXX:, XXX:trust/github/]
+2024-12-07 22:52:34 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.boot: XXX:trust/github/ x 1253
+2024-12-07 22:52:34 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.fsm: XXX:trust/github/ == XXX:trust/github/verify
+2024-12-07 22:52:34 INFO  [sy.sy.ag.AgentBuilder] (executor-thread-1) builder.agentic: XXX:trust/github/ -> XXX:trust/github/verify
+2024-12-07 22:52:34 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/verify ==> XXX:trust/github/verify @ XXX:trust/github/
+2024-12-07 22:52:34 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:trust/github/ @ XXX:trust/github/verify
+2024-12-07 22:52:34 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:update, iq:do, iq:learn, iq:script, iq:construct] <-- XXX:trust/github/ @ XXX:trust/github/verify
+2024-12-07 22:52:34 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:trust/github/ @ XXX:trust/github/verify <-- [(XXX:trust/github/verify, iq:script, XXX:trust/github/github) [XXX:]]
+2024-12-07 22:52:34 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:trust/github/ == iq:script -> XXX:trust/github/github == JSR233
+2024-12-07 22:52:34 INFO  [sy.sy.rd.sp.IQScripts] (executor-thread-1) findScript.model: XXX:trust/github/github -> null @ null -> true
+2024-12-07 22:52:34 INFO  [sy.sy.ag.IQFacade] (executor-thread-1) ux.vfs: null 
+2024-12-07 22:52:38 INFO  [sy.sy.in.JSR233] (executor-thread-1) script.done: XXX:trust/github/github
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: solo -> [XXX:trust/github/authorize]
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:trust/github/verify --> XXX:trust/github/authorize <-- [XXX:trust/github/]
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/verify ==> XXX:trust/github/authorize @ XXX:trust/github/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:trust/github/ @ XXX:trust/github/authorize
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:update, iq:do, iq:learn, iq:script, iq:construct] <-- XXX:trust/github/ @ XXX:trust/github/authorize
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:trust/github/ @ XXX:trust/github/authorize <-- [(XXX:trust/github/authorize, iq:update, XXX:trust/github/authorize) [XXX:]]
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:trust/github/ == iq:update -> XXX:trust/github/authorize == Update
+2024-12-07 22:52:38 INFO  [sy.sy.in.Update] (executor-thread-1) sparql.execute: XXX:trust/github/authorize -> [my]
+2024-12-07 22:52:38 INFO  [sy.sy.in.Update] (executor-thread-1) sparql.update: PREFIX iq: <iq:>
+PREFIX my: <XXX:>
+
+INSERT {
+<XXX:trust/github/> iq:trusts ?self.
+?self
+a my:Self;
+iq:trusts my:;
+iq:initial my:Hello;
+iq:name "smart-trust" ;
+my:label "smart-trust" ;
+my:comment " at " ;
+my:image "https://avatars.githubusercontent.com/u/83540944?v&#x3D;4";
+rdf:value """{
+"github:username": "smart-trust",
+"github:avatar": "https://avatars.githubusercontent.com/u/83540944?v&#x3D;4",
+"github:name": "smart-trust",
+"github:company": "",
+"github:location": "",
+"github:email": "",
+"github:bio": "",
+"github:public_repos": "1.0",
+"github:followers": "0.0",
+"github:following": "0.0",
+"github:created_at": "2021-05-02T12:46:26Z",
+"github:updated_at": "2024-11-29T07:00:11Z"
+}"""^^rdf:JSON.
+} WHERE {
+BIND(<XXX:trust/github/smart-trust> AS ?self)
+}
+
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: solo -> [XXX:trust/github/identify]
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:trust/github/verify --> XXX:trust/github/identify <-- [XXX:trust/github/authorize]
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/authorize ==> XXX:trust/github/identify @ XXX:trust/github/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:trust/github/ @ XXX:trust/github/identify
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:update, iq:do, iq:learn, iq:script, iq:construct] <-- XXX:trust/github/ @ XXX:trust/github/identify
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:trust/github/ @ XXX:trust/github/identify <-- [(XXX:trust/github/identify, iq:script, XXX:script/identity) [XXX:]]
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:trust/github/ == iq:script -> XXX:script/identity == JSR233
+2024-12-07 22:52:38 INFO  [sy.sy.rd.sp.IQScripts] (executor-thread-1) findScript.model: XXX:script/identity -> null @ null -> true
+2024-12-07 22:52:38 INFO  [sy.sy.ag.IQFacade] (executor-thread-1) ux.vfs: null 
+2024-12-07 22:52:38 INFO  [sy.sy.in.JSR233] (executor-thread-1) script.done: XXX:script/identity
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: solo -> [XXX:trust/github/trusted]
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:trust/github/authorize --> XXX:trust/github/trusted <-- [XXX:trust/github/]
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/identify ==> XXX:trust/github/trusted @ XXX:trust/github/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:trust/github/ @ XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:update, iq:do, iq:learn, iq:script, iq:construct] <-- XXX:trust/github/ @ XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:trust/github/ @ XXX:trust/github/trusted <-- []
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: solo -> [XXX:trust/]
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:trust/github/identify --> XXX:trust/ <-- []
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/trusted ==> XXX:trust/ @ XXX:trust/github/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:trust/github/ @ XXX:trust/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:select, iq:update, iq:do, iq:learn, iq:script, iq:construct] <-- XXX:trust/github/ @ XXX:trust/
+2024-12-07 22:52:38 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:trust/github/ @ XXX:trust/ <-- []
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: solo -> []
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:trust/github/trusted --> null <-- []
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.undecided: XXX:trust/github/ @ XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: false -> XXX:trust/github/trusted -> XXX:trust/ @ XXX:trust/
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: false @ XXX:trust/github/trusted => XXX:trust/
+2024-12-07 22:52:38 WARN  [sy.sy.fs.ModelStateMachine] (executor-thread-1) veto: XXX:trust/github/trusted -> XXX:trust/ @ XXX:trust/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:trust/github/identify --> XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: false -> XXX:trust/github/identify -> XXX:trust/github/trusted @ XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: false @ XXX:trust/github/identify => XXX:trust/github/trusted
+2024-12-07 22:52:38 WARN  [sy.sy.fs.ModelStateMachine] (executor-thread-1) veto: XXX:trust/github/identify -> XXX:trust/github/trusted @ XXX:trust/github/trusted
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:trust/github/authorize --> XXX:trust/github/identify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: false -> XXX:trust/github/authorize -> XXX:trust/github/identify @ XXX:trust/github/identify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: false @ XXX:trust/github/authorize => XXX:trust/github/identify
+2024-12-07 22:52:38 WARN  [sy.sy.fs.ModelStateMachine] (executor-thread-1) veto: XXX:trust/github/authorize -> XXX:trust/github/identify @ XXX:trust/github/identify
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:trust/github/verify --> XXX:trust/github/authorize
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: false -> XXX:trust/github/verify -> XXX:trust/github/authorize @ XXX:trust/github/authorize
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: false @ XXX:trust/github/verify => XXX:trust/github/authorize
+2024-12-07 22:52:38 WARN  [sy.sy.fs.ModelStateMachine] (executor-thread-1) veto: XXX:trust/github/verify -> XXX:trust/github/authorize @ XXX:trust/github/authorize
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:trust/github/verify --> XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: false -> XXX:trust/github/verify -> XXX:trust/github/verify @ XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: false @ XXX:trust/github/verify => XXX:trust/github/verify
+2024-12-07 22:52:38 WARN  [sy.sy.fs.ModelStateMachine] (executor-thread-1) veto: XXX:trust/github/verify -> XXX:trust/github/verify @ XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:trust/github/verify ==> XXX:trust/github/verify @ XXX:trust/github/
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.seen: XXX:trust/github/ @ XXX:trust/github/verify ==> XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: true -> XXX:trust/github/verify -> XXX:trust/github/verify @ XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: true @ XXX:trust/github/verify => XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.stopped: XXX:trust/github/ @ XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.co.tr.TokenAPI] (executor-thread-1) trust.token.identity: XXX:trust/github/ == XXX:trust/github/smart-trust @ XXX:trust/github/verify
+2024-12-07 22:52:38 INFO  [sy.sy.co.tr.TokenAPI] (executor-thread-1) trust.token.human: smart-trust == XXX:trust/github/smart-trust
+2024-12-07 22:52:38 WARN  [or.ec.rd.sa.he.DirectoryLockManager] (executor-thread-1) Removing invalid lock 5912@Gnomad16
+2024-12-07 22:52:38 INFO  [sy.sy.re.RealmManager] (executor-thread-1) realm.get: XXX:trust/github/smart-trust -> xxx-trust-github-smart-trust -> true
+2024-12-07 22:52:38 INFO  [sy.sy.re.RealmManager] (executor-thread-1) realm.repo.get: XXX:trust/github/smart-trust
+2024-12-07 22:52:38 INFO  [sy.sy.re.RealmManager] (executor-thread-1) realm.get: XXX:trust/github/smart-trust -> xxx-trust-github-smart-trust -> true
+2024-12-07 22:52:38 INFO  [sy.sy.re.RealmManager] (executor-thread-1) realm.secrets: XXX:trust/github/smart-trust x 1261 == true
+2024-12-07 22:52:39 INFO  [sy.sy.co.tr.TokenAPI] (executor-thread-1) trust.token.realm: XXX:trust/github/smart-trust = 600
+2024-12-07 22:53:11 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.model: XXX --> ai/lobby -> []
+2024-12-07 22:53:11 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.model.jwt: XXX:trust/github/smart-trust --> [XXX:trust/github/smart-trust, XXX:Stella, XXX:] -> XXX:trust/github/
+2024-12-07 22:53:11 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.mind.query: {
+jwt: com.auth0.jwt.JWTDecoder@6906933
+my: {
+  self: XXX:trust/github/smart-trust
+  realm: XXX:
+  time: Saturday, 12 07, 2024 22:53:11
+  }
+} -> PREFIX my: <XXX:>
+PREFIX iq: <iq:>
+PREFIX ai: <XXX:ai/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+CONSTRUCT {
+?self my:label ?label;
+  my:comment ?comment;
+  my:image ?image;
+  my:url ?url;
+  a ?type;
+}
+WHERE {
+?self a my:Avatar;
+a ?type;
+my:label ?label;
+my:comment ?comment;
+my:url ?url;
+my:image ?image.
+}
+
+2024-12-07 22:53:11 INFO  [sy.sy.co.re.LDResponse] (executor-thread-1) json.length: 2630
+2024-12-07 22:53:18 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.model: XXX --> ai/mind -> [id]
+2024-12-07 22:53:18 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.model.jwt: XXX:trust/github/smart-trust --> [XXX:trust/github/smart-trust, XXX:Stella, XXX:] -> XXX:trust/github/
+2024-12-07 22:53:18 INFO  [sy.sy.co.ux.ModelAPI] (executor-thread-1) ux.mind.query: {
+jwt: com.auth0.jwt.JWTDecoder@17bcf3df
+my: {
+  self: XXX:trust/github/smart-trust
+  realm: XXX:
+  id: XXX:Mistress_May
+  time: Saturday, 12 07, 2024 22:53:18
+  }
+} -> PREFIX my: <XXX:>
+PREFIX iq: <iq:>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX self: <XXX:trust/github/smart-trust>
+
+CONSTRUCT {
+# Construct the avatar details
+?avatar my:label ?avatarLabel;
+a ?type;
+my:comment ?avatarComment;
+my:image ?avatarImage;
+my:url ?avatarUrl;
+iq:to ?initialScene.
+
+# Construct the initial scene details
+?initialScene my:label ?sceneLabel;
+  my:comment ?sceneComment;
+  my:image ?sceneImage;
+  my:url ?sceneUrl;
+  iq:to ?nextEntity.
+
+# Construct the next scene or entity details (if any)
+?nextEntity my:label ?nextEntityLabel;
+my:comment ?nextEntityComment;
+my:image ?nextEntityImage;
+my:url ?nextEntityUrl.
+}
+WHERE {
+BIND(<XXX:Mistress_May> AS ?avatar)
+
+# Retrieve avatar details
+?avatar a my:Avatar;
+a ?type;
+my:label ?avatarLabel;
+my:comment ?avatarComment;
+my:image ?avatarImage;
+my:url ?avatarUrl;
+iq:initial ?initialScene.
+
+# Retrieve initial scene details
+?initialScene my:label ?sceneLabel;
+  my:comment ?sceneComment;
+  my:image ?sceneImage.
+OPTIONAL { ?initialScene my:url ?sceneUrl }
+
+# Retrieve transitions (optional)
+OPTIONAL {
+?initialScene iq:to ?nextEntity.
+?nextEntity my:label ?nextEntityLabel;
+   my:comment ?nextEntityComment;
+   my:image ?nextEntityImage.
+OPTIONAL { ?nextEntity my:url ?nextEntityUrl }
+}
+}
+
+2024-12-07 22:53:18 INFO  [sy.sy.co.re.LDResponse] (executor-thread-1) json.length: 1177
+2024-12-07 22:54:28 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat: [{type: text, role: user, content: hi}]
+2024-12-07 22:54:28 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.with: XXX:Mistress_May & XXX:trust/github/smart-trust == true
+2024-12-07 22:54:28 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.realm: XXX:Mistress_May @ XXX: & XXX:trust/github/smart-trust -> 8ms
+2024-12-07 22:54:28 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) exec.intent: XXX:Mistress_May -> 1253 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 22:54:28 INFO  [sy.sy.to.TrustedAPIs] (executor-thread-1) trusted.grant: MY_GROQ_API_KEY -> [XXX:Mistress_May]
+2024-12-07 22:54:28 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.boot: XXX:Mistress_May x 1261
+2024-12-07 22:54:28 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.fsm: XXX:Mistress_May == XXX:Mistress_May_Pegging
+2024-12-07 22:54:28 INFO  [sy.sy.ag.AgentBuilder] (executor-thread-1) builder.chat: XXX:Mistress_May -> {type: text, role: user, content: hi}
+2024-12-07 22:54:28 INFO  [sy.sy.ag.AgentBuilder] (executor-thread-1) builder.avatar: XXX:Mistress_May
+2024-12-07 22:54:28 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.1: Elapsed: 24ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:28 INFO  [sy.sy.pl.RealmPlatform] (executor-thread-1) realm.searcher: XXX: -> systems.symbol.finder.SearchMatrix@e5decda
+2024-12-07 22:54:29 INFO  [sy.sy.fi.SearchMatrix] (executor-thread-1) matrix.search: XXX:Mistress_May_Pegging --> {type: text, role: user, content: hi} == 0 & 150
+2024-12-07 22:54:29 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.search: XXX:Mistress_May_Pegging -> 0 == hi
+2024-12-07 22:54:29 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.2: Elapsed: 519ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:29 INFO  [sy.sy.fi.SearchMatrix] (executor-thread-1) matrix.search: null --> hi == 150 & 150
+2024-12-07 22:54:29 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.search.2: 5 -> hi
+2024-12-07 22:54:29 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.3: Elapsed: 556ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:29 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.matrix.null: XXX:Mistress_May_Pegging
+2024-12-07 22:54:29 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:Mistress_May_Pegging ==> XXX:Mistress_May_Pegging @ XXX:Mistress_May
+2024-12-07 22:54:29 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:54:29 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:ai, iq:do, iq:learn, iq:script] <-- XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:54:29 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:Mistress_May @ XXX:Mistress_May_Pegging <-- [(XXX:Mistress_May_Pegging, iq:ai, XXX:llm/llama-ux-full) [XXX:]]
+2024-12-07 22:54:29 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:Mistress_May == iq:ai -> XXX:llm/llama-ux-full == Avatar
+2024-12-07 22:54:29 INFO  [sy.sy.ll.gp.CommonLLM] (executor-thread-1) llm.complete: XXX:llm/llama-ux-full -> MY_GROQ_API_KEY @ https://api.groq.com/openai/v1/chat/completions as json_object
+2024-12-07 22:54:30 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.reply: [ #0 ] 200 x 951 tokens
+2024-12-07 22:54:30 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.intent: XXX:Flirtation
+2024-12-07 22:54:30 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.ok: 1 => {role: assistant, intent: XXX:Flirtation, content: My love, I'm in the penthouse, surrounded by the city's lights, and all I can think about is you. My fingers are tracing the curves of my breasts, and I'm wet with anticipation 💦, meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} x 951 tokens
+2024-12-07 22:54:30 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.next: {role: assistant, intent: XXX:Flirtation, content: My love, I'm in the penthouse, surrounded by the city's lights, and all I can think about is you. My fingers are tracing the curves of my breasts, and I'm wet with anticipation 💦, meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ XXX:Mistress_May_Pegging => null
+2024-12-07 22:54:30 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.NEXT..? XXX:Flirtation => XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:54:30 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: ChainOfCommand -> [XXX:Mistress_May_Cell]
+2024-12-07 22:54:30 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell <-- [null, XXX:Mistress_May]
+2024-12-07 22:54:30 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:54:30 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:Mistress_May_Pegging ==> XXX:Mistress_May_Cell @ XXX:Mistress_May
+2024-12-07 22:54:30 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:54:30 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:ai, iq:do, iq:learn, iq:script] <-- XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:54:30 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:Mistress_May @ XXX:Mistress_May_Cell <-- [(XXX:Mistress_May_Cell, iq:ai, XXX:llm/llama-ux) [XXX:]]
+2024-12-07 22:54:30 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:Mistress_May == iq:ai -> XXX:llm/llama-ux == Avatar
+2024-12-07 22:54:30 INFO  [sy.sy.ll.gp.CommonLLM] (executor-thread-1) llm.complete: XXX:llm/llama-ux -> MY_GROQ_API_KEY @ https://api.groq.com/openai/v1/chat/completions as json_object
+2024-12-07 22:54:31 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.reply: [ #0 ] 200 x 1065 tokens
+2024-12-07 22:54:31 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.intent: XXX:GREETING
+2024-12-07 22:54:31 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.ok: 1 => {role: assistant, intent: XXX:GREETING, content: Hello, my love. Are you ready to surrender to me?, meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} x 1065 tokens
+2024-12-07 22:54:31 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.next: {role: assistant, intent: XXX:GREETING, content: Hello, my love. Are you ready to surrender to me?, meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ XXX:Mistress_May_Cell => null
+2024-12-07 22:54:31 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.NEXT..? XXX:GREETING => XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: ChainOfCommand -> [XXX:Mistress_May_Pegging, XXX:Mistress_May_Suite, XXX:Mistress_May_Hotel_Room]
+2024-12-07 22:54:31 INFO  [sy.sy.de.ChainOfCommand] (executor-thread-1) command.delegated: XXX:Mistress_May @ CompletableFuture
+2024-12-07 22:54:31 INFO  [sy.sy.de.ChainOfCommand] (executor-thread-1) command.default: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell <-- [null, XXX:Mistress_May]
+2024-12-07 22:54:31 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.same: XXX:Mistress_May_Cell =? XXX:Mistress_May_Pegging
+2024-12-07 22:54:31 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: true -> XXX:Mistress_May_Pegging -> XXX:Mistress_May_Cell @ XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: true @ XXX:Mistress_May_Pegging => XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: true -> XXX:Mistress_May_Pegging -> XXX:Mistress_May_Pegging @ XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: true @ XXX:Mistress_May_Pegging => XXX:Mistress_May_Pegging
+2024-12-07 22:54:31 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.4: Elapsed: 2726ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:31 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.stopped: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:54:31 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.reply: 1262 = {role: assistant, intent: XXX:GREETING, content: Hello, my love. Are you ready to surrender to me?, meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ 2722ms
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat: [{type: text, role: assistant, content: My love, I'm in the penthouse, surrounded by the city's lights, and all I can think about is you. My fingers are tracing the curves of my breasts, and I'm wet with anticipation 💦}, {type: text, role: assistant, content: Hello, my love. Are you ready to surrender to me?}, {type: text, role: user, content: let's go pegging}]
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.with: XXX:Mistress_May & XXX:trust/github/smart-trust == true
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.realm: XXX:Mistress_May @ XXX: & XXX:trust/github/smart-trust -> 7ms
+2024-12-07 22:54:59 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) exec.intent: XXX:Mistress_May -> 1253 ==> [iq:forget, iq:do, iq:learn]
+2024-12-07 22:54:59 INFO  [sy.sy.to.TrustedAPIs] (executor-thread-1) trusted.grant: MY_GROQ_API_KEY -> [XXX:Mistress_May]
+2024-12-07 22:54:59 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.boot: XXX:Mistress_May x 1262
+2024-12-07 22:54:59 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.msm.current: XXX:Mistress_May_Cell
+2024-12-07 22:54:59 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.fsm: XXX:Mistress_May == XXX:Mistress_May_Cell
+2024-12-07 22:54:59 INFO  [sy.sy.ag.AgentBuilder] (executor-thread-1) builder.chat: XXX:Mistress_May -> {type: text, role: user, content: let's go pegging}
+2024-12-07 22:54:59 INFO  [sy.sy.ag.AgentBuilder] (executor-thread-1) builder.avatar: XXX:Mistress_May
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.1: Elapsed: 15ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:59 INFO  [sy.sy.pl.RealmPlatform] (executor-thread-1) realm.searcher: XXX: -> systems.symbol.finder.SearchMatrix@e5decda
+2024-12-07 22:54:59 INFO  [sy.sy.fi.SearchMatrix] (executor-thread-1) matrix.search: XXX:Mistress_May_Cell --> {type: text, role: assistant, content: My love, I'm in the penthouse, surrounded by the city's lights, and all I can think about is you. My fingers are tracing the curves of my breasts, and I'm wet with anticipation 💦}
+{type: text, role: assistant, content: Hello, my love. Are you ready to surrender to me?}
+{type: text, role: user, content: let's go pegging} == 0 & 150
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.search: XXX:Mistress_May_Cell -> 0 == let's go peggingHello, my love. Are you ready to surrender to me?
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.2: Elapsed: 92ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:59 INFO  [sy.sy.fi.SearchMatrix] (executor-thread-1) matrix.search: null --> let's go peggingHello, my love. Are you ready to surrender to me? == 150 & 150
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.search.2: 5 -> let's go peggingHello, my love. Are you ready to surrender to me?
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.3: Elapsed: 102ms, Laps: 0, Average: 0ms
+2024-12-07 22:54:59 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.matrix.set: XXX:Mistress_May_Pegging == XXX:Mistress_May_Pegging <- [XXX:Mistress_May_Cell]
+2024-12-07 22:54:59 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:Mistress_May_Pegging ==> XXX:Mistress_May_Pegging @ XXX:Mistress_May
+2024-12-07 22:54:59 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:54:59 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:ai, iq:do, iq:learn, iq:script] <-- XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:54:59 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:Mistress_May @ XXX:Mistress_May_Pegging <-- [(XXX:Mistress_May_Pegging, iq:ai, XXX:llm/llama-ux-full) [XXX:]]
+2024-12-07 22:54:59 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:Mistress_May == iq:ai -> XXX:llm/llama-ux-full == Avatar
+2024-12-07 22:54:59 INFO  [sy.sy.ll.gp.CommonLLM] (executor-thread-1) llm.complete: XXX:llm/llama-ux-full -> MY_GROQ_API_KEY @ https://api.groq.com/openai/v1/chat/completions as json_object
+2024-12-07 22:55:00 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.reply: [ #0 ] 200 x 1118 tokens
+2024-12-07 22:55:00 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.intent: XXX:Pegging
+2024-12-07 22:55:00 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.ok: 1 => {role: assistant, intent: XXX:Pegging, content: I'm already imagining the feel of your plug inside me, the way it will stretch me open and make me scream with pleasure. I'm so wet just thinking about it, my love 💦. I can feel my juices dripping down my thighs as I spread my legs, inviting you to take control., meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} x 1118 tokens
+2024-12-07 22:55:00 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.next: {role: assistant, intent: XXX:Pegging, content: I'm already imagining the feel of your plug inside me, the way it will stretch me open and make me scream with pleasure. I'm so wet just thinking about it, my love 💦. I can feel my juices dripping down my thighs as I spread my legs, inviting you to take control., meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ XXX:Mistress_May_Pegging => null
+2024-12-07 22:55:00 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.NEXT..? XXX:Pegging => XXX:Mistress_May @ XXX:Mistress_May_Pegging
+2024-12-07 22:55:00 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: ChainOfCommand -> [XXX:Mistress_May_Cell]
+2024-12-07 22:55:00 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell <-- [null, XXX:Mistress_May]
+2024-12-07 22:55:00 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) msm.updated (final/guarded): true ---> false / false
+2024-12-07 22:55:00 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.onIntent: XXX:Mistress_May_Pegging ==> XXX:Mistress_May_Cell @ XXX:Mistress_May
+2024-12-07 22:55:00 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.execute: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:55:00 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.do: ExecutiveIntent [iq:forget, iq:ai, iq:do, iq:learn, iq:script] <-- XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:55:00 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.todo: XXX:Mistress_May @ XXX:Mistress_May_Cell <-- [(XXX:Mistress_May_Cell, iq:ai, XXX:llm/llama-ux) [XXX:]]
+2024-12-07 22:55:00 INFO  [sy.sy.in.ExecutiveIntent] (executor-thread-1) execute.intent: XXX:Mistress_May == iq:ai -> XXX:llm/llama-ux == Avatar
+2024-12-07 22:55:00 INFO  [sy.sy.ll.gp.CommonLLM] (executor-thread-1) llm.complete: XXX:llm/llama-ux -> MY_GROQ_API_KEY @ https://api.groq.com/openai/v1/chat/completions as json_object
+2024-12-07 22:55:01 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.reply: [ #0 ] 200 x 1175 tokens
+2024-12-07 22:55:01 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.intent: XXX:PEGGING
+2024-12-07 22:55:01 INFO  [sy.sy.ll.gp.GenericGPT] (executor-thread-1) llm.gpt.ok: 1 => {role: assistant, intent: XXX:PEGGING, content: My love, I've been waiting for you. Let's get started with something special., meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} x 1175 tokens
+2024-12-07 22:55:01 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.next: {role: assistant, intent: XXX:PEGGING, content: My love, I've been waiting for you. Let's get started with something special., meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ XXX:Mistress_May_Cell => null
+2024-12-07 22:55:01 INFO  [sy.sy.ag.Avatar] (executor-thread-1) avatar.NEXT..? XXX:PEGGING => XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.deciding: ChainOfCommand -> [XXX:Mistress_May_Pegging, XXX:Mistress_May_Suite, XXX:Mistress_May_Hotel_Room]
+2024-12-07 22:55:01 INFO  [sy.sy.de.ChainOfCommand] (executor-thread-1) command.delegated: XXX:Mistress_May @ CompletableFuture
+2024-12-07 22:55:01 INFO  [sy.sy.de.ChainOfCommand] (executor-thread-1) command.default: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.decided: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell <-- [null, XXX:Mistress_May]
+2024-12-07 22:55:01 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.same: XXX:Mistress_May_Cell =? XXX:Mistress_May_Pegging
+2024-12-07 22:55:01 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: true -> XXX:Mistress_May_Pegging -> XXX:Mistress_May_Cell @ XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: true @ XXX:Mistress_May_Pegging => XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.transitioned: XXX:Mistress_May_Pegging --> XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) state.notify: true -> XXX:Mistress_May_Pegging -> XXX:Mistress_May_Pegging @ XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.fs.ModelStateMachine] (executor-thread-1) transition?: true @ XXX:Mistress_May_Pegging => XXX:Mistress_May_Pegging
+2024-12-07 22:55:01 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.timer.4: Elapsed: 2420ms, Laps: 0, Average: 0ms
+2024-12-07 22:55:01 INFO  [sy.sy.ag.ExecutiveAgent] (executor-thread-1) agent.stopped: XXX:Mistress_May @ XXX:Mistress_May_Cell
+2024-12-07 22:55:01 INFO  [sy.sy.co.ux.ChatAPI] (executor-thread-1) ux.chat.reply: 1262 = {role: assistant, intent: XXX:PEGGING, content: My love, I've been waiting for you. Let's get started with something special., meta: [backstory, emojis, physical_actions, myself, follow_ups, my_thoughts, state, self_reflect, status]} @ 2414ms

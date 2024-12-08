@@ -83,6 +83,7 @@ throw new StateException("from: " + getState() + " to: " + targetState + " denie
  *
  * @param targetState The state to set as current.
  */
+@Override
 public void setCurrentState(T targetState) {
 currentState = targetState;
 }

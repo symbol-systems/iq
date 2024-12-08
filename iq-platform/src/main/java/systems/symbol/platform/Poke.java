@@ -19,7 +19,7 @@ for (Statement stmt : statements) {
 String fieldName = stmt.getPredicate().getLocalName();
 log.debug("\tpeek: {} ", fieldName);
 try {
-Field field  = todo.getClass().getDeclaredField(fieldName);
+Field field = todo.getClass().getDeclaredField(fieldName);
 poke(field, stmt, todo);
 } catch (NoSuchFieldException ignored) {
 }
@@ -33,7 +33,6 @@ field.setAccessible(true);
 Object value = stmt.getObject();
 Class<?> fieldType = field.getType();
 
-//log.info("poke: {} -> {} / {}", field.getName(), value, fieldType);
 if (fieldType == String.class) {
 if (value instanceof Literal) {
 field.set(config, ((Literal) value).stringValue());
@@ -49,7 +48,6 @@ field.set(config, Double.parseDouble(((Literal) value).stringValue()));
 } else if (fieldType == boolean.class) {
 field.set(config, Boolean.parseBoolean(((Literal) value).stringValue()));
 }
-
+log.debug("poked: {} -> {} / {} == {}", field.getName(), value, fieldType, field.get(config));
 }
 }
-

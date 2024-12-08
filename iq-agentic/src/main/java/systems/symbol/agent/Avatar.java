@@ -183,7 +183,7 @@ if (transition instanceof IRI state && state.getLocalName().toLowerCase().equals
 decision = state;
 }
 }
-log.info("avatar.next: {} @ {} => {}", message, agent.getStateMachine().getState(), decision);
+log.info("avatar.next: {} @ {} => {}", agent.getSelf(), agent.getStateMachine().getState(), decision);
 return decision == null ? (IRI) agent.getStateMachine().getState() : decision;
 }
 

@@ -17,7 +17,8 @@ private final I_Guard<T> guard; // The guard condition
 private final T actor; // The entity associated with the state machine
 
 /**
- * Constructs a GuardedStateMachine with the provided actor, underlying state machine, and guard condition.
+ * Constructs a GuardedStateMachine with the provided actor, underlying state
+ * machine, and guard condition.
  *
  * @param actor The entity associated with the state machine.
  * @param fsm   The underlying state machine.
@@ -37,6 +38,11 @@ fsm.initialize();
 @Override
 public I_StateMachine<T> setInitial(T initialState) {
 return fsm.setInitial(initialState);
+}
+
+@Override
+public void setCurrentState(T current) {
+fsm.setCurrentState(current);
 }
 
 @Override
