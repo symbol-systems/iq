@@ -27,7 +27,8 @@ public class GenericGPT implements I_LLM<String> {
     String token;
     I_LLMConfig config;
     private final List<GPTResponse> history;
-    private int retryCount = 1;
+    private int retryCount = 2;
+    private int backOffTime = 2000;
 
     public GenericGPT(String token, I_LLMConfig config) {
         this.token = token;
@@ -61,12 +62,14 @@ public class GenericGPT implements I_LLM<String> {
 
     @Override
     public I_Assist<String> complete(I_Assist<String> chats) throws APIException, IOException {
-        return complete(chats, 0);
+        return complete(chats, retryCount);
     }
 
     protected I_Assist<String> complete(I_Assist<String> chats, int attempt) throws APIException, IOException {
-        if (attempt > retryCount)
+        if (attempt <= 0) {
+            log.debug("llm.gpt.attempts: {} -> {}", config.getName(), attempt);
             return chats;
+        }
         log.debug("llm.gpt.url: {} -> {}", config.getName(), config.getURL());
         RestAPI api = new RestAPI(config.getURL());
         api.header("Authorization", "Bearer " + token);
@@ -83,28 +86,34 @@ public class GenericGPT implements I_LLM<String> {
                 GPTResponse completion = om.readValue(body, GPTResponse.class);
                 int tokens = completion.usage == null ? -1 : completion.usage.total_tokens;
                 log.info("llm.gpt.reply: [ #{} ] {} x {} tokens", attempt, response.code(), tokens);
-                if (completion.choices != null && !completion.choices.isEmpty()) {
+
+                if (response.code() == 200 && completion.choices != null && !completion.choices.isEmpty()) {
                     for (int c = 0; c < completion.choices.size(); c++) {
                         GPTResponse.Choice choice = completion.choices.get(c);
                         processMessage(chats, choice.message);
                     }
                     history.add(completion);
-                    log.info("llm.gpt.ok: {} => {} x {} tokens", completion.choices.size(), chats.latest(), tokens);
+                    log.info("llm.gpt.ok: {}->{} => {}", chats.messages(), completion.choices.size(),
+                            chats.latest());
                     return chats;
                 } else if (completion.error != null) {
                     // completion.error.failed_generation
                     if (completion.error.failed_generation != null) {
+                        if (response.code() == 429) {
+                            try {
+                                log.info("llm.gpt.backoff: {} -> {}", backOffTime, completion.error);
+                                Thread.sleep(backOffTime);
+                            } catch (InterruptedException e) {
+                                log.info("llm.gpt.interrupted: {}", e.getMessage());
+                            }
+                        }
                         log.info("llm.gpt.oops: {} / {} => {}", response.code(), completion.error.code,
                                 completion.error.failed_generation);
-                        complete(chats, attempt++);
-                        // chats.add(new TextMessage(I_LLMessage.RoleType.assistant,
-                        // completion.error.failed_generation));
+                        complete(chats, attempt - 1);
                     } else {
                         log.info("llm.gpt.OOPS: {} -> {} => {}", completion.error.code, completion.error.message,
                                 completion.error.type);
-                        complete(chats, attempt++);
-                        // chats.add(new TextMessage(I_LLMessage.RoleType.assistant, "llm.oops." +
-                        // completion.error));
+                        complete(chats, attempt - 1);
                     }
                 }
             }

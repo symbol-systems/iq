@@ -1,25 +1,27 @@
-package systems.symbol.llm;
+package systems.symbol.llm.gpt;
 
-public class DefaultLLConfig implements I_LLMConfig {
+import systems.symbol.llm.I_LLMConfig;
+
+public class GPTConfig implements I_LLMConfig {
 
     public String url;
     public String modelName;
     public float frequencyPenalty;
     public float temperature;
-    public int maxTokens = 2048;
+    public int maxTokens = 4096;
     public float topP;
     public int n, seed;
     public String secret;
     public String response_format = null;
 
-    public DefaultLLConfig() {
+    public GPTConfig() {
     }
 
-    public DefaultLLConfig(int maxTokens) {
+    public GPTConfig(int maxTokens) {
         this.maxTokens = maxTokens;
     }
 
-    public DefaultLLConfig(String url, String modelName, int maxTokens) {
+    public GPTConfig(String url, String modelName, int maxTokens) {
         this.url = url;
         this.modelName = modelName;
         this.temperature = 0;

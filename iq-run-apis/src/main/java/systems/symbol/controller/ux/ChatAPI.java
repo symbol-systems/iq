@@ -61,8 +61,6 @@ public class ChatAPI extends GuardedAPI {
             Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.chat: {}", chat.messages());
-        if (chat.messages().isEmpty())
-            return new OopsResponse("ux.chat.empty", Response.Status.NOT_FOUND).build();
         if (Validate.isNonAlphanumeric(_realm))
             return new OopsResponse("ux.chat.repository", Response.Status.BAD_REQUEST).build();
         if (Validate.isMissing(_actor))
@@ -98,19 +96,19 @@ public class ChatAPI extends GuardedAPI {
             bindings.put("capacity", connection.size());
             I_Agent agent = builder.avatar(chat);
 
-            log.info("ux.chat.timer.1: {}", stopwatch.summary());
+            // log.info("ux.chat.timer.1: {}", stopwatch.summary());
             Resource state = agent.getStateMachine().getState();
             if (state.isIRI()) {
                 I_Corpus<IRI> searcher = platform.searcher(realm.getSelf());
                 Collection<I_Found<IRI>> search = searcher.byConcept((IRI) state).search(chat.toString(), maxResults,
                         minScore);
                 log.info("ux.chat.search: {} -> {} == {}", state, search.size(), chat.context());
-                log.info("ux.chat.timer.2: {}", stopwatch.summary());
+                // log.info("ux.chat.timer.2: {}", stopwatch.summary());
                 if ((search == null || search.isEmpty()) && state != null) {
                     search = searcher.byConcept(null).search(chat.context(), maxResults,
                             minScore);
                     log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
-                    log.info("ux.chat.timer.3: {}", stopwatch.summary());
+                    // log.info("ux.chat.timer.3: {}", stopwatch.summary());
                 }
                 Collection<Resource> cando = agent.getStateMachine().getTransitions();
                 final IRI[] _intent = new IRI[1];
@@ -134,14 +132,14 @@ public class ChatAPI extends GuardedAPI {
                     synchronized (connection) {
                         agent.getStateMachine().setInitial(_intent[0]);
                         log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0], agent.getStateMachine().getState(),
-                                agent.getStateMachine().getTransitions());
+                                cando);
                     }
                 } else {
                     log.info("ux.chat.matrix.null: {}", state);
                 }
             }
             agent.start();
-            log.info("ux.chat.timer.4: {}", stopwatch.summary());
+            // log.info("ux.chat.timer.4: {}", stopwatch.summary());
             agent.stop();
             log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
             return new ChatResponse(chat, agent).build();

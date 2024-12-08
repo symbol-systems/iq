@@ -83,6 +83,7 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
      *
      * @param targetState The state to set as current.
      */
+    @Override
     public void setCurrentState(T targetState) {
         currentState = targetState;
     }
