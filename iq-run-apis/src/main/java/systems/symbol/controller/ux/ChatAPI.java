@@ -57,7 +57,7 @@ public class ChatAPI extends GuardedAPI {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor,
             @HeaderParam("Authorization") String auth,
-            @Context UriInfo uriInfo,
+            @Context UriInfo uriInfo, @QueryParam("focus") String _focus,
             Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
         Stopwatch stopwatch = new Stopwatch();
         log.info("ux.chat: {}", chat.messages());
