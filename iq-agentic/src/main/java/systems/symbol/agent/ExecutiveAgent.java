@@ -84,27 +84,28 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
             log.info("agent.self: {} -> {}", getSelf(), transitioned);
             return transitioned != null & Objects.equals(transitioned, getSelf());
         }
-        try {
-            log.info("agent.execute: {} @ {}", self, getStateMachine().getState());
-            Set<IRI> executed = execute(getSelf(), to, bindings);
-            Resource next = intent();
-            log.info("agent.decided: {} --> {} <-- {}", from, next, executed);
-            if (next == null) {
-                log.info("agent.undecided: {} @ {}", getSelf(), from);
-                return false; // don't veto, we may try again
-            }
-            if (getStateMachine().getState().equals(next)) {
-                log.info("agent.same: {} =? {}", next, from);
-                return !next.equals(from);
-            }
-            Resource transitioned = getStateMachine().transition(next);
-            log.info("agent.transitioned: {} --> {}", from, transitioned);
-            seen.add(transitioned);
-            return next.equals(transitioned);
-        } catch (StateException e) {
-            log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to, e.getMessage());
-            return false;
+        // try {
+        log.info("agent.execute: {} @ {}", self, getStateMachine().getState());
+        Set<IRI> executed = execute(getSelf(), to, bindings);
+        Resource next = intent();
+        log.info("agent.decided: {} --> {} <-- {}", from, next, executed);
+        if (next == null) {
+            log.info("agent.undecided: {} @ {}", getSelf(), from);
+            return false; // don't veto, we may try again
         }
+        if (getStateMachine().getState().equals(next)) {
+            log.info("agent.same: {} =? {}", next, from);
+            return !next.equals(from);
+        }
+        Resource transitioned = getStateMachine().transition(next);
+        log.info("agent.transitioned: {} --> {}", from, transitioned);
+        seen.add(transitioned);
+        return next.equals(transitioned);
+        // } catch (StateException e) {
+        // log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to,
+        // e.getMessage());
+        // return false;
+        // }
     }
 
     /**

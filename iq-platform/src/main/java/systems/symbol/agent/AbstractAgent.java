@@ -97,7 +97,7 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Intent, I
             try {
                 return onTransition(from, to);
             } catch (Exception e) {
-                log.error("agent.intent.failed: {}", fsm, e);
+                log.warn("agent.intent.failed: {} @ {} ==> ", getSelf(), fsm.getState(), e);
                 return false;
             }
         });

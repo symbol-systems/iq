@@ -23,6 +23,7 @@ import systems.symbol.agent.I_Agent;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.platform.RealmAPI;
 import systems.symbol.controller.responses.*;
+import systems.symbol.fsm.StateException;
 import systems.symbol.sigint.GeoLocate;
 import systems.symbol.platform.RealmPlatform;
 import systems.symbol.platform.WebURLs;
@@ -107,14 +108,19 @@ public class TokenAPI extends RealmAPI {
             AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
             builder.setThoughts(realm.getModel()).scripting().sparql(connection);
             I_Agent agent = builder.agent();
-            agent.start();
             IRI initial = Values.iri(issuer.stringValue() + "verify");
+            Object identity;
+            try {
+                agent.start();
+                Resource state = agent.getStateMachine().transition(initial);
+                identity = bindings.get("identity");
+                log.info("trust.token.identity: {} == {} @ {}", agent.getSelf(), identity, state);
+                agent.stop();
+            } catch (Exception e) {
+                return new OopsResponse(e.getMessage(), Response.Status.UNAUTHORIZED).build();
+            }
             // agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
-            Resource state = agent.getStateMachine().transition(initial);
-            agent.stop();
-            Object identity = bindings.get("identity");
-            log.info("trust.token.identity: {} == {} @ {}", agent.getSelf(), identity, state);
             if (identity == null)
                 return new OopsResponse("trust.token.identity", Response.Status.UNAUTHORIZED).build();
             if (!identity.toString().startsWith(agent.getSelf().stringValue())
