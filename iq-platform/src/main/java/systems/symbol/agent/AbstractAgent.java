@@ -97,7 +97,7 @@ log.info("agent.onIntent: {} ==> {} @ {}", from, to, getSelf());
 try {
 return onTransition(from, to);
 } catch (Exception e) {
-log.error("agent.intent.failed: {}", fsm, e);
+log.warn("agent.intent.failed: {} @ {} ==> ", getSelf(), fsm.getState(), e);
 return false;
 }
 });

@@ -93,8 +93,10 @@ done.add(actor);
 log.info("script.done: {}", state, result, done.size());
 // Facades.dump(my, System.out);
 } catch (ScriptException e) {
-log.error("script.failed: {}/{} @ {}", e.getLineNumber(), e.getColumnNumber(), e.getCause().getMessage());
-throw new StateException(e.getCause().getMessage(), state, e.getCause());
+Throwable cause = e.getCause().getCause();
+log.warn("script.failed: {} ({}:{}) == {}", state, e.getLineNumber(), e.getColumnNumber(),
+cause.getMessage());
+throw new StateException(cause.getMessage(), state);
 } catch (SecretsException e) {
 throw new StateException(e.getMessage(), state, e);
 }

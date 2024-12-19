@@ -84,7 +84,7 @@ Resource transitioned = getStateMachine().transition(getSelf());
 log.info("agent.self: {} -> {}", getSelf(), transitioned);
 return transitioned != null & Objects.equals(transitioned, getSelf());
 }
-try {
+// try {
 log.info("agent.execute: {} @ {}", self, getStateMachine().getState());
 Set<IRI> executed = execute(getSelf(), to, bindings);
 Resource next = intent();
@@ -101,10 +101,11 @@ Resource transitioned = getStateMachine().transition(next);
 log.info("agent.transitioned: {} --> {}", from, transitioned);
 seen.add(transitioned);
 return next.equals(transitioned);
-} catch (StateException e) {
-log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to, e.getMessage());
-return false;
-}
+// } catch (StateException e) {
+// log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to,
+// e.getMessage());
+// return false;
+// }
 }
 
 /**
