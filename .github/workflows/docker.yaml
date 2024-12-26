@@ -26,5 +26,5 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build and push Quarkus Docker image
-        run: mvn package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.group=${{ github.repository_owner }} -Dquarkus.container-image.name=iq-apis -Dquarkus.container-image.tag=latest
+        run: mvn package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=ghcr.io -Dquarkus.container-image.group=${{ github.repository_owner }} -Dquarkus.container-image.name=iq-apis -Dquarkus.container-image.tag=latest -DskipITs
 

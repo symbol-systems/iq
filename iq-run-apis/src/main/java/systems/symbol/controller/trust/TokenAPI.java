@@ -135,7 +135,6 @@ public class TokenAPI extends RealmAPI {
             boolean newUser = platform.getRealm(self) == null;
             I_Realm myRealm = platform.getInstance().newRealm(self);
 
-            // RDFDump.dump(myRealm.getModel());
             try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
                 myConnection.begin();
                 trusting(routing, builder.getGround(), agent.getThoughts(), agent.getSelf(), self);
@@ -146,16 +145,14 @@ public class TokenAPI extends RealmAPI {
                     ? new String[] { _realm + "role:noob", _realm + "role:user", _realm + "role:" + provider }
                     : new String[] { _realm + "role:user", _realm + "role:" + provider };
             List<String> aud = new ArrayList<>();
-            // aud.add(realm.getSelf().stringValue());
-            // aud.add(self.stringValue());
+
             Iterable<IRI> trusts = Realms.trusts(builder.getGround(), self, new IRIs(), true);
             trusts.forEach(trust -> aud.add(trust.stringValue()));
 
             int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
             String[] _aud = aud.toArray(new String[0]);
-            String signedToken = tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(),
-                    _aud, realm,
-                    duration);
+            String signedToken = tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(), _aud,
+                    realm, duration);
             SimpleResponse response = new SimpleResponse("access_token", signedToken);
             connection.commit();
             log.info("trust.token.realm: {} = {}", self.stringValue(), duration);

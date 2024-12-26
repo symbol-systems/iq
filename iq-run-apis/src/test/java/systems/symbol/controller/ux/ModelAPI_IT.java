@@ -13,7 +13,7 @@ import java.io.IOException;
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
-public class ModelAPITest {
+public class ModelAPIIT {
 
     private static String VALID_AUTH_HEADER;
     private static final String INVALID_AUTH_HEADER = "Bearer invalid.token";

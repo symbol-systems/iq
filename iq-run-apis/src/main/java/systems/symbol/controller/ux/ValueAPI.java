@@ -101,4 +101,5 @@ public class ValueAPI extends GuardedAPI {
             return new OopsResponse("ux.value.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }
