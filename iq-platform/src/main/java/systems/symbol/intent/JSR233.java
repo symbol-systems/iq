@@ -94,9 +94,10 @@ log.info("script.done: {}", state, result, done.size());
 // Facades.dump(my, System.out);
 } catch (ScriptException e) {
 Throwable cause = e.getCause().getCause();
+String error = cause == null ? e.getMessage() : cause.getMessage();
 log.warn("script.failed: {} ({}:{}) == {}", state, e.getLineNumber(), e.getColumnNumber(),
-cause.getMessage());
-throw new StateException(cause.getMessage(), state);
+error);
+throw new StateException(error, state);
 } catch (SecretsException e) {
 throw new StateException(e.getMessage(), state, e);
 }
@@ -122,13 +123,14 @@ if (engine == null) {
 return null;
 }
 ScriptContext sc = new SimpleScriptContext();
-sc.setAttribute("log", log, ScriptContext.ENGINE_SCOPE);
 StringWriter out = new StringWriter();
 sc.setWriter(out);
 sc.setBindings(Facades.trust(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+sc.setAttribute("log", log, ScriptContext.ENGINE_SCOPE);
+
 Object eval = engine.eval(script.stringValue(), sc);
-log.debug("script.eval: {} @ {} ==> {}\n==={}", script.stringValue(), state.stringValue(), eval,
-out.getBuffer().toString());
+log.debug("script.eval: {} @ {} ==> {}", script.stringValue(), state.stringValue(), eval);
+log.info("script.logged: %o", out.toString());
 return eval;
 }
 }

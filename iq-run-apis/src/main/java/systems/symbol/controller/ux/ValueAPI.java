@@ -101,4 +101,5 @@ log.error("ux.value.failed: {} -> {} ==> {}", jwt.getSubject(), path, e.getMessa
 return new OopsResponse("ux.value.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
+
 }
