@@ -84,7 +84,7 @@ public class ProfileAPI extends GuardedAPI {
             IRI resource = Values.iri(jwt.getSubject());
             RepositoryResult<Statement> found = connection.getStatements(resource, RDF.VALUE, null);
             if (!found.hasNext()) {
-                return new OopsResponse("ux.profile.missing", Response.Status.NOT_FOUND).build();
+                return new SimpleResponse().build();
             }
             Statement stmt = found.next();
             found.close();
