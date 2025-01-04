@@ -73,7 +73,7 @@ public class Update implements I_Intent, I_Self {
         try {
             Bindings bindings = Facades.rebind(actor, state, my);
             log.info("sparql.execute: {} -> {}", state.stringValue(), bindings.keySet());
-            Facades.dump(bindings, System.out);
+            // Facades.dump(bindings, System.out);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
             log.info("sparql.update: {}", sparql);
             if (sparql == null || sparql.isEmpty())

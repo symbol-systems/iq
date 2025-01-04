@@ -9,12 +9,9 @@ import jakarta.ws.rs.core.Response;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
-
-import java.io.File;
 
 @Path("/ux/vision")
 @Tag(name = "api.ux.vision.name", description = "api.ux.vision.description")

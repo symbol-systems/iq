@@ -19,6 +19,7 @@ import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.IQScriptCatalog;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQStore;
+import systems.symbol.string.PrettyStrings;
 import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
@@ -81,9 +82,9 @@ public class Construct implements I_Intent, I_Self {
         try {
             Bindings bindings = Facades.rebind(actor, state, my);
             String sparql = catalog.getSPARQL(state.stringValue(), bindings);
-            Facades.dump(my, System.out);
-            log.info("sparql.construct: {}", sparql);
-            Facades.dump(bindings, System.out);
+            // Facades.dump(my, System.out);
+            log.info("sparql.construct: {} --> {}", sparql, PrettyStrings.pretty(my));
+            // Facades.dump(bindings, System.out);
             if (sparql == null || sparql.isEmpty())
                 return done;
             GraphQuery updated = iq.getConnection().prepareGraphQuery(sparql);

@@ -4,7 +4,6 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.vertx.ext.web.RoutingContext;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
@@ -16,16 +15,11 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import systems.symbol.agent.AgentBuilder;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.platform.RealmAPI;
 import systems.symbol.controller.responses.*;
-import systems.symbol.fsm.StateException;
 import systems.symbol.sigint.GeoLocate;
-import systems.symbol.platform.RealmPlatform;
 import systems.symbol.platform.WebURLs;
 import systems.symbol.rdf4j.Facts;
 import systems.symbol.rdf4j.IRIs;
@@ -107,6 +101,7 @@ public class TokenAPI extends RealmAPI {
 
             AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
             builder.setThoughts(realm.getModel()).scripting().sparql(connection);
+            builder.realm(realm);
             I_Agent agent = builder.agent();
             IRI initial = Values.iri(issuer.stringValue() + "verify");
             Object identity;
@@ -176,11 +171,12 @@ public class TokenAPI extends RealmAPI {
         Facts.copy(ground, trusts, thoughts);
         GeoLocate geo = new GeoLocate();
         String ipv4 = routing.request().remoteAddress().host();
-        log.info("trust.ipv4: {}", ipv4);
         try {
+            log.info("trust.ipv4: {} -> {}", ipv4, geo.location());
             geo.locate(self, ipv4, thoughts);
         } catch (Exception e) {
-            /* no op */ }
+            log.warn("trust.oops.geo: {} -> {}", e.getMessage(), e);
+        }
         // RDFDump.dump(thoughts);
         ground.add(issuer, TRUSTS, self);
     }

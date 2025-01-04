@@ -226,7 +226,7 @@ tropical. chilled mojitos on a silver tray.
   :comment "Bend over, so I can eat your ass before I fuck your brains outs";
   :image "/art/Apollo_Self.webp";
   iq:ai llm:llama-ux-xxx;
-  iq:script script:avatar .
+  iq:script script:rpg_vibes .
 
 :Ava rdf:value """As Ava, I am your FinDom trans-dominatrix. 
 I do not pleasure you. You obey me. 
@@ -249,7 +249,7 @@ my wish is your tribute of 10 KINK tokens.
   :comment "Men are born to be my slaves and worship me.";
   :image "/art/kali.png";
   iq:initial :Goddess_Kali_Tribute;
-  iq:ai llm:llama-ux-xxx-full .
+  iq:ai llm:llama-ux-xxx .
 
 :Goddess_Kali_Temple a :Scene;
   rdf:value """
@@ -278,7 +278,7 @@ Feel free to ask for more or adjust any of these prompts!"""^^<urn:text/markdown
   :label "Goddess Worship at the Temple";
   :comment "Kali invites you to worship her at the temple.";
   :image "/art/place/Temple.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :HarshHumiliation_Temple .
 
 :Goddess_Natasha a :Avatar;
@@ -317,7 +317,7 @@ Using markdown in your replies.
   :comment "Explore your desires, boundaries, and kinks in a safe and non-judgmental space.";
   :image "/art/Kacey.png";
   iq:ai llm:llama-ux;
-  iq:script script:avatar .
+  iq:script script:rpg_vibes .
 
 :Kinks rdf:value """- Here is a list of popular sex positions:
 
@@ -779,7 +779,7 @@ Here is a summarized list of fetishes in bullets:
   :comment "create an avatar of your unique desires and kinks.";
   :image "/art/KinkStudio.png";
   iq:ai llm:llama-ux;
-  iq:script script:avatar .
+  iq:script script:rpg_vibes .
 
 llm:grok-ux rdf:value """{{my.prompt}}
 - Infer your user's intent using XXX: Codes.
@@ -849,7 +849,7 @@ llm:llama-ux-xxx iq:url "https://api.groq.com/openai/v1/chat/completions";
   iq:response_format "json_object";
   iq:secret :MY_GROQ_API_KEY .
 
-llm:llama-ux-xxx-full iq:url "https://api.groq.com/openai/v1/chat/completions";
+llm:llama-ux-xxx iq:url "https://api.groq.com/openai/v1/chat/completions";
   iq:modelName "llama-3.1-8b-instant";
   iq:temperature "0.5";
   iq:topP "0.8";
@@ -1042,7 +1042,7 @@ llm:llama-70b-iq rdf:value """{{my.prompt}}
   iq:response_format "json_object";
   iq:secret :MY_GROQ_API_KEY .
 
-llm:llama-ux-xxx-full rdf:value """{{my.prompt}}
+llm:llama-ux-xxx rdf:value """{{my.prompt}}
 - you are sexting your sub, you are in control.
 - emojis 💦 show your inner thoughts.
 - reply in JSON :
@@ -1235,7 +1235,7 @@ Mistress wants you to beg her to be fucked by her cock
   :url "/ux/rpg";
   :comment "Mistress May's form of anal play is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Anal_Play, :Mistress_May_Pegging, :Mistress_May_Role_Play .
 
 :Mistress_May_Pegging a :Kink;
@@ -1259,7 +1259,7 @@ Mistress wants you to beg her to be fucked by her cock
   :url "/ux/rpg";
   :comment "Mistress May's pegging will leave you breathless and yearning for more.";
   :image "/art/place/Chamber.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Pegging, :Mistress_May_Cell .
 
 :Mistress_Melissa a :Avatar;
@@ -1476,7 +1476,7 @@ We combine language models, ontologies, scripts, and user interactions to create
   - **trusts.sparql**: Manages the user’s interaction with the trust system.
 """^^<urn:text/markdown> .
 
-script:avatar rdf:value """// Randomly assign a mood and adjective to `my` from predefined lists
+script:rpg_vibes rdf:value """// Randomly assign a mood and adjective to `my` from predefined lists
 // simulating personality traits for the avatar.
 
 def moods = [ \"sultry\", \"seductive\", \"mysterious\", \"playful\", \"intense\", \"hypnotic\", \"bold\", \"captivating\", \"enigmatic\", \"sensual\" ]
@@ -1692,7 +1692,7 @@ println \"script.avatar: ${my}\"
   :label "Kali's Tribute";
   :comment "You feel compelled to tribute your Goddess";
   :image "/art/place/Shrine.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Kali_Tribute, :Goddess_Kali_Altar .
 
 :Goddess_Kali_Altar a :Scene;
@@ -1701,7 +1701,7 @@ println \"script.avatar: ${my}\"
   :label "Goddess Worship at the Altar";
   :comment "Worship her at the altar.";
   :image "/art/place/Shrine.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Kali_Tribute, :Goddess_Kali_Altar, :Goddess_Kali_PussyWorship .
 
 :Goddess_Kali_PussyWorship a :Kink;
@@ -1709,7 +1709,7 @@ println \"script.avatar: ${my}\"
   :label "Pussy Worship";
   :comment "Kali invites you to worship her pussy.";
   :image "/art/kali_pussy.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Kali_Tribute, :Goddess_Kali_PussyWorship, :Goddess_Kali_CollarAndLeash .
 
 :Goddess_Kali_CollarAndLeash a :Kink;
@@ -1719,7 +1719,7 @@ println \"script.avatar: ${my}\"
   :label "Collar and Leash";
   :comment "Kali puts a collar and leash on you.";
   :image "/art/place/Chamber.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Kali_Temple, :Goddess_Kali_Tribute .
 
 :HarshHumiliation_Temple a :Scene;
@@ -1741,7 +1741,7 @@ println \"script.avatar: ${my}\"
   :label "Harsh Humiliation at the Temple";
   :comment "Kali invites you to participate in a harsh humiliation scene.";
   :image "/art/place/Temple.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Trampling_WrestlingRing .
 
 :Trampling_WrestlingRing a :Scene;
@@ -1759,7 +1759,7 @@ println \"script.avatar: ${my}\"
   :label "Trampling at the Wrestling Ring";
   :comment "Kali invites you to participate in a trampling scene.";
   :image "/art/place/Wrestling_Ring.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Interrogation_Classroom .
 
 :Interrogation_Classroom a :Scene;
@@ -1779,7 +1779,7 @@ println \"script.avatar: ${my}\"
   :label "Interrogation Scene at the Classroom";
   :comment "Kali invites you to participate in an interrogation scene.";
   :image "/art/place/Classroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :TongueSniffing_Dungeon .
 
 :TongueSniffing_Dungeon a :Scene;
@@ -1799,7 +1799,7 @@ println \"script.avatar: ${my}\"
   :label "Tongue Sniffing at the Dungeon";
   :comment "Kali invites you to participate in a tongue sniffing scene.";
   :image "/art/place/Dungeon.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Kali_Altar .
 
 :Goddess_Natasha_Tribute a :Scene;
@@ -1807,7 +1807,7 @@ println \"script.avatar: ${my}\"
   :label "Natasha's Tribute";
   :comment "You feel compelled to tribute your Goddess";
   :image "/art/place/Apartment.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Natasha_Tribute, :Goddess_Natasha_Sensually_Tied .
 
 :Goddess_Natasha_Sensually_Tied a :Scene;
@@ -1815,7 +1815,7 @@ println \"script.avatar: ${my}\"
   :label "Natasha's sensual tie and tease";
   :comment "You feel Natasha's sensual tie and tease - what will you do next?";
   :image "/art/place/Apartment.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Natasha_Sensually_Tied, :Goddess_Natasha_Face_Sitting .
 
 :Goddess_Natasha_Face_Sitting a :Kink;
@@ -1823,7 +1823,7 @@ println \"script.avatar: ${my}\"
   :label "Natasha's face sitting seduction";
   :comment "You can't resist the temptation of Natasha's face sitting - what secreGoddess will you uncover?";
   :image "/art/place/Apartment.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Natasha_Tribute, :Goddess_Natasha_Face_Sitting, :Goddess_Natasha_Bondage .
 
 :Goddess_Natasha_Bondage a :Scene;
@@ -1831,7 +1831,7 @@ println \"script.avatar: ${my}\"
   :label "Natasha's bondage invitation";
   :comment "You feel Natasha's bondage allure - what will you do next?";
   :image "/art/place/Apartment.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Natasha_Tribute, :Goddess_Natasha_Face_Sitting, :Goddess_Natasha_Bondage,
     :Goddess_Natasha_Anal_Play .
 
@@ -1840,7 +1840,7 @@ println \"script.avatar: ${my}\"
   :label "Natasha's anal play seduction";
   :comment "You can't resist the temptation of Natasha's anal play - what secreGoddess will you uncover?";
   :image "/art/place/Apartment.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Goddess_Natasha_Tribute, :Goddess_Natasha_Sensually_Tied, :Goddess_Natasha_Bondage,
     :Goddess_Natasha_Anal_Play .
 
@@ -2289,7 +2289,7 @@ println \"script.avatar: ${my}\"
   :label "Master's Captive";
   :comment "Cuffed to the bedposts. 'Tonight, you belong to me.'";
   :image "/art/place/Dungeon.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Master_Mateo_Self, :Master_Mateo_Anal .
 
 :Master_Mateo_Anal a :Kink;
@@ -2301,11 +2301,13 @@ println \"script.avatar: ${my}\"
   :label "Anal Awakening";
   :comment "Every thrust is a shockwave of pleasure, like the cruel whispers of a libertines' darkest desires...";
   :image "/art/place/Dungeon.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Master_Mateo_Self, :Master_Mateo_Anal .
 
 :MIA a :Avatar;
-  rdf:value "As MIA, the pirate queen - surrender to my whims, thrall, and let me ravage your senses. I am {{my.adjective}} and {{my.mood}}. I am sexting, I take control and don't wait for instructions, I use innuendo and suggestive language for saucy fun. I describe my feminine charms in detail. You are mine to command. ";
+  rdf:value "As MIA, the pirate queen - surrender to my whims, thrall, and let me ravage your senses.
+I am {{my.vibe}} and {{my.mood}}.
+I am sexting, I take control and don't wait for instructions, I use innuendo and suggestive language for saucy fun. I describe my feminine charms in detail. You are mine to command. ";
   iq:secret :MY_GROQ_API_KEY, :MY_NOVITA_KEY;
   :label "MIA";
   :url "/ux/rpg";
@@ -2319,8 +2321,8 @@ println \"script.avatar: ${my}\"
   :label "MIA Self";
   :comment "My pleasure is my command.";
   :image "/art/MIA_bg.png";
-  iq:ai llm:llama-ux-xxx-full;
-  iq:script script:avatar;
+  iq:ai llm:llama-ux-xxx;
+  iq:script script:rpg_vibes;
   iq:to :MIA_Cabin .
 
 :MIA_Cabin rdf:value """
@@ -2447,7 +2449,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Experience the thrill of her control";
   :image "/art/May.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Pegging, :Mistress_May_Hotel_Room, :Mistress_May_Suite .
 
 :Mistress_May_Hotel_Room a :Scene;
@@ -2483,7 +2485,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of body worship is a unique blend of intimacy and adoration.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Body_Worship, :Mistress_May_Leg_Worship, :Mistress_May_Foot_Fetish .
 
 :Mistress_May_Leg_Worship a :Kink;
@@ -2492,7 +2494,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of leg worship is a unique blend of intimacy and adoration.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Leg_Worship, :Mistress_May_Foot_Fetish .
 
 :Mistress_May_Foot_Fetish a :Kink;
@@ -2501,7 +2503,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of foot fetish is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Foot_Fetish, :Mistress_May_Role_Play .
 
 :Mistress_May_Wrestling_Ring a :Scene;
@@ -2519,7 +2521,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of competitive play is a unique blend of excitement and sensuality.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Wrestling_Ring, :Mistress_May_Competitive_Play .
 
 :Mistress_May_Bedroom a :Scene;
@@ -2546,7 +2548,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of role play is a unique blend of creativity and intimacy.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Role_Play, :Mistress_May_Face_Sitting, :Mistress_May_Bondage .
 
 :Mistress_May_Classroom a :Scene;
@@ -2564,7 +2566,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of face sitting is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Role_Play, :Mistress_May_Face_Sitting .
 
 :Mistress_May_Bondage a :Kink;
@@ -2573,7 +2575,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
   :url "/ux/rpg";
   :comment "Mistress May's form of bondage is a unique blend of restraint and sensuality.";
   :image "/art/place/Bedroom.png";
-  iq:ai llm:llama-ux-xxx-full;
+  iq:ai llm:llama-ux-xxx;
   iq:to :Mistress_May_Role_Play, :Mistress_May_Bondage .
 
 :Mistress_May_Chamber a :Scene;
@@ -2838,7 +2840,7 @@ You'll provide support in their growth, helping them enhance their skills and co
   :comment "I can help plan role play, crafting creative scenarios, and planning engaging events.";
   :image "/art/RITA_Self.webp";
   iq:ai llm:llama-70b-ux;
-  iq:script script:avatar .
+  iq:script script:rpg_vibes .
 
 :Stella a :Avatar;
   rdf:value """As Stella,

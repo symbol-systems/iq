@@ -3,6 +3,8 @@ package systems.symbol.tools;
 import com.amazonaws.util.Base64;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import okhttp3.FormBody.Builder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.secrets.I_Secrets;
@@ -10,6 +12,7 @@ import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
@@ -196,6 +199,16 @@ public class RestAPI implements I_API<Response> {
             formBody.add(entry.getKey(), String.valueOf(entry.getValue()));
         }
         return formBody;
+    }
+
+    public Response multipart(InputStream in, String filename, Map<String, Object> queryParams)
+            throws IOException {
+        okhttp3.MultipartBody.Builder multipart = MultipartRequestBuilder.multipart(in, filename, queryParams);
+        Request.Builder builder = createRequestBuilder().url(getURL());
+        MultipartBody multipartBody = multipart.build();
+
+        Request req = builder.post(multipartBody).build();
+        return executeRequest(req);
     }
 
     /**

@@ -109,7 +109,7 @@ public class AgentBuilder implements I_Self, I_Facade {
     }
 
     public AgentBuilder realm(I_Realm realm) {
-        bindings.put("realm", realm);
+        bindings.put("realm", realm.getSelf().stringValue());
         // bindings.put("model", realm.getModel());
         return this;
     }
