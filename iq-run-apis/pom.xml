@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.90.0</version>
+   <version>0.90.2</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-run-apis</artifactId>
@@ -12,7 +12,7 @@
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-   <version>0.90.0</version>
+   <version>0.90.2</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -21,7 +21,6 @@
 <maven.compiler.target>21</maven.compiler.target>
 <maven.compiler.release>21</maven.compiler.release>
 
-<!--<quarkus.version>3.11.1</quarkus.version>-->
 <quarkus.container-image.builder>docker</quarkus.container-image.builder>
 
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -50,19 +49,6 @@
    <version>${project.version}</version>
 <scope>compile</scope>
 </dependency>
-<!-- <dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-lake</artifactId>
-   <version>${project.version}</version>
-<scope>compile</scope>
-</dependency> -->
-
-<dependency>
-<groupId>org.glassfish.jersey.media</groupId>
-<artifactId>jersey-media-multipart</artifactId>
-<version>3.1.7</version>
-</dependency>
-
 <dependency>
 <groupId>jakarta.ws.rs</groupId>
 <artifactId>all</artifactId>

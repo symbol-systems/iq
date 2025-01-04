@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.90.0</version>
+ <version>0.90.2</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -75,11 +75,7 @@
 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 <cloudevents.version>2.4.0</cloudevents.version>
-<!--<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>-->
-<!--<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>-->
-<!--<quarkus.platform.version>2.16.9.Final</quarkus.platform.version>-->
-<!--<quarkus.group-id>io.quarkus</quarkus.group-id>-->
-<quarkus.version>3.15.0</quarkus.version>
+<quarkus.version>3.17.5</quarkus.version>
 <jakarta.activation.version>2.1.1</jakarta.activation.version>
 <spring.version>6.0.11</spring.version>
 <springboot.version>3.1.2</springboot.version>

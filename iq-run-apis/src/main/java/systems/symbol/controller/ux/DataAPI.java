@@ -25,6 +25,8 @@ import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyString;
+import systems.symbol.string.PrettyStrings;
 import systems.symbol.string.Validate;
 
 import javax.script.Bindings;
@@ -91,8 +93,8 @@ IRI self = Values.iri(jwt.getSubject());
 IQScriptCatalog catalog = new IQScriptCatalog(self, connection);
 Bindings params = Facades.bind(uriInfo.getQueryParameters(true));
 Bindings my = Facades.rebind(self, params, jwt);
-log.info("ux.data.bind: {}", my.keySet());
-Facades.dump(my, System.out);
+log.info("ux.data.bind: {}", PrettyStrings.pretty(my));
+// Facades.dump(my, System.out);
 
 String sparql = RDFPrefixer.toSPARQL(connection, catalog.getSPARQL(query, my));
 if (Validate.isMissing(sparql)) {

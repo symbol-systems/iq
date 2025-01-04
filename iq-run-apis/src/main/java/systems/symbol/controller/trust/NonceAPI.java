@@ -58,10 +58,11 @@ if (realm == null)
 return new OopsResponse("ux.trust.nonce.realm", Response.Status.NOT_FOUND).build();
 Bindings bindings = new SimpleBindings();
 String nonce = SecretsHelper.totp(realmName, 10, "HmacSHA1", 1);
-String nonced = IdentityHelper.password("", nonce);
+String nonced = IdentityHelper.password(realm.getSelf().stringValue(), nonce);
 
-bindings.put("nonce", nonce);
 bindings.put("nonced", nonced);
+bindings.put("nonce", nonce);
+log.info("trust.nonced: {} -> {}", realm.getSelf().stringValue(), nonced);
 SimpleResponse response = new SimpleResponse(bindings);
 return response.build();
 }

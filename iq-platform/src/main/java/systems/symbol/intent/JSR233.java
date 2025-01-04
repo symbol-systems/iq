@@ -14,6 +14,7 @@ import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.util.SupportedScripts;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyStrings;
 
 import javax.script.*;
 
@@ -90,8 +91,7 @@ return done;
 try {
 Object result = executeScript(script, actor, state, my);
 done.add(actor);
-log.info("script.done: {}", state, result, done.size());
-// Facades.dump(my, System.out);
+log.info("script.done: {} -> {} --> {}", state, result, PrettyStrings.pretty(my));
 } catch (ScriptException e) {
 Throwable cause = e.getCause().getCause();
 String error = cause == null ? e.getMessage() : cause.getMessage();
