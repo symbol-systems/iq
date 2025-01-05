@@ -7,6 +7,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
+import java.sql.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
@@ -45,6 +51,9 @@ public class GeoAPI extends RealmAPI {
                 reply.putIfAbsent("client", geo.location());
             }
             reply.putIfAbsent("server", geo.location());
+            ZonedDateTime now = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("GMT"));
+            reply.putIfAbsent("now", System.currentTimeMillis());
+            reply.putIfAbsent("gmt", now.format(DateTimeFormatter.RFC_1123_DATE_TIME));
             log.info("api.geo.ipv4: {}", reply);
             return new SimpleResponse(reply).build();
         } catch (Exception e) {
