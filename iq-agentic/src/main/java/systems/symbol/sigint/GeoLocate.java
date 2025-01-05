@@ -3,8 +3,11 @@ package systems.symbol.sigint;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.City;
 import com.maxmind.geoip2.record.Country;
 import com.maxmind.geoip2.record.Location;
+import com.maxmind.geoip2.record.Subdivision;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
@@ -18,6 +21,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URI;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GeoLocate {
     private static final String GEO_PREFIX = "geo:";
@@ -71,10 +78,17 @@ public class GeoLocate {
     public String location(String ip) throws IOException, GeoIp2Exception {
         InetAddress ipAddress = InetAddress.getByName(ip);
         CityResponse response = reader.city(ipAddress);
-        return String.format("%s, %s, %s",
-                response.getCity().getName(),
-                response.getMostSpecificSubdivision().getName(),
-                response.getCountry().getName());
+
+        String city = response.getCity() != null ? response.getCity().getName() : null;
+        String subdivision = response.getMostSpecificSubdivision() != null
+                ? response.getMostSpecificSubdivision().getName()
+                : null;
+        String country = response.getCountry() != null ? response.getCountry().getName() : null;
+
+        return Stream.of(city, subdivision, country)
+                .filter(Objects::nonNull) // Remove null values
+                .filter(s -> !s.isEmpty()) // Remove empty strings
+                .collect(Collectors.joining(", "));
     }
 
     public Model locate() throws IOException, GeoIp2Exception {
