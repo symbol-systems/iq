@@ -27,50 +27,50 @@
 :Greetings a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Greetings";
-    skos:definition "Introducing user and agent." ;
+    skos:definition "Introducing user and agent.";
 .
 :Assistance a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Assistance";
-    skos:definition "Providing generic help or support to the user." ;
+    skos:definition "Providing generic help or support to the user.";
 .
 :DataRetrieval a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Data Retrieval";
-    skos:definition "Ability to retrieve data sets from various sources." ;
+    skos:definition "Ability to retrieve data sets from various sources.";
 .
 :KnowledgeBase a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Information Query";
-    skos:definition "Seeking information or answers to questions from knowledge base." ;
+    skos:definition "Seeking information or answers to questions from knowledge base.";
 .
 :NaturalLanguage a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Natural Language";
-    skos:definition "Ability to understand and generate human language." ;
+    skos:definition "Ability to understand and generate human language.";
 .
 :CreativeServices a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Creative Services";
-    skos:definition "Ability to generate imagery and visual creative." ;
+    skos:definition "Ability to generate imagery and visual creative.";
 .
 :TaskAutomation a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Task Automation";
-    skos:definition "Capability to automate repetitive tasks." ;
+    skos:definition "Capability to automate repetitive tasks.";
 .
 :StripeFinance a skos:Concept;
     skos:related :AI_Capability;
     skos:prefLabel "Stripe Finances";
-    skos:definition "Information about payments and invoices from Stripe API." ;
+    skos:definition "Information about payments and invoices from Stripe API.";
 .
 # Messaging
 
 :Human a foaf:Person;
-    foaf:name "User" ;
+    foaf:name "User";
 .
 :Agent a schema:ComputerProgram;
-    schema:name "AI Agent" ;
+    schema:name "AI Agent";
 .
 :Conversation_1 a skos:Concept;
     skos:related :Conversation;

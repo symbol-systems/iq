@@ -22,22 +22,26 @@ import javax.script.Bindings;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/ux/vox")
 @Tag(name = "api.ux.vox.name", description = "api.ux.vox.description")
 public class VoxAPI extends GuardedAPI {
 
-    String url = "https://api.groq.com/openai/v1/audio/transcriptions";
-
+    @ConfigProperty(name = "iq.realm.vox.transcribe.api", defaultValue = "https://api.groq.com/openai/v1/audio/transcriptions")
+    String url;
+    @ConfigProperty(name = "iq.realm.vox.model", defaultValue = "distil-whisper-large-v3-en")
+    String model;
+    @ConfigProperty(name = "iq.realm.vox.temperature", defaultValue = "0.1")
+    String temperature;
+    @ConfigProperty(name = "iq.realm.vox.prompt", defaultValue = "transcribe and fix typos")
+    String prompt;
     @ConfigProperty(name = "iq.realm.vox.maxLength", defaultValue = "10240000") // 10 MB default
     int maxLength;
 
     @GET
     @Operation(summary = "api.ux.vox.get.summary", description = "api.ux.vox.get.description")
     @Path("{realm}")
-    public Response getSpeech(
+    public Response ignored(
             @PathParam("realm") String _realm,
             @Context UriInfo uriInfo,
             @HeaderParam("Authorization") String auth) throws IOException, SecretsException {
@@ -76,9 +80,9 @@ public class VoxAPI extends GuardedAPI {
         RestAPI api = new RestAPI(url);
         api.header("Authorization", "Bearer " + secret);
         Bindings config = new SimpleBindings();
-        config.put("model", "distil-whisper-large-v3-en");
-        config.put("temperature", "0.1");
-        config.put("prompt", "transcribe and fix typos");
+        config.put("model", model);
+        config.put("temperature", temperature);
+        config.put("prompt", prompt);
         config.put("response_format", "json");
         log.info("ux.vox.transcribe: {} --> {}", _realm, fileInputStream.available());
         okhttp3.Response transcribed = api.multipart(fileInputStream, "audio.webm", config);

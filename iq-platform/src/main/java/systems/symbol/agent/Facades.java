@@ -30,7 +30,8 @@ public class Facades {
     protected final static Logger log = LoggerFactory.getLogger(Facades.class);
 
     public static final String SELF = "self";
-    public static final String STATE = "state";
+    public static final String FOCUS = "focus";
+    public static final String INTENTS = "intents";
     public static final String RESULTS = "results";
     public static final String NAME = "name";
     public static final String TIME = "time";
@@ -58,8 +59,6 @@ public class Facades {
         Bindings bindings = rebind(self, my);
         if (!my.containsKey(SELF))
             my.put(SELF, IdentityHelper.uuid(self + "#"));
-        if (state != null)
-            my.put(STATE, state.stringValue());
         return bindings;
     }
 

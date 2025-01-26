@@ -14,13 +14,11 @@ import systems.symbol.llm.*;
 import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class GenericGPT implements I_LLM<String> {
-    // private static final String MD_BLOCKS_REGEX =
-    // "```(?:([a-zA-Z0-9_]+))?\\n([\\s\\S]*?)\\n```";
-    // private static final String JSON_BLOCKS_REGEX = "\\{[^{}]*\\}";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
     ObjectMapper om = new ObjectMapper();
@@ -29,6 +27,7 @@ public class GenericGPT implements I_LLM<String> {
     private final List<GPTResponse> history;
     private int retryCount = 2;
     private int backOffTime = 2000;
+    private List<I_ToolSpec> tools = new ArrayList<>();
 
     public GenericGPT(String token, I_LLMConfig config) {
         this.token = token;
@@ -86,7 +85,7 @@ public class GenericGPT implements I_LLM<String> {
                 GPTResponse completion = om.readValue(body, GPTResponse.class);
                 int tokens = completion.usage == null ? -1 : completion.usage.total_tokens;
                 log.info("llm.gpt.reply: [ #{} ] {} x {} tokens", attempt, response.code(), tokens);
-
+                log.info(body, completion);
                 if (response.code() == 200 && completion.choices != null && !completion.choices.isEmpty()) {
                     for (int c = 0; c < completion.choices.size(); c++) {
                         GPTResponse.Choice choice = completion.choices.get(c);
@@ -148,6 +147,7 @@ public class GenericGPT implements I_LLM<String> {
         json.put("temperature", config.getTemperature());
         json.put("frequency_penalty", config.getFrequencyPenalty());
         json.put("seed", config.getSeed());
+        // json.put("tools", tools);
         List<Map<String, Object>> messages = new ArrayList<>();
         for (I_LLMessage<String> msg : msgs) {
             if (msg.getType() == I_LLMessage.MessageType.text) {
@@ -163,6 +163,10 @@ public class GenericGPT implements I_LLM<String> {
         return json;
     }
 
+    public void addTool(I_ToolSpec tool) {
+        this.tools.add(tool);
+    }
+
     private Map<String, Object> toMap(I_LLMessage<String> chat) {
         Map<String, Object> message = RestAPI.newParams();
         message.put("role", chat.getRole());
@@ -176,5 +180,10 @@ public class GenericGPT implements I_LLM<String> {
 
     public String toString() {
         return getConfig().getName();
+    }
+
+    @Override
+    public Collection<I_ToolSpec> tools() {
+        return tools;
     }
 }

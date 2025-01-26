@@ -11,22 +11,22 @@
 
 
 [] a rep:Repository ;
-   rep:repositoryID "{%id|memory-spin-rdfs-lucene%}" ;
-   rdfs:label "{%title|Memory store with RDFS, SPIN and Lucene Support%}" ;
+   rep:repositoryID "{%id|memory-spin-rdfs-lucene%}";
+   rdfs:label "{%title|Memory store with RDFS, SPIN and Lucene Support%}";
    rep:repositoryImpl [
-	  rep:repositoryType "openrdf:SailRepository" ;
+	  rep:repositoryType "openrdf:SailRepository";
 	  sr:sailImpl [
 		  sail:sailType "openrdf:LuceneSpinSail";
-		  sail-luc:indexDir "index/" ;
+		  sail-luc:indexDir "index/";
 		  sail:delegate [
-			  sail:sailType "openrdf:SpinSail" ;
+			  sail:sailType "openrdf:SpinSail";
 			  spin:axiomClosureNeeded false ;
 			  sail:delegate [
-				     sail:sailType "rdf4j:SchemaCachingRDFSInferencer" ;
+				     sail:sailType "rdf4j:SchemaCachingRDFSInferencer";
 				     sail:delegate [
-					     sail:sailType "openrdf:DedupingInferencer" ;
+					     sail:sailType "openrdf:DedupingInferencer";
 					     sail:delegate [
-						    sail:sailType "openrdf:MemoryStore" ;
+						    sail:sailType "openrdf:MemoryStore";
 						    sail:iterationCacheSyncThreshold "{%Query Iteration Cache sync threshold|10000%}";
 						    ms:persist {%Persist|true|false%} ;
 						    ms:syncDelay {%Sync delay|60%};

@@ -11,12 +11,12 @@
 
 
 [] a rep:Repository ;
-   rep:repositoryID "{%id|default%}" ;
-   rdfs:label "{%title|Native RDF inferencing%}" ;
+   rep:repositoryID "{%id|default%}";
+   rdfs:label "{%title|Native RDF inferencing%}";
    rep:repositoryImpl [
-      rep:repositoryType "openrdf:SailRepository" ;
+      rep:repositoryType "openrdf:SailRepository";
       sr:sailImpl [
-         sail:sailType "openrdf:NativeStore" ;
+         sail:sailType "openrdf:NativeStore";
 	      sail:iterationCacheSyncThreshold "{%Query Iteration Cache size|10000%}";
          ns:tripleIndexes "{%Triple indexes|spoc,posc%}";
          sb:evaluationStrategyFactory "{%EvaluationStrategyFactory|org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory%}"

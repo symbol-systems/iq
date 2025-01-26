@@ -11,16 +11,16 @@
 
 
 [] a rep:Repository ;
-   rep:repositoryID "{%id|memory-rdfs-dt%}" ;
-   rdfs:label "{%title|Memory store with RDF Schema and direct type inferencing%}" ;
+   rep:repositoryID "{%id|memory-rdfs-dt%}";
+   rdfs:label "{%title|Memory store with RDF Schema and direct type inferencing%}";
    rep:repositoryImpl [
-      rep:repositoryType "openrdf:SailRepository" ;
+      rep:repositoryType "openrdf:SailRepository";
       sr:sailImpl [
-         sail:sailType "openrdf:DirectTypeHierarchyInferencer" ;
+         sail:sailType "openrdf:DirectTypeHierarchyInferencer";
          sail:delegate [
-            sail:sailType "rdf4j:SchemaCachingRDFSInferencer" ;
+            sail:sailType "rdf4j:SchemaCachingRDFSInferencer";
             sail:delegate [
-               sail:sailType "openrdf:MemoryStore" ;
+               sail:sailType "openrdf:MemoryStore";
 	       sail:iterationCacheSyncThreshold "{%Query Iteration Cache size|10000%}";
                ms:persist {%Persist|true|false%} ;
                ms:syncDelay {%Sync delay|60%};

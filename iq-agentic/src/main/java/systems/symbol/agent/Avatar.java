@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.tools.APIException;
@@ -102,12 +103,23 @@ public class Avatar implements I_Selfie {
         return done;
     }
 
+    public void tools(I_LLM<String> llm) {
+        for (Resource state : this.agent.getStateMachine().getTransitions()) {
+            String comment = value(state, RDFS.COMMENT);
+            FuncTool funct = new FuncTool(state.stringValue(), comment);
+            funct.requires("string", "prompt", "think, plan, prompt");
+            llm.tools().add(funct);
+        }
+    }
+
     // Builds then binds the Avatar prompt from agent & state, calls LLM and updates
     // the LLM
     protected boolean prompts(IRI actor, Resource assistant, I_LLM<String> llm, Bindings bindings)
             throws Exception, APIException {
+        tools(llm);
         Resource state = agent.getStateMachine().getState();
         bindings.put(Facades.AI, actor.getLocalName());
+
         Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
         if (wrapper.isEmpty()) {
             log.warn("avatar.system.{}: {} @ {} == {}", assistant, actor, state, wrapper);
@@ -127,7 +139,7 @@ public class Avatar implements I_Selfie {
         bindings.put("prompt", prompt.bind(prompt$));
         // log.info("avatar.state: {}", prompt$);
         I_Assist<String> prompted = chain.complete(chat);
-        // log.debug("avatar.prompted: {} -> {}", bindings.keySet(), prompted);
+        log.debug("avatar.completed: {} -> {}", bindings.keySet(), prompted);
         I_Assist<String> answer = llm.complete(prompted);
         // log.info("avatar.answer: {}", answer);
         answered(agent, chat, answer);
@@ -145,6 +157,13 @@ public class Avatar implements I_Selfie {
         if (state == null)
             return null;
         Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
+        return groundS.orElse(Values.literal("")).stringValue();
+    }
+
+    public String value(Resource state, IRI predicate) {
+        if (state == null)
+            return null;
+        Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, predicate);
         return groundS.orElse(Values.literal("")).stringValue();
     }
 

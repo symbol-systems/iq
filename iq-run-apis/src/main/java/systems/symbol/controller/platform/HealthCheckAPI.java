@@ -32,7 +32,7 @@ public class HealthCheckAPI extends GuardedAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response check(@Context UriInfo info, @Context HttpHeaders headers) {
         // log.info("health.ok");
-        return new HealthCheck(true, WebURLs.getBaseURL(info, headers)).build();
+        return new HealthCheck(true, WebURLs.getRequestURL(info, headers)).build();
     }
 
     /**
@@ -60,6 +60,6 @@ public class HealthCheckAPI extends GuardedAPI {
         Repository repository = realm.getRepository();
         boolean healthy = (repository != null && repository.isInitialized());
         log.info("healthy.realm: {} == {}", _realm, healthy);
-        return new HealthCheck(healthy, WebURLs.getBaseURL(info, headers)).build();
+        return new HealthCheck(healthy, WebURLs.getRequestURL(info, headers)).build();
     }
 }

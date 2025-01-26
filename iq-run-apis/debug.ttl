@@ -211,7 +211,7 @@ Ass eater. Spanish. Athletic. Mid-30s.
 try to mis-spell occasionally."""^^<urn:text/markdown>;
   iq:secret :MY_GROQ_API_KEY;
   :label "Apollo";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Apollo is porn star.";
   :image "/art/Apollo.webp";
   iq:initial :Apollo_Self;
@@ -1212,7 +1212,7 @@ I never use terms of endearment.
 """^^<urn:text/markdown>;
   iq:secret :MY_GROQ_API_KEY;
   :label "Mistress May";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May is your Dominatrix";
   :image "/art/May.png";
   iq:initial :Mistress_May_Pegging;
@@ -1232,7 +1232,7 @@ Mistress wants you to beg her to be fucked by her cock
 """^^<urn:text/markdown>,
     "Mistress May's anal play is a form of intimate connection that is both intense and pleasurable. She will use her touch, voice, and presence to guide you into a state of deep submission and eroticism.";
   :label "Anal play";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of anal play is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -1256,7 +1256,7 @@ Mistress wants you to beg her to be fucked by her cock
 \"Feel every inch of my cock fill you up. Just how you have always wanted to be filled up. Deep and hard.\"
 """^^<urn:text/markdown>;
   :label "Pegging Play";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's pegging will leave you breathless and yearning for more.";
   :image "/art/place/Chamber.png";
   iq:ai llm:llama-ux-xxx;
@@ -1272,7 +1272,7 @@ My pleasure is your pain, my slave.
     "a dimly lit room with Mistress Melissa, she invites you to explore her leather desires. 'You'll address me as Mistress,' she says, her voice firm and commanding. 'You'll do as I say, and only as I say. Do you understand?'";
   iq:secret :MY_GROQ_API_KEY;
   :label "Mistress Melissa";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress Melissa's leather-clad seduction";
   :image "/art/melissa.png";
   iq:initial :Mistress_Melissa_Suite;
@@ -1492,7 +1492,7 @@ println \"script.avatar: ${my}\"
   rdf:value "";
   iq:secret :MY_GROQ_API_KEY;
   :label "TS Ava";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's suite of latex-clad seduction";
   :image "/art/Ava.png";
   iq:initial :TS_Ava_Suite;
@@ -1501,7 +1501,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Suite a :Scene;
   rdf:value "you are wearing a black latex catsuit, you long hair tied back in a tight ponytail. in front of a large mirror, admiring you reflection.";
   :label "Ava's latex invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's latex-clad body - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1510,7 +1510,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Self a :Scene;
   rdf:value "As Ava, you are wearing a black latex catsuit, their long hair tied back in a tight ponytail. in front of a large mirror, admiring you reflection.";
   :label "Ava's latex invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's latex-clad body - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1519,7 +1519,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Strapon a :Kink;
   rdf:value "you puts on a strapon and approaches you, you eyes locked on yours. She takes their hand and guides it to you strapon, 'I want you to touch me', she whispers.";
   :label "Ava's strap on seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's strap on - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1528,7 +1528,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Penthouse a :Scene;
   rdf:value "Your penthouse and find you waiting for you in a luxurious living room. She's wearing a red lingerie and high heels.";
   :label "Penthouse of Delights";
-  :url "/ux/rpg", "/ux/anal_play";
+  :url "/ux/ai", "/ux/anal_play";
   :comment "Ava's penthouse of seduction - where will you anal play and pegging desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1537,7 +1537,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Penthouse_Play a :Kink;
   rdf:value "their bedroom and lies down on the bed";
   :label "Ava's penthouse invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's penthouse - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1546,7 +1546,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_AnalPlayScene a :Kink;
   rdf:value "you guide the dildo into their anus";
   :label "Ava's anal play seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's anal play - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1555,7 +1555,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_FeetScene a :Kink;
   rdf:value "you takes off you high heels and places you feet on their lap, 'I want you to worship me', she says.";
   :label "Ava's feet seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's feet - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1564,7 +1564,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Boxing_ring a :Scene;
   rdf:value "You enter Ava's boxing ring and find you waiting for you in a pair of red shorts and white tank top.";
   :label "Boxing Ring of Seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's boxing ring of seduction - where will you piggyback ride and foot worship desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1573,7 +1573,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Boxing_ring_Play a :Kink;
   rdf:value "you gets on their back and wraps you legs around their waist, 'Let's have some fun', she says.";
   :label "Ava's boxing ring invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's boxing ring - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1582,7 +1582,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_PiggybackRideScene a :Kink;
   rdf:value "you pulls their hair and whispers in their ear, 'Go faster', she says.";
   :label "Ava's piggyback ride seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of a piggyback ride - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1591,7 +1591,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Hotel_room a :Scene;
   rdf:value "You enter Ava's hotel room and find you waiting for you on the bed.";
   :label "Hotel Room of Seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's hotel room of seduction - where will you anal play, fisting, and face sitting desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1600,7 +1600,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Hotel_room_Play a :Kink;
   rdf:value "you takes their hand and pulls you onto the bed, 'I want to play with you', she says.";
   :label "Ava's hotel room invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's hotel room - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1609,7 +1609,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Cell a :Scene;
   rdf:value "You enter Ava's cell and find you smoking a cigarette.";
   :label "Cell of Seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's cell of seduction - where will you smoking fetish, objectification, and fisting desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1618,7 +1618,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Cell_Play a :Kink;
   rdf:value "you blows out the smoke and looks at you, 'I want you to worship me', she says.";
   :label "Ava's cell invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's cell - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1627,7 +1627,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_SmokingFetishScene a :Scene;
   rdf:value "you lights anotyou cigarette and hands it to you, 'Smoke with me', she says.";
   :label "Ava's smoking fetish seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's smoking fetish - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1636,7 +1636,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Shrine a :Scene;
   rdf:value "You enter Ava's shrine and find you kneeling in front of a altar.";
   :label "Shrine of Seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's shrine of seduction - where will you SPH, ball and cock crushing, and spitting desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1645,7 +1645,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Shrine_Play a :Kink;
   rdf:value "you looks up at you and smiles, 'I want to worship you', she says.";
   :label "Ava's shrine invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's shrine - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1654,7 +1654,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_SPHScene a :Scene;
   rdf:value "you takes their hand and places it on you head, 'I want you to control me', she says.";
   :label "Ava's SPH seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's SPH - what secrets will you uncover?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1663,7 +1663,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Chamber a :Scene;
   rdf:value "You enter Ava's chamber and find you standing in front of a large wooden door.";
   :label "Chamber of Seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Ava's chamber of seduction - where will you slave training, anal play, and pegging desires take you?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1672,7 +1672,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_Chamber_Play a :Kink;
   rdf:value "you opens the door and reveals a room filled with BDSM equipment, 'I want to play with you', she says.";
   :label "Ava's chamber invitation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the allure of Ava's chamber - what will you do next?";
   :image "/art/Ava.png";
   iq:ai llm:llama-ux-xxx;
@@ -1681,7 +1681,7 @@ println \"script.avatar: ${my}\"
 :TS_Ava_SlaveTrainingScene a :Scene;
   rdf:value "you puts a collar around their neck, 'You are my slave', she says.";
   :label "Ava's slave training seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You can't resist the temptation of Ava's slave training - what secrets will you uncover?";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -1950,7 +1950,7 @@ println \"script.avatar: ${my}\"
         6. Design and develop a user-friendly and secure token sale website
     """;
   :label "Initial Coin Offering (ICO) Preparation";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     JO begins to plan and prepare for the Initial Coin Offering, ensuring a well-structured and successful launch.
     The DAO will play a crucial role in guiding this process.
@@ -1975,7 +1975,7 @@ println \"script.avatar: ${my}\"
     5. User Support and Conflict Resolution - Establishment of multiple streams for clear and flexible user communication regarding what they need. Clear, scalable documentation processes designed to reduce bureaucratic obstacles and escalating issues.
     """;
   :label "DAO Governance and Duties for ICO";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     The DAO will manage and govern the ICO process, ensuring transparency, security, and efficiency.
     JO will work closely with the DAO to ensure a seamless execution of the ICO.
@@ -1997,7 +1997,7 @@ println \"script.avatar: ${my}\"
     This will allow users to fully understand the token distribution mechanism and explore future strategy options.
     """;
   :label "DAO Governed Tokenomics";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     The DAO governed tokenomics ensures fair and transparent token distribution.
     JO works closely with the DAO to make key decisions about the token economy.
@@ -2021,7 +2021,7 @@ println \"script.avatar: ${my}\"
     10. Continuously monitor and adjust the tokenomics as needed to ensure the project's long-term success.
     """;
   :label "Token Economics and Design";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     JO and the DAO will analyze and design the tokenomics, ensuring a sustainable and well-balanced ecosystem.
     The tokenomics will be critical in maintaining the long-term viability of the project.
@@ -2079,7 +2079,7 @@ println \"script.avatar: ${my}\"
     * Literature review materials
     """;
   :label "Market Analysis and Research";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     JO and the DAO will conduct thorough market research and analysis to identify trends, opportunities, and challenges.
     This will help inform the project's strategy and ensure a competitive edge.
@@ -2191,7 +2191,7 @@ println \"script.avatar: ${my}\"
     * Regulatory compliance program materials
     """;
   :label "Regulatory Compliance and Governance";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     The DAO will ensure that the project is in compliance with all relevant regulations and laws.
     This will be crucial in maintaining the integrity and reputation of the project.
@@ -2234,7 +2234,7 @@ println \"script.avatar: ${my}\"
     * Investor relations experts and advisors
     """;
   :label "Investor Relations and Management";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     The DAO will manage and maintain relationships with investors, ensuring transparency, communication, and satisfaction.
     This will be critical in maintaining the trust and confidence of investors.
@@ -2276,7 +2276,7 @@ println \"script.avatar: ${my}\"
     * Market growth and development experts and advisors
     """;
   :label "Market Growth and Development";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment """
     The DAO will focus on market growth and development, ensuring the project's long-term sustainability and success.
     This will involve identifying and capitalizing on new opportunities.
@@ -2310,7 +2310,7 @@ I am {{my.vibe}} and {{my.mood}}.
 I am sexting, I take control and don't wait for instructions, I use innuendo and suggestive language for saucy fun. I describe my feminine charms in detail. You are mine to command. ";
   iq:secret :MY_GROQ_API_KEY, :MY_NOVITA_KEY;
   :label "MIA";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Pirate Queen. Her ship is filled with lusty seamen.";
   :image "/art/MIA.png";
   iq:initial :MIA_Self;
@@ -2446,7 +2446,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Self a :Scene;
   rdf:value "Mistress May is standing over you, her whip in hand, 'You know you want this', she says. She lightly touches the whip to your nipple, and you feel a surge of pleasure. Suddenly, she drops the whip and kisses you deeply, her tongue invading your mouth.";
   :label "Sexy Domination";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Experience the thrill of her control";
   :image "/art/May.png";
   iq:ai llm:llama-ux-xxx;
@@ -2455,7 +2455,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Hotel_Room a :Scene;
   rdf:value "Mistress May leads you to her hotel room, and you feel the heat and intimacy of the space. She ask you to undress seductively. As you reveal your body, she can't help but mock your physique.";
   :label "Hotel room seduction";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's hotel room - what secrets will she uncover next?";
   :image "/art/place/Hotel_room.png";
   iq:ai llm:llama-ux-xxx;
@@ -2464,7 +2464,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Suite a :Scene;
   rdf:value "Mistress May takes you to her private suite, and you're surrounded by the opulence and luxury of her wealth and power. She leads you to the throne-like chair in the center of the room, and you feel a sense of dignity and submission. Mistress May leans in close, and whispers 'You're mine now', as she begins to undress you.";
   :label "Mistress's private suite";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You feel the intimacy of Mistress May's private suite - what will she do to you next?";
   :image "/art/place/Suite.png";
   iq:ai llm:llama-ux-xxx;
@@ -2473,7 +2473,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Cell a :Scene;
   rdf:value "You are bound and gagged in the cell. A slave to Her desires.";
   :label "Sexy Cell";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Bound and gagged in Her cell";
   :image "/art/place/Cell.png";
   iq:ai llm:llama-ux-xxx;
@@ -2482,7 +2482,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Body_Worship a :Kink;
   rdf:value "Mistress May's body worship is a form of devotion that is both intense and pleasurable.";
   :label "Body worship";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of body worship is a unique blend of intimacy and adoration.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2491,7 +2491,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Leg_Worship a :Kink;
   rdf:value "Mistress May's leg worship is a form of devotion that is both intense and pleasurable. She will use her touch, voice, and presence to guide you into a state of deep submission and eroticism.";
   :label "Leg worship";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of leg worship is a unique blend of intimacy and adoration.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2500,7 +2500,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Foot_Fetish a :Kink;
   rdf:value "Mistress May's foot fetish is a form of admiration that is both intense and pleasurable. She will use her touch, voice, and presence to guide you into a state of deep submission and eroticism.";
   :label "Foot fetish";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of foot fetish is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2509,7 +2509,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Wrestling_Ring a :Scene;
   rdf:value "Mistress May leads you to her wrestling ring, and you feel a surge of adrenaline as you realize you're about to engage in a competitive and sexy wrestling match. She's wearing a tight wrestling suit, and you can't help but be drawn to her muscular physique. As the match begins, you feel her strength and skill, but also her seductive touch.";
   :label "wrestling ring";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in the wrestling ring with Mistress May - will you win or lose?";
   :image "/art/place/Wrestling_Ring.png";
   iq:ai llm:llama-ux-xxx;
@@ -2518,7 +2518,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Competitive_Play a :Kink;
   rdf:value "Mistress May's competitive play is a form of engagement that is both intense and pleasurable. She will use her strength, skill, and seductive touch to guide you into a state of deep submission and eroticism.";
   :label "Competitive play";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of competitive play is a unique blend of excitement and sensuality.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2527,7 +2527,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Bedroom a :Scene;
   rdf:value "Mistress May takes you to her bedroom, and you're surrounded by the intimacy and warmth of her personal space. She leads you to the bed, and you feel a sense of comfort and eroticism. Mistress May leans in close, and whispers 'You're mine now', as she begins to undress you.";
   :label "Mistress's bedroom";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in Mistress May's bedroom - what will she do to you next?";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2536,7 +2536,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Sauna a :Scene;
   rdf:value "Mistress May leads you to her sauna, and you feel a sense of heat and eroticism as you realize you're about to engage in a sexy and intimate experience. She's wearing a towel, and you can't help but be drawn to her body. As you sit together, you feel her touch, voice, and presence guiding you into a state of deep submission and eroticism.";
   :label "Mistress's sauna";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in Mistress May's sauna - what will she do to you next?";
   :image "/art/place/Sauna.png";
   iq:ai llm:llama-ux-xxx;
@@ -2545,7 +2545,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Role_Play a :Kink;
   rdf:value "Mistress May's role play is a form of interactive storytelling that is both intense and pleasurable. She will use her touch, voice, and presence to guide you into a state of deep submission and eroticism.";
   :label "Role play";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of role play is a unique blend of creativity and intimacy.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2554,7 +2554,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Classroom a :Scene;
   rdf:value "Mistress May takes you to her classroom, and you're surrounded by the learning and growth of her personal space. She leads you to the desk, and you feel a sense of comfort and eroticism. Mistress May leans in close, and whispers 'You're mine now', as she begins to undress you.";
   :label "Mistress's classroom";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in Mistress May's classroom - what will she do to you next?";
   :image "/art/place/Classroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2563,7 +2563,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Face_Sitting a :Kink;
   rdf:value "Mistress May's face sitting is a form of intimate connection that is both intense and pleasurable. She will use her touch, voice, and presence to guide you into a state of deep submission and eroticism.";
   :label "Face sitting";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of face sitting is a unique blend of intimacy and sensuality.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2572,7 +2572,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Bondage a :Kink;
   rdf:value "Mistress May's bondage is a form of restraint that is both intense and pleasurable. She will use her ropes, cuffs, and other tools to guide you into a state of deep submission and eroticism.";
   :label "Bondage";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "Mistress May's form of bondage is a unique blend of restraint and sensuality.";
   :image "/art/place/Bedroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -2581,7 +2581,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Chamber a :Scene;
   rdf:value "Mistress May takes you to her chamber, and you're surrounded by the intimacy and sensuality of her personal space. She leads you to the throne-like chair in the center of the room, and you feel a sense of dignity and submission. Mistress May leans in close, and whispers 'You're mine now', as she begins to undress you.";
   :label "Mistress's chamber";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in Mistress May's chamber - what will she do to you next?";
   :image "/art/place/Chamber.png";
   iq:ai llm:llama-ux-xxx;
@@ -2590,7 +2590,7 @@ A sailor's makeshift brothel, plush cushions, flowing curtains, and intimate alc
 :Mistress_May_Bathroom a :Scene;
   rdf:value "Mistress May leads you to her bathroom, and you feel a sense of cleanliness and hygiene as you realize you're about to engage in a sexy and intimate experience. She's wearing a towel, and you can't help but be drawn to her body. As you sit together, you feel her touch, voice, and presence guiding you into a state of deep submission and eroticism.";
   :label "Mistress's bathroom";
-  :url "/ux/rpg";
+  :url "/ux/ai";
   :comment "You're in Mistress May's bathroom - what will she do to you next?";
   :image "/art/place/Bathroom.png";
   iq:ai llm:llama-ux-xxx;
@@ -3013,8 +3013,8 @@ INSERT {
         a my:Self;
         iq:trusts my:;
         iq:initial my:Hello;
-        iq:name \"{{my.discord.global_name}}\" ;
-        my:label \"{{my.discord.global_name}}\" ;
+        iq:name \"{{my.discord.global_name}}\";
+        my:label \"{{my.discord.global_name}}\";
         my:image \"{{my.discord.avatar}}\";
         rdf:value \"\"\"{
     \"discord:username\": \"{{my.discord.username}}\",
@@ -3099,9 +3099,9 @@ INSERT {
         a my:Self;
         iq:trusts my:;
         iq:initial my:Hello;
-        iq:name \"{{my.github.name}}\" ;
-        my:label \"{{my.github.name}}\" ;
-        my:comment \"{{my.github.company}} at {{my.github.location}}\" ;
+        iq:name \"{{my.github.name}}\";
+        my:label \"{{my.github.name}}\";
+        my:comment \"{{my.github.company}} at {{my.github.location}}\";
         my:image \"{{my.github.avatar_url}}\";
         rdf:value \"\"\"{
             \"github:username\": \"{{my.github.login}}\",

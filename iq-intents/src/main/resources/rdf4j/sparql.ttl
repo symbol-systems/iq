@@ -7,9 +7,9 @@
 
 [] a rep:Repository ;
    rep:repositoryImpl [
-      rep:repositoryType "openrdf:SPARQLRepository" ;
+      rep:repositoryType "openrdf:SPARQLRepository";
       sparql:query-endpoint <{%SPARQL query endpoint|%}> ;
       sparql:update-endpoint <{%SPARQL update endpoint|%}> ;
    ];
-   rep:repositoryID "{%Local repository ID|endpoint@localhost%}" ;
+   rep:repositoryID "{%Local repository ID|endpoint@localhost%}";
    rdfs:label "{%title|SPARQL endpoint repository @localhost%}" .

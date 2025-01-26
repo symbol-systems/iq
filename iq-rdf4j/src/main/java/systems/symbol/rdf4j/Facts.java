@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Facts {
     static protected DynamicModelFactory dmf = new DynamicModelFactory();
@@ -69,52 +70,22 @@ public class Facts {
         }
     }
 
-    // public static void index(RepositoryConnection connection, IRI self, IRI
-    // query, FactFinder finder) {
-    // I_Contents queries = new IQScriptCatalog(self, connection);
-    // Literal sparql = queries.getContent(query, null);
-    // if (sparql == null)
-    // return;
-    // IndexHelper.index(finder,
-    // connection.prepareTupleQuery(sparql.stringValue()));
-    // }
-
-    // public static void index(I_Finder finder, Model model, IRI self) {
-    // Set<IRI> found = find(model, self, new IRIs(), false, IQ_NS.TRUSTS);
-    // find(model, self, found, false, IQ_NS.TRUSTS);
-    // find(model, self, found, false, IQ_NS.KNOWS);
-    // index(finder, model, found, RDF.VALUE);
-    // }
-
-    // public static void index(I_Finder finder, Model model, IRI self, IRI follow)
-    // {
-    // index(finder, model, self, follow, RDF.VALUE);
-    // }
-
-    // public static void index(I_Finder finder, Model model, IRI self, IRI follow,
-    // IRI value) {
-    // Iterable<IRI> found = find(model, self, new IRIs(), false, follow);
-    // index(finder, model, found, value);
-    // }
-
-    // public static void index(I_Finder finder, Model model, Iterable<IRI> found,
-    // IRI value) {
-    // for (IRI todo : found) {
-    // StringBuilder content = new StringBuilder();
-    // Iterable<Statement> statements = model.getStatements(todo, value, null);
-    // for (Statement st : statements) {
-    // content.append(st.getObject().stringValue());
-    // }
-    // finder.store(todo.stringValue(), content.toString());
-    // }
-    // }
-
     public static String[] toStrings(Collection<Resource> items) {
         if (items == null || items.isEmpty()) {
             return new String[0];
         }
         return items.stream()
-                .map(Resource::toString)
+                .map(Resource::stringValue)
                 .toArray(String[]::new);
     }
+
+    public static String toString(Collection<Resource> items) {
+        if (items == null || items.isEmpty()) {
+            return "";
+        }
+        return items.stream()
+                .map(Resource::stringValue)
+                .collect(Collectors.joining(","));
+    }
+
 }

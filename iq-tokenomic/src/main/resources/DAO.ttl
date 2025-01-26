@@ -4,35 +4,35 @@
 
 dao:Wyoming
     a dao:Jurisdiction ;
-    rdfs:label "Wyoming" ;
+    rdfs:label "Wyoming";
     rdfs:comment "Jurisdiction within the United States, known for favorable LLC laws." .
 
 dao:Delaware
     a dao:Jurisdiction ;
-    rdfs:label "Delaware" ;
+    rdfs:label "Delaware";
     rdfs:comment "Jurisdiction within the United States, known for favorable corporate laws." .
 
 dao:Nevada
     a dao:Jurisdiction ;
-    rdfs:label "Nevada" ;
+    rdfs:label "Nevada";
     rdfs:comment "Jurisdiction within the United States, known for favorable corporate laws." .
 
 dao:UK
     a dao:Jurisdiction ;
-    rdfs:label "United Kingdom" ;
+    rdfs:label "United Kingdom";
     rdfs:comment "Jurisdiction comprising England, Scotland, Wales, and Northern Ireland." .
 
 dao:ChannelIslands
     a dao:Jurisdiction ;
-    rdfs:label "Channel Islands" ;
+    rdfs:label "Channel Islands";
     rdfs:comment "Group of islands in the English Channel, including Jersey and Guernsey." .
 
 dao:UAE
     a dao:Jurisdiction ;
-    rdfs:label "United Arab Emirates" ;
+    rdfs:label "United Arab Emirates";
     rdfs:comment "Sovereign state in the Middle East, comprising seven emirates." .
 
 dao:CaymanIslands
     a dao:Jurisdiction ;
-    rdfs:label "Cayman Islands" ;
+    rdfs:label "Cayman Islands";
     rdfs:comment "British Overseas Territory in the western Caribbean Sea." .

@@ -11,16 +11,16 @@
 
 
 [] a rep:Repository ;
-   rep:repositoryID "{%id|native-rdfs-dt%}" ;
-   rdfs:label "{%title|Native store with RDF Schema and direct type inferencing%}" ;
+   rep:repositoryID "{%id|native-rdfs-dt%}";
+   rdfs:label "{%title|Native store with RDF Schema and direct type inferencing%}";
    rep:repositoryImpl [
-      rep:repositoryType "openrdf:SailRepository" ;
+      rep:repositoryType "openrdf:SailRepository";
       sr:sailImpl [
-         sail:sailType "openrdf:DirectTypeHierarchyInferencer" ;
+         sail:sailType "openrdf:DirectTypeHierarchyInferencer";
          sail:delegate [
-            sail:sailType "rdf4j:SchemaCachingRDFSInferencer" ;
+            sail:sailType "rdf4j:SchemaCachingRDFSInferencer";
             sail:delegate [
-               sail:sailType "openrdf:NativeStore" ;
+               sail:sailType "openrdf:NativeStore";
 	       sail:iterationCacheSyncThreshold "{%Query Iteration Cache size|10000%}";
                ns:tripleIndexes "{%Triple indexes|spoc,posc%}";
                sb:evaluationStrategyFactory "{%EvaluationStrategyFactory|org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory%}"
