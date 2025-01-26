@@ -10,12 +10,12 @@ sh:targetClass ai:DAO ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:AgentShape
@@ -24,12 +24,12 @@ sh:targetClass ai:Agent ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:LegalEntityShape
@@ -38,12 +38,12 @@ sh:targetClass ai:LegalEntity ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:LLCShape
@@ -52,12 +52,12 @@ sh:targetClass ai:LLC ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:JurisdictionShape
@@ -66,12 +66,12 @@ sh:targetClass ai:Jurisdiction ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 # More Shapes for other classes...
@@ -86,7 +86,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Matter) ;
 sh:minCount 1 ;
-sh:message "Must be of type Matter" ;
+sh:message "Must be of type Matter";
 ] .
 
 ai:managesShape
@@ -98,7 +98,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Matter) ;
 sh:minCount 1 ;
-sh:message "Must be of type Matter" ;
+sh:message "Must be of type Matter";
 ] .
 
 ai:requiresVoteShape
@@ -110,7 +110,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Proposal) ;
 sh:minCount 1 ;
-sh:message "Must be of type Proposal" ;
+sh:message "Must be of type Proposal";
 ] .
 
 # Linking Shapes to Classes
@@ -131,12 +131,12 @@ sh:targetClass ai:Proposal ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:VoteShape
@@ -145,12 +145,12 @@ sh:targetClass ai:Vote ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:DecisionShape
@@ -159,12 +159,12 @@ sh:targetClass ai:Decision ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:approvalStatusShape
@@ -183,7 +183,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Action) ;
 sh:minCount 1 ;
-sh:message "Must be of type Action" ;
+sh:message "Must be of type Action";
 ] .
 
 ai:executesShape
@@ -195,7 +195,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Action) ;
 sh:minCount 1 ;
-sh:message "Must be of type Action" ;
+sh:message "Must be of type Action";
 ] .
 
 ai:ProposalShape
@@ -216,12 +216,12 @@ sh:targetClass ai:Resolution ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:ApprovedShape
@@ -230,12 +230,12 @@ sh:targetClass ai:Approved ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:RejectedShape
@@ -244,12 +244,12 @@ sh:targetClass ai:Rejected ;
 sh:property [
 sh:path rdfs:label ;
 sh:minCount 1 ;
-sh:message "Label is required" ;
+sh:message "Label is required";
 ] ;
 sh:property [
 sh:path rdfs:comment ;
 sh:minCount 1 ;
-sh:message "Comment is required" ;
+sh:message "Comment is required";
 ] .
 
 ai:assignedToShape
@@ -261,7 +261,7 @@ sh:property [
 sh:path rdf:type ;
 sh:in (ai:Trustee) ;
 sh:minCount 1 ;
-sh:message "Must be of type Trustee" ;
+sh:message "Must be of type Trustee";
 ] .
 
 ai:deadlineShape

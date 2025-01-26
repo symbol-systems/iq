@@ -83,6 +83,7 @@ return done;
 TupleQuery prepared = iq.getConnection().prepareTupleQuery(sparql);
 List<Map<String, Object>> results = SPARQLMapper.toMaps(prepared.evaluate());
 Facades.results(bindings, results);
+log.info("sparql.results: {}", results.size());
 done.add((IRI) state);
 } catch (IOException e) {
 throw new RuntimeException(e);

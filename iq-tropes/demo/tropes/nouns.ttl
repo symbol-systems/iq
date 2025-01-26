@@ -17,7 +17,7 @@
   skos:prefLabel "Tropes";
   dcterms:contributor [
   a foaf:Person ;
-  foaf:name "Gnomad" ;
+  foaf:name "Gnomad";
 ] ;
 .
 :Trope

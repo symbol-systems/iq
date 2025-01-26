@@ -5,81 +5,81 @@
 # Classes
 ai:DAO
 a rdfs:Class ;
-rdfs:label "DAO" ;
+rdfs:label "DAO";
 rdfs:comment "A decentralized autonomous organization." .
 
 ai:Agent
 a rdfs:Class ;
-rdfs:label "Agent" ;
+rdfs:label "Agent";
 rdfs:comment "An agent performs actions on behalf of the DAO." .
 
 
 ai:LegalEntity
 a rdfs:Class ;
-rdfs:label "Legal Entity" ;
+rdfs:label "Legal Entity";
 rdfs:comment "An entity operating within a jurisdiction." .
 
 ai:LLC
 a rdfs:Class ;
 rdfs:subClassOf ai:LegalEntity ;
-rdfs:label "LLC" ;
+rdfs:label "LLC";
 rdfs:comment "An LLC (Limited Liability Corporation) operating within a jurisdiction." .
 
 ai:Jurisdiction
 a rdfs:Class ;
-rdfs:label "Jurisdiction" ;
+rdfs:label "Jurisdiction";
 rdfs:comment "A legal jurisdiction." .
 
 ai:Proposal
 a rdfs:Class ;
-rdfs:label "Proposal" ;
+rdfs:label "Proposal";
 rdfs:comment "A proposal." .
 
 ai:Vote
 a rdfs:Class ;
-rdfs:label "Vote" ;
+rdfs:label "Vote";
 rdfs:comment "A vote." .
 
 ai:Decision
 a rdfs:Class ;
-rdfs:label "Decision" ;
+rdfs:label "Decision";
 rdfs:comment "A decision." .
 
 ai:Resolution
 rdfs:subClassOf ai:Decision;
-rdfs:label "Resolution" ;
+rdfs:label "Resolution";
 rdfs:comment "A resolution is an approved decision." .
 
 ai:Approved
 a rdfs:Class ;
 rdfs:subClassOf ai:Resolution, ai:ProposalState ;
-rdfs:label "Approved Proposal" ;
+rdfs:label "Approved Proposal";
 rdfs:comment "An approved proposal." .
 
 ai:Rejected
 a rdfs:Class ;
 rdfs:subClassOf ai:Resolution, ai:ProposalState ;
-rdfs:label "Rejected Proposal" ;
+rdfs:label "Rejected Proposal";
 rdfs:comment "A rejected proposal." .
 
 ai:Matter
 a rdfs:Class ;
-rdfs:label "Matter" ;
+rdfs:label "Matter";
 rdfs:comment "Represents matters requiring DAO attention or action." .
 
 ai:Trustee
 a rdfs:Class ;
-rdfs:label "Trustee" ;
+rdfs:label "Trustee";
 rdfs:comment "An entity managing DAO assets or affairs." .
 
 ai:TokenHolder
 a rdfs:Class ;
-rdfs:label "Token Holder" ;
+rdfs:label "Token Holder";
 rdfs:comment "An entity holding DAO tokens." .
 
 ai:Responsibility
 a rdfs:Class ;
-rdfs:label "Responsibility" ;
+rdfs:label "Responsibility";
 rdfs:comment "A responsibility or role within the DAO." .
 
 # Properties
@@ -88,28 +88,28 @@ a rdf:Property ;
 rdf:subPropertyOf ai:manages ;
 rdfs:domain ai:Trustee ;
 rdfs:range ai:Matter ;
-rdfs:label "Responsible For" ;
+rdfs:label "Responsible For";
 rdfs:comment "Indicates a trustee managing a specific matter for the DAO." .
 
 ai:manages
 a rdf:Property ;
 rdfs:domain ai:Trustee ;
 rdfs:range ai:Matter ;
-rdfs:label "Manages" ;
+rdfs:label "Manages";
 rdfs:comment "Indicates a trustee managing a specific matter of the DAO." .
 
 ai:requiresVote
 a rdf:Property ;
 rdfs:domain ai:Matter ;
 rdfs:range ai:Proposal ;
-rdfs:label "Requires Vote" ;
+rdfs:label "Requires Vote";
 rdfs:comment "Indicates a matter requiring a DAO vote or decision." .
 
 ai:hasResponsibility
 a rdf:Property ;
 rdfs:domain ai:Trustee ;
 rdfs:range ai:Responsibility ;
-rdfs:label "has Responsibility" ;
+rdfs:label "has Responsibility";
 rdfs:comment "Indicates the responsibilities of a trustee within the DAO." .
 
 # Additional Properties
@@ -118,125 +118,125 @@ ai:contact
 a rdf:Property ;
 rdfs:domain ai:Trustee ;
 rdfs:range rdfs:Literal ;
-rdfs:label "Contact Information" ;
+rdfs:label "Contact Information";
 rdfs:comment "Represents the contact information of a trustee." .
 
 ai:assignedTo
 a rdf:Property ;
 rdfs:domain ai:Responsibility ;
 rdfs:range ai:Trustee ;
-rdfs:label "Assigned To" ;
+rdfs:label "Assigned To";
 rdfs:comment "Indicates which trustee is assigned to a responsibility." .
 
 ai:deadline
 a rdf:Property ;
 rdfs:domain ai:Responsibility ;
 rdfs:range rdfs:Literal ;
-rdfs:label "Deadline" ;
+rdfs:label "Deadline";
 rdfs:comment "Represents the deadline associated with a responsibility." .
 
 ai:date
 a rdf:Property ;
 rdfs:domain ai:Matter ;
 rdfs:range rdfs:Literal ;
-rdfs:label "Assertion Date" ;
+rdfs:label "Assertion Date";
 rdfs:comment "Represents the date when a matter is asserted." .
 
 ai:approvalStatus
 a rdf:Property ;
 rdfs:domain ai:Proposal ;
 rdfs:range rdfs:Literal ;
-rdfs:label "Approval Status" ;
+rdfs:label "Approval Status";
 rdfs:comment "Represents the approval status of a proposal." .
 
 ai:authorizes
 a rdf:Property ;
 rdfs:domain ai:Decision ;
 rdfs:range ai:Action ;
-rdfs:label "Authority to" ;
+rdfs:label "Authority to";
 rdfs:comment "Represents the authority to act upon a decision." .
 
 ai:executes
 a rdf:Property ;
 rdfs:domain ai:Agent ;
 rdfs:range ai:Action ;
-rdfs:label "Executes Action" ;
+rdfs:label "Executes Action";
 rdfs:comment "Represents the action potential of an agent." .
 
 ai:observes
 a rdf:Property ;
 rdfs:range ai:Agent ;
 rdfs:domain ai:Observation ;
-rdfs:label "observes" ;
+rdfs:label "observes";
 rdfs:comment "Factual observations of an agent." .
 
 ai:asserts
 a rdf:Property ;
 rdfs:range ai:Agent ;
 rdfs:domain ai:Facts ;
-rdfs:label "asserts" ;
+rdfs:label "asserts";
 rdfs:comment "Factual assertions of an agent." .
 
 # Instances
 ai:AssetManagement
 a ai:Matter ;
-rdfs:label "Asset Management" ;
+rdfs:label "Asset Management";
 rdfs:comment "Matters related to asset management." .
 
 ai:Observation
-rdfs:label "Observation" ;
+rdfs:label "Observation";
 rdfs:comment "Facts provided by an agent." .
 
 ai:Facts
-rdfs:label "Facts" ;
+rdfs:label "Facts";
 rdfs:comment "Factual claims asserted by an agent." .
 
 ai:Governance
 a ai:Matter ;
-rdfs:label "Governance Changes" ;
+rdfs:label "Governance Changes";
 rdfs:comment "Matters related to governance changes." .
 
 ai:Strategy
 a ai:Matter ;
-rdfs:label "Strategic Initiatives" ;
+rdfs:label "Strategic Initiatives";
 rdfs:comment "Matters related to strategic initiatives." .
 
 ai:Formation
 a ai:Matter ;
-rdfs:label "Formation" ;
+rdfs:label "Formation";
 rdfs:comment "Matters related to trust or organization formation." .
 
 ai:Dissolution
 a ai:Matter ;
-rdfs:label "Dissolution" ;
+rdfs:label "Dissolution";
 rdfs:comment "Matters related to trust or organization dissolution." .
 
 ai:AppointTrustee
 a ai:Matter ;
-rdfs:label "Appoint Trustee" ;
+rdfs:label "Appoint Trustee";
 rdfs:comment "Matters related to trustee appointment." .
 
 ai:RemoveTrustee
 a ai:Matter ;
-rdfs:label "Remove Trustee" ;
+rdfs:label "Remove Trustee";
 rdfs:comment "Matters related to trustee removal." .
 
 ai:Decant
 a ai:Matter ;
-rdfs:label "Decant" ;
+rdfs:label "Decant";
 rdfs:comment "Matters related to asset transfer between DAO." .
 
 ai:FinancialManagement
 a ai:Responsibility ;
-rdfs:label "Financial Management" ;
+rdfs:label "Financial Management";
 rdfs:comment "Responsible for managing the financial affairs of the DAO." .
 
 ai:LegalCompliance
 a ai:Responsibility ;
-rdfs:label "Legal Compliance" ;
+rdfs:label "Legal Compliance";
 rdfs:comment "Responsible for ensuring legal compliance within the DAO." .
 
 ai:CommunityEngagement
 a ai:Responsibility ;
-rdfs:label "Community Engagement" ;
+rdfs:label "Community Engagement";
 rdfs:comment "Responsible for engaging with the DAO community and stakeholders." .

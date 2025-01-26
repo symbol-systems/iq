@@ -3,31 +3,31 @@
 
 # Concept scheme for MEDPIC
 medpic: a skos:ConceptScheme ;
-skos:prefLabel "MEDPIC Concepts" ;
-skos:notation "MEDPIC" ;
+skos:prefLabel "MEDPIC Concepts";
+skos:notation "MEDPIC";
 skos:description "A concept scheme for MEDPIC in sales" .
 
 # Concepts for MEDPIC components
 medpic:metrics a skos:Concept ;
-skos:prefLabel "Metrics" ;
+skos:prefLabel "Metrics";
 skos:definition "Quantifiable data and KPIs important to the prospect" .
 
 medpic:economic-buyer a skos:Concept ;
-skos:prefLabel "Economic Buyer" ;
+skos:prefLabel "Economic Buyer";
 skos:definition "The person with authority for purchasing decisions based on budget" .
 
 medpic:decision-criteria a skos:Concept ;
-skos:prefLabel "Decision Criteria" ;
+skos:prefLabel "Decision Criteria";
 skos:definition "Specific factors and requirements for evaluating solutions" .
 
 medpic:decision-process a skos:Concept ;
-skos:prefLabel "Decision Process" ;
+skos:prefLabel "Decision Process";
 skos:definition "Steps and stages in the prospect's buying decision" .
 
 medpic:identified-pain a skos:Concept ;
-skos:prefLabel "Identified Pain" ;
+skos:prefLabel "Identified Pain";
 skos:definition "Challenges or pain points that your solution can address" .
 
 medpic:champion a skos:Concept ;
-skos:prefLabel "Champion" ;
+skos:prefLabel "Champion";
 skos:definition "Advocate or supporter within the prospect's organization" .

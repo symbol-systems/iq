@@ -35,6 +35,7 @@ import systems.symbol.util.IdentityHelper;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +86,9 @@ return new OopsResponse("trust.token.repository." + _realm, Response.Status.NOT_
 
 IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
 
-String baseUrl = WebURLs.getBaseURL(info, headers);
-log.info("trust.token.issuer: {} @ {}", issuer, baseUrl);
+String baseUrl = WebURLs.getRequestURL(info, headers);
+String clientIp = info.getRequestUri().getHost();
+log.info("trust.token.url: {} @ {}", issuer, baseUrl, clientIp);
 
 try (RepositoryConnection connection = repo.getConnection()) {
 connection.begin();

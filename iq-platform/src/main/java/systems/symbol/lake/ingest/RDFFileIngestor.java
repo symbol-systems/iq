@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.rdf4j.io.RDFLoader;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.function.Consumer;
 
 public class RDFFileIngestor implements Consumer<FileObject> {

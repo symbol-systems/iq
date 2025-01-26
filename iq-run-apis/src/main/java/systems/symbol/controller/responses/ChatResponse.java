@@ -2,6 +2,7 @@ package systems.symbol.controller.responses;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import systems.symbol.agent.Facades;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLMessage;
@@ -30,11 +31,10 @@ this.meta = meta;
 public ChatResponse(I_Assist<String> chat, I_Agent agent) {
 this.messages = chat.messages();
 this.meta = new SimpleBindings();
-meta.put("self", agent.getSelf().stringValue());
+meta.put(Facades.SELF, agent.getSelf().stringValue());
+meta.put(Facades.FOCUS, agent.getStateMachine().getState().stringValue());
 Collection<Resource> intents = agent.getStateMachine().getTransitions();
-if (intents.size() > 1)
-meta.put("intents", Facts.toStrings(intents));
-meta.put("state", agent.getStateMachine().getState().stringValue());
+meta.put(Facades.INTENTS, Facts.toString(intents));
 }
 
 public Response build() {

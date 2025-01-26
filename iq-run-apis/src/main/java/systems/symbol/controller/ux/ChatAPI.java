@@ -90,13 +90,14 @@ if (myRealm == null)
 return new OopsResponse("ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
 log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
-builder.jwt(jwt).setThoughts(myRealm.getModel());
+builder.jwt(jwt).setThoughts(myRealm.getModel()).sparql(connection);
 
 bindings.put("realm", _realm);
 bindings.put("capacity", connection.size());
 I_Agent agent = builder.avatar(chat);
 
 stateful(chat, agent, realm, connection);
+builder.agentic(agent);
 agent.start();
 // log.info("ux.chat.timer.4: {}", stopwatch.summary());
 agent.stop();

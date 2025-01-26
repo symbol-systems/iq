@@ -5,6 +5,7 @@ import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_LLMessage;
+import systems.symbol.llm.I_ToolSpec;
 
 import java.io.IOException;
 import java.util.*;
@@ -12,6 +13,7 @@ import java.util.*;
 public class PromptChain implements I_LLM<String> {
 Collection<I_LLM<String>> chain = new ArrayList<>();
 Collection<I_LLMessage.RoleType> types = new ArrayList<>();
+private List<I_ToolSpec> tools = new ArrayList<>();
 
 public PromptChain() {
 init();
@@ -25,6 +27,10 @@ init();
 private void init() {
 types.add(I_LLMessage.RoleType.assistant);
 types.add(I_LLMessage.RoleType.user);
+}
+
+public List<I_ToolSpec> tools() {
+return tools;
 }
 
 public void setTypes(Collection<I_LLMessage.RoleType> types) {

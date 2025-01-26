@@ -3,41 +3,41 @@
 
 # Concept scheme for Solution Selling
 solution_selling:scheme a skos:ConceptScheme ;
-skos:prefLabel "Solution Selling Concepts" ;
-skos:notation "Solution Selling" ;
+skos:prefLabel "Solution Selling Concepts";
+skos:notation "Solution Selling";
 skos:description "A concept scheme guiding the key principles of Solution Selling in sales" .
 
 # Concepts for Solution Selling components
 solution_selling:concept a skos:Concept ;
-skos:prefLabel "Solution Selling" ;
+skos:prefLabel "Solution Selling";
 skos:definition "Master the essential concepts and principles of Solution Selling" .
 
 solution_selling:problem_identification a skos:Concept ;
-skos:prefLabel "Problem Identification" ;
-skos:definition "Identify and deeply understand customer pain points and challenges to offer tailored solutions" ;
+skos:prefLabel "Problem Identification";
+skos:definition "Identify and deeply understand customer pain points and challenges to offer tailored solutions";
 skos:broader solution_selling:concept .
 
 solution_selling:solution_presentation a skos:Concept ;
-skos:prefLabel "Solution Presentation" ;
-skos:definition "Craft and deliver precise solutions to meet specific customer needs" ;
+skos:prefLabel "Solution Presentation";
+skos:definition "Craft and deliver precise solutions to meet specific customer needs";
 skos:broader solution_selling:concept .
 
 solution_selling:value_proposition a skos:Concept ;
-skos:prefLabel "Value Proposition" ;
-skos:definition "Effectively communicate the unique value your solution brings to the customer" ;
+skos:prefLabel "Value Proposition";
+skos:definition "Effectively communicate the unique value your solution brings to the customer";
 skos:broader solution_selling:concept .
 
 solution_selling:needs_analysis a skos:Concept ;
-skos:prefLabel "Needs Analysis" ;
-skos:definition "Evaluate and dissect the precise needs and requirements of the customer" ;
+skos:prefLabel "Needs Analysis";
+skos:definition "Evaluate and dissect the precise needs and requirements of the customer";
 skos:broader solution_selling:concept .
 
 solution_selling:obstacle_overcoming a skos:Concept ;
-skos:prefLabel "Obstacle Overcoming" ;
-skos:definition "Confront and resolve objections and obstacles that may arise during the sales process" ;
+skos:prefLabel "Obstacle Overcoming";
+skos:definition "Confront and resolve objections and obstacles that may arise during the sales process";
 skos:broader solution_selling:concept .
 
 solution_selling:relationship_building a skos:Concept ;
-skos:prefLabel "Relationship Building" ;
-skos:definition "Forge and nurture strong, enduring relationships with your customers" ;
+skos:prefLabel "Relationship Building";
+skos:definition "Forge and nurture strong, enduring relationships with your customers";
 skos:broader solution_selling:concept .

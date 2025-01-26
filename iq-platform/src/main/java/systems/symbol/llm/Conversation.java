@@ -56,7 +56,9 @@ int count = 0;
 while (i >= 0 && count < window) {
 I_LLMessage<String> msg = messages.get(i);
 if (msg.getRole() != I_LLMessage.RoleType.system) {
-s$.append(msg.getContent());
+String content = msg.getContent();
+if (content != null)
+s$.append(content);
 count++;
 }
 i--;

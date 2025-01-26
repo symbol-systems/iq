@@ -9,12 +9,12 @@
 @prefix sb: <http://www.openrdf.org/config/sail/base#>.
 
 [] a rep:Repository ;
-   rep:repositoryID "{%id|memory%}" ;
-   rdfs:label "{%title|Memory store%}" ;
+   rep:repositoryID "{%id|memory%}";
+   rdfs:label "{%title|Memory store%}";
    rep:repositoryImpl [
-  rep:repositoryType "openrdf:SailRepository" ;
+  rep:repositoryType "openrdf:SailRepository";
   sr:sailImpl [
- sail:sailType "openrdf:MemoryStore" ;
+ sail:sailType "openrdf:MemoryStore";
 	 sail:iterationCacheSyncThreshold "{%Query Iteration Cache sync threshold|10000%}";
  ms:persist {%Persist|true|false%} ;
  ms:syncDelay {%Sync delay|60%} ;

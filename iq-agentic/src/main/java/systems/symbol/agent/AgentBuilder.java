@@ -21,6 +21,7 @@ import systems.symbol.intent.*;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.Facts;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.realm.I_Realm;
@@ -32,6 +33,7 @@ import systems.symbol.util.IdentityHelper;
 import javax.script.Bindings;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import static systems.symbol.Formats.HumanDate;
@@ -156,8 +158,10 @@ log.info("builder.avatar: {}", agent == null ? "" : agent.getSelf());
 return avatar;
 }
 
-protected I_Agent agentic(I_Agent agent) {
-bindings.put(STATE, agent.getStateMachine().getState());
+public I_Agent agentic(I_Agent agent) {
+bindings.put(FOCUS, agent.getStateMachine().getState());
+Collection<Resource> intents = agent.getStateMachine().getTransitions();
+bindings.put(INTENTS, Facts.toString(intents));
 log.info("builder.agentic: {} -> {}", agent.getSelf(), agent.getStateMachine().getState());
 return agent;
 }
