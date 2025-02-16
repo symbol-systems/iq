@@ -76,6 +76,9 @@ public class ProfileAPI extends GuardedAPI {
         log.info("ux.profile.jwt: {} --> {} -> {}", jwt.getSubject(), jwt.getAudience(), jwt.getIssuer());
 
         I_Realm my_realm = platform.getRealm(jwt.getSubject());
+        if (my_realm == null) {
+            return new OopsResponse("ux.profile.realm.user", Response.Status.NOT_FOUND).build();
+        }
         Repository repository = my_realm.getRepository();
         if (repository == null)
             return new OopsResponse("ux.profile.repository", Response.Status.NOT_FOUND).build();

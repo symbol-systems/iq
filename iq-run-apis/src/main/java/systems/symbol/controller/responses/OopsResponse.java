@@ -6,7 +6,12 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class OopsResponse implements I_Response {
+    protected static final Logger log = LoggerFactory.getLogger(OopsResponse.class);
+
     public Object message;
     public Map<String, Object> meta = new HashMap<>();
     private final int status;
@@ -31,6 +36,7 @@ public class OopsResponse implements I_Response {
     public Response build() {
         Response.ResponseBuilder builder = Response.status(this.status).type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(this);
+        log.info("oops: {} -> {}", this.status, this.message);
         return addCORS(builder).build();
     }
 }
