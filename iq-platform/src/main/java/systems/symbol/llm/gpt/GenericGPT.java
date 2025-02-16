@@ -84,9 +84,8 @@ if (responseBody != null) {
 body = responseBody.string();
 GPTResponse completion = om.readValue(body, GPTResponse.class);
 int tokens = completion.usage == null ? -1 : completion.usage.total_tokens;
-log.info("llm.gpt.reply: [ #{} ] {} x {} tokens", attempt, response.code(), tokens);
-log.info(body, completion);
 if (response.code() == 200 && completion.choices != null && !completion.choices.isEmpty()) {
+log.info("llm.gpt.reply: [ #{} ] {} x {} tokens", attempt, response.code(), tokens);
 for (int c = 0; c < completion.choices.size(); c++) {
 GPTResponse.Choice choice = completion.choices.get(c);
 processMessage(chats, choice.message);

@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize
@@ -14,6 +19,9 @@ public class Conversation implements I_Assist<String> {
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public List<I_LLMessage<String>> messages = new ArrayList<>();
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public Map<String, Object> meta = new HashMap<>();
 
 public Conversation() {
 }
@@ -84,6 +92,10 @@ add("user", content);
 
 public void assistant(String content) {
 add("assistant", content);
+}
+
+public Map<String, Object> getBindings() {
+return meta;
 }
 
 public String toString() {

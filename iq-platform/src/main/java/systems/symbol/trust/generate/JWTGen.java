@@ -4,15 +4,23 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
+
+import systems.symbol.tools.TrustedAPIs;
 import systems.symbol.trust.SimpleKeyStore;
 import java.security.*;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class JWTGen {
+protected static final Logger log = LoggerFactory.getLogger(JWTGen.class);
+
 public JWTCreator.Builder generate(String issuer, String subject, String[] audience, int longevitySeconds) {
 Date issuedAt = new Date();
 Date expiresAt = new Date(issuedAt.getTime() + (longevitySeconds * 1000L));
 
+log.info("trust.jwt: {} -> {} @ {}", issuer, subject, expiresAt);
 return JWT.create()
 .withIssuer(issuer)
 .withSubject(subject)

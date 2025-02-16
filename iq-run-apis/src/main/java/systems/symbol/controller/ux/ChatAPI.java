@@ -26,6 +26,7 @@ import systems.symbol.llm.Conversation;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.realm.PlatformException;
 import systems.symbol.secrets.SecretsException;
+import systems.symbol.string.PrettyStrings;
 import systems.symbol.string.Validate;
 import systems.symbol.util.Stopwatch;
 
@@ -51,7 +52,7 @@ int maxResults;
  * @return JSON response containing language model results.
  */
 @POST
-@Operation(summary = "api ux chat post summary", description = "api.ux.chat.post.description")
+@Operation(summary = "api.ux.chat.post.summary", description = "api.ux.chat.post.description")
 @Path("{realm}/{actor:.*}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -79,15 +80,17 @@ return new OopsResponse(e.getMessage(), e.getStatus()).build();
 Repository realmRepository = realm.getRepository();
 if (realmRepository == null)
 return new OopsResponse("ux.chat.repository.missing", Response.Status.NOT_FOUND).build();
-
-Bindings bindings = new SimpleBindings();
 IRI user = Values.iri(jwt.getSubject());
-
-try (RepositoryConnection connection = realmRepository.getConnection()) {
 I_Realm myRealm = platform.getRealm(user);
-log.info("ux.chat.with: {} & {} == {}", actor, user, myRealm != null);
 if (myRealm == null)
 return new OopsResponse("ux.chat.realm.missing", Response.Status.NOT_FOUND).build();
+
+Bindings bindings = new SimpleBindings();
+bindings.putAll(chat.getBindings());
+
+try (RepositoryConnection connection = realmRepository.getConnection()) {
+log.info("ux.chat.with: {} & {} == {} --> {}", actor, user, myRealm != null,
+PrettyStrings.pretty(chat.getBindings()));
 log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
 AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
 builder.jwt(jwt).setThoughts(myRealm.getModel()).sparql(connection);
@@ -108,7 +111,7 @@ log.error("ux.chat.oops: {}", e.getMessage());
 return new OopsResponse("ux.chat.state", Response.Status.BAD_REQUEST).build();
 } catch (Exception e) {
 log.error("ux.chat.fatal: {}", e.getMessage(), e);
-return new OopsResponse("ux.chat.oops", Response.Status.INTERNAL_SERVER_ERROR).build();
+return new OopsResponse("ux.chat.error", Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }
 

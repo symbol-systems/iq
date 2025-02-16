@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import systems.symbol.tools.APIException;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
@@ -15,6 +16,7 @@ import systems.symbol.llm.gpt.CommonLLM;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.prompt.*;
 import systems.symbol.secrets.I_Secrets;
+import systems.symbol.llm.I_LLMessage;
 
 import javax.script.Bindings;
 import java.util.*;
@@ -147,12 +149,6 @@ log.debug("avatar.done: {} -> {}", actor, answer);
 return true;
 }
 
-protected void links(StringBuilder s$, Iterable<IRI> found) {
-found.forEach(f -> {
-s$.append("[").append(f.getLocalName()).append("](").append(f.stringValue()).append("), ");
-});
-}
-
 public String value(Resource state) {
 if (state == null)
 return null;
@@ -171,16 +167,21 @@ return groundS.orElse(Values.***REMOVED***("")).stringValue();
 // processing
 private void answered(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
 I_LLMessage<String> latest = ai.latest();
+if (!latest.getRole().equals(I_LLMessage.RoleType.assistant)) {
+log.info("avatar.noreply {}", agent.getSelf());
+return;
+}
+// if (latest.getRole() == I_LLMessage.RoleType.user) {
+// chat.messages().removeLast();
+// intent = new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.user,
+// latest.getContent());
+// log.info("avatar.intent: {}", intent);
+// }
 if (!(latest instanceof IntentMessage intent)) {
 String reply = latest.getContent();
 log.info("avatar.reply: {} => {}", ai.messages().size(), ai.messages());
 chat.assistant(reply);
 return;
-}
-if (latest.getRole() == I_LLMessage.RoleType.user) {
-chat.messages().removeLast();
-intent = new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.user, latest.getContent());
-log.info("avatar.intent: {}", intent);
 }
 chat.add(intent);
 if (intent.intent() != null && !agent.getStateMachine().getState().equals(intent.intent())) {
