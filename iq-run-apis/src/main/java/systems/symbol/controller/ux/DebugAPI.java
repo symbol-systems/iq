@@ -59,8 +59,8 @@ LDResponse ld = new LDResponse(RDFPrefixer.describe(connection, self));
 Bindings my = ld.getBindings();
 
 AgentBuilder builder = new AgentBuilder(self, connection, my, realm.getSecrets());
-builder.scripting().remodel().sparql(connection);
 I_Agent agent = builder.agent();
+builder.scripting(agent).remodel().sparql(connection);
 agent.start();
 
 my.put("name", jwt.getClaim("name").asString());

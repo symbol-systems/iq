@@ -86,7 +86,7 @@ return (Literal) script;
 Iterable<Statement> statements = context == null ? model.getStatements(script, HAS_CONTENT, null)
 : model.getStatements(script, HAS_CONTENT, null, context);
 Iterator<Statement> statementIterator = statements.iterator();
-log.info("findScript.model: {} -> {} @ {} -> {}", script, mimetype, context, statementIterator.hasNext());
+log.info("findScript.model: {} = {} @ {} -> {}", script, statementIterator.hasNext(), mimetype, context);
 return findScript(statementIterator, script, mimetype);
 }
 

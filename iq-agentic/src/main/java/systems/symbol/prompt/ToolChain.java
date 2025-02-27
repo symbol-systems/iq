@@ -11,16 +11,16 @@ import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.Collection;
 
-public class ChoicePrompt extends AbstractPrompt<String> {
+public class ToolChain extends AbstractPrompt<String> {
 I_Agent agent;
 String wrapper = "{{prompt}}";
 
-public ChoicePrompt(Bindings my, I_Agent agent, String wrapper) {
+public ToolChain(Bindings my, I_Agent agent, String wrapper) {
 this(my, agent);
 this.wrapper = wrapper;
 }
 
-public ChoicePrompt(Bindings my, I_Agent agent) {
+public ToolChain(Bindings my, I_Agent agent) {
 super(my);
 this.agent = agent;
 }
@@ -30,7 +30,7 @@ public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOE
 String prompt = prompt(agent.getThoughts(), agent.getStateMachine().getTransitions());
 log.info("prompt.choices: {}", prompt);
 if (!prompt.isEmpty())
-chat.system(bind(prompt));
+chat.system(interpolate(prompt));
 return chat;
 }
 

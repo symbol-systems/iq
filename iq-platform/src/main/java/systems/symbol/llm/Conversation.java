@@ -83,14 +83,20 @@ return this;
 }
 
 public void system(String content) {
+if (content == null)
+return;
 add("system", content);
 }
 
 public void user(String content) {
+if (content == null)
+return;
 add("user", content);
 }
 
 public void assistant(String content) {
+if (content == null)
+return;
 add("assistant", content);
 }
 

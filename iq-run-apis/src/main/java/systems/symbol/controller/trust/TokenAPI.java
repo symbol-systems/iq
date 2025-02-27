@@ -102,9 +102,10 @@ bindings.put("issuer", issuer);
 bindings.put("provider", provider);
 
 AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
-builder.setThoughts(realm.getModel()).scripting().sparql(connection);
+builder.setThoughts(realm.getModel());
 builder.realm(realm);
 I_Agent agent = builder.agent();
+builder.scripting(agent).sparql(connection);
 IRI initial = Values.iri(issuer.stringValue() + "verify");
 Object identity;
 try {

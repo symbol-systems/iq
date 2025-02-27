@@ -3,13 +3,32 @@ package systems.symbol.tools;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Online {
 static String server = "https://www.google.com";
 
 public static boolean isOnline() {
 return isOnline(server);
+}
+
+public static boolean isPing(String server) {
+if (server.startsWith("http://") || server.startsWith("https://")) {
+try {
+server = new URI(server).getHost();
+} catch (URISyntaxException e) {
+return false;
+}
+}
+try {
+InetAddress address = InetAddress.getByName(server);
+return address.isReachable(3000);
+} catch (IOException e) {
+return false;
+}
 }
 
 /**

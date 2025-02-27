@@ -38,16 +38,31 @@ inferType();
 
 public IntentMessage(@JsonProperty("meta") Bindings meta) {
 this.meta = meta;
-this.intent = extractIntent(String.valueOf(meta.get("intent")));
+this.intent = extractIntent(meta.get("intent"));
 this.role = RoleType.assistant;
-this.content = String.valueOf(meta.get("content"));
-this.meta.remove("intent");
-this.meta.remove("content");
+this.content = content();
 inferType();
 }
 
+public IntentMessage(String intent, Bindings meta) {
+this.meta = meta;
+this.intent = intent;
+this.role = RoleType.assistant;
+this.content = content();
+inferType();
+}
+
+private String content() {
+Object content = this.meta.get("content");
+if (content == null)
+return null;
+this.meta.remove("content");
+return String.valueOf(content);
+}
+
 void inferType() {
-this.type = this.intent.isEmpty() ? this.meta == null ? MessageType.text : MessageType.JSON
+this.type = this.intent == null || this.intent.isEmpty()
+? this.meta == null ? MessageType.text : MessageType.JSON
 : MessageType.intent;
 }
 
@@ -55,12 +70,8 @@ public String getIntent() {
 return intent;
 }
 
-// public IRI getSelf() {
-// return getIntent().isEmpty() ? null : Values.iri(getIntent());
-// }
-
 public String toString() {
-return "{role: " + role + ", intent: " + intent + ", content: " + content + ", meta: " + meta.keySet() + "}";
+return "{ role: " + role + ", intent: " + intent + ", content: " + content + ", meta: " + meta.keySet() + "}";
 }
 
 @Override

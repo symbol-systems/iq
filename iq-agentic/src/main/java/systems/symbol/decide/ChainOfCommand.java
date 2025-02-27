@@ -19,6 +19,9 @@ private static final Logger log = LoggerFactory.getLogger(ChainOfCommand.class);
 private final List<I_Decide<Resource>> delegates = new ArrayList<>();
 IRIs seen = new IRIs();
 
+public ChainOfCommand() {
+}
+
 public ChainOfCommand(I_Decide<Resource> delegate) {
 this.delegates.add(delegate);
 }
@@ -38,8 +41,9 @@ Resource resource = delegated.get().intent();
 Resource state = agent.getStateMachine().getState();
 if (resource != null && !resource.equals(state) && resource.isIRI()) {
 log.info("command.escalated: {} @ {} -> {} --> {}", agent.getSelf(), state, resource, seen);
-if (!seen.contains((IRI)resource)) todo.complete(()->resource);
-seen.add((IRI)resource);
+if (!seen.contains((IRI) resource))
+todo.complete(() -> resource);
+seen.add((IRI) resource);
 break;
 }
 } catch (InterruptedException | ExecutionException e) {
@@ -47,7 +51,7 @@ break;
 }
 }
 log.info("command.default: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
-todo.complete(()->agent.getStateMachine().getState());
+todo.complete(() -> agent.getStateMachine().getState());
 return todo;
 }
 }

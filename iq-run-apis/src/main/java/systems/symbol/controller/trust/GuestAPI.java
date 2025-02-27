@@ -2,7 +2,6 @@ package systems.symbol.controller.trust;
 
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.vertx.ext.web.RoutingContext;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -62,7 +61,8 @@ I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
 return new OopsResponse("guest.token.realm", Response.Status.NOT_FOUND).build();
 
-String guestToken = tokenize("guest", new String[] { "guest" }, "ipv4:" + clientIp, "guest",
+String self = IdentityHelper.uuid("urn:guest:");
+String guestToken = tokenize("guest", new String[] { "guest" }, self, "guest",
 new String[] { _realm },
 realm, tokenDuration);
 

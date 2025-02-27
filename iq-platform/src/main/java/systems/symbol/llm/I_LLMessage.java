@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public interface I_LLMessage<T> {
 
 enum MessageType {
-text, image_url, intent, JSON, audio, video, fn, url, data, error
+text, image_url, intent, JSON, audio, video, fn, url, data, error, thoughts
 }
 
 enum RoleType {

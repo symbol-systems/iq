@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.RDF;
 import systems.symbol.agent.Facades;
+import systems.symbol.agent.I_Agent;
+import systems.symbol.agent.SelfFacade;
 import systems.symbol.tools.TrustedAPIs;
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
@@ -44,6 +46,7 @@ public class JSR233 extends AbstractIntent {
 private final ScriptEngineManager engineManager = new ScriptEngineManager();
 private final I_Secrets secrets;
 private final I_Contents scripts;
+private final I_Agent agent;
 
 /**
  * Constructs a new JSR233 intent with the provided RDF4J model and self
@@ -52,8 +55,9 @@ private final I_Contents scripts;
  * @param model The RDF4J model associated with the intent.
  * @param self  The self identity of the intent.
  */
-public JSR233(IRI self, Model model) {
-boot(self, model);
+public JSR233(I_Agent agent, Model model) {
+this.agent = agent;
+boot(agent.getSelf(), model);
 this.secrets = null;
 this.scripts = new ModelScriptCatalog(model);
 }
@@ -65,9 +69,10 @@ this.scripts = new ModelScriptCatalog(model);
  * @param model The RDF4J model associated with the intent.
  * @param self  The self identity of the intent.
  */
-public JSR233(IRI self, Model model, Model thoughts, I_Secrets secrets, I_Contents scripts)
+public JSR233(I_Agent agent, Model model, Model thoughts, I_Secrets secrets, I_Contents scripts)
 throws SecretsException {
-boot(self, thoughts);
+this.agent = agent;
+boot(agent.getSelf(), thoughts);
 this.scripts = scripts;
 this.secrets = TrustedAPIs.trusted(model, self, secrets);
 }
@@ -89,9 +94,10 @@ log.error("script.missing: {}", state);
 return done;
 }
 try {
+log.info("script.execute: {} @ {} -> {}", agent.getSelf(), actor, state);
 Object result = executeScript(script, actor, state, my);
 done.add(actor);
-log.info("script.done: {} -> {} --> {}", state, result, PrettyStrings.pretty(my));
+log.info("script.done: {} --> {}", result, PrettyStrings.pretty(my));
 } catch (ScriptException e) {
 Throwable cause = e.getCause().getCause();
 String error = cause == null ? e.getMessage() : cause.getMessage();
@@ -125,12 +131,14 @@ return null;
 ScriptContext sc = new SimpleScriptContext();
 StringWriter out = new StringWriter();
 sc.setWriter(out);
-sc.setBindings(Facades.trust(actor, state, getModel(), my, secrets), ScriptContext.ENGINE_SCOPE);
+Bindings bindings = Facades.facade(actor, state, getModel(), my, secrets);
+bindings.put(Facades.SELF, new SelfFacade(agent));
+sc.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 sc.setAttribute("log", log, ScriptContext.ENGINE_SCOPE);
 
 Object eval = engine.eval(script.stringValue(), sc);
 log.debug("script.eval: {} @ {} ==> {}", script.stringValue(), state.stringValue(), eval);
-log.info("script.logged: %o", out.toString());
+log.info("script.logged: {}", out.toString());
 return eval;
 }
 }

@@ -127,9 +127,9 @@ public abstract boolean onTransition(Resource from, Resource to) throws StateExc
 @Override
 public abstract Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException;
 
-public Resource decide(Resource state) throws StateException {
-return getStateMachine().transition(state);
-}
+// public Resource decide(Resource state) throws StateException {
+// return getStateMachine().transition(state);
+// }
 
 @Override
 public IRI getSelf() {

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.tools.APIException;
 import systems.symbol.llm.I_Assist;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.I_ToolSpec;
+import systems.symbol.llm.tools.Tool;
 import systems.symbol.string.PrettyStrings;
 
 import javax.script.Bindings;
@@ -19,24 +19,24 @@ import java.util.List;
 public abstract class AbstractPrompt<T> implements I_LLM<T> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected static Handlebars hbs = new Handlebars();
-Bindings my;
-private List<I_ToolSpec> tools = new ArrayList<>();
+Bindings bindings;
+private List<Tool> tools = new ArrayList<>();
 
 @Override
-public Collection<I_ToolSpec> tools() {
+public Collection<Tool> tools() {
 return tools;
 }
 
 public AbstractPrompt(Bindings my) {
-this.my = my;
+this.bindings = my;
 }
 
-public String bind(String prompt) throws IOException {
-return bind(prompt, my);
+public String interpolate(String prompt) throws IOException {
+return interpolate(prompt, bindings);
 }
 
-public String bind(String prompt, Bindings bindings) throws IOException {
-log.debug("prompt.bind: {} -> {}\n\n{}\n", prompt, bindings.keySet(), PrettyStrings.pretty(bindings));
+public String interpolate(String prompt, Bindings bindings) throws IOException {
+log.debug("prompt.interpolate: {} -> {}\n\n{}\n", prompt, bindings.keySet(), PrettyStrings.pretty(bindings));
 return hbs.compileInline(prompt).apply(bindings);
 }
 

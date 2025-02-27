@@ -8,19 +8,17 @@ import jakarta.ws.rs.core.*;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.agent.AgentBuilder;
+import systems.symbol.agent.Avatar;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.tools.APIException;
 import systems.symbol.controller.platform.GuardedAPI;
 import systems.symbol.controller.responses.ChatResponse;
 import systems.symbol.controller.responses.OopsException;
 import systems.symbol.controller.responses.OopsResponse;
-import systems.symbol.finder.I_Corpus;
-import systems.symbol.finder.I_Found;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.Conversation;
 import systems.symbol.realm.I_Realm;
@@ -33,7 +31,6 @@ import systems.symbol.util.Stopwatch;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * REST-ful API to chat with an LLM avatar.
@@ -59,6 +56,7 @@ int maxResults;
 public Response chat(@PathParam("realm") String _realm, @PathParam("actor") String _actor,
 @HeaderParam("Authorization") String auth,
 @Context UriInfo uriInfo, @QueryParam("focus") String _focus,
+@QueryParam("debug") boolean _debug,
 Conversation chat) throws APIException, IOException, SecretsException, PlatformException {
 Stopwatch stopwatch = new Stopwatch();
 log.info("ux.chat: {}", chat.messages());
@@ -92,20 +90,21 @@ try (RepositoryConnection connection = realmRepository.getConnection()) {
 log.info("ux.chat.with: {} & {} == {} --> {}", actor, user, myRealm != null,
 PrettyStrings.pretty(chat.getBindings()));
 log.info("ux.chat.realm: {} @ {} & {} -> {}", actor, realm.getSelf(), myRealm.getSelf(), stopwatch);
-AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets()).scripting();
-builder.jwt(jwt).setThoughts(myRealm.getModel()).sparql(connection);
+AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets());
 
-bindings.put("realm", _realm);
-bindings.put("capacity", connection.size());
-I_Agent agent = builder.avatar(chat);
+builder.jwt(jwt).setThoughts(myRealm.getModel()).realm(myRealm);
+Avatar avatar = builder.avatar(chat);
+builder.scripting(avatar).sparql(connection);
+log.info("ux.chat.ready: {} @ {}", avatar.getSelf(), avatar.getStateMachine().getState());
 
-stateful(chat, agent, realm, connection);
-builder.agentic(agent);
-agent.start();
-// log.info("ux.chat.timer.4: {}", stopwatch.summary());
-agent.stop();
-log.info("ux.chat.reply: {} = {} @ {}", agent.getThoughts().size(), chat.messages.getLast(), stopwatch);
-return new ChatResponse(chat, agent).build();
+// stateful(chat, agent, realm, connection);
+avatar.start();
+// stuff happens ;-)
+avatar.stop();
+bindings.put("usage", avatar.getUsage());
+
+log.info("ux.chat.reply: {} = {} @ {}", avatar.getThoughts().size(), chat.messages.getLast(), stopwatch);
+return new ChatResponse(chat, avatar, bindings).build();
 } catch (StateException e) {
 log.error("ux.chat.oops: {}", e.getMessage());
 return new OopsResponse("ux.chat.state", Response.Status.BAD_REQUEST).build();
@@ -115,48 +114,53 @@ return new OopsResponse("ux.chat.error", Response.Status.INTERNAL_SERVER_ERROR).
 }
 }
 
-private void stateful(Conversation chat, I_Agent agent, I_Realm realm, RepositoryConnection connection) {
-// log.info("ux.chat.timer.1: {}", stopwatch.summary());
-Resource state = agent.getStateMachine().getState();
-if (state.isIRI()) {
-I_Corpus<IRI> searcher = platform.searcher(realm.getSelf());
-Collection<I_Found<IRI>> search = searcher.byConcept((IRI) state).search(chat.toString(), maxResults,
-minScore);
-log.info("ux.chat.search: {} -> {} == {}", state, search.size(), chat.context());
-// log.info("ux.chat.timer.2: {}", stopwatch.summary());
-if ((search == null || search.isEmpty()) && state != null) {
-search = searcher.byConcept(null).search(chat.context(), maxResults,
-minScore);
-log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
-// log.info("ux.chat.timer.3: {}", stopwatch.summary());
-}
-Collection<Resource> cando = agent.getStateMachine().getTransitions();
-final IRI[] _intent = new IRI[1];
+// private void stateful(Conversation chat, I_Agent agent, I_Realm realm,
+// RepositoryConnection connection) {
+// // log.info("ux.chat.timer.1: {}", stopwatch.summary());
+// Resource state = agent.getStateMachine().getState();
+// if (state.isIRI()) {
+// I_Corpus<IRI> searcher = platform.searcher(realm.getSelf());
+// Collection<I_Found<IRI>> search = searcher.byConcept((IRI)
+// state).search(chat.toString(), maxResults,
+// minScore);
+// log.info("ux.chat.search: {} -> {} == {}", state, search.size(),
+// chat.context());
+// // log.info("ux.chat.timer.2: {}", stopwatch.summary());
+// if ((search == null || search.isEmpty()) && state != null) {
+// search = searcher.byConcept(null).search(chat.context(), maxResults,
+// minScore);
+// log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
+// // log.info("ux.chat.timer.3: {}", stopwatch.summary());
+// }
+// Collection<Resource> cando = agent.getStateMachine().getTransitions();
+// final IRI[] _intent = new IRI[1];
 
-search.forEach(found -> {
-try {
-IRI intent = found.intent();
-if (intent != null && cando.contains(intent)) {
-_intent[0] = intent;
+// search.forEach(found -> {
+// try {
+// IRI intent = found.intent();
+// if (intent != null && cando.contains(intent)) {
+// _intent[0] = intent;
 
-}
-} catch (StateException e) {
-log.error("Error processing intent: {}. State machine transition failed: {}", _intent[0],
-e.getMessage(), e);
-connection.rollback();
-} catch (Exception e) {
-log.error("Unexpected error: {}", e.getMessage(), e);
-}
-});
-if (_intent[0] != null) {
-synchronized (connection) {
-agent.getStateMachine().setCurrentState(_intent[0]);
-log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0], agent.getStateMachine().getState(),
-cando);
-}
-} else {
-log.info("ux.chat.matrix.null: {}", state);
-}
-}
-}
+// }
+// } catch (StateException e) {
+// log.error("Error processing intent: {}. State machine transition failed: {}",
+// _intent[0],
+// e.getMessage(), e);
+// connection.rollback();
+// } catch (Exception e) {
+// log.error("Unexpected error: {}", e.getMessage(), e);
+// }
+// });
+// if (_intent[0] != null) {
+// synchronized (connection) {
+// agent.getStateMachine().setCurrentState(_intent[0]);
+// log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0],
+// agent.getStateMachine().getState(),
+// cando);
+// }
+// } else {
+// log.info("ux.chat.matrix.null: {}", state);
+// }
+// }
+// }
 }

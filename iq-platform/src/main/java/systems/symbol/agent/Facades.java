@@ -71,12 +71,16 @@ my = (Bindings) bindings.get(MY);
 bindings = new SimpleBindings();
 bindings.put(MY, my);
 }
-my.put(TIME, humanDateFormat.format(new Date()));
+// my.put(TIME, time());
 my.put(SELF, self.stringValue());
 return bindings;
 }
 
-public static Bindings trust(IRI agent, Resource state, Model model, Bindings my, I_Secrets trusted)
+public static String time() {
+return humanDateFormat.format(new Date());
+}
+
+public static Bindings facade(IRI agent, Resource state, Model model, Bindings my, I_Secrets trusted)
 throws SecretsException {
 IQFacade facade = new IQFacade(agent, model, trusted);
 try {
@@ -84,15 +88,16 @@ facade.enableVFS();
 } catch (FileSystemException e) {
 // ignore
 }
-return trust(agent, state, my, facade);
-}
+// return iq(agent, state, my, facade);
+// }
 
-public static Bindings trust(IRI agent, Resource state, Bindings my, IQFacade facade)
-throws SecretsException {
-log.debug("iq.trust: {} @ {} --> {}", agent, state, my.keySet());
+// public static Bindings iq(IRI agent, Resource state, Bindings my, IQFacade
+// facade)
+// throws SecretsException {
+log.debug("facade.iq: {} @ {} --> {}", agent, state, my.keySet());
 Bindings bindings = rebind(agent, state, my);
 bindings.put(IQ, facade);
-log.debug("iq.bound: {}", bindings.keySet());
+log.debug("facade.bound: {}", bindings.keySet());
 return bindings;
 }
 

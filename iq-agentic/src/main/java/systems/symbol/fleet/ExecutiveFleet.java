@@ -7,6 +7,7 @@ import systems.symbol.agent.Agentic;
 import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
+import systems.symbol.agent.ManagedAgent;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
@@ -36,7 +37,8 @@ public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> ll
 throws StateException, SecretsException {
 super(self, fleet, new ExecutiveIntent(self, fleet), secrets);
 // this.llm = llm;
-this.intents.add(new JSR233(self, fleet, fleet, secrets, new ModelScriptCatalog(fleet)));
+// this.intents.add(new JSR233(self, fleet, fleet, secrets, new
+// ModelScriptCatalog(fleet)));
 log.info("fleet.intents: {}", intents.getIntents());
 }
 
@@ -113,7 +115,7 @@ if (this.agents.containsKey(actor))
 return agents.get(actor);
 I_Agentic<String> context = new Agentic<>(() -> actor, new SimpleBindings(), new Conversation());
 contexts.put(actor, context);
-ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, this, context.getBindings());
+ManagedAgent agent = new ManagedAgent(this, actor, fleet, intents, context.getBindings());
 agents.put(actor, agent);
 return agent;
 }

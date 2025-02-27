@@ -64,12 +64,13 @@ Repository myRepo = myRealm.getRepository();
 try (RepositoryConnection connection = repository.getConnection()) {
 try (RepositoryConnection connection2 = myRepo.getConnection()) {
 AgentBuilder builder = new AgentBuilder(agent, connection, bindings, realm.getSecrets());
-builder.setThoughts(connection2).scripting().remodel().sparql(connection).self(chat);
+builder.setThoughts(connection2);
 
 // SearchDecision search = builder.decision(realm.getFinder(), chat);
-IntentDecision intents = builder.intention(chat);
-ChainOfCommand control = builder.control(intents);
-I_Agent avatar = builder.agent(chat, control, jwt);
+// IntentDecision intents = builder.deciding(chat);
+// ChainOfCommand control = builder.control(intents);
+I_Agent avatar = builder.avatar(chat);
+builder.scripting(avatar).remodel().sparql(connection).self(chat);
 log.info("ux.avatar.start: {} @ {}", agent, avatar.getStateMachine().getState());
 
 platform.getTasks().add(agent, avatar);
