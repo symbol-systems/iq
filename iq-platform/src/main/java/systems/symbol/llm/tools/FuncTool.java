@@ -1,6 +1,8 @@
-package systems.symbol.llm;
+package systems.symbol.llm.tools;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import systems.symbol.llm.I_ToolSpec;
 
 import java.util.HashMap;
 import java.util.Map;

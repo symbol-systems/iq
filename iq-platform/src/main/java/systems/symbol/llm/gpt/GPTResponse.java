@@ -32,6 +32,20 @@ public class GPTResponse {
         public String role;
         public String refusal;
         public String content;
+        public List<ToolCall> tool_calls;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ToolCall {
+        public String id;
+        public String type;
+        public Function function;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Function {
+        public String name;
+        public String arguments;
     }
 
     public static class Usage {

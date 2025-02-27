@@ -4,7 +4,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
-import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.ModelStateMachine;
@@ -16,11 +15,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
-    I_Decide<Resource> manager;
+    // I_Decide<Resource> manager;
     Set<Resource> seen = new HashSet<>();
 
     /**
@@ -29,17 +26,17 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      * @param self     The identity of the agent
      * @param thoughts The working memory of the agent as an RDF4J Model.
      */
-    public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, I_Decide<Resource> manager,
-            Bindings bindings) throws StateException {
+    public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, Bindings bindings)
+            throws StateException {
         super(self, thoughts, intent, bindings);
-        this.manager = manager;
+        // this.manager = manager;
         setFSM(new ModelStateMachine(self, thoughts, thoughts));
     }
 
     public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent,
-            I_Decide<Resource> manager, Bindings bindings) throws StateException {
+            Bindings bindings) throws StateException {
         super(self, thoughts, intent, bindings);
-        this.manager = manager;
+        // setManager(manager);
         setFSM(new ModelStateMachine(self, ground, thoughts));
     }
 
@@ -48,21 +45,18 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         log.info("agent.boot: {} x {}", self, ground.size());
     }
 
-    // public void resume() {
-    // }
-
     protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
         super.setFSM(fsm);
         Resource state = getStateMachine().getState();
+        log.info("agent.fsm: {} == {}", getSelf(), state);
         if (state == null)
             return;
         this.seen.add(state);
-        log.info("agent.fsm: {} == {}", getSelf(), state);
     }
 
-    public void setManager(I_Decide<Resource> manager) {
-        this.manager = manager;
-    }
+    // public void setManager(I_Decide<Resource> manager) {
+    // this.manager = manager;
+    // }
 
     /**
      * Handles transitions .
@@ -101,11 +95,6 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         log.info("agent.transitioned: {} --> {}", from, transitioned);
         seen.add(transitioned);
         return next.equals(transitioned);
-        // } catch (StateException e) {
-        // log.warn("agent.error: {} @ {} --> {} && {}", getSelf(), from, to,
-        // e.getMessage());
-        // return false;
-        // }
     }
 
     /**
@@ -121,22 +110,23 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
     @Override
     public Resource intent() throws StateException {
         Collection<Resource> choices = getStateMachine().getTransitions();
-        log.info("agent.deciding: {} -> {}", manager == null ? "solo" : manager.getClass().getSimpleName(), choices);
+        log.info("agent.deciding: {} @ {} -> {}", getSelf(), getStateMachine().getState(), choices);
         if (choices.isEmpty())
             return null;
         if (choices.size() == 1)
             return choices.iterator().next();
-        if (manager == null)
-            return null;
-        Future<I_Delegate<Resource>> delegated = manager.delegate(this);
-        if (delegated == null)
-            return null;
-        try {
-            I_Delegate<Resource> delegate = delegated.get();
-            return (delegate == null) ? null : delegate.intent();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new StateException(e.getMessage(), getStateMachine().getState(), e);
-        }
+        return getStateMachine().getState();
+        // if (manager == null)
+        // return null;
+        // Future<I_Delegate<Resource>> delegated = manager.delegate(this);
+        // if (delegated == null)
+        // return null;
+        // try {
+        // I_Delegate<Resource> delegate = delegated.get();
+        // return (delegate == null) ? null : delegate.intent();
+        // } catch (InterruptedException | ExecutionException e) {
+        // throw new StateException(e.getMessage(), getStateMachine().getState(), e);
+        // }
     }
 
     public void start() throws Exception {

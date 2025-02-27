@@ -28,7 +28,7 @@ public class SimplePrompt extends AbstractPrompt<String> {
 
     @Override
     public I_Assist<String> complete(I_Assist<String> chat) throws APIException, IOException {
-        String txt = bind(msg.toString());
+        String txt = interpolate(msg.toString());
         // log.info("prompt.complete: {}", txt);
         chat.add(new TextMessage(role, txt));
         return chat;

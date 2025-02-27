@@ -2,6 +2,8 @@ package systems.symbol.llm;
 
 import java.util.Map;
 
+import systems.symbol.llm.tools.FuncToolParam;
+
 public interface I_ToolSpec {
 
     /**

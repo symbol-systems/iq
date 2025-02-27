@@ -4,31 +4,34 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import systems.symbol.tools.APIException;
+import systems.symbol.decide.I_Decide;
+import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;
-import systems.symbol.llm.gpt.CommonLLM;
+import systems.symbol.llm.gpt.GPTResponse.Usage;
+import systems.symbol.llm.gpt.GenericGPT;
+import systems.symbol.llm.gpt.LLMFactory;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.prompt.*;
 import systems.symbol.secrets.I_Secrets;
-import systems.symbol.llm.I_LLMessage;
 
 import javax.script.Bindings;
+
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * The `Avatar` class represents an intelligent agent capable of interacting
- * with
- * a large language model (LLM) to process and execute user intents within a
- * state
- * machine framework. This class acts as a mediator between the agent's internal
- * decision-making processes and the external prompts and responses managed by
- * the LLM.
+ * with a large language model (LLM) to process and execute user intents.
+ * This class acts as a mediator between the agent's internal
+ * decision-making, the prompts and responses of the LLM.
  *
  * <ul>
  * <li>Manages agent's state machine and ensuring that state transitions
@@ -50,17 +53,25 @@ import java.util.*;
  * intent recognition, state management, and interaction handling.
  */
 
-public class Avatar implements I_Selfie {
+public class Avatar implements I_Avatar {
     private static final Logger log = LoggerFactory.getLogger(Avatar.class);
     I_Agent agent;
     I_Assist<String> chat;
     Model facts;
     I_Secrets secrets;
-    IRI decision = null;
     int contextLength = 2048;
+    I_Decide<Resource> manager;
+    private List<Usage> usage = null;
 
-    // Constructor initializes the Avatar instance with required dependencies
     public Avatar(I_Agent agent, I_Assist<String> chat, Model facts, I_Secrets secrets) {
+        this.agent = agent;
+        this.chat = chat;
+        this.facts = facts;
+        this.secrets = secrets;
+    }
+
+    public Avatar(I_Decide<Resource> manager, I_Agent agent, I_Assist<String> chat, Model facts, I_Secrets secrets) {
+        this.manager = manager;
         this.agent = agent;
         this.chat = chat;
         this.facts = facts;
@@ -89,134 +100,55 @@ public class Avatar implements I_Selfie {
     }
 
     // Handles the flow between agent and the LLM, then updating state
-    public Set<IRI> llm(IRI actor, Resource assistant, Bindings bindings) throws APIException, Exception {
+    public Set<IRI> llm(IRI action, Resource assistant, Bindings bindings) throws APIException, Exception {
         Set<IRI> done = new HashSet<>();
-        I_LLM<String> llm = CommonLLM.complete(assistant, facts, contextLength, secrets);
+        GenericGPT llm = LLMFactory.llm(assistant, facts, contextLength, secrets);
         if (llm == null) {
-            log.error("*** OOPS.LLM: {} @ {} *** ", actor, assistant);
+            log.error("*** OOPS.llm.configure: {} @ {} *** ", action, assistant);
             return done;
         }
-        if (!prompts(actor, assistant, llm, bindings)) {
-            log.warn("*** OOPS.prompt: {} @ {} *** ", actor, assistant);
+        if (!generate(action, assistant, llm, bindings)) {
+            log.warn("*** OOPS.llm.prompt: {} @ {} *** ", action, assistant);
             return done;
         }
-        done.add(actor);
-        done.add(decision);
+        usage.addAll(llm.getUsage());
+        done.add(action);
+        // done.add(decision);
         return done;
     }
 
-    public void tools(I_LLM<String> llm) {
-        for (Resource state : this.agent.getStateMachine().getTransitions()) {
-            String comment = value(state, RDFS.COMMENT);
-            FuncTool funct = new FuncTool(state.stringValue(), comment);
-            funct.requires("string", "prompt", "think, plan, prompt");
-            llm.tools().add(funct);
-        }
-    }
-
-    // Builds then binds the Avatar prompt from agent & state, calls LLM and updates
-    // the LLM
-    protected boolean prompts(IRI actor, Resource assistant, I_LLM<String> llm, Bindings bindings)
-            throws Exception, APIException {
-        tools(llm);
-        Resource state = agent.getStateMachine().getState();
-        bindings.put(Facades.AI, actor.getLocalName());
-
-        Optional<Literal> wrapper = Models.getPropertyLiteral(facts, assistant, RDF.VALUE);
-        if (wrapper.isEmpty()) {
-            log.warn("avatar.system.{}: {} @ {} == {}", assistant, actor, state, wrapper);
-            return false;
-        }
-
-        String prompt$ = value(agent.getSelf()) + "\n" + value(agent.getStateMachine().getState());
-        if (prompt$.trim().isEmpty()) {
-            log.warn("avatar.prompt.empty: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
-            return false;
-        }
-
-        Bindings my = Facades.rebind(agent.getSelf(), bindings);
-        SimplePrompt prompt = new SimplePrompt(wrapper.get().stringValue(), my);
-        PromptChain chain = new PromptChain(prompt);
-
-        bindings.put("prompt", prompt.bind(prompt$));
-        // log.info("avatar.state: {}", prompt$);
-        I_Assist<String> prompted = chain.complete(chat);
-        log.debug("avatar.completed: {} -> {}", bindings.keySet(), prompted);
-        I_Assist<String> answer = llm.complete(prompted);
-        // log.info("avatar.answer: {}", answer);
+    private boolean generate(IRI action, Resource assistant, I_LLM<String> llm, Bindings bindings)
+            throws IOException, APIException, StateException {
+        AvatarPrompt prompts = new AvatarPrompt(agent, facts, bindings);
+        prompts.avatar(assistant);
+        prompts.assistant();
+        I_Assist<String> answer = llm.complete(prompts.complete(chat));
         answered(agent, chat, answer);
-        log.debug("avatar.done: {} -> {}", actor, answer);
         return true;
     }
 
-    public String value(Resource state) {
-        if (state == null)
-            return null;
-        Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, RDF.VALUE);
-        return groundS.orElse(Values.literal("")).stringValue();
-    }
-
-    public String value(Resource state, IRI predicate) {
-        if (state == null)
-            return null;
-        Optional<Literal> groundS = Models.getPropertyLiteral(facts, state, predicate);
-        return groundS.orElse(Values.literal("")).stringValue();
-    }
-
-    // Updates the chat interface with the LLM's response and handles intent
-    // processing
-    private void answered(I_Agent agent, I_Assist<String> chat, I_Assist<String> ai) throws StateException {
-        I_LLMessage<String> latest = ai.latest();
+    // Updates the chat interface with the LLM's response and intent processing
+    private void answered(I_Agent agent, I_Assist<String> chat, I_Assist<String> answer) throws StateException {
+        I_LLMessage<String> latest = answer.latest();
         if (!latest.getRole().equals(I_LLMessage.RoleType.assistant)) {
-            log.info("avatar.noreply {}", agent.getSelf());
+            log.info("avatar.not-reply {}", agent.getSelf());
             return;
         }
-        // if (latest.getRole() == I_LLMessage.RoleType.user) {
-        // chat.messages().removeLast();
-        // intent = new IntentMessage(intent.getIntent(), I_LLMessage.RoleType.user,
-        // latest.getContent());
-        // log.info("avatar.intent: {}", intent);
-        // }
         if (!(latest instanceof IntentMessage intent)) {
             String reply = latest.getContent();
-            log.info("avatar.reply: {} => {}", ai.messages().size(), ai.messages());
+            log.info("avatar.reply: #{} => {}", answer.messages().size(), answer.messages());
             chat.assistant(reply);
             return;
         }
         chat.add(intent);
-        if (intent.intent() != null && !agent.getStateMachine().getState().equals(intent.intent())) {
-            IRI todo = next(agent, intent);
-            log.info("avatar.NEXT..? {} => {} @ {}", intent.getIntent(), agent.getSelf(), todo);
-        }
-    }
-
-    // Determines the appropriate state transition based on the message intent - the
-    // match is namespace and case agnostic
-    private IRI next(I_Agent agent, IntentMessage message) throws StateException {
-        I_StateMachine<Resource> fsm = agent.getStateMachine();
-        Collection<Resource> transitions = fsm.getTransitions();
-        String intentLocalName = message.intent().getLocalName().toLowerCase();
-
-        // match agnostic to namespace and case
-        for (Resource transition : transitions) {
-            if (transition instanceof IRI state && state.getLocalName().toLowerCase().equals(intentLocalName)) {
-                decision = state;
-            }
-        }
-        log.info("avatar.next: {} @ {} => {}", agent.getSelf(), agent.getStateMachine().getState(), decision);
-        return decision == null ? (IRI) agent.getStateMachine().getState() : decision;
+        log.info("avatar.intent: {} => {} @ {}", intent.getIntent(), agent.getSelf(),
+                agent.getStateMachine().getState());
     }
 
     // Returns the current identity of the agent
     @Override
     public IRI getSelf() {
         return agent.getSelf();
-    }
-
-    // Returns the decision or intent resource
-    @Override
-    public Resource intent() throws StateException {
-        return decision;
     }
 
     // Retrieves the current thoughts or internal state of the agent
@@ -231,15 +163,51 @@ public class Avatar implements I_Selfie {
         return agent.getStateMachine();
     }
 
-    // Starts the agent's operation
+    public List<Usage> getUsage() {
+        return usage;
+    }
+
+    // Starts the agent
     @Override
     public void start() throws Exception {
+        if (manager != null) {
+            Future<I_Delegate<Resource>> delegated = manager.delegate(agent);
+            if (delegated.isDone()) {
+                I_Delegate<Resource> decision = delegated.get();
+                agent.getStateMachine().setInitial(decision.intent());
+                log.info("avatar.start: {} @ {} -> {}", agent.getSelf(), agent.getStateMachine().getState(),
+                        decision.intent());
+            }
+        }
         agent.start();
+        log.info("avatar.started: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
     }
 
     // Stops the agent's operation
     @Override
     public void stop() {
         agent.stop();
+    }
+
+    @Override
+    public Resource intent() throws StateException {
+        if (manager != null) {
+            Future<I_Delegate<Resource>> delegated = manager.delegate(agent);
+            if (delegated.isDone()) {
+                try {
+                    I_Delegate<Resource> decision;
+                    decision = delegated.get();
+                    Resource intent = decision.intent();
+                    log.info("avatar.start: {} @ {}", agent.getSelf(), intent);
+                    return intent;
+                } catch (InterruptedException e) {
+                    log.info("avatar.interrupted: {} @ {}", agent.getSelf(), e);
+                } catch (ExecutionException e) {
+                    log.info("avatar.oops: {} @ {}", agent.getSelf(), e);
+                }
+                return null;
+            }
+        }
+        return null;
     }
 }

@@ -47,6 +47,12 @@ public class ExecutiveIntent extends AbstractIntent implements I_Intents {
         log.info("exec.intent: {} -> {} ==> {}", self, facts.size(), this.intents.keySet());
     }
 
+    public ExecutiveIntent(IRI self, Model facts, Model thoughts) {
+        boot(self, thoughts);
+        this.facts = facts;
+        log.info("exec.intent: {} -> {} ==> {}", self, facts.size(), this.intents.keySet());
+    }
+
     /**
      * An executive able to execute specified intents, and follow next-steps.
      * 

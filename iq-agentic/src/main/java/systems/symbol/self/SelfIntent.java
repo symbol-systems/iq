@@ -4,7 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Values;
 import systems.symbol.RDF;
-import systems.symbol.agent.I_Selfie;
+import systems.symbol.agent.I_Avatar;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.AbstractIntent;
 import systems.symbol.llm.Conversation;
@@ -15,9 +15,9 @@ import java.util.Set;
 
 public class SelfIntent extends AbstractIntent {
     Conversation chat;
-    I_Selfie selfie;
+    I_Avatar selfie;
 
-    public SelfIntent(I_Selfie selfie, Conversation chat) {
+    public SelfIntent(I_Avatar selfie, Conversation chat) {
         this.selfie = selfie;
         this.chat = chat;
     }

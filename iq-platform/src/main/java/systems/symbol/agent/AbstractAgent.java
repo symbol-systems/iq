@@ -127,9 +127,9 @@ public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Intent, I
     @Override
     public abstract Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException;
 
-    public Resource decide(Resource state) throws StateException {
-        return getStateMachine().transition(state);
-    }
+    // public Resource decide(Resource state) throws StateException {
+    // return getStateMachine().transition(state);
+    // }
 
     @Override
     public IRI getSelf() {

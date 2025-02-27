@@ -8,8 +8,8 @@ class AvatarTest {
     @Test
     void delegateChat() {
         EnvsAsSecrets secrets = new EnvsAsSecrets();
-        String openaiApiKey = secrets.getSecret("OPENAI_API_KEY");
-        if (openaiApiKey != null) {
+        String OPENAI_API_KEY = secrets.getSecret("OPENAI_API_KEY");
+        if (OPENAI_API_KEY != null) {
             try {
                 // IRI self = Values.iri(IQ_NS.TEST);
                 // DynamicModelFactory dmf = new DynamicModelFactory();

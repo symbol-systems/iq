@@ -173,10 +173,9 @@ public class RealmPlatform implements I_Realms {
         RepositoryConnection connection = realm.getRepository().getConnection();
         Conversation chat = new Conversation();
         AgentBuilder builder = new AgentBuilder(realm.getSelf(), connection, bindings, realm.getSecrets());
-        builder.setThoughts(realm.getModel()).scripting().remodel().sparql(connection).realm(realm).self(chat);
+        builder.setThoughts(realm.getModel());
         I_Agent agent = builder.avatar(chat);
-        if (agent == null)
-            return null;
+        builder.scripting(agent).remodel().sparql(connection).realm(realm).self(chat);
         Resource state = agent.getStateMachine().getState();
         if (state != null) {
             Thread thread = threads.add(agent.getSelf(), agent);

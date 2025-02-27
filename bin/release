@@ -1,4 +1,14 @@
-MSG="$1"
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    MSG=$(grep -oPm1 "(?<=<version>)[^<]+" pom.xml)
+
+    if [ -z "$MSG" ]; then
+        MSG=$(grep -oPm1 "(?<=<parent>.*<version>)[^<]+" pom.xml)
+    fi
+else
+    MSG="$1"
+fi
 
 if [ -z "$MSG" ]; then
     echo "Error: Missing commit message."
@@ -10,4 +20,3 @@ git commit -m "$MSG"
 git tag "$MSG"
 git push
 git push --tags
-

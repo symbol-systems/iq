@@ -78,8 +78,8 @@ public class EchoAPI extends GuardedAPI {
 
         try (RepositoryConnection connection = repository.getConnection()) {
             AgentBuilder builder = new AgentBuilder(actor, connection, bindings, realm.getSecrets());
-            builder.self(chat).scripting();
             Avatar avatar = builder.avatar(chat);
+            builder.self(chat).scripting(avatar);
             // execute agentic LLM without state transition/actions
             avatar.execute(builder.getBindings());
             log.info("trust.echo.reply: {} @ {}", chat.messages().getLast(), stopwatch);

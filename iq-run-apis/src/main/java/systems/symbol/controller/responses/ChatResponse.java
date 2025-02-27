@@ -23,18 +23,17 @@ public class ChatResponse implements I_Response {
         this.messages = chat.messages();
     }
 
-    public ChatResponse(I_Assist<String> chat, Bindings meta) {
-        this.messages = chat.messages();
-        this.meta = meta;
+    public ChatResponse(I_Assist<String> chat, I_Agent agent) {
+        this(chat, agent, new SimpleBindings());
     }
 
-    public ChatResponse(I_Assist<String> chat, I_Agent agent) {
+    public ChatResponse(I_Assist<String> chat, I_Agent agent, Bindings meta) {
         this.messages = chat.messages();
-        this.meta = new SimpleBindings();
-        meta.put(Facades.SELF, agent.getSelf().stringValue());
-        meta.put(Facades.FOCUS, agent.getStateMachine().getState().stringValue());
+        this.meta = meta == null ? new SimpleBindings() : new SimpleBindings(meta);
+        this.meta.put(Facades.SELF, agent.getSelf().stringValue());
+        this.meta.put(Facades.FOCUS, agent.getStateMachine().getState().stringValue());
         Collection<Resource> intents = agent.getStateMachine().getTransitions();
-        meta.put(Facades.INTENTS, Facts.toString(intents));
+        this.meta.put(Facades.INTENTS, Facts.toString(intents));
     }
 
     public Response build() {

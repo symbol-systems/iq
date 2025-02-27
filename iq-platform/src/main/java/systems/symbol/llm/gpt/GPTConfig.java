@@ -24,8 +24,8 @@ public class GPTConfig implements I_LLMConfig {
     public GPTConfig(String url, String modelName, int maxTokens) {
         this.url = url;
         this.modelName = modelName;
-        this.temperature = 0;
-        this.frequencyPenalty = 0;
+        this.temperature = 0.0f;
+        this.frequencyPenalty = 0.0f;
         this.maxTokens = maxTokens;
         this.topP = 1;
         this.n = 1;

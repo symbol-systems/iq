@@ -25,7 +25,6 @@ import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.util.RDFPrefixer;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
-import systems.symbol.string.PrettyString;
 import systems.symbol.string.PrettyStrings;
 import systems.symbol.string.Validate;
 

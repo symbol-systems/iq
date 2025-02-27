@@ -23,17 +23,18 @@ public class AgentService {
     Bindings state;
     I_Contents scripts;
 
-    public AgentService(IRI self, RepositoryConnection connection, I_Secrets secrets, Bindings state) throws StateException, SecretsException {
+    public AgentService(IRI self, RepositoryConnection connection, I_Secrets secrets, Bindings state)
+            throws StateException, SecretsException {
         this.self = self;
         this.model = new LiveModel(connection);
         this.scripts = new IQScriptCatalog(this.self, connection);
-        this.intent = new ExecutiveIntent(self, model, model,new JSR233(self, model, model, secrets, scripts));
+        this.intent = new ExecutiveIntent(self, model, model, new JSR233(agent, model, model, secrets, scripts));
         this.intent.add(new Select(self, connection));
         this.intent.add(new Update(self, connection));
         this.intent.add(new Remodel(self, this.model, scripts));
         this.intent.add(new Construct(self, connection));
         this.state = state;
-        this.agent = new ExecutiveAgent(this.self, this.model, intent, null, state);
+        this.agent = new ExecutiveAgent(this.self, this.model, intent, state);
     }
 
     public Resource next(Resource state) throws StateException {

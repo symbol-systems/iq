@@ -9,6 +9,8 @@ public interface I_Assist<T> {
 
     I_LLMessage<T> latest();
 
+    public String context(int window);
+
     void system(T s);
 
     void assistant(T s);

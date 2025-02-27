@@ -1,6 +1,9 @@
 package systems.symbol.platform;
 
 import jakarta.ws.rs.core.UriInfo;
+
+import javax.servlet.http.HttpServletRequest;
+
 import jakarta.ws.rs.core.HttpHeaders;
 
 public class WebURLs {
@@ -23,13 +26,22 @@ public class WebURLs {
         return forwardedProto + "://" + forwardedHost + port + "/";
     }
 
-    public static String getClientHostname(HttpHeaders headers) {
-        String forwardedFor = getHeader(headers, "X-Forwarded-For", null);
-        if (forwardedFor != null) {
-            String[] parts = forwardedFor.split(",");
-            return parts[0].trim(); // First IP in the list, typically the client's real IP
+    public static String getClientIP(HttpServletRequest request, HttpHeaders headers) {
+        String ip = request.getRemoteAddr();
+
+        // Check common proxy headers for real IP address
+        String[] headerCandidates = {
+                "X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP",
+                "True-Client-IP", "Forwarded", "Proxy-Client-IP", "WL-Proxy-Client-IP"
+        };
+
+        for (String header : headerCandidates) {
+            String ipList = headers.getHeaderString(header);
+            if (ipList != null && !ipList.isEmpty()) {
+                return ipList.split(",")[0].trim(); // First IP is the original client
+            }
         }
-        return getHeader(headers, "X-Real-IP", null); // Fallback to X-Real-IP if available
+        return ip;
     }
 
     private static String getHeader(HttpHeaders headers, String headerName, String defaultValue) {

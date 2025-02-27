@@ -30,7 +30,7 @@ public class ChoicePrompt extends AbstractPrompt<String> {
         String prompt = prompt(agent.getThoughts(), agent.getStateMachine().getTransitions());
         log.info("prompt.choices: {}", prompt);
         if (!prompt.isEmpty())
-            chat.system(bind(prompt));
+            chat.system(interpolate(prompt));
         return chat;
     }
 

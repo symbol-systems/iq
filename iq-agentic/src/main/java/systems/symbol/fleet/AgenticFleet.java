@@ -48,6 +48,7 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
         this.self = self;
         this.fleet = model;
     }
+
     /**
      * Deploys agents from the fleet model and initializes them.
      *
@@ -67,20 +68,21 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
     /**
      * Creates a new agent instance.
      *
-     * @param self    the self IRI representing the agent
+     * @param self the self IRI representing the agent
      * @return the newly created agent
      * @throws StateException if there is an issue with the state machine
      */
     /**
      * Deploy a new actor instance.
      *
-     * @param actor    the Agent IRI
+     * @param actor the Agent IRI
      * @return the newly created actor
      * @throws StateException if there is an issue with the deployment
      */
     public I_Agent deploy(IRI actor) throws StateException {
-        if (this.agents.containsKey(actor)) return agents.get(actor);
-        ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, null, new SimpleBindings());
+        if (this.agents.containsKey(actor))
+            return agents.get(actor);
+        ExecutiveAgent agent = new ExecutiveAgent(actor, fleet, intents, new SimpleBindings());
         agents.put(actor, agent);
         return agent;
     }
@@ -112,7 +114,8 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
      */
     @Override
     public void start() throws Exception {
-        if (agents.isEmpty()) deploy();
+        if (agents.isEmpty())
+            deploy();
         Set<IRI> iris = agents.keySet();
         log.info("fleet.start: {}", iris);
         for (IRI agent : iris) {
@@ -146,7 +149,8 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
     @Override
     public void start(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent == null) return;
+        if (agent == null)
+            return;
         agent.start();
     }
 
@@ -159,7 +163,8 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
     @Override
     public void stop(IRI self) throws Exception {
         I_Agent agent = getAgent(self);
-        if (agent == null) return ;
+        if (agent == null)
+            return;
         agent.stop();
     }
 
