@@ -12,7 +12,8 @@ import java.util.Set;
 
 /**
  * Implementation of a lazy agent.
- * This agent performs no action upon transition and simply returns the current state.
+ * This agent performs no action upon transition and simply returns the current
+ * state.
  */
 public class LazyAgent extends AbstractAgent {
 
@@ -24,6 +25,7 @@ public class LazyAgent extends AbstractAgent {
      */
     public LazyAgent(IRI self, Model model) throws StateException {
         super(self, model);
+        boot(self, model);
     }
 
     /**
@@ -50,7 +52,7 @@ public class LazyAgent extends AbstractAgent {
      * For a lazy agent, this method simply returns the current state.
      *
      * @param actor The subject of the execution.
-     * @param state   The current state of the agent.
+     * @param state The current state of the agent.
      * @return A set of IRIs representing the current state.
      * @throws StateException If an error occurs during execution.
      */
@@ -58,7 +60,8 @@ public class LazyAgent extends AbstractAgent {
     public Set<IRI> execute(IRI actor, Resource state, Bindings bindings) throws StateException {
         IRIs iris = new IRIs();
         // do nothing
-        if (state instanceof IRI)  iris.add((IRI) state);
+        if (state instanceof IRI)
+            iris.add((IRI) state);
         return iris;
     }
 }
