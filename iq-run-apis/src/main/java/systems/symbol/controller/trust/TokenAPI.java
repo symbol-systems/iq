@@ -72,17 +72,17 @@ public class TokenAPI extends RealmAPI {
             return new OopsResponse("trust.token.provider", Response.Status.BAD_REQUEST).build();
         }
         if (Validate.isMissing(_realm)) {
-            return new OopsResponse("trust.token.realm", Response.Status.BAD_REQUEST).build();
+            return new OopsResponse("trust.token.realm.missing", Response.Status.BAD_REQUEST).build();
         }
         I_Realm realm = platform.getRealm(_realm);
         if (realm == null)
-            return new OopsResponse("trust.token.realm." + _realm, Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.realm.invalid", Response.Status.NOT_FOUND).build();
         // TODO: authenticate (subject is a user, subject known to issuer)
         // TODO: authorize (subject known to audience)
 
         Repository repo = realm.getRepository();
         if (repo == null)
-            return new OopsResponse("trust.token.repository." + _realm, Response.Status.NOT_FOUND).build();
+            return new OopsResponse("trust.token.repository.missing", Response.Status.NOT_FOUND).build();
 
         IRI issuer = Values.iri(realm.getSelf().stringValue(), "trust/" + provider + "/");
 
@@ -107,7 +107,7 @@ public class TokenAPI extends RealmAPI {
             I_Agent agent = builder.agent();
             builder.scripting(agent).sparql(connection);
             IRI initial = Values.iri(issuer.stringValue() + "verify");
-            Object identity;
+            Object identity = null;
             try {
                 agent.start();
                 Resource state = agent.getStateMachine().transition(initial);
@@ -115,12 +115,14 @@ public class TokenAPI extends RealmAPI {
                 log.info("trust.token.identity: {} == {} @ {}", agent.getSelf(), identity, state);
                 agent.stop();
             } catch (Exception e) {
+                log.error("trust.token.agent: {} == {}", agent.getSelf(), identity, e);
                 return new OopsResponse(e.getMessage(), Response.Status.UNAUTHORIZED).build();
             }
             // agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
-            if (identity == null)
+            if (identity == null) {
                 return new OopsResponse("trust.token.identity", Response.Status.UNAUTHORIZED).build();
+            }
             if (!identity.toString().startsWith(agent.getSelf().stringValue())
                     || identity.toString().length() == agent.getSelf().stringValue().length())
                 return new OopsResponse("trust.token.fraud", Response.Status.FORBIDDEN).build();
