@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.rdf4j.io.RDFLoader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.function.Consumer;
 
 public class RDFFileIngestor implements Consumer<FileObject> {
@@ -42,9 +41,9 @@ return;
 IRI asset = Values.iri(file.getURI().toString());
 try {
 loader.load(asset, file.getContent().getInputStream(), format);
-log.info("loaded.rdf: " + format + " @ " + asset);
+log.info("ingest.rdf: " + format + " @ " + asset);
 } catch (IOException e) {
-log.error("oops: " + e.getMessage() + " @ " + file.getName().getURI(), e);
+log.error("ingest.oops: " + e.getMessage() + " @ " + file.getName().getURI(), e);
 }
 }
 
