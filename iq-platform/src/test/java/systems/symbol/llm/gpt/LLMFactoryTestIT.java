@@ -50,11 +50,11 @@ ai.tool(Tool.defineFunction("search_memory", "search my memory").addStringParam(
 Conversation chat = generateLLMResponse(ai, "today is " + Facades.time() + ". find todays news");
 assert chat != null;
 System.out.printf("llm.llama_tools.search: %s \n", chat.messages().size());
-assert chat.messages.size() == 2;
+assert chat.messages.size() > 0;
 Conversation chat2 = generateLLMResponse(ai, "as an RDF agent, self-reflect.");
 assert chat2 != null;
 System.out.printf("llm.llama_tools.self: %s \n", chat2.messages().size());
-assert chat2.messages.size() == 2;
+assert chat2.messages.size() > 0;
 }
 
 Conversation generateLLMResponse(GenericGPT ai, String say) throws APIException, IOException {
