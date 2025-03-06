@@ -161,7 +161,7 @@ public class TokenAPI extends RealmAPI {
                 return new SimpleResponse(oops.getMessage(), oops.getStatus()).build();
             }
             log.error("trust.token.failed: {}", e.getMessage(), e);
-            return new OopsResponse("trust.token.oops", Response.Status.FORBIDDEN).build();
+            return new OopsResponse("trust.token.error", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 

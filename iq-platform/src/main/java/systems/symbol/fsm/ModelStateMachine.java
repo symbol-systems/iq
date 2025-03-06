@@ -62,7 +62,7 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
         Iterator<Resource> found_current = find(self, state, hasCurrentState).iterator();
         if (found_current.hasNext()) {
             Resource next = found_current.next();
-            log.info("msm.msm.current: {}", next);
+            log.debug("msm.current: {}", next);
             setCurrentState(next);
         }
     }
@@ -73,7 +73,7 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
 
         state.add(self, initialStep, initialState);
         state.add(self, hasCurrentState, getState());
-        log.debug("msm.msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
+        log.debug("msm.sync: {} @ {} -> {}", self, getState(), getTransitions(getState()));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
             return false; // No transitions
         }
 
-        log.info("msm.updated (final/guarded): {} ---> {} / {}", isAllowedByGuard(self, target), isFinal(getState()),
+        log.debug("msm.updated (final/guarded): {} ---> {} / {}", isAllowedByGuard(self, target), isFinal(getState()),
                 isGuarded(target));
         // if (isFinal(getState())) return false; // No states
         if (!isGuarded(target))
@@ -123,25 +123,25 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
             Resource guard = iGuards.next();
             Iterable<Statement> rules = model.getStatements(guard, null, null);
             Iterator<Statement> iRules = rules.iterator();
-            log.info("msm.guard: {} --> {} = {}", subject, guard, iRules.hasNext());
+            log.debug("msm.guard: {} --> {} = {}", subject, guard, iRules.hasNext());
 
             // ensure the rule 2-tuple match the subject's 2-tuple (aka name/value)
             while (iRules.hasNext()) {
                 Statement rule = iRules.next();
-                log.info("msm.guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
+                log.debug("msm.guard.rule: {} --> {} = {}", subject, rule.getPredicate(), rule.getObject());
                 if (!hasGuard.equals(rule.getPredicate())) {
                     // ensure rules tuples match the subject
                     Iterable<Statement> statements = model.getStatements(subject, rule.getPredicate(),
                             rule.getObject());
                     boolean matches = statements.iterator().hasNext();
                     if (!matches) {
-                        log.info("msm.guard.block: {} == {}", subject, rule.getPredicate());
+                        log.debug("msm.guard.block: {} == {}", subject, rule.getPredicate());
                         return false;
                     }
                 }
             }
         }
-        log.info("msm.guard.grants: {} -> {}", subject, target);
+        log.debug("msm.guard.grants: {} -> {}", subject, target);
         return true; // All rules must have matched
     }
 

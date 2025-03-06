@@ -4,7 +4,6 @@ import org.apache.commons.vfs2.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -35,8 +34,6 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected final RepositoryManager manager;
     protected FileSystemManager vfs;
-    // protected final File keysHome;
-    // protected File home, logHome, lakeHome, vaultHome, indexHome;
     protected FileObject home, lake;
     protected DynamicModelFactory dmf = new DynamicModelFactory();
     protected String defaultType = "default";
@@ -64,7 +61,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         if (realms.containsKey(self)) {
             return realms.get(self);
         }
-        log.info("realm.repo.get: {}", self.stringValue());
+        log.debug("realm.repo.get: {}", self.stringValue());
         Repository repo = getRepository(self.stringValue());
         if (repo == null) {
             log.warn("realm.repo.missing: {}", self);
@@ -74,7 +71,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         try {
             I_Secrets secrets = this.secrets.getSecrets(self);
             I_KeyStore keys = getKeyStore(self);
-            log.info("realm.secrets: {} x {} == {}", self, model.size(), secrets != null);
+            log.debug("realm.secrets: {} x {} == {}", self, model.size(), secrets != null);
             realm = new Realm(self, model, repo, secrets, this.vfs, keys.keys());
             realms.put(self, realm);
             searchers.put(self, new SearchMatrix());
@@ -113,13 +110,13 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     protected Repository addRepository(String self, String id, String type)
             throws RepositoryException, RepositoryConfigException {
         Repository repo = this.manager.getRepository(id);
-        log.info("realm.get: {} -> {} -> {}", self, id, repo == null ? false : repo.isInitialized());
+        log.debug("realm.get: {} -> {} -> {}", self, id, repo == null ? false : repo.isInitialized());
         if (repo != null) {
             return repo;
         }
         try {
             RepositoryConfig config = RDFConfigFactory.toConfig(Values.iri(self), id, type);
-            log.info("realm.add: {} -> {} -> {} --> {}", id, self, type, config.getID());
+            log.debug("realm.add: {} -> {} -> {} --> {}", id, self, type, config.getID());
             this.manager.addRepositoryConfig(config);
             repo = this.manager.getRepository(id);
             repo.init();
@@ -167,7 +164,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
     @Override
     public void stop() {
         for (String id : this.manager.getRepositoryIDs()) {
-            log.info("realm.stop: {}", id);
+            log.debug("realm.stop: {}", id);
             this.manager.getRepository(id).shutDown();
         }
         this.manager.shutDown();
@@ -181,6 +178,10 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
 
     public void index(I_Realm realm) {
         SearchMatrix searcher = searchers.get(realm.getSelf());
+        if (searcher == null) {
+            log.warn("realm.index.missing: {}", realm.getSelf());
+            return;
+        }
         try (RepositoryConnection connection = realm.getRepository().getConnection()) {
             try (RepositoryResult<Statement> contents = connection.getStatements(null,
                     RDF.VALUE, null)) {

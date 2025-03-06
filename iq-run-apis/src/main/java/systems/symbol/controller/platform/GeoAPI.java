@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.rdf4j.model.IRI;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
 import systems.symbol.platform.WebURLs;
 import systems.symbol.sigint.GeoLocate;
@@ -39,28 +38,27 @@ public class GeoAPI extends RealmAPI {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response locate(@Context UriInfo info, @Context HttpHeaders headers, @Context HttpServletRequest request) {
+    public Response locate(@Context UriInfo info, @Context HttpHeaders headers) {
         Bindings reply = new SimpleBindings();
         ZonedDateTime now = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("GMT"));
         reply.putIfAbsent("now", System.currentTimeMillis());
         reply.putIfAbsent("gmt", now.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        String ipv4 = WebURLs.getClientIP(request, headers);
-        if (ipv4 == null) {
-            return new OopsResponse("geo.ipv4.unknown", Response.Status.NOT_FOUND).build();
-        }
-        reply.putIfAbsent("ipv4", ipv4);
-        try {
-            GeoLocate geo = new GeoLocate();
-            if (!ipv4.equals("127.0.0.1")) {
-                reply.putIfAbsent("client", geo.location(ipv4));
-            } else {
-                reply.putIfAbsent("client", geo.location());
+        String ipv4 = WebURLs.getClientIP(null, headers);
+        if (ipv4 != null) {
+            reply.putIfAbsent("ipv4", ipv4);
+            try {
+                GeoLocate geo = new GeoLocate();
+                if (!ipv4.equals("127.0.0.1")) {
+                    reply.putIfAbsent("client", geo.location(ipv4));
+                } else {
+                    reply.putIfAbsent("client", geo.location());
+                }
+                reply.putIfAbsent("server", geo.location());
+                // log.info("api.geo.ipv4: {}", reply);
+            } catch (Exception e) {
+                log.warn("api.geo.oops.geo: {} -> {}", e.getMessage(), ipv4);
+                reply.putIfAbsent("error", e.getMessage());
             }
-            reply.putIfAbsent("server", geo.location());
-            // log.info("api.geo.ipv4: {}", reply);
-        } catch (Exception e) {
-            log.warn("api.geo.oops.geo: {} -> {}", e.getMessage(), ipv4);
-            reply.putIfAbsent("error", e.getMessage());
         }
         return new SimpleResponse(reply).build();
     }

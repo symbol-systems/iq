@@ -52,13 +52,6 @@ public class GenericGPT implements I_LLM<String> {
         init();
     }
 
-    // public GenericGPT(String token, int contextLength) {
-    // this.token = token;
-    // this.config = LLMFactory.GPT3_5_Turbo(contextLength);
-    // this.history = new ArrayList<>();
-    // init();
-    // }
-
     private void init() {
         om.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
     }
@@ -85,7 +78,7 @@ public class GenericGPT implements I_LLM<String> {
             log.debug("llm.gpt.throttled: {} -> {}", config.getName(), attempt);
             return chats;
         }
-        log.info("llm.gpt.url: {} @ {} -> {}", config.getName(), config.getURL(), chats.latest());
+        log.info("llm.gpt.api: {} @ {} -> {}", config.getName(), config.getURL(), chats.latest());
         RestAPI api = new RestAPI(config.getURL());
         api.header("Authorization", "Bearer " + token);
         Map<String, Object> json = toPayload(chats.messages());
@@ -112,7 +105,7 @@ public class GenericGPT implements I_LLM<String> {
     private I_Assist<String> processError(I_Assist<String> chats, int attempt, GPTResponse completion,
             Response response) throws IOException, APIException {
         if (completion.error.failed_generation == null) {
-            log.info("oops.llm.gpt.error: {} -> {} => {}", completion.error.code, completion.error.message,
+            log.warn("oops.llm.gpt.error: {} -> {} => {}", completion.error.code, completion.error.message,
                     completion.error.type);
             return processAttempt(chats, attempt);
         }
@@ -188,7 +181,7 @@ public class GenericGPT implements I_LLM<String> {
         if (answer.startsWith("{"))
             processJSON(chat, answer);
         else
-            chat.add(new TextMessage(I_LLMessage.MessageType.text, role, answer));
+            chat.add(new TextMessage(role, answer));
     }
 
     private void processJSON(I_Assist<String> chat, String message)

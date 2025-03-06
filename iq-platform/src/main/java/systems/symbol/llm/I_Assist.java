@@ -9,7 +9,7 @@ public interface I_Assist<T> {
 
     I_LLMessage<T> latest();
 
-    public String context(int window);
+    public void add(I_Assist<T> chat, int window);
 
     void system(T s);
 

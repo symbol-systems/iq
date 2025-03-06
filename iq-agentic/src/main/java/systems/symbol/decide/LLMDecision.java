@@ -10,7 +10,6 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.agent.I_Agent;
-import systems.symbol.agent.I_Agentic;
 import systems.symbol.tools.APIException;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
@@ -19,17 +18,17 @@ import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_LLMessage;
 import systems.symbol.llm.IntentMessage;
 import systems.symbol.llm.tools.Tool;
+import systems.symbol.llm.tools.Tool.FunctionBuilder;
 import systems.symbol.string.PrettyString;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 /*
- * An LLM decision maker that uses a Language Model (LLM) to interpret an actor's intentions on behalf of an agent .
+ * An LLM decision maker that uses a Language Model (LLM) to interpret 
+ * an actor's intentions on behalf of an agent .
  */
-public class LLMDecision implements I_Decide<Resource> {
+public class LLMDecision implements I_Delegate<Resource> {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final I_LLM<String> llm;
@@ -76,28 +75,39 @@ public class LLMDecision implements I_Decide<Resource> {
         if (fsm.getTransitions().size() == 1)
             return fsm.getTransitions().iterator().next();
 
+        log.info("llm.decide.state: {}", state);
         for (Resource iri : fsm.getTransitions()) {
+            String name = ((IRI) iri).getLocalName();
             Optional<Literal> comment = Models.getPropertyLiteral(ground, iri, RDFS.COMMENT);
             String description = comment.isPresent() ? comment.get().stringValue()
-                    : PrettyString.humanize(((IRI) iri).getLocalName());
-            llm.tools().add(Tool.defineFunction(iri.stringValue(), description)
-                    .build());
-            log.debug("llm.decide.tool: {} -> {} == {}", state, iri, description);
+                    : PrettyString.humanize(name);
+
+            FunctionBuilder fn = Tool.defineFunction(name, description);
+            fn.addStringParam("content", "reply", false);
+            Tool tool = fn.build();
+            // log.info("llm.decide.tool: {} -> {}", iri, tool);
+            llm.tools().add(tool);
         }
 
+        log.info("llm.decide.prompt: {}", prompts);
         I_LLMessage<String> latest = llm.complete(prompts).latest();
-        if (latest == null)
+        if (latest == null) {
+            log.info("llm.decide.nothing");
             return state;
-        log.info("llm.decide.latest: {} -> {}", latest, latest.getClass());
-        if (!(latest instanceof IntentMessage))
+        }
+        if (!(latest instanceof IntentMessage)) {
+            log.info("llm.decide.text: {} ", latest.getContent());
             return state;
+        }
         IntentMessage intent = (IntentMessage) latest;
         if (intent.getIntent() == null || intent.getIntent().isEmpty())
             return state;
-        log.info("llm.decide.intent: {}", intent.getIntent());
-        if (intent.getIntent().indexOf(":") > 0)
+        if (intent.getIntent().indexOf(":") > 0) {
+            log.info("llm.decide.intent: {}", intent.getIntent());
             return Values.iri(intent.getIntent());
+        }
 
+        // heuristic
         for (Resource t : fsm.getTransitions()) {
             if (t.isIRI()) {
                 IRI iri = (IRI) t;
@@ -106,23 +116,21 @@ public class LLMDecision implements I_Decide<Resource> {
                 }
             }
         }
+        log.info("llm.decide.state: {} -> {}", intent, state);
         return state;
     }
 
     @Override
-    public Future<I_Delegate<Resource>> delegate(I_Agent agent) throws StateException {
-        I_StateMachine<Resource> fsm = agent.getStateMachine();
-        Resource state = fsm.getState();
-        CompletableFuture<I_Delegate<Resource>> future = new CompletableFuture<>();
-        future.complete(() -> {
-            try {
-                return decides();
-            } catch (IOException e) {
-                throw new StateException("llm.decide.io", state, e);
-            } catch (APIException e) {
-                throw new StateException("llm.decide.api", state, e);
-            }
-        });
-        return future;
+    public Resource intent() throws StateException {
+        try {
+            return decides();
+        } catch (StateException e) {
+            log.error("llm.decide.state: {}", e);
+        } catch (IOException e) {
+            log.error("llm.decide.io: {}", e);
+        } catch (APIException e) {
+            log.error("llm.decide.api: {}", e);
+        }
+        return null;
     }
 }

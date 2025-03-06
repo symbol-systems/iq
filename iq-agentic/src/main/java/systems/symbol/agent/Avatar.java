@@ -1,15 +1,14 @@
 package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.model.util.Values;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import systems.symbol.tools.APIException;
-import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
+import systems.symbol.finder.I_Found;
+import systems.symbol.finder.I_Search;
+import systems.symbol.finder.SearchMatrix;
 import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;
@@ -24,8 +23,6 @@ import javax.script.Bindings;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * The `Avatar` class represents an intelligent agent capable of interacting
@@ -60,8 +57,8 @@ public class Avatar implements I_Avatar {
     Model facts;
     I_Secrets secrets;
     int contextLength = 2048;
-    I_Decide<Resource> manager;
-    private List<Usage> usage = null;
+    private List<Usage> usage = new ArrayList<>();
+    I_Delegate<Resource> manager;
 
     public Avatar(I_Agent agent, I_Assist<String> chat, Model facts, I_Secrets secrets) {
         this.agent = agent;
@@ -70,7 +67,7 @@ public class Avatar implements I_Avatar {
         this.secrets = secrets;
     }
 
-    public Avatar(I_Decide<Resource> manager, I_Agent agent, I_Assist<String> chat, Model facts, I_Secrets secrets) {
+    public Avatar(I_Delegate<Resource> manager, I_Agent agent, I_Assist<String> chat, Model facts, I_Secrets secrets) {
         this.manager = manager;
         this.agent = agent;
         this.chat = chat;
@@ -100,29 +97,31 @@ public class Avatar implements I_Avatar {
     }
 
     // Handles the flow between agent and the LLM, then updating state
-    public Set<IRI> llm(IRI action, Resource assistant, Bindings bindings) throws APIException, Exception {
+    public Set<IRI> llm(IRI action, Resource llm, Bindings bindings) throws APIException, Exception {
         Set<IRI> done = new HashSet<>();
-        GenericGPT llm = LLMFactory.llm(assistant, facts, contextLength, secrets);
-        if (llm == null) {
-            log.error("*** OOPS.llm.configure: {} @ {} *** ", action, assistant);
+        GenericGPT gpt = LLMFactory.llm(llm, facts, contextLength, secrets);
+        if (gpt == null) {
+            log.error("*** OOPS.llm.configure: {} @ {} *** ", action, llm);
             return done;
         }
-        if (!generate(action, assistant, llm, bindings)) {
-            log.warn("*** OOPS.llm.prompt: {} @ {} *** ", action, assistant);
+        if (!generate(action, llm, gpt, bindings)) {
+            log.warn("*** OOPS.llm.prompt: {} @ {} *** ", action, llm);
             return done;
         }
-        usage.addAll(llm.getUsage());
+        usage.addAll(gpt.getUsage());
         done.add(action);
         // done.add(decision);
         return done;
     }
 
-    private boolean generate(IRI action, Resource assistant, I_LLM<String> llm, Bindings bindings)
+    private boolean generate(IRI action, Resource llm, I_LLM<String> gpt, Bindings bindings)
             throws IOException, APIException, StateException {
         AvatarPrompt prompts = new AvatarPrompt(agent, facts, bindings);
-        prompts.avatar(assistant);
+        prompts.avatar(llm);
         prompts.assistant();
-        I_Assist<String> answer = llm.complete(prompts.complete(chat));
+        I_Assist<String> prompted = prompts.complete(chat);
+        log.info("avatar.generate: {}", action);
+        I_Assist<String> answer = gpt.complete(prompted);
         answered(agent, chat, answer);
         return true;
     }
@@ -170,16 +169,12 @@ public class Avatar implements I_Avatar {
     // Starts the agent
     @Override
     public void start() throws Exception {
-        if (manager != null) {
-            Future<I_Delegate<Resource>> delegated = manager.delegate(agent);
-            if (delegated.isDone()) {
-                I_Delegate<Resource> decision = delegated.get();
-                agent.getStateMachine().setInitial(decision.intent());
-                log.info("avatar.start: {} @ {} -> {}", agent.getSelf(), agent.getStateMachine().getState(),
-                        decision.intent());
-            }
-        }
         agent.start();
+        if (manager != null) {
+            Resource delegated = manager.intent();
+            log.info("avatar.delegated: {}", delegated);
+            agent.getStateMachine().transition(delegated);
+        }
         log.info("avatar.started: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
     }
 
@@ -191,23 +186,7 @@ public class Avatar implements I_Avatar {
 
     @Override
     public Resource intent() throws StateException {
-        if (manager != null) {
-            Future<I_Delegate<Resource>> delegated = manager.delegate(agent);
-            if (delegated.isDone()) {
-                try {
-                    I_Delegate<Resource> decision;
-                    decision = delegated.get();
-                    Resource intent = decision.intent();
-                    log.info("avatar.start: {} @ {}", agent.getSelf(), intent);
-                    return intent;
-                } catch (InterruptedException e) {
-                    log.info("avatar.interrupted: {} @ {}", agent.getSelf(), e);
-                } catch (ExecutionException e) {
-                    log.info("avatar.oops: {} @ {}", agent.getSelf(), e);
-                }
-                return null;
-            }
-        }
-        return null;
+        return manager.intent();
     }
+
 }

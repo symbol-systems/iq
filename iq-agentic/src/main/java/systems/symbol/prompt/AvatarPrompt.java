@@ -55,6 +55,11 @@ public class AvatarPrompt extends AbstractPrompt<String> {
         }
     }
 
+    public void prompt(IRI actor) throws IOException {
+        String system$ = value(actor).trim();
+        ai.system(interpolate(system$));
+    }
+
     public void assistant() throws IOException {
         assistant(agent.getStateMachine().getState());
     }
@@ -63,7 +68,7 @@ public class AvatarPrompt extends AbstractPrompt<String> {
         String assistant$ = interpolate(value(state).trim());
         if (!assistant$.isEmpty())
             ai.assistant(assistant$);
-        log.info("prompt.avatar.state: {} -> {}", state, assistant$);
+        log.info("prompt.avatar.assistant: {} -> {}", state, assistant$);
     }
 
     public String value(Resource state) {
