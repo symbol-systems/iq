@@ -19,18 +19,30 @@ import java.util.Set;
 public class IntentAgent extends AbstractAgent {
 protected final I_Intent intent;
 protected Bindings bindings;
+
 /**
- * Constructs a new IntentAgent with the provided intent, RDF4J model, and self identity.
+ * Constructs a new IntentAgent with the provided intent, RDF4J model, and self
+ * identity.
  *
  * @param intent The intent to be executed by the agent.
  * @param model  The RDF4J model associated with the agent.
  * @param self   The self identity of the agent.
  */
-public IntentAgent(@NotNull IRI self, @NotNull Model model, @NotNull I_Intent intent, @NotNull Bindings bindings) throws StateException {
+public IntentAgent(@NotNull IRI self, @NotNull Model model, @NotNull I_Intent intent, @NotNull Bindings bindings)
+throws StateException {
 super(self, model);
 this.intent = intent;
 this.bindings = bindings;
+boot(self, thoughts);
 }
+
+@Override
+public void boot(IRI self, Model ground) throws StateException {
+super.boot(self, ground);
+log.info("agent.boot: {} @ {}", self, getStateMachine().getState());
+getStateMachine().transition(getStateMachine().getState());
+}
+
 /**
  * Handles transitions within a symbolic system.
  *
@@ -53,7 +65,7 @@ return false;
  * Executes an intent based on the provided subject and object.
  *
  * @param actor The subject of the execution (the actor).
- * @param state  The object of the execution (the intent).
+ * @param state The object of the execution (the intent).
  * @return A set of IRIs resulting from the execution.
  * @throws StateException If an error occurs during execution.
  */
@@ -69,7 +81,7 @@ Collection<Statement> found = RDFCollections.getCollection(thoughts, state, new 
 for (Statement statement : found) {
 Value v = statement.getObject();
 if (v instanceof Resource) {
-iris.addAll( execute(actor, (Resource) v, bindings) );
+iris.addAll(execute(actor, (Resource) v, bindings));
 }
 }
 return iris;

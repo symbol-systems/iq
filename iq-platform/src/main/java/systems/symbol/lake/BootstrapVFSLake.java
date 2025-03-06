@@ -60,11 +60,6 @@ deployFile(file, files[i]);
 }
 
 protected void deployFile(FileObject home, FileObject file) throws IOException {
-// if (!isChanged(file)) {
-// // if (VERBOSE)
-// log.info("not-modified: {}", file.getAbsolutePath());
-// return;
-// }
 String name = file.getName().getBaseName();
 RDFFormat format = Rio.getWriterFormatForFileName(name).orElse(null);
 IRI mediatype = FileFormats.toMime(name);
@@ -84,7 +79,7 @@ iri = Values.iri(iri.stringValue().substring(0, iri.stringValue().length() - 2))
 format = null;
 }
 
-log.info("lake.stream: {} @ {} -> {} --> {}", iri, file.getPath(), file.getContent().getSize(),
+log.debug("lake.stream: {} @ {} -> {} --> {}", iri, file.getPath(), file.getContent().getSize(),
 mediatype == null ? format : mediatype.getLocalName());
 InputStream inStream = file.getContent().getInputStream();
 deploy(iri, inStream, mediatype, format);

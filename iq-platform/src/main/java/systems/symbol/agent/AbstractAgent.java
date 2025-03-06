@@ -14,6 +14,8 @@ import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.I_Bootstrap;
 
 import javax.script.Bindings;
+
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,6 +28,7 @@ protected final Logger log = LoggerFactory.getLogger(getClass());
 protected I_StateMachine<Resource> fsm;
 protected Model thoughts;
 protected IRI self;
+protected final Set<Resource> seen = new HashSet<>();
 
 /**
  * Parameterized constructor allowing initialization with a pre-existing RDF4J
@@ -36,7 +39,6 @@ protected IRI self;
 public AbstractAgent(IRI self, @NotNull Model thoughts) throws StateException {
 this.self = self;
 this.thoughts = thoughts;
-boot(self, thoughts);
 }
 
 @Override
@@ -53,7 +55,6 @@ log.info("agent.reboot: {} @ {}", getSelf(), fsm.getState());
 
 @Override
 public void start() throws Exception {
-getStateMachine().transition(getStateMachine().getState());
 log.debug("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
 }
 

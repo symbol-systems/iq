@@ -30,6 +30,10 @@ public Conversation(I_Assist<String> chat) {
 messages.addAll(chat.messages());
 }
 
+public Conversation(I_Assist<String> chat, int window) {
+add(chat, window);
+}
+
 public Conversation add(I_LLMessage<String> msg) {
 // I_LLMessage<String> last = this.messages.getLast();
 // if (last!=null && last.getRole().equals(msg.getRole())) {
@@ -52,27 +56,52 @@ public I_LLMessage<String> latest() {
 return messages.isEmpty() ? null : messages.get(messages.size() - 1);
 }
 
-public String context() {
-return context(2);
+// public String context() {
+// return context(2);
+// }
+
+// public String context(int window) {
+// StringBuilder s$ = new StringBuilder();
+// int i = messages.size() - 1;
+// int count = 0;
+
+// while (i >= 0 && count < window) {
+// I_LLMessage<String> msg = messages.get(i);
+// if (msg.getRole() != I_LLMessage.RoleType.system) {
+// String content = msg.getContent();
+// if (content != null)
+// s$.append(content);
+// count++;
+// }
+// i--;
+// }
+
+// return s$.toString();
+// }
+
+public void add(I_Assist<String> chat, int window) {
+if (chat == null || chat.messages() == null || window <= 0) {
+return;
 }
 
-public String context(int window) {
-StringBuilder s$ = new StringBuilder();
-int i = messages.size() - 1;
-int count = 0;
+List<I_LLMessage<String>> messages = chat.messages();
+int size = messages.size();
 
-while (i >= 0 && count < window) {
+if (size == 0) {
+return;
+}
+
+int startIdx = Math.max(0, size - window);
+
+for (int i = startIdx; i < size; i++) {
 I_LLMessage<String> msg = messages.get(i);
-if (msg.getRole() != I_LLMessage.RoleType.system) {
+if (msg != null && msg.getRole() != I_LLMessage.RoleType.system) {
 String content = msg.getContent();
-if (content != null)
-s$.append(content);
-count++;
+if (content != null) {
+add(msg);
 }
-i--;
 }
-
-return s$.toString();
+}
 }
 
 public I_Assist<String> add(String role, String content) {

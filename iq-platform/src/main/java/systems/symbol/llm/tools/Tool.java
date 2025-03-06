@@ -4,23 +4,28 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tool {
-private ToolType type;
+protected static final Logger log = LoggerFactory.getLogger(Tool.class);
+private String type = "function";
 private FunctionDef function;
 
 // Getters and Setters
-public ToolType getType() {
+public String getType() {
 return type;
 }
 
-public void setType(ToolType type) {
-this.type = type;
-}
+// public void setType(ToolType type) {
+// this.type = type;
+// }
 
 public FunctionDef getFunction() {
 return function;
@@ -36,7 +41,7 @@ FUNCTION
 }
 
 public String toString() {
-return function.getName();
+return "fn = " + function.getName() + " { " + function.getParameters() + " }";
 }
 
 public static FunctionBuilder defineFunction(String name, String description) {
@@ -58,6 +63,9 @@ public FunctionBuilder addStringParam(String name, String paramDescription, bool
 ParameterSchema schema = new ParameterSchema();
 schema.setType("string");
 schema.setDescription(paramDescription);
+
+// log.info("addStringParam: {} -> {} ", name, schema.toString());
+
 parameters.put(name, schema);
 if (required)
 requiredParams.add(name);
@@ -90,6 +98,7 @@ public Tool build() {
 // Create the root parameter schema
 ParameterSchema rootSchema = new ParameterSchema();
 rootSchema.setType("object");
+rootSchema.setDescription(functionName);
 rootSchema.setProperties(parameters);
 rootSchema.setRequired(requiredParams);
 
@@ -101,7 +110,7 @@ functionDef.setParameters(rootSchema);
 
 // Create the tool
 Tool tool = new Tool();
-tool.setType(ToolType.FUNCTION);
+// tool.setType(ToolType.FUNCTION);
 tool.setFunction(functionDef);
 return tool;
 }
@@ -148,7 +157,7 @@ private String description;
 @JsonProperty("enum")
 private List<String> enumValues;
 
-private Map<String, ParameterSchema> properties;
+private Map<String, ParameterSchema> properties = new HashMap<>();
 private List<String> required;
 
 public String getType() {
@@ -189,5 +198,9 @@ return required;
 
 public void setRequired(List<String> required) {
 this.required = required;
+}
+
+public String toString() {
+return "ps = " + description + " => " + properties.keySet();
 }
 }

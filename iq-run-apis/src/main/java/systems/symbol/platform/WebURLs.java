@@ -8,6 +8,11 @@ import jakarta.ws.rs.core.HttpHeaders;
 
 public class WebURLs {
 
+static String[] HeaderCandidates = {
+"X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP",
+"True-Client-IP", "Forwarded", "Proxy-Client-IP", "WL-Proxy-Client-IP"
+};
+
 public static String getFullURL(UriInfo uriInfo, HttpHeaders headers) {
 String baseUrl = getRequestURL(uriInfo, headers);
 String requestUri = uriInfo.getPath();
@@ -27,18 +32,12 @@ return forwardedProto + "://" + forwardedHost + port + "/";
 }
 
 public static String getClientIP(HttpServletRequest request, HttpHeaders headers) {
-String ip = request.getRemoteAddr();
+String ip = request == null ? null : request.getRemoteAddr();
 
-// Check common proxy headers for real IP address
-String[] headerCandidates = {
-"X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP",
-"True-Client-IP", "Forwarded", "Proxy-Client-IP", "WL-Proxy-Client-IP"
-};
-
-for (String header : headerCandidates) {
+for (String header : HeaderCandidates) {
 String ipList = headers.getHeaderString(header);
 if (ipList != null && !ipList.isEmpty()) {
-return ipList.split(",")[0].trim(); // First IP is the original client
+return ipList.split(",")[0].trim();
 }
 }
 return ip;

@@ -6,19 +6,15 @@ import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.I_StateMachine;
-import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.IQ_NS;
 import javax.script.Bindings;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> {
-// I_Decide<Resource> manager;
-Set<Resource> seen = new HashSet<>();
 
 /**
  * The ExecutiveAgent makes simple decisions and delegates other to manager.
@@ -29,33 +25,17 @@ Set<Resource> seen = new HashSet<>();
 public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, Bindings bindings)
 throws StateException {
 super(self, thoughts, intent, bindings);
-// this.manager = manager;
-setFSM(new ModelStateMachine(self, thoughts, thoughts));
 }
 
 public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent,
 Bindings bindings) throws StateException {
 super(self, thoughts, intent, bindings);
-// setManager(manager);
-setFSM(new ModelStateMachine(self, ground, thoughts));
 }
 
-@Override
-public void boot(IRI self, Model ground) {
-log.info("agent.boot: {} x {}", self, ground.size());
-}
-
-protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
-super.setFSM(fsm);
-Resource state = getStateMachine().getState();
-log.info("agent.fsm: {} == {}", getSelf(), state);
-if (state == null)
-return;
-this.seen.add(state);
-}
-
-// public void setManager(I_Decide<Resource> manager) {
-// this.manager = manager;
+// protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
+// super.setFSM(fsm);
+// Resource state = getStateMachine().getState();
+// log.info("agent.fsm: {} == {}", getSelf(), state);
 // }
 
 /**
@@ -116,17 +96,6 @@ return null;
 if (choices.size() == 1)
 return choices.iterator().next();
 return getStateMachine().getState();
-// if (manager == null)
-// return null;
-// Future<I_Delegate<Resource>> delegated = manager.delegate(this);
-// if (delegated == null)
-// return null;
-// try {
-// I_Delegate<Resource> delegate = delegated.get();
-// return (delegate == null) ? null : delegate.intent();
-// } catch (InterruptedException | ExecutionException e) {
-// throw new StateException(e.getMessage(), getStateMachine().getState(), e);
-// }
 }
 
 public void start() throws Exception {

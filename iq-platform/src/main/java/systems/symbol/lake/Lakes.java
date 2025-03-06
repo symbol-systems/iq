@@ -54,7 +54,7 @@ for (int i = 0; i < files.length; i++) {
 FileObject file = files[i];
 if (file.isFolder() && !file.getName().getBaseName().startsWith(".")) {
 String realmId = file.getName().getBaseName() + ":";
-log.info("lake.realm.new: {}", realmId);
+log.debug("lake.realm.new: {}", realmId);
 I_Realm realm = realms.newRealm(Values.iri(realmId));
 boot(realm, file);
 }

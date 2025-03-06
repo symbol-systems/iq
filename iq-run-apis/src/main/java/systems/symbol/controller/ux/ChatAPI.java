@@ -102,6 +102,7 @@ avatar.start();
 // stuff happens ;-)
 avatar.stop();
 bindings.put("usage", avatar.getUsage());
+bindings.remove("chat");
 
 log.info("ux.chat.reply: {} = {} @ {}", avatar.getThoughts().size(), chat.messages.getLast(), stopwatch);
 return new ChatResponse(chat, avatar, bindings).build();

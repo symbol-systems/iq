@@ -120,7 +120,7 @@ jwtHome.mkdirs();
 File file = new File(jwtHome, name + ".jwt");
 IOCopier.save(token, file);
 LocalDateTime until = LocalDateTime.now().plusSeconds(duration);
-log.info("realms.trusted: {} -> {} -> {} until {}", self, name, file.getPath(), until);
+log.info("realms.trusted: {} -> {} until {}", self, file.getPath(), until);
 }
 
 protected void onStop(@Observes ShutdownEvent ev) {

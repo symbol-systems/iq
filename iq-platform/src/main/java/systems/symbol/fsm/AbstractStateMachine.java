@@ -68,10 +68,10 @@ if (allowed) {
 T fromState = currentState;
 setCurrentState(targetState);
 boolean ok = notifyListeners(fromState, targetState);
-log.info("transition?: {} @ {} => {}", ok, fromState, targetState);
+log.debug("transition?: {} @ {} => {}", ok, fromState, targetState);
 if (!ok) {
-log.warn("veto: {} -> {} @ {}", fromState, targetState, getState());
 setCurrentState(fromState);
+log.debug("veto: {} -> {}", fromState, getState());
 }
 return getState();
 }
@@ -130,7 +130,7 @@ protected boolean notifyListeners(T from, T to) throws StateException {
 boolean ok = true;
 for (I_StateListener<T> listener : listeners) {
 boolean _ok = listener.onTransition(from, to);
-log.info("state.notify: {} -> {} -> {} @ {}", _ok, from, to, getState());
+log.debug("state.notify: {} -> {} -> {} @ {}", _ok, from, to, getState());
 ok = ok & _ok;
 }
 return ok;

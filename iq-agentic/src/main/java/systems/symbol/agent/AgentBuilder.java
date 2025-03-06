@@ -26,13 +26,14 @@ import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.gpt.LLMFactory;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.platform.I_Self;
+import systems.symbol.prompt.AvatarPrompt;
 import systems.symbol.rdf4j.Facts;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
-import systems.symbol.self.SelfIntent;
+// import systems.symbol.self.SelfIntent;
 import systems.symbol.string.PrettyString;
 import systems.symbol.util.IdentityHelper;
 
@@ -106,14 +107,15 @@ bindings.put(name, value);
 
 public AgentBuilder chatty(I_Assist<String> chat) {
 bindings.put("chat", chat);
-bindings.put("messages", chat.messages());
-bindings.put("latest", chat.latest());
+// bindings.put("messages", chat.messages());
+// bindings.put("latest", chat.latest());
 log.info("builder.chatty: {} -> {}", self, chat.latest());
 return this;
 }
 
 public AgentBuilder jwt(DecodedJWT jwt) {
-bindings.put("jwt", jwt);
+bindings.put("jwt", jwt.getId());
+bindings.put("subject", jwt.getSubject());
 bindings.put("human", jwt.getClaim("name").asString());
 return this;
 }
@@ -170,10 +172,10 @@ intents.add(new Remodel(self, getThoughts(), new ModelScriptCatalog(getGround())
 return this;
 }
 
-public AgentBuilder search(I_ModelFinder finder) {
-intents.add(new Search(self, getThoughts(), finder, getGround()));
-return this;
-}
+// public AgentBuilder search(I_ModelFinder finder) {
+// intents.add(new Search(self, getThoughts(), finder, getGround()));
+// return this;
+// }
 
 public AgentBuilder sparql(RepositoryConnection connection) {
 intents.add(new Select(self, connection));
@@ -186,20 +188,23 @@ public ChainOfCommand control(I_Decide<Resource> decider) {
 return new ChainOfCommand(decider);
 }
 
-public LLMDecision deciding(I_Agent agent, I_Assist<String> chat) throws SecretsException, StateException {
+public LLMDecision deciding(I_Agent agent, I_Assist<String> chat)
+throws SecretsException, StateException, IOException, APIException {
 return deciding(agent, chat, 8000);
 }
 
 public LLMDecision deciding(I_Agent agent, I_Assist<String> chat, int contextLength)
-throws SecretsException, StateException {
+throws SecretsException, StateException, IOException, APIException {
 Optional<IRI> assistant = Models.getPropertyIRI(ground, self, Values.iri(IQ_NS.IQ + "ai"));
 if (assistant.isEmpty())
 return null;
 I_LLM<String> llm = LLMFactory.llm(assistant.get(), ground, contextLength, secrets);
 if (llm == null)
 throw new StateException("agent.decisions.missing", agent.getStateMachine().getState());
-Conversation decision = new Conversation();
-decision.user(chat.context(2));
+AvatarPrompt prompts = new AvatarPrompt(agent, ground, bindings);
+prompts.prompt(agent.getSelf());
+Conversation context = new Conversation(chat, 2);
+I_Assist<String> decision = prompts.complete(context);
 return new LLMDecision(llm, agent, ground, decision);
 }
 
@@ -207,8 +212,9 @@ public SearchDecision searching(I_Search<IRI> finder, I_Assist<String> chat) {
 return new SearchDecision(finder, new Agentic<>(() -> self, bindings, chat));
 }
 
-public AgentBuilder self(Conversation chat) throws APIException, IOException, StateException, SecretsException {
-this.intents.add(new SelfIntent(avatar(chat), chat));
+public AgentBuilder self(Conversation chat) throws APIException, IOException,
+StateException, SecretsException {
+// this.intents.add(new SelfIntent(avatar(chat), chat));
 return this;
 }
 
@@ -242,4 +248,5 @@ return ground;
 public Bindings getBindings() {
 return bindings;
 }
+
 }
