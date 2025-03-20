@@ -17,15 +17,17 @@ import java.util.Set;
  */
 public class LazyAgent extends AbstractAgent {
 
+    private Model thoughts;
+
     /**
      * Constructs a new LazyAgent with the provided RDF4J model and self identity.
      *
      * @param model The RDF4J model associated with the agent.
      * @param self  The self identity of the agent.
      */
-    public LazyAgent(IRI self, Model model) throws StateException {
-        super(self, model);
-        boot(self, model);
+    public LazyAgent(IRI self, Model thoughts) throws StateException {
+        super(self);
+        this.thoughts = thoughts;
     }
 
     /**
@@ -63,5 +65,10 @@ public class LazyAgent extends AbstractAgent {
         if (state instanceof IRI)
             iris.add((IRI) state);
         return iris;
+    }
+
+    @Override
+    public Model getThoughts() {
+        return this.thoughts;
     }
 }

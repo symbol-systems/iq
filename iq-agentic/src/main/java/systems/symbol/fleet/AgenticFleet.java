@@ -27,7 +27,7 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     Map<IRI, I_Agent> agents = new HashMap<>();
     IRI self;
-    Model fleet;
+    Model fleet, thoughts;
     I_Intents intents;
     I_Secrets secrets;
 
@@ -38,10 +38,12 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
      * @param fleet   the RDF model representing the fleet
      * @param secrets the secrets manager for accessing agent secrets
      */
-    public AgenticFleet(IRI self, Model fleet, I_Intents intents, I_Secrets secrets) throws StateException {
+    public AgenticFleet(IRI self, Model fleet, Model thoughts, I_Intents intents, I_Secrets secrets)
+            throws StateException {
         boot(self, fleet);
         this.secrets = secrets;
         this.intents = intents;
+        this.thoughts = thoughts;
     }
 
     public void boot(IRI self, Model model) {
@@ -55,7 +57,7 @@ public class AgenticFleet implements I_Fleet, I_Self, I_Bootstrap {
      * @throws StateException if there is an issue with the state machine
      */
     public void deploy() throws StateException {
-        Iterable<Statement> found = fleet.getStatements(null, IQ_NS.initialStep, null);
+        Iterable<Statement> found = fleet.getStatements(null, IQ_NS.hasInitialState, null);
         for (Statement s : found) {
             IRI self = (IRI) s.getSubject();
             I_Agent agent = deploy(self);

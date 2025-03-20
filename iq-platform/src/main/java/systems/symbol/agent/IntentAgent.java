@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.RDFCollections;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.RDF;
+import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.IQ_NS;
@@ -19,28 +20,32 @@ import java.util.Set;
 public class IntentAgent extends AbstractAgent {
     protected final I_Intent intent;
     protected Bindings bindings;
+    protected Model ground, thoughts;
 
     /**
      * Constructs a new IntentAgent with the provided intent, RDF4J model, and self
      * identity.
      *
-     * @param intent The intent to be executed by the agent.
-     * @param model  The RDF4J model associated with the agent.
-     * @param self   The self identity of the agent.
+     * @param intent   The intent to be executed by the agent.
+     * @param model    The RDF4J model associated with the agent.
+     * @param self     The self identity of the agent.
+     * @param thoughts
      */
-    public IntentAgent(@NotNull IRI self, @NotNull Model model, @NotNull I_Intent intent, @NotNull Bindings bindings)
+    public IntentAgent(@NotNull IRI self, @NotNull Model ground, Model thoughts, @NotNull I_Intent intent,
+            @NotNull Bindings bindings)
             throws StateException {
-        super(self, model);
+        super(self);
+        this.ground = ground;
+        this.thoughts = thoughts;
         this.intent = intent;
         this.bindings = bindings;
-        boot(self, thoughts);
+        boot();
     }
 
-    @Override
-    public void boot(IRI self, Model ground) throws StateException {
-        super.boot(self, ground);
-        log.info("agent.boot: {} @ {}", self, getStateMachine().getState());
-        getStateMachine().transition(getStateMachine().getState());
+    public void boot() throws StateException {
+        ModelStateMachine fsm = new ModelStateMachine(self, ground, thoughts);
+        setFSM(fsm);
+        log.debug("agent.boot: {} @ {}", getSelf(), fsm.getState());
     }
 
     /**
@@ -86,4 +91,15 @@ public class IntentAgent extends AbstractAgent {
         }
         return iris;
     }
+
+    /**
+     * Retrieves the state model associated with the agent.
+     * 
+     * @return The RDF4J model.
+     */
+    @Override
+    public Model getThoughts() {
+        return thoughts;
+    }
+
 }

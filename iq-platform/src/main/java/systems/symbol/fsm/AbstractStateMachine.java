@@ -32,6 +32,10 @@ public abstract class AbstractStateMachine<T> implements I_StateMachine<T> {
         return this;
     }
 
+    public T getInitial() {
+        return initialState;
+    }
+
     /**
      * Retrieves the current state of the state machine.
      *

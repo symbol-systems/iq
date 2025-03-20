@@ -10,8 +10,8 @@ import jakarta.ws.rs.core.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -102,21 +102,23 @@ public class TokenAPI extends RealmAPI {
             bindings.put("provider", provider);
 
             AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
-            builder.setThoughts(realm.getModel());
             builder.realm(realm);
             I_Agent agent = builder.agent();
             builder.scripting(agent).sparql(connection);
-            IRI initial = Values.iri(issuer.stringValue() + "verify");
+            // IRI initial = Values.iri(issuer.stringValue() + "verify");
             Object identity = null;
             try {
+                log.info("trust.token.init: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
+                agent.getStateMachine().initialize();
+                log.info("trust.token.starting: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
                 agent.start();
-                Resource state = agent.getStateMachine().transition(initial);
+                // Resource state = agent.getStateMachine().transition(initial);
                 identity = bindings.get("identity");
-                log.info("trust.token.identity: {} == {} @ {}", agent.getSelf(), identity, state);
+                log.info("trust.token.identity: {} == {}", identity, agent.getStateMachine().getState());
                 agent.stop();
             } catch (Exception e) {
-                log.error("trust.token.agent: {} == {}", agent.getSelf(), identity, e);
-                return new OopsResponse(e.getMessage(), Response.Status.UNAUTHORIZED).build();
+                log.error("trust.token.agent: {} == {}", agent.getSelf(), e.getMessage());
+                return new OopsResponse("trust.token.failed", Response.Status.UNAUTHORIZED).build();
             }
             // agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 

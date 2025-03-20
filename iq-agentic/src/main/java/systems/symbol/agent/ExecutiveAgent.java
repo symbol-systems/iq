@@ -5,7 +5,6 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import systems.symbol.decide.I_Delegate;
-import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
 import systems.symbol.platform.IQ_NS;
@@ -24,19 +23,13 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
      */
     public ExecutiveAgent(@NotNull IRI self, @NotNull Model thoughts, I_Intent intent, Bindings bindings)
             throws StateException {
-        super(self, thoughts, intent, bindings);
+        super(self, thoughts, thoughts, intent, bindings);
     }
 
     public ExecutiveAgent(@NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts, I_Intent intent,
             Bindings bindings) throws StateException {
-        super(self, thoughts, intent, bindings);
+        super(self, ground, thoughts, intent, bindings);
     }
-
-    // protected void setFSM(@NotNull I_StateMachine<Resource> fsm) {
-    // super.setFSM(fsm);
-    // Resource state = getStateMachine().getState();
-    // log.info("agent.fsm: {} == {}", getSelf(), state);
-    // }
 
     /**
      * Handles transitions .

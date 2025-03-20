@@ -16,7 +16,7 @@ public interface IQ_NS {
     String TEST = "iq:test:"; // reserved for testing
 
     // Workflow-related IRIs
-    IRI initialStep = Values.iri(IQ, "initial");
+    IRI hasInitialState = Values.iri(IQ, "initial");
     IRI TO = Values.iri(IQ, "to");
     IRI hasGuard = Values.iri(IQ, "guard");
     IRI hasCurrentState = Values.iri(IQ, "state");

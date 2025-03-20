@@ -31,7 +31,7 @@ public class GuardedStateMachine<T> implements I_StateMachine<T> {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws StateException {
         fsm.initialize();
     }
 
