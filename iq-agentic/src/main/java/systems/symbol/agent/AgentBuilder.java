@@ -16,7 +16,6 @@ import systems.symbol.decide.LLMDecision;
 import systems.symbol.decide.ChainOfCommand;
 import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.SearchDecision;
-import systems.symbol.finder.I_ModelFinder;
 import systems.symbol.finder.I_Search;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.*;
@@ -33,7 +32,6 @@ import systems.symbol.rdf4j.store.LiveModel;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
-// import systems.symbol.self.SelfIntent;
 import systems.symbol.string.PrettyString;
 import systems.symbol.util.IdentityHelper;
 

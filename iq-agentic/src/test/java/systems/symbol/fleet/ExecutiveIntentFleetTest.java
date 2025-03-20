@@ -78,7 +78,7 @@ APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 
 try (RepositoryConnection connection = assets.getConnection()) {
 Model model = new LiveModel(connection);
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, model, secrets, gpt);
 fleet.deploy();
 assert !fleet.agents.isEmpty();
 
@@ -118,7 +118,7 @@ Stopwatch stopwatch = new Stopwatch();
 try (RepositoryConnection connection = assets.getConnection()) {
 Model model = new LiveModel(connection);
 DynamicModel memoryModel = dmf.createEmptyModel();
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, model, secrets, gpt);
 
 fleet.intents.add(new Remodel(self, memoryModel, new ModelScriptCatalog(model)));
 fleet.deploy();
@@ -172,7 +172,7 @@ APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 try (RepositoryConnection connection = assets.getConnection()) {
 Model model = new LiveModel(connection);
 
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, model, secrets, gpt);
 fleet.deploy();
 I_Agent agent = fleet.getAgent(self);
 assert null != agent;
@@ -217,7 +217,7 @@ Stopwatch stopwatch = new Stopwatch();
 try (RepositoryConnection connection = assets.getConnection()) {
 Model model = new LiveModel(connection);
 DynamicModel memoryModel = dmf.createEmptyModel();
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, model, secrets, gpt);
 
 fleet.intents.add(new Remodel(self, memoryModel, new ModelScriptCatalog(model)));
 fleet.deploy();
@@ -257,7 +257,7 @@ APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 try (RepositoryConnection connection = assets.getConnection()) {
 Model model = new LiveModel(connection);
 Model thoughts = new DynamicModelFactory().createEmptyModel();
-ExecutiveFleet fleet = new ExecutiveFleet(self, model, secrets, gpt);
+ExecutiveFleet fleet = new ExecutiveFleet(self, model, model, secrets, gpt);
 fleet.intents.add(new Think(self, thoughts, new ModelScriptCatalog(model), gpt));
 fleet.deploy();
 I_Agent agent = fleet.getAgent(self);

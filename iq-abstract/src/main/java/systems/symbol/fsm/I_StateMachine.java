@@ -27,8 +27,10 @@ public interface I_StateMachine<T> {
 
 /**
  * Initializes the state machine.
+ * 
+ * @throws StateException
  */
-void initialize();
+void initialize() throws StateException;
 
 /**
  * Sets the initial state of the FSM.

@@ -4,7 +4,6 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import systems.symbol.agent.Agentic;
-import systems.symbol.agent.ExecutiveAgent;
 import systems.symbol.agent.I_Agent;
 import systems.symbol.agent.I_Agentic;
 import systems.symbol.agent.ManagedAgent;
@@ -12,10 +11,8 @@ import systems.symbol.decide.I_Decide;
 import systems.symbol.decide.I_Delegate;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.ExecutiveIntent;
-import systems.symbol.intent.JSR233;
 import systems.symbol.llm.Conversation;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 
@@ -33,9 +30,9 @@ private final Map<IRI, CompletableFuture<I_Delegate<Resource>>> pending = new Ha
 private boolean isRunning = false;
 private long sleepTime = 100;
 
-public ExecutiveFleet(IRI self, Model fleet, I_Secrets secrets, I_LLM<String> llm)
+public ExecutiveFleet(IRI self, Model fleet, Model thoughts, I_Secrets secrets, I_LLM<String> llm)
 throws StateException, SecretsException {
-super(self, fleet, new ExecutiveIntent(self, fleet), secrets);
+super(self, fleet, thoughts, new ExecutiveIntent(self, fleet), secrets);
 // this.llm = llm;
 // this.intents.add(new JSR233(self, fleet, fleet, secrets, new
 // ModelScriptCatalog(fleet)));
@@ -115,7 +112,7 @@ if (this.agents.containsKey(actor))
 return agents.get(actor);
 I_Agentic<String> context = new Agentic<>(() -> actor, new SimpleBindings(), new Conversation());
 contexts.put(actor, context);
-ManagedAgent agent = new ManagedAgent(this, actor, fleet, intents, context.getBindings());
+ManagedAgent agent = new ManagedAgent(this, actor, fleet, thoughts, intents, context.getBindings());
 agents.put(actor, agent);
 return agent;
 }

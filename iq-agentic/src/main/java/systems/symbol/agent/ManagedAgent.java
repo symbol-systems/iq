@@ -2,16 +2,9 @@ package systems.symbol.agent;
 
 import org.eclipse.rdf4j.model.*;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import systems.symbol.decide.I_Decide;
-import systems.symbol.decide.I_Delegate;
-import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
-
-import java.util.concurrent.Future;
 
 import javax.script.Bindings;
 
@@ -42,13 +35,12 @@ import javax.script.Bindings;
  */
 
 public class ManagedAgent extends IntentAgent {
-// private static final Logger log =
-// LoggerFactory.getLogger(ManagedAgent.class);
 I_Decide<Resource> manager;
 
-public ManagedAgent(I_Decide<Resource> manager, @NotNull IRI self, @NotNull Model thoughts, I_Intent intent,
+public ManagedAgent(I_Decide<Resource> manager, @NotNull IRI self, @NotNull Model ground, @NotNull Model thoughts,
+I_Intent intent,
 Bindings bindings) throws StateException {
-super(self, thoughts, intent, bindings);
+super(self, ground, thoughts, intent, bindings);
 this.manager = manager;
 }
 

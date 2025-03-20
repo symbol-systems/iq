@@ -32,6 +32,10 @@ assert initialState != null && this.initialState == this.currentState;
 return this;
 }
 
+public T getInitial() {
+return initialState;
+}
+
 /**
  * Retrieves the current state of the state machine.
  *

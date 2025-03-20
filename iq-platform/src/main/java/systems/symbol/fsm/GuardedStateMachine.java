@@ -31,7 +31,7 @@ this.guard = guard;
 }
 
 @Override
-public void initialize() {
+public void initialize() throws StateException {
 fsm.initialize();
 }
 

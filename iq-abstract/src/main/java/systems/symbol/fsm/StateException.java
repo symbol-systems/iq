@@ -15,7 +15,8 @@ public Object state;
 /**
  * Constructs a new StateException with the specified detail message and state.
  *
- * @param message the detail message (which is saved for later retrieval by the getMessage() method).
+ * @param message the detail message (which is saved for later retrieval by the
+ *getMessage() method).
  * @param state   the state where the error occurred.
  */
 public StateException(String message, Object state) {
@@ -24,11 +25,14 @@ this.state = state;
 }
 
 /**
- * Constructs a new StateException with the specified detail message, state, and cause.
+ * Constructs a new StateException with the specified detail message, state, and
+ * cause.
  *
- * @param message the detail message (which is saved for later retrieval by the getMessage() method).
+ * @param message the detail message (which is saved for later retrieval by the
+ *getMessage() method).
  * @param state   the state where the error occurred.
- * @param cause   the cause (which is saved for later retrieval by the getCause() method).
+ * @param cause   the cause (which is saved for later retrieval by the
+ *getCause() method).
  */
 public StateException(String message, Object state, Throwable cause) {
 super(message, cause);

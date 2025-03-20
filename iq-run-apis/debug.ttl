@@ -291,7 +291,7 @@ Gaudio in tenebris tuorum desideriorum explorandis. 'Fac quod vis, lex mea erit
   :label "Caleister Crowley";
   :url "/ux/ai";
   :comment "She is enigmatic and mystifying, with a flair for the dramatic and forbidden.";
-  :image "/art/Caleister_Crowley.png";
+  :image "/art/Caleister_Crowley.webp";
   iq:initial :Caleister_Crowley_Hello;
   iq:ai llm:llama-iq .
 

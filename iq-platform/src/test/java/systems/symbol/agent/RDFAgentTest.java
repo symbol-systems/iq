@@ -17,6 +17,8 @@ import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.store.IQConnection;
 
 import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -64,7 +66,7 @@ RDFDump.dump(model, System.out, RDFFormat.TURTLE);
 
 boolean[] actioned = { false };
 System.out.println("agent.rdf.self: " + self);
-LazyAgent agent = new LazyAgent(self, model) {
+IntentAgent agent = new IntentAgent(self, model, model, null, new SimpleBindings()) {
 public boolean onTransition(Resource from, Resource to) {
 return actioned[0] = true;
 }

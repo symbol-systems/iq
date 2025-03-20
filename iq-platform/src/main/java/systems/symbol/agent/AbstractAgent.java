@@ -8,10 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.fsm.I_StateListener;
 import systems.symbol.fsm.I_StateMachine;
-import systems.symbol.fsm.ModelStateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.intent.I_Intent;
-import systems.symbol.platform.I_Bootstrap;
 
 import javax.script.Bindings;
 
@@ -23,10 +21,9 @@ import java.util.Set;
  * The agent state is maintained by an RDF4J Model.
  * Skills are finite state machines which represent sets of next-best actions.
  */
-public abstract class AbstractAgent implements I_Agent, I_Bootstrap, I_Intent, I_StateListener<Resource> {
+public abstract class AbstractAgent implements I_Agent, I_Intent, I_StateListener<Resource> {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected I_StateMachine<Resource> fsm;
-protected Model thoughts;
 protected IRI self;
 protected final Set<Resource> seen = new HashSet<>();
 
@@ -36,41 +33,19 @@ protected final Set<Resource> seen = new HashSet<>();
  * 
  * @param thoughts The RDF4J model to be associated with the agent.
  */
-public AbstractAgent(IRI self, @NotNull Model thoughts) throws StateException {
+public AbstractAgent(IRI self) throws StateException {
 this.self = self;
-this.thoughts = thoughts;
-}
-
-@Override
-public void boot(IRI self, Model model) throws StateException {
-if (fsm == null) {
-ModelStateMachine fsm = new ModelStateMachine(self, model);
-setFSM(fsm);
-log.debug("agent.boot: {} @ {}", getSelf(), fsm.getState());
-} else if (fsm instanceof ModelStateMachine) {
-((ModelStateMachine) fsm).initialize(self, model, model);
-log.info("agent.reboot: {} @ {}", getSelf(), fsm.getState());
-}
 }
 
 @Override
 public void start() throws Exception {
+getStateMachine().transition(getStateMachine().getState());
 log.debug("agent.started: {} @ {}", getSelf(), getStateMachine().getState());
 }
 
 @Override
 public void stop() {
 log.info("agent.stopped: {} @ {}", getSelf(), getStateMachine().getState());
-}
-
-/**
- * Retrieves the state model associated with the agent.
- * 
- * @return The RDF4J model.
- */
-@Override
-public Model getThoughts() {
-return thoughts;
 }
 
 /**
