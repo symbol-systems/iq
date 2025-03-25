@@ -14,8 +14,6 @@ import java.time.format.DateTimeFormatter;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
-import javax.servlet.http.HttpServletRequest;
-
 import org.eclipse.rdf4j.model.IRI;
 import com.auth0.jwt.interfaces.DecodedJWT;
 

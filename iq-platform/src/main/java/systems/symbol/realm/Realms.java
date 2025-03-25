@@ -2,6 +2,8 @@ package systems.symbol.realm;
 
 import com.auth0.jwt.JWTCreator;
 
+import java.util.Set;
+
 import org.eclipse.rdf4j.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,12 @@ return Facts.find(model, agent, new IRIs(), false, IQ_NS.TRUSTS);
 
 public static Iterable<IRI> trusts(Model model, IRI focus, IRIs trusts, boolean recurse) {
 return Facts.find(model, focus, trusts, recurse, IQ_NS.TRUSTS);
+}
+
+public static boolean trusts(Model model, IRI focus, IRI trusts) {
+Set<IRI> found = Facts.find(model, focus, new IRIs(), true, IQ_NS.TRUSTS);
+log.info("Realm.trusts: {} -> {} -> {}", focus, trusts, found);
+return found.contains(trusts);
 }
 
 public static String tokenize(String issuer, String[] roles, String self, String name, String[] audience,

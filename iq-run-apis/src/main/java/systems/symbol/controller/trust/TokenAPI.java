@@ -11,7 +11,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -77,9 +76,6 @@ return new OopsResponse("trust.token.realm.missing", Response.Status.BAD_REQUEST
 I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
 return new OopsResponse("trust.token.realm.invalid", Response.Status.NOT_FOUND).build();
-// TODO: authenticate (subject is a user, subject known to issuer)
-// TODO: authorize (subject known to audience)
-
 Repository repo = realm.getRepository();
 if (repo == null)
 return new OopsResponse("trust.token.repository.missing", Response.Status.NOT_FOUND).build();
@@ -103,16 +99,19 @@ bindings.put("provider", provider);
 
 AgentBuilder builder = new AgentBuilder(issuer, connection, bindings, realm.getSecrets());
 builder.realm(realm);
+
+builder.getGround();
+// TODO: authenticate (subject is a user, subject known to issuer)
+// TODO: authorize (subject known to audience)
+// find(model, Resource self, Set<IRI> found, boolean recurse, IRI follow)
+
 I_Agent agent = builder.agent();
+
 builder.scripting(agent).sparql(connection);
-// IRI initial = Values.iri(issuer.stringValue() + "verify");
 Object identity = null;
 try {
-log.info("trust.token.init: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
-agent.getStateMachine().initialize();
-log.info("trust.token.starting: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
+log.info("trust.token.agent: {} @ {}", agent.getSelf(), agent.getStateMachine().getState());
 agent.start();
-// Resource state = agent.getStateMachine().transition(initial);
 identity = bindings.get("identity");
 log.info("trust.token.identity: {} == {}", identity, agent.getStateMachine().getState());
 agent.stop();
@@ -120,7 +119,6 @@ agent.stop();
 log.error("trust.token.agent: {} == {}", agent.getSelf(), e.getMessage());
 return new OopsResponse("trust.token.failed", Response.Status.UNAUTHORIZED).build();
 }
-// agent.getStateMachine().setInitial(Values.iri(issuer.stringValue()+"verify"));
 
 if (identity == null) {
 return new OopsResponse("trust.token.identity", Response.Status.UNAUTHORIZED).build();
@@ -133,9 +131,12 @@ IRI self = Values.iri(identity.toString());
 Object human = bindings.get("human");
 log.info("trust.token.human: {} == {}", human == null ? "ANON" : human, self);
 if (human == null || human.toString().isEmpty())
-return new OopsResponse("trust.token.human.name", Response.Status.UNAUTHORIZED).build();
+return new OopsResponse("trust.token.human", Response.Status.UNAUTHORIZED).build();
 boolean newUser = platform.getRealm(self) == null;
 I_Realm myRealm = platform.getInstance().newRealm(self);
+
+boolean trusted = Realms.trusts(builder.getGround(), issuer, self);
+log.info("trust.token.trusted: {}", trusted);
 
 try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
 myConnection.begin();
@@ -162,7 +163,7 @@ return response.build();
 } catch (Exception e) {
 if (e instanceof OopsException oops) {
 log.warn("trust.token.oops: {} == {}", e.getMessage(), oops.getStatus(), e);
-return new SimpleResponse(oops.getMessage(), oops.getStatus()).build();
+return new OopsResponse(oops.getMessage(), oops.getStatus()).build();
 }
 log.error("trust.token.failed: {}", e.getMessage(), e);
 return new OopsResponse("trust.token.error", Response.Status.INTERNAL_SERVER_ERROR).build();
