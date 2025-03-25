@@ -52,9 +52,9 @@ public class ModelStateMachine extends AbstractStateMachine<Resource> implements
 
     @Override
     public void initialize() throws StateException {
-        Resource found_initial = findGroundState(hasInitialState);
+        Resource found_initial = findCurrentState(hasInitialState);
         if (found_initial == null)
-            found_initial = findCurrentState(hasInitialState);
+            found_initial = findGroundState(hasInitialState);
         if (found_initial == null)
             throw new StateException("oops.msm.initial", self);
         setInitial(found_initial);

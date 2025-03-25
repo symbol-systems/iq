@@ -31,6 +31,8 @@ public class VoxAPI extends GuardedAPI {
     String url;
     @ConfigProperty(name = "iq.realm.vox.model", defaultValue = "distil-whisper-large-v3-en")
     String model;
+    @ConfigProperty(name = "iq.realm.vox.secret", defaultValue = "MY_GROQ_API_KEY")
+    String secretKeyGrant;
     @ConfigProperty(name = "iq.realm.vox.temperature", defaultValue = "0.1")
     String temperature;
     @ConfigProperty(name = "iq.realm.vox.prompt", defaultValue = "transcribe and fix typos")
@@ -71,7 +73,7 @@ public class VoxAPI extends GuardedAPI {
 
         I_Realm realm = platform.getRealm(_realm);
         APISecrets apiSecrets = new APISecrets(realm.getSecrets());
-        apiSecrets.grant(url, "MY_GROQ_API_KEY");
+        apiSecrets.grant(url, secretKeyGrant);
         String secret = apiSecrets.getSecret(url);
         log.info("ux.vox.secret: {}", secret);
         if (Validate.isMissing(secret)) {
