@@ -38,7 +38,7 @@
 <module>iq-rdf4j</module>
 <module>iq-intents</module>
 <module>iq-platform</module>
-<!-- <module>iq-lake</module> -->
+<module>iq-lake</module>
 <!-- <module>iq-finder</module> -->
 <module>iq-agentic</module>
 <module>iq-run-apis</module>
