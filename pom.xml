@@ -39,7 +39,7 @@
     <module>iq-intents</module>
     <module>iq-platform</module>
     <module>iq-lake</module>
-    <!-- <module>iq-finder</module> -->
+    <module>iq-finder</module>
     <module>iq-agentic</module>
     <module>iq-run-apis</module>
     <module>iq-persona</module>
