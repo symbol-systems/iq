@@ -1,6 +1,6 @@
 # IQ-MCP Module — Complete Reference
 
-## Executive Summary
+git ad## Executive Summary
 
 Successfully created the **iq-mcp** Maven module integrating **Model Context Protocol (MCP 0.17.2)** with IQ's RDF-first agentic architecture. The module provides high-level interface contracts and comprehensive tool specifications following IQ project idioms.
 
