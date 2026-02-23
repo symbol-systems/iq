@@ -98,7 +98,7 @@ return store;
 storeHome.getParentFile().mkdirs();
 InMemoryEmbeddingStore<TextSegment> store = defaultEmbeddingStore();
 System.out.println("finder.text.load: " + storeHome.toURI());
-store.serializeToFile(Paths.get(storeHome.toURI()));
+store.serializelocate(Paths.get(storeHome.toURI()));
 return store;
 }
 
@@ -128,7 +128,7 @@ storeHome.getParentFile().mkdirs();
 if (store instanceof InMemoryEmbeddingStore) {
 InMemoryEmbeddingStore<TextSegment> saveStore = (InMemoryEmbeddingStore<TextSegment>) store;
 log.info("finder.text.save: {}", storeHome);
-saveStore.serializeToFile(Paths.get(storeHome.toURI()));
+saveStore.serializelocate(Paths.get(storeHome.toURI()));
 }
 }
 

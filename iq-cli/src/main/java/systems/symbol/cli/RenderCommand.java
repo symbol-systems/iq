@@ -64,7 +64,7 @@ log.info("iq.render.models: " + models.size());
 //
 // // localize IRI to Folder / File
 // File toFolder = this.toFolder == null ? context.www_docs : this.toFolder;
-// File file = Files.toFile(toFolder, ctx, modelIRI);
+// File file = Files.locate(toFolder, ctx, modelIRI);
 //// log.info("iq.render: {} @ {}", modelIRI, file.getAbsolutePath());
 //
 // if (file != null && file.isDirectory()) {

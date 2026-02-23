@@ -4,7 +4,7 @@ IQ provides the infrastructure and tools necessary for the development, deployme
 
 In essence, a framework for building and harnessing the power of intelligent systems that combine the strengths of both neural and symbolic approaches to AI.
 
-At the heart of `IQ` is the `mind graph`, a declarative AI model based on RDF.
+At the heart of `IQ` is the `fact graph`, a declarative approach to AI modelleing based on RDF.
 
 As a cognitive toolkit, `IQ` is fed on knowledge - these are your facts, your data, your processes, policies, goals, tools, actions and more.
 

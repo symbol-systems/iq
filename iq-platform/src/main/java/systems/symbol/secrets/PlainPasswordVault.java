@@ -80,7 +80,7 @@ load(Values.iri(file.toURI().toASCIIString()));
  */
 protected void save(IRI agent, I_Secrets iSecrets) throws IOException {
 try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-Files.newOutputStream(toFile(agent).toPath()))) {
+Files.newOutputStream(locate(agent).toPath()))) {
 objectOutputStream.writeObject(iSecrets);
 } catch (URISyntaxException e) {
 throw new RuntimeException(e);
@@ -95,7 +95,7 @@ throw new RuntimeException(e);
  */
 protected void load(IRI agent) throws IOException {
 try (ObjectInputStream objectInputStream = new ObjectInputStream(
-Files.newInputStream(toFile(agent).toPath()))) {
+Files.newInputStream(locate(agent).toPath()))) {
 I_Secrets secrets = (I_Secrets) objectInputStream.readObject();
 this.store.put(agent, secrets);
 } catch (ClassNotFoundException | URISyntaxException e) {
@@ -109,7 +109,7 @@ throw new RuntimeException(e);
  * @param agent The ID of the agent for whom secrets are being stored.
  * @return The File object representing the file where secrets will be stored.
  */
-private File toFile(IRI agent) throws URISyntaxException {
+private File locate(IRI agent) throws URISyntaxException {
 return new File(new URI(agent.stringValue()));
 }
 

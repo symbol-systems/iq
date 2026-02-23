@@ -129,7 +129,6 @@ node.put(name, enlist);
 
 Bindings v = new SimpleBindings();
 v.put("@id", s.getObject().stringValue());
-// node.put("_"+name, v);
 enlist.add(v);
 log.debug("@ref: {} -> {} == {}", s.getSubject(), name, enlist);
 }
@@ -142,10 +141,10 @@ return new ArrayList<>();
 List<Object> l;
 if (o instanceof List) {
 return (List<Object>) o;
-} else {
+} 
+
 l = new ArrayList<>();
 l.add(o);
-}
 return l;
 }
 

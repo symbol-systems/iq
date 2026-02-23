@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.76.0</version>
+<version>0.91.5</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
@@ -159,6 +159,14 @@
 <groupId>com.graphql-java</groupId>
 <artifactId>graphql-java</artifactId>
 <version>20.1</version>
+</dependency>
+
+<!-- Test dependencies -->
+<dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter</artifactId>
+<version>5.10.5</version>
+<scope>test</scope>
 </dependency>
 
 <dependency>

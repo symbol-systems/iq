@@ -21,7 +21,7 @@ import systems.symbol.fsm.StateException;
 import systems.symbol.intent.Remodel;
 import systems.symbol.intent.Think;
 import systems.symbol.lake.BootstrapRepository;
-import systems.symbol.llm.gpt.GenericGPT;
+import systems.symbol.llm.gpt.GPTWrapper;
 import systems.symbol.llm.gpt.LLMFactory;
 import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.rdf4j.sparql.ModelScriptCatalog;
@@ -72,7 +72,7 @@ System.err.println("healthy.fleet.llm.skipped: ");
 return;
 }
 System.out.println("---- self");
-GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
+GPTWrapper gpt = new GPTWrapper(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
 
@@ -111,7 +111,7 @@ System.err.println("brave.fleet.llm.skipped: ");
 return;
 }
 System.out.println("---- search");
-GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
+GPTWrapper gpt = new GPTWrapper(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
 System.out.println("brave.fleet: " + self);
 
 Stopwatch stopwatch = new Stopwatch();
@@ -164,7 +164,7 @@ System.err.println("guarded.llm.skipped: ");
 return;
 }
 System.out.println("---- guarded");
-GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
+GPTWrapper gpt = new GPTWrapper(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
 System.out.println("guarded.fleet: " + self);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());
@@ -210,7 +210,7 @@ System.err.println("image.fleet.llm.skipped: ");
 return;
 }
 System.out.println("---- image generation");
-GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
+GPTWrapper gpt = new GPTWrapper(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
 System.out.println("image.fleet: " + self);
 
 Stopwatch stopwatch = new Stopwatch();
@@ -249,7 +249,7 @@ System.err.println("thinking.llm.skipped: ");
 return;
 }
 System.out.println("---- thinking");
-GenericGPT gpt = new GenericGPT(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
+GPTWrapper gpt = new GPTWrapper(OPENAI_API_KEY, LLMFactory.GPT3_5_Turbo(1000));
 System.out.println("thinking.fleet: " + self);
 
 APISecrets secrets = new APISecrets(new EnvsAsSecrets());

@@ -1,4 +1,4 @@
-# **Semantic Augmentation for Large Language Models: A Technical Paper**
+# **Semantic Augmentation: A Technical Paper**
 
 ## **Abstract**
 
@@ -253,7 +253,7 @@ where \(A\) and \(B\) are vectors, \(A \cdot B\) is their dot product, and \(\|A
 
 ## **5. Conclusion**
 
-This paper presents a novel approach to semantic neural augmentation, enhancing LLM capabilities by integrating contextually relevant knowledge through IRIs. By linking IRIs into generated text, we provide robust backtracking, provenance tracking, and contextual enrichment. This advancement improves LLM performance in anomaly detection, source code lookup, information retrieval, goal planning, trust assertion, provenance tracking, and fraud detection, paving the way for more sophisticated AI interactions.
+This paper presents a approach to semantic neural augmentation, enhancing LLM capabilities by integrating contextually relevant knowledge through IRIs. By linking IRIs into generated text, we provide robust backtracking, provenance tracking, and contextual enrichment. This advancement improves LLM performance in anomaly detection, source code lookup, information retrieval, goal planning, trust assertion, provenance tracking, and fraud detection, paving the way for more sophisticated AI interactions.
 
 ## **References**
 

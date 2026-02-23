@@ -20,7 +20,7 @@ Repository getRepository();
 // FactFinder getFinder();
 // I_Search<I_Found<IRI>> getSearch(IRI index);
 
-FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException;
+FileObject locate(IRI iri) throws URISyntaxException, FileSystemException;
 
 I_Secrets getSecrets();
 

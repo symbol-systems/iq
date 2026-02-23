@@ -13,7 +13,7 @@ import systems.symbol.fsm.I_StateMachine;
 import systems.symbol.fsm.StateException;
 import systems.symbol.llm.*;
 import systems.symbol.llm.gpt.GPTResponse.Usage;
-import systems.symbol.llm.gpt.GenericGPT;
+import systems.symbol.llm.gpt.GPTWrapper;
 import systems.symbol.llm.gpt.LLMFactory;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.prompt.*;
@@ -99,7 +99,7 @@ throw new RuntimeException(e);
 // Handles the flow between agent and the LLM, then updating state
 public Set<IRI> llm(IRI action, Resource llm, Bindings bindings) throws APIException, Exception {
 Set<IRI> done = new HashSet<>();
-GenericGPT gpt = LLMFactory.llm(llm, facts, contextLength, secrets);
+GPTWrapper gpt = LLMFactory.llm(llm, facts, contextLength, secrets);
 if (gpt == null) {
 log.error("*** OOPS.llm.configure: {} @ {} *** ", action, llm);
 return done;
@@ -133,12 +133,13 @@ if (!latest.getRole().equals(I_LLMessage.RoleType.assistant)) {
 log.info("avatar.not-reply {}", agent.getSelf());
 return;
 }
-if (!(latest instanceof IntentMessage intent)) {
+if (!(latest instanceof IntentMessage)) {
 String reply = latest.getContent();
 log.info("avatar.reply: #{} => {}", answer.messages().size(), answer.messages());
 chat.assistant(reply);
 return;
 }
+IntentMessage intent = (IntentMessage) latest;
 chat.add(intent);
 log.info("avatar.intent: {} => {} @ {}", intent.getIntent(), agent.getSelf(),
 agent.getStateMachine().getState());

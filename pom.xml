@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.91.4</version>
+ <version>0.91.5</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -50,7 +50,8 @@
 <!-- <module>iq-camel</module> -->
 <!-- <module>iq-cli</module> -->
 <!-- <module>iq-cli-devops</module> -->
-<!-- <module>iq-rdf4j-graphql</module> -->
+<module>iq-rdf4j-graphql</module>
+<module>iq-mcp</module>
 <!-- <module>iq-rdf4j-nlp</module> -->
 <!-- <module>iq-codehub</module> -->
   </modules>

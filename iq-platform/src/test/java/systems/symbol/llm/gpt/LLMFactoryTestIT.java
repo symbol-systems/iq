@@ -22,7 +22,7 @@ public void setUp() {
 // @Test
 public void testGROQ_Llama3_8b() throws IOException, APIException {
 I_LLMConfig config = LLMFactory.GROQ_Llama3(tokens);
-GenericGPT ai = new GenericGPT(authKey, config);
+GPTWrapper ai = new GPTWrapper(authKey, config);
 Conversation chat = generateLLMResponse(ai, "hello ...");
 assert chat != null;
 System.out.printf("llm.llama3.done: %s \n", chat.messages().size());
@@ -32,7 +32,7 @@ assert chat.messages.size() > 1;
 // @Test
 public void testGROQ_Llama_DeepSeek() throws IOException, APIException {
 I_LLMConfig config = LLMFactory.GROQ_Llama_DeepSeek(tokens);
-GenericGPT ai = new GenericGPT(authKey, config);
+GPTWrapper ai = new GPTWrapper(authKey, config);
 Conversation chat = generateLLMResponse(ai, "what is your nature ...");
 assert chat != null;
 System.out.printf("llm.llama_deepseek.done: %s \n", chat.messages().size());
@@ -42,7 +42,7 @@ assert chat.messages.size() > 1;
 @Test
 public void testGROQ_Llama_Tools() throws IOException, APIException {
 I_LLMConfig config = LLMFactory.GROQ_Llama3(tokens);
-GenericGPT ai = new GenericGPT(authKey, config);
+GPTWrapper ai = new GPTWrapper(authKey, config);
 ai.tool(Tool.defineFunction("search_web", "search the web").addStringParam("query", "search query", true)
 .build());
 ai.tool(Tool.defineFunction("search_memory", "search my memory").addStringParam("query", "SPARQL query", true)
@@ -57,7 +57,7 @@ System.out.printf("llm.llama_tools.self: %s \n", chat2.messages().size());
 assert chat2.messages.size() > 0;
 }
 
-Conversation generateLLMResponse(GenericGPT ai, String say) throws APIException, IOException {
+Conversation generateLLMResponse(GPTWrapper ai, String say) throws APIException, IOException {
 Conversation chat = new Conversation();
 chat.user(say);
 System.out.printf("llm.gpt.messages: %s ->\n%s\n", say, chat.messages());
