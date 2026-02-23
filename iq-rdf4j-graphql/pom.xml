@@ -152,13 +152,13 @@
 <dependency>
 <groupId>com.graphql-java</groupId>
 <artifactId>java-dataloader</artifactId>
-<version>3.2.0</version>
+<version>3.3.0</version>
 </dependency>
 
 <dependency>
 <groupId>com.graphql-java</groupId>
 <artifactId>graphql-java</artifactId>
-<version>20.1</version>
+<version>21.5</version>
 </dependency>
 
 <!-- Test dependencies -->
