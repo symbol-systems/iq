@@ -57,7 +57,7 @@ public class Realm implements I_Realm {
     // }
 
     @Override
-    public FileObject toFile(IRI iri) throws URISyntaxException, FileSystemException {
+    public FileObject locate(IRI iri) throws URISyntaxException, FileSystemException {
         return vfs.resolveFile(new URI(iri.stringValue()));
     }
 

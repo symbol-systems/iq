@@ -1,22 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [ -z "$1" ]; then
-    MSG=$(grep -oPm1 "(?<=<version>)[^<]+" pom.xml)
+# release helper - commit everything, tag it and push
+# usage: bin/release [message]
 
-    if [ -z "$MSG" ]; then
-        MSG=$(grep -oPm1 "(?<=<parent>.*<version>)[^<]+" pom.xml)
+set -euo pipefail
+
+MSG="${1:-}"
+
+if [ -z "$MSG" ]; then
+    # try to infer from pom.xml version, parent version fallback
+    if grep -q '<version>' pom.xml; then
+        MSG=$(grep -oPm1 "(?<=<version>)[^<]+" pom.xml || true)
     fi
-else
-    MSG="$1"
+
+    if [ -z "$MSG" ] && grep -q '<parent>' pom.xml; then
+        MSG=$(grep -oPm1 "(?<=<parent>.*<version>)[^<]+" pom.xml || true)
+    fi
 fi
 
 if [ -z "$MSG" ]; then
-    echo "Error: Missing commit message."
+    echo >&2 "Error: commit message or pom version required"
     exit 1
 fi
 
+# stage everything
 git add -A .
-git commit -m "$MSG"
+
+# commit only if there are staged changes
+if git diff --cached --quiet; then
+    echo "No changes to commit; skipping commit."
+else
+    git commit -m "$MSG"
+fi
+
+# create tag (force=false)
 git tag "$MSG"
+
+# push branch and tags
 git push
 git push --tags
+

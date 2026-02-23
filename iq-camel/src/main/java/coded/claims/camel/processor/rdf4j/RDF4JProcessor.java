@@ -6,6 +6,7 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.support.ExchangeHelper;
 import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -19,7 +20,13 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
+import org.eclipse.rdf4j.query.resultio.QueryResultIO;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 
 /**
  * systems.symbol (c) 2014-2023
@@ -55,7 +62,6 @@ public class RDF4JProcessor implements Processor {
 		Message out = exchange.getOut();
 		out.setHeaders(headers);
 
-		RepositoryConnection connection = repository.getConnection();
 		String sparql = null, contentType = this.outputType;
 		// SPARQL query is specified in message Body not in declaration
 
@@ -67,22 +73,23 @@ public class RDF4JProcessor implements Processor {
 
 		sparql = in.getBody(String.class);
 
-		if (queryType=="select") {
-			if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL SELECT query");
-//			processSelect(connection, headers, contentType, sparql, out);
-		} else if (queryType=="load") {
-			if ( isMissing(sparql) ) throw new MalformedQueryException("Missing RDF statements");
-			processLoad(connection, headers, contentType, sparql, out);
-		} else if (queryType=="construct" || queryType=="describe") {
-			if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL CONSTRUCT|DESCRIBE query");
-			processConstruct(connection, headers, contentType, sparql, out);
-		} else if (queryType=="ask") {
-			if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL ASK query");
-			processAsk(connection, sparql, out);
-		} else {
-			throw new MalformedQueryException("Missing SPARQL operation");
+		try (RepositoryConnection connection = repository.getConnection()) {
+			if ("select".equalsIgnoreCase(queryType)) {
+				if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL SELECT query");
+				processSelect(connection, headers, contentType, sparql, out);
+			} else if ("load".equalsIgnoreCase(queryType)) {
+				if ( isMissing(sparql) ) throw new MalformedQueryException("Missing RDF statements");
+				processLoad(connection, headers, contentType, sparql, out);
+			} else if ("construct".equalsIgnoreCase(queryType) || "describe".equalsIgnoreCase(queryType)) {
+				if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL CONSTRUCT|DESCRIBE query");
+				processConstruct(connection, headers, contentType, sparql, out);
+			} else if ("ask".equalsIgnoreCase(queryType)) {
+				if ( isMissing(sparql) ) throw new MalformedQueryException("Missing SPARQL ASK query");
+				processAsk(connection, sparql, out);
+			} else {
+				throw new MalformedQueryException("Missing SPARQL operation");
+			}
 		}
-		connection.close();
 	}
 	
 	boolean isMissing(String sparql) {
@@ -111,23 +118,41 @@ public class RDF4JProcessor implements Processor {
 		connection.commit();
 	}
 
-	private void processConstruct(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RDFHandlerException, MalformedQueryException, RepositoryException, IOException, QueryResultHandlerException, QueryEvaluationException {
-		GraphQueryResult graphQueryResult = executeGraphQuery(connection, sparql);
-
-		RDFFormat rdfFormat = Rio.getParserFormatForMIMEType(contentType).orElse(null);
-		log.debug("processConstruct: " + contentType+" -> "+rdfFormat);
-		if (rdfFormat==null) {
-			out.setBody(graphQueryResult);
+	private void processSelect(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RepositoryException, QueryResultHandlerException, MalformedQueryException, QueryEvaluationException, IOException {
+		TupleQueryResultFormat parserFormatForMIMEType = QueryResultIO.getParserFormatForMIMEType(contentType, null);
+		if (parserFormatForMIMEType!=null) {
+			headers.put("Content-Type", parserFormatForMIMEType.getDefaultMIMEType()+";"+parserFormatForMIMEType.getCharset());
+			StringWriter stringWriter = handle(connection, sparql, parserFormatForMIMEType);
+			log.trace("TUPLES: " + stringWriter.toString());
+			out.setBody(stringWriter.toString());
 		} else {
-			headers.put("Content-Type", rdfFormat.getDefaultMIMEType()+";"+rdfFormat.getCharset());
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			Rio.write(graphQueryResult, outputStream, rdfFormat);
-			outputStream.flush();
-			outputStream.close();
-			log.debug("GRAPH: "+outputStream);
-			out.setBody(outputStream.toString());
+			// unknown-type, internal
+			java.util.Collection<java.util.Map> results = systems.symbol.rdf4j.util.SesameHelper.toMapCollection(connection, sparql);
+			log.debug("COLLECTION: " + results);
+			out.setBody(results);
 		}
 	}
+
+	public StringWriter handle(RepositoryConnection connection, String sparql, TupleQueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException {
+		StringWriter stringWriter = new StringWriter();
+		OutputStream out = new org.apache.commons.io.output.WriterOutputStream(stringWriter);
+		handle(connection, sparql, out, parserFormatForMIMEType);
+		out.close();
+		return stringWriter;
+	}
+
+	public void handle(RepositoryConnection connection, String sparql, OutputStream out, TupleQueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException {
+		// handle query and result set
+		TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparql);
+		tupleQuery.setIncludeInferred(isInferred());
+		if (maxQueryTime>0) tupleQuery.setMaxQueryTime(getMaxQueryTime());
+
+		TupleQueryResultWriter resultWriter = QueryResultIO.createWriter(parserFormatForMIMEType, out);
+		resultWriter.startQueryResult(new ArrayList());
+		tupleQuery.evaluate(resultWriter);
+		resultWriter.endQueryResult();
+	}
+
 	public GraphQueryResult executeGraphQuery(RepositoryConnection connection, String sparql) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException, RDFHandlerException {
 		// handle query and result set
 		GraphQuery query = connection.prepareGraphQuery(QueryLanguage.SPARQL, sparql);

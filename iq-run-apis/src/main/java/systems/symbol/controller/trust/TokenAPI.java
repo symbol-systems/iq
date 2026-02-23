@@ -161,7 +161,8 @@ public class TokenAPI extends RealmAPI {
             log.info("trust.token.realm: {} = {}", self.stringValue(), duration);
             return response.build();
         } catch (Exception e) {
-            if (e instanceof OopsException oops) {
+            if (e instanceof OopsException) {
+                OopsException oops = (OopsException) e;
                 log.warn("trust.token.oops: {} == {}", e.getMessage(), oops.getStatus(), e);
                 return new OopsResponse(oops.getMessage(), oops.getStatus()).build();
             }

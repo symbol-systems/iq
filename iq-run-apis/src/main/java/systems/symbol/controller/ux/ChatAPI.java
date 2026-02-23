@@ -45,7 +45,6 @@ public class ChatAPI extends GuardedAPI {
 
     /**
      * Endpoint for answering queries using LLM Language Models.
-     *
      * @return JSON response containing language model results.
      */
     @POST
@@ -115,53 +114,4 @@ public class ChatAPI extends GuardedAPI {
         }
     }
 
-    // private void stateful(Conversation chat, I_Agent agent, I_Realm realm,
-    // RepositoryConnection connection) {
-    // // log.info("ux.chat.timer.1: {}", stopwatch.summary());
-    // Resource state = agent.getStateMachine().getState();
-    // if (state.isIRI()) {
-    // I_Corpus<IRI> searcher = platform.searcher(realm.getSelf());
-    // Collection<I_Found<IRI>> search = searcher.byConcept((IRI)
-    // state).search(chat.toString(), maxResults,
-    // minScore);
-    // log.info("ux.chat.search: {} -> {} == {}", state, search.size(),
-    // chat.context());
-    // // log.info("ux.chat.timer.2: {}", stopwatch.summary());
-    // if ((search == null || search.isEmpty()) && state != null) {
-    // search = searcher.byConcept(null).search(chat.context(), maxResults,
-    // minScore);
-    // log.info("ux.chat.search.2: {} -> {}", search.size(), chat.context());
-    // // log.info("ux.chat.timer.3: {}", stopwatch.summary());
-    // }
-    // Collection<Resource> cando = agent.getStateMachine().getTransitions();
-    // final IRI[] _intent = new IRI[1];
-
-    // search.forEach(found -> {
-    // try {
-    // IRI intent = found.intent();
-    // if (intent != null && cando.contains(intent)) {
-    // _intent[0] = intent;
-
-    // }
-    // } catch (StateException e) {
-    // log.error("Error processing intent: {}. State machine transition failed: {}",
-    // _intent[0],
-    // e.getMessage(), e);
-    // connection.rollback();
-    // } catch (Exception e) {
-    // log.error("Unexpected error: {}", e.getMessage(), e);
-    // }
-    // });
-    // if (_intent[0] != null) {
-    // synchronized (connection) {
-    // agent.getStateMachine().setCurrentState(_intent[0]);
-    // log.info("ux.chat.matrix.set: {} == {} <- {}", _intent[0],
-    // agent.getStateMachine().getState(),
-    // cando);
-    // }
-    // } else {
-    // log.info("ux.chat.matrix.null: {}", state);
-    // }
-    // }
-    // }
 }

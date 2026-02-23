@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.platform.Poke;
-import systems.symbol.rdf4j.io.RDFDump;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.PrettyString;
@@ -44,17 +43,11 @@ public class LLMFactory {
         return config;
     }
 
-    public static GenericGPT llm(Resource self, Model model, int contextLength, I_Secrets secrets)
+    public static GPTWrapper llm(Resource self, Model model, int contextLength, I_Secrets secrets)
             throws SecretsException {
         I_LLMConfig config = configure(self, model, contextLength);
         if (config.getName() == null || config.getURL() == null) {
             log.error("llm.config.missing: {} -> {} -> {}", self, config.getName(), config.getURL());
-            log.error("llm.config.dump: {} -> {}", model.size(), model.getStatements(self, null, null));
-            try {
-                RDFDump.dump(model, new FileOutputStream(new java.io.File("debug.ttl")), RDFFormat.TURTLE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             return null;
         }
         String secretName = PrettyString.localName(config.getSecretName());
@@ -64,7 +57,7 @@ public class LLMFactory {
         if (token == null)
             throw new SecretsException("secret.missing: " + secretName);
         log.info("llm.gpt: {} -> {} @ {} as {}", self, secretName, config.getURL(), config.getResponseFormat());
-        return new GenericGPT(token, config);
+        return new GPTWrapper(token, config);
     }
 
 }

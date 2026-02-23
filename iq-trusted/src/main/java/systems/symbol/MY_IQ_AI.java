@@ -10,7 +10,7 @@ import systems.symbol.rdf4j.io.RDFLoader;
  * MY_IQ_AI: Neuro-symbolic AI Cognitive Partner.
  * <p>
  * IQ enforces operational governance for fleets of neuro-symbolic cognitive AI.
- * It converts RDF mind graphs into actionable MY.IQ.AI playbooks.
+ * It converts RDF fact graphs into actionable MY.IQ.AI playbooks.
  */
 public class MY_IQ_AI {
 

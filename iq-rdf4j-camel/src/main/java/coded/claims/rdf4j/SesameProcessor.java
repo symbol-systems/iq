@@ -59,7 +59,6 @@ public class SesameProcessor implements Processor {
 		Message out = exchange.getOut();
 		out.setHeaders(headers);
 
-		RepositoryConnection connection = repository.getConnection();
 		String sparql = null, contentType = this.outputType;
 		// SPARQL query is specified in message Body not in declaration
 
@@ -71,21 +70,22 @@ public class SesameProcessor implements Processor {
 
 		sparql = in.getBody(String.class);
 
-		if (queryType=="select") {
-			if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL SELECT query");
-			processSelect(connection, headers, contentType, sparql, out);
-		} else if (queryType=="load") {
-			if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing RDF statements");
-			processLoad(connection, headers, contentType, sparql, out);
-		} else if (queryType=="construct") {
-			if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL CONSTRUCT query");
-			processConstruct(connection, headers, contentType, sparql, out);
-		} else {
-			if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL DESCRIBE query");
-			log.debug("DEFAULT: ");
-			processConstruct(connection, headers, contentType, sparql, out);
+		try (RepositoryConnection connection = repository.getConnection()) {
+			if ("select".equalsIgnoreCase(queryType)) {
+				if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL SELECT query");
+				processSelect(connection, headers, contentType, sparql, out);
+			} else if ("load".equalsIgnoreCase(queryType)) {
+				if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing RDF statements");
+				processLoad(connection, headers, contentType, sparql, out);
+			} else if ("construct".equalsIgnoreCase(queryType)) {
+				if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL CONSTRUCT query");
+				processConstruct(connection, headers, contentType, sparql, out);
+			} else {
+				if ( sparql==null||sparql.isEmpty() ) throw new MalformedQueryException("Missing SPARQL DESCRIBE query");
+				log.debug("DEFAULT: ");
+				processConstruct(connection, headers, contentType, sparql, out);
+			}
 		}
-		connection.close();
 	}
 
 	private void processLoad(RepositoryConnection connection, Map<String, Object> headers, String contentType, String triples, Message out) throws RepositoryException, RDFParseException, IOException {

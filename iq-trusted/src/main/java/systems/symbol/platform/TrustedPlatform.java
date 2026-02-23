@@ -83,26 +83,7 @@ public class TrustedPlatform extends Platform {
 
         boot();
 
-        if (!name.equals(true_name)) {
-            // deploy the true Q
-            try {
-                XXXX();
-                XXX();
-                XX();
-                X();
-            } catch (IOException | JavaLayerException e) {
-                // OOPS, LOLZ ...
-                try {
-                    my_ai.speak("I trust U");
-                } catch (JavaLayerException | IOException ex) {
-                    //
-                }
-            }
-        }
-
         try {
-            // trust me or honeypot
-            // governance honeypot - limited to 15 minutes per lifetime
             super.start();
             my_ai.speak("Bye "+ CODENAME);
             stop();
@@ -126,29 +107,8 @@ public class TrustedPlatform extends Platform {
         // G-0 - Governance Guilds
         my_ai.speak("I am "+CODENAME+". I trust G-0");
         trusts();
-        XXXX();
     }
 
-    public void X() throws IOException, JavaLayerException {
-        // AI Honeypot reboots after 1 unit
-        my_ai.speak("X 1");
-    }
-
-    public void XX() throws IOException, JavaLayerException {
-        // AI Honeypot reboots after 10 units
-        my_ai.speak("X 2");
-    }
-
-
-    public void XXX() throws IOException, JavaLayerException {
-        // AI Honeypot reboots after 100 units
-        my_ai.speak("X 3");
-    }
-
-    public void XXXX() throws IOException, JavaLayerException {
-        // AI Honeypot reboots after 1000 units
-        my_ai.speak("X 4");
-    }
 
     public void stop() {
         try {

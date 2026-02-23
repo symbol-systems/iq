@@ -22,4 +22,7 @@ public interface COMMONS {
 	String MIME_JAVA = "text/x-java-source";
 	String MIME_GRAPHQL = "text/graphql";
 	String MIME_XHTML = "application/xhtml+xml";
+
+	// Test namespaces
+	String GG_TEST = "https://test.symbol.systems/cases#";
 }
