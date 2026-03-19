@@ -17,7 +17,7 @@ import systems.symbol.connect.core.I_Connector;
  * <p>
  * This is a template and not intended for production use.
  */
-public final class TemplateConnector implements I_Connector {
+public final class TemplateConnector implements I_Connector, systems.symbol.connect.core.I_ConnectorDescriptor {
 
     private final IRI connectorId;
     private final Model state;
@@ -27,6 +27,25 @@ public final class TemplateConnector implements I_Connector {
     public TemplateConnector(String connectorId) {
         this.connectorId = Values.iri(connectorId);
         this.state = new LinkedHashModel();
+    }
+
+    @Override
+    public String getName() {
+        return "Template Connector";
+    }
+
+    @Override
+    public String getDescription() {
+        return "A minimal connector template demonstrating IQ connector patterns.";
+    }
+
+    @Override
+    public Model getDescriptorModel() {
+        Model m = new LinkedHashModel();
+        m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/ontology/connect#Connector"));
+        m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasName"), Values.literal(getName()));
+        m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasDescription"), Values.literal(getDescription()));
+        return m;
     }
 
     @Override

@@ -1,0 +1,49 @@
+@prefix connect: <https://symbol.systems/ontology/connect#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Connector ontology for IQ connectors
+
+connect:Connector a rdf:Class ;
+    rdfs:label "Connector" ;
+    rdfs:comment "A connector that synchronizes external systems into IQ." .
+
+connect:hasSyncStatus a rdf:Property ;
+    rdfs:label "has sync status" ;
+    rdfs:comment "A connector's current sync status." ;
+    rdfs:range xsd:string .
+
+connect:syncStatus a rdf:Property ;
+    rdfs:label "sync status" ;
+    rdfs:comment "Status enumeration for connector sync state (Idle, Syncing, Error, etc.)." ;
+    rdfs:range xsd:string .
+
+connect:lastSyncedAt a rdf:Property ;
+    rdfs:label "last synced at" ;
+    rdfs:comment "Timestamp of the last successful sync." ;
+    rdfs:range xsd:dateTime .
+
+connect:checkpoint a rdf:Property ;
+    rdfs:label "checkpoint" ;
+    rdfs:comment "Opaque checkpoint token used to resume synchronization." ;
+    rdfs:range xsd:string .
+
+connect:hasDescriptor a rdf:Property ;
+    rdfs:label "has descriptor" ;
+    rdfs:comment "Links a connector to its descriptor model." ;
+    rdfs:range connect:ConnectorDescriptor .
+
+connect:ConnectorDescriptor a rdf:Class ;
+    rdfs:label "Connector Descriptor" ;
+    rdfs:comment "Metadata used to discover and register connectors." .
+
+connect:hasName a rdf:Property ;
+    rdfs:label "has name" ;
+    rdfs:comment "Human-friendly name of the connector." ;
+    rdfs:range xsd:string .
+
+connect:hasDescription a rdf:Property ;
+    rdfs:label "has description" ;
+    rdfs:comment "Human-friendly description of the connector." ;
+    rdfs:range xsd:string .

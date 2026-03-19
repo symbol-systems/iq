@@ -10,9 +10,6 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface I_ConnectorKernel {
 
-    /** Returns the descriptor for the connector that this kernel is running. */
-    I_ConnectorDescriptor getDescriptor();
-
     /**
      * Starts the kernel.
      *
@@ -32,4 +29,8 @@ public interface I_ConnectorKernel {
 
     /** Returns a read-only view of the connector state. */
     I_Connector getConnector();
+
+    /** Returns the descriptor for the connector that this kernel is running. */
+    I_ConnectorDescriptor getDescriptor();
+
 }

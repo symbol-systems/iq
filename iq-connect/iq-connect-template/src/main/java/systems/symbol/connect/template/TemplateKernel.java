@@ -40,7 +40,10 @@ public final class TemplateKernel implements I_ConnectorKernel {
     }
 
     @Override
-    public I_Connector getDescriptor() {
-        return connector;
+    public systems.symbol.connect.core.I_ConnectorDescriptor getDescriptor() {
+        if (connector instanceof systems.symbol.connect.core.I_ConnectorDescriptor) {
+            return (systems.symbol.connect.core.I_ConnectorDescriptor) connector;
+        }
+        throw new IllegalStateException("Connector must implement I_ConnectorDescriptor");
     }
 }
