@@ -42,9 +42,9 @@ public final class TemplateConnector implements I_Connector, systems.symbol.conn
     @Override
     public Model getDescriptorModel() {
         Model m = new LinkedHashModel();
-        m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/ontology/connect#Connector"));
-        m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasName"), Values.literal(getName()));
-        m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasDescription"), Values.literal(getDescription()));
+        m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/v0/connect#Connector"));
+        m.add(connectorId, Values.iri("https://symbol.systems/v0/connect#hasName"), Values.literal(getName()));
+        m.add(connectorId, Values.iri("https://symbol.systems/v0/connect#hasDescription"), Values.literal(getDescription()));
         return m;
     }
 

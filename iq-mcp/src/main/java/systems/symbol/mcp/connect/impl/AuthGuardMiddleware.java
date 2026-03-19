@@ -65,14 +65,27 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
         String secret = asString(config.get("jwtSecret"));
         String issuer = asString(config.get("jwtIssuer"));
         String audience = asString(config.get("jwtAudience"));
+        Long cacheTtlMs = asLong(config.get("jwksCacheTtlMs"));
 
         if (jwksUri != null && !jwksUri.isBlank()) {
-            return JwtPrincipalExtractors.fromJwksUrl(jwksUri, issuer, audience);
+            return JwtPrincipalExtractors.fromJwksUrl(jwksUri, issuer, audience, cacheTtlMs);
         }
         if (secret != null && !secret.isBlank()) {
             return JwtPrincipalExtractors.fromHmacSecret(secret, issuer, audience);
         }
         return principalFromJwtPayload();
+    }
+
+    private static Long asLong(Object value) {
+        if (value instanceof Number n) return n.longValue();
+        if (value instanceof String s) {
+            try {
+                return Long.parseLong(s);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static String asString(Object value) {

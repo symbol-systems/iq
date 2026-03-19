@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkProvider;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,8 +128,34 @@ class JwtPrincipalExtractorsTest {
                 .withExpiresAt(Date.from(Instant.now().plusSeconds(60)))
                 .sign(algorithm);
 
-        AuthGuardMiddleware.JwtPrincipalExtractor extractor = JwtPrincipalExtractors.fromJwksUrl(jwksUrl, issuer, audience);
+        AuthGuardMiddleware.JwtPrincipalExtractor extractor = JwtPrincipalExtractors.fromJwksUrl(jwksUrl, issuer, audience, 2000L);
         String principal = extractor.extractPrincipal(token);
         assertEquals("test-user", principal);
     }
+
+    @Test
+    void testJwksProviderCache() throws Exception {
+        // Create a dummy JWK provider to verify caching.
+        var jwk = Jwk.fromValues(Map.of(
+                "kty", "RSA",
+                "kid", "cache-test",
+                "n", "",
+                "e", "AQAB"
+        ));
+
+        var calls = new int[1];
+        JwkProvider provider = keyId -> {
+            calls[0]++;
+            return jwk;
+        };
+
+        var cachingProvider = new JwtPrincipalExtractors.CachingJwkProvider(provider, 1000);
+
+        // Call twice with same kid; underlying provider should be invoked only once.
+        cachingProvider.get("cache-test");
+        cachingProvider.get("cache-test");
+
+        assertEquals(1, calls[0]);
+    }
 }
+
