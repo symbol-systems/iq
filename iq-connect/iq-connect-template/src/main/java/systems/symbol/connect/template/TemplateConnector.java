@@ -49,7 +49,7 @@ return m;
 }
 
 @Override
-public IRI getConnectorId() {
+public IRI getSelf() {
 return connectorId;
 }
 
@@ -64,7 +64,7 @@ return status;
 }
 
 @Override
-public Model getStateModel() {
+public Model getModel() {
 return state;
 }
 

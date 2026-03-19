@@ -9,19 +9,13 @@ import org.eclipse.rdf4j.model.IRI;
 public interface I_ConnectorDescriptor {
 
 /** Returns the stable IRI for the connector instance. */
-IRI getConnectorId();
-
-/** Returns a human-friendly name for the connector. */
-String getName();
-
-/** Returns a human-friendly description of the connector. */
-String getDescription();
+IRI getSelf();
 
 /**
- * Returns a model that describes this connector (for registration/discovery).
+ * Updates a model to describes this connector (for registration/discovery).
  *
- * <p>The returned model should contain a minimal set of triples needed to discover the connector
+ * <p>The model should contain a minimal set of triples needed to discover the connector
  * and its capabilities; it is safe for this view to be a subset of the full connector state.</p>
  */
-Model getDescriptorModel();
+void describe(Model model);
 }
