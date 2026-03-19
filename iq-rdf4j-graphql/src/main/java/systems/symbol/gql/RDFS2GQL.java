@@ -139,14 +139,14 @@ public class RDFS2GQL {
 		rdfsClass.objects.forEach((o_iri, object) -> {
 			GraphQLFieldDefinition.Builder fieldDef = newFieldDefinition();
 			fieldDef.name(o_iri.getLocalName());
-			GraphQLObjectType graphQLObjectType = objectMap.get(object.getIdentity());
+			GraphQLObjectType graphQLObjectType = objectMap.get(object.getSelf());
 			if (graphQLObjectType != null) {
 				fieldDef.type(graphQLObjectType);
 				if (object.description != null)
 					fieldDef.description(object.description);
 				typeDef.field(fieldDef);
 			} else {
-				missing.put(object.getIdentity(), object);
+				missing.put(object.getSelf(), object);
 			}
 		});
 	}
