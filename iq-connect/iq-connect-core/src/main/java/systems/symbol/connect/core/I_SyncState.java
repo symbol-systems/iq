@@ -2,6 +2,7 @@ package systems.symbol.connect.core;
 
 import java.time.Instant;
 import java.util.Optional;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * Snapshot of the connector's sync state that can be persisted as RDF.
@@ -18,7 +19,7 @@ Instant getLastPolledAt();
 Optional<Instant> getLastErrorAt();
 
 /** The optional opaque checkpoint/cursor for the connector. */
-Optional<String> getCheckpoint();
+Optional<IRI> getCheckpoint();
 
 /** The current high-level status. */
 ConnectorStatus getStatus();

@@ -1,80 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-parent</artifactId>
+<version>0.91.5</version>
+<relativePath>../../pom.xml</relativePath>
+  </parent>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}void refresh();/** Triggers an immediate sync cycle (read, write, or both) as supported by the connector. */void stop();/** Stops or pauses the connector runtime. */void start();/** Starts or resumes the connector runtime. */Optional<I_Checkpoint> getCheckpoint();/** Returns an optional checkpoint that can be used to restore or resume sync. */Model getStateModel(); */ * connector's state. * in-memory snapshot. The model should be considered the canonical view of the * Implementations are free to return a {@link Model} backed by a repository or an * <p> * Returns a live view of the connector's internal state graph./**ConnectorStatus getStatus();/** Returns the current observed status of the connector (syncing, idle, error, etc.). */ConnectorMode getMode();/** Returns the operational mode of the connector (read-only, write-only, etc.). */IRI getConnectorId();/** Returns the stable IRI that identifies this connector instance. */public interface I_Connector { */ * {@link Model} view that can be queried by other IQ components. * Connectors are expected to keep their own state as RDF and expose a live * * A connector is an active adapter that synchronizes a remote system into IQ./**import org.eclipse.rdf4j.model.Model;import org.eclipse.rdf4j.model.IRI;import java.util.Optional;  <groupId>systems.symbol</groupId>
   <artifactId>iq-connect-core</artifactId>
-  <version>0.91.5</version>
   <packaging>jar</packaging>
   <name>IQ Connect Core</name>
   <description>Core connector abstractions and utilities for IQ connectors.</description>
-
-  <properties>
-<maven.compiler.source>21</maven.compiler.source>
-<maven.compiler.target>21</maven.compiler.target>
-<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-<rdf4j.version>5.0.2</rdf4j.version>
-<slf4j.version>1.7.32</slf4j.version>
-  </properties>
 
   <dependencies>
 <dependency>
   <groupId>org.eclipse.rdf4j</groupId>
   <artifactId>rdf4j-model</artifactId>
-  <version>${rdf4j.version}</version>
 </dependency>
 <dependency>
   <groupId>org.eclipse.rdf4j</groupId>
   <artifactId>rdf4j-model-api</artifactId>
-  <version>${rdf4j.version}</version>
 </dependency>
 <dependency>
   <groupId>org.slf4j</groupId>
   <artifactId>slf4j-api</artifactId>
-  <version>${slf4j.version}</version>
 </dependency>
   </dependencies>
 </project>

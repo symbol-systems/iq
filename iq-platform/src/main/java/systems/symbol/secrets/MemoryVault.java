@@ -16,7 +16,7 @@ public MemoryVault() {
 
 @Override
 public I_Secrets getSecrets(IRI agent) {
-return System::getenv;
+return store.get(agent);
 }
 
 @Override
