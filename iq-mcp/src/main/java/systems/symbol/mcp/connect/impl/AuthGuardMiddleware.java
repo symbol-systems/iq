@@ -50,6 +50,8 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
      *   <li>jwtIssuer</li>
      *   <li>jwtAudience</li>
      *   <li>jwksUri (JWKS endpoint for RSA/ECDSA keys)</li>
+     *   <li>oidcDiscoveryUrl (OIDC discovery endpoint, e.g. https://example.com/.well-known/openid-configuration)</li>
+     *   <li>jwksCacheTtlMs (time in ms to cache JWKS keys)</li>
      * </ul>
      */
     public AuthGuardMiddleware(java.util.Map<String, Object> config) {
@@ -61,12 +63,16 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
             return principalFromJwtPayload();
         }
 
+        String oidcDiscoveryUrl = asString(config.get("oidcDiscoveryUrl"));
         String jwksUri = asString(config.get("jwksUri"));
         String secret = asString(config.get("jwtSecret"));
         String issuer = asString(config.get("jwtIssuer"));
         String audience = asString(config.get("jwtAudience"));
         Long cacheTtlMs = asLong(config.get("jwksCacheTtlMs"));
 
+        if (oidcDiscoveryUrl != null && !oidcDiscoveryUrl.isBlank()) {
+            return JwtPrincipalExtractors.fromOidcDiscoveryUrl(oidcDiscoveryUrl, issuer, audience, cacheTtlMs);
+        }
         if (jwksUri != null && !jwksUri.isBlank()) {
             return JwtPrincipalExtractors.fromJwksUrl(jwksUri, issuer, audience, cacheTtlMs);
         }

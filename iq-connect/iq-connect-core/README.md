@@ -6,7 +6,7 @@ This module provides:
 
 - `I_Connector` / `I_ConnectorKernel` — the core connector runtime abstraction.
 - `I_SyncState` / `I_Checkpoint` — a simple way to represent and persist sync status.
-- `I_ConnectorRegistry` — a minimal service interface for managing connectors.
+- `I_ConnectorRegistry` — a minimal service interface for managing connectors (see `InMemoryConnectorRegistry`).
 - `ConnectorModels` / `Checkpoints` — helper utilities to sync models and create checkpoint snapshots.
 
 ## Usage patterns

@@ -9,9 +9,17 @@ import com.auth0.jwk.JwkException;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -78,6 +86,53 @@ public final class JwtPrincipalExtractors {
             return fromJwkProvider(provider, expectedIssuer, expectedAudience);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid JWKS URL: " + jwksUrl, e);
+        }
+    }
+
+    /**
+     * Create an extractor by performing OIDC discovery.
+     *
+     * <p>The discovery document MUST contain {@code issuer} and {@code jwks_uri}.
+     */
+    public static AuthGuardMiddleware.JwtPrincipalExtractor fromOidcDiscoveryUrl(
+            String oidcUrl,
+            String expectedIssuerOverride,
+            String expectedAudience,
+            Long cacheTtlMs) {
+        Objects.requireNonNull(oidcUrl, "oidcDiscoveryUrl");
+
+        try {
+            HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(5))
+                    .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(oidcUrl))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new IllegalArgumentException("OIDC discovery failed: HTTP " + response.statusCode());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.body());
+            String issuer = root.path("issuer").asText(null);
+            String jwksUri = root.path("jwks_uri").asText(null);
+
+            if (jwksUri == null || jwksUri.isBlank()) {
+                throw new IllegalArgumentException("OIDC discovery document missing jwks_uri");
+            }
+            if (issuer == null || issuer.isBlank()) {
+                throw new IllegalArgumentException("OIDC discovery document missing issuer");
+            }
+            String effectiveIssuer = (expectedIssuerOverride != null && !expectedIssuerOverride.isBlank())
+                    ? expectedIssuerOverride
+                    : issuer;
+
+            return fromJwksUrl(jwksUri, effectiveIssuer, expectedAudience, cacheTtlMs);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("OIDC discovery failed: " + e.getMessage(), e);
         }
     }
 

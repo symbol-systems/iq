@@ -14,7 +14,7 @@ import org.eclipse.rdf4j.model.Model;
 public interface I_Connector {
 
     /** Returns the stable IRI that identifies this connector instance. */
-    IRI getConnectorId();
+    IRI getSelf();
 
     /** Returns the operational mode of the connector (read-only, write-only, etc.). */
     ConnectorMode getMode();
@@ -29,7 +29,7 @@ public interface I_Connector {
      * in-memory snapshot. The model should be considered the canonical view of the
      * connector's state.</p>
      */
-    Model getStateModel();
+    Model getModel();
 
     /** Returns an optional checkpoint that can be used to restore or resume sync. */
     Optional<I_Checkpoint> getCheckpoint();

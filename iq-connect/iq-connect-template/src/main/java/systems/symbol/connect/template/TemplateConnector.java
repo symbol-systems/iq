@@ -49,7 +49,7 @@ public final class TemplateConnector implements I_Connector, systems.symbol.conn
     }
 
     @Override
-    public IRI getConnectorId() {
+    public IRI getSelf() {
         return connectorId;
     }
 
@@ -64,7 +64,7 @@ public final class TemplateConnector implements I_Connector, systems.symbol.conn
     }
 
     @Override
-    public Model getStateModel() {
+    public Model getModel() {
         return state;
     }
 

@@ -73,8 +73,9 @@ public interface MCP_NS {
     IRI jwtSecret       = Values.iri(MCP, "jwtSecret");
     IRI jwtIssuer       = Values.iri(MCP, "jwtIssuer");
     IRI jwtAudience     = Values.iri(MCP, "jwtAudience");
-    IRI jwksUri         = Values.iri(MCP, "jwksUri");
-    IRI jwksCacheTtlMs  = Values.iri(MCP, "jwksCacheTtlMs");
+    IRI jwksUri             = Values.iri(MCP, "jwksUri");
+    IRI oidcDiscoveryUrl     = Values.iri(MCP, "oidcDiscoveryUrl");
+    IRI jwksCacheTtlMs       = Values.iri(MCP, "jwksCacheTtlMs");
 
     /* ── IQ-specific resource URI templates ── */
     String IQ_RESOURCE_REALM_SCHEMA    = "iq://realm/{realm}/schema";

@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.model.IRI;
 public interface I_ConnectorSession {
 
     /** The identity of the connector that owns this session. */
-    IRI getConnectorId();
+    IRI getSelf();
 
     /**
      * Returns a model that can be used to read/write connector state.
