@@ -69,6 +69,12 @@ public interface MCP_NS {
     IRI quotaUsed       = Values.iri(MCP, "quotaUsed");
     IRI quotaResetAt    = Values.iri(MCP, "quotaResetAt");
 
+    /* ── JWT / auth config (for mcp:connect middleware) ── */
+    IRI jwtSecret       = Values.iri(MCP, "jwtSecret");
+    IRI jwtIssuer       = Values.iri(MCP, "jwtIssuer");
+    IRI jwtAudience     = Values.iri(MCP, "jwtAudience");
+    IRI jwksUri         = Values.iri(MCP, "jwksUri");
+
     /* ── IQ-specific resource URI templates ── */
     String IQ_RESOURCE_REALM_SCHEMA    = "iq://realm/{realm}/schema";
     String IQ_RESOURCE_REALM_POLICY    = "iq://realm/{realm}/policy";
