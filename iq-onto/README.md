@@ -10,7 +10,12 @@ This /types/ API is mapped to the rdfs_types.sparql file in the ./sparql/ folder
 Governance Graph
 ----------------
 
-The systems.symbol.ttl file contains a ss:Service graph describing the OpenAPI and it's runtime components.
+The systems.symbol.ttl file contains a ss:Service graph describing the OpenAPI and its runtime components.
+
+Connector ontology
+------------------
+
+The `rdf/connector.ttl` file defines a small RDF vocabulary for connectors (`conn:Connector`, `conn:syncStatus`, etc.) used by IQ connector implementations.
 
 
 :api-service-sparql
