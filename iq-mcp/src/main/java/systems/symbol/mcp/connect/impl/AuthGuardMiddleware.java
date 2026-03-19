@@ -43,6 +43,42 @@ public AuthGuardMiddleware(JwtPrincipalExtractor principalExtractor) {
 this.principalExtractor = principalExtractor;
 }
 
+/**
+ * Config-driven constructor. Supports these config keys:
+ * <ul>
+ *   <li>jwtSecret (HMAC shared secret)</li>
+ *   <li>jwtIssuer</li>
+ *   <li>jwtAudience</li>
+ *   <li>jwksUri (JWKS endpoint for RSA/ECDSA keys)</li>
+ * </ul>
+ */
+public AuthGuardMiddleware(java.util.Map<String, Object> config) {
+this(buildExtractorFromConfig(config));
+}
+
+private static JwtPrincipalExtractor buildExtractorFromConfig(java.util.Map<String, Object> config) {
+if (config == null || config.isEmpty()) {
+return principalFromJwtPayload();
+}
+
+String jwksUri = asString(config.get("jwksUri"));
+String secret = asString(config.get("jwtSecret"));
+String issuer = asString(config.get("jwtIssuer"));
+String audience = asString(config.get("jwtAudience"));
+
+if (jwksUri != null && !jwksUri.isBlank()) {
+return JwtPrincipalExtractors.fromJwksUrl(jwksUri, issuer, audience);
+}
+if (secret != null && !secret.isBlank()) {
+return JwtPrincipalExtractors.fromHmacSecret(secret, issuer, audience);
+}
+return principalFromJwtPayload();
+}
+
+private static String asString(Object value) {
+return (value instanceof String) ? (String) value : null;
+}
+
 @Override
 public IRI getSelf() {
 return SELF;

@@ -2,7 +2,7 @@ package systems.symbol.connect.core;
 
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.util.Models;
+import org.eclipse.rdf4j.model.Statement;
 
 /**
  * Convenience helpers for working with connector state models.
@@ -29,6 +29,6 @@ target.add(st);
  * Returns a view of the model that contains only statements about the given subject.
  */
 public static Model forSelf(Model model, org.eclipse.rdf4j.model.Resource self) {
-return Models.filter(model, self, null, null);
+return model.filter(self, null, null);
 }
 }

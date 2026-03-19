@@ -44,12 +44,16 @@ List<I_MCPPipeline> result = new ArrayList<>();
 try (RepositoryConnection conn = repository.getConnection()) {
 String sparql = """
 PREFIX mcp: <urn:mcp:>
-SELECT ?m ?class ?order WHERE {
+SELECT ?m ?class ?order ?jwtSecret ?jwtIssuer ?jwtAudience ?jwksUri WHERE {
 GRAPH <urn:mcp:pipeline> {
 ?m a mcp:Middleware ;
    mcp:middlewareClass ?class ;
    mcp:order ?order ;
    mcp:enabled true .
+OPTIONAL { ?m mcp:jwtSecret ?jwtSecret }
+OPTIONAL { ?m mcp:jwtIssuer ?jwtIssuer }
+OPTIONAL { ?m mcp:jwtAudience ?jwtAudience }
+OPTIONAL { ?m mcp:jwksUri ?jwksUri }
 }
 } ORDER BY ?order
 """;
@@ -57,16 +61,33 @@ conn.prepareTupleQuery(sparql).evaluate().stream().forEach(bs -> {
 String className = bs.getValue("class").stringValue();
 try {
 Class<?> clazz = Class.forName(className);
+Map<String, Object> config = new java.util.HashMap<>();
+if (bs.hasBinding("jwtSecret"))  config.put("jwtSecret",  bs.getValue("jwtSecret").stringValue());
+if (bs.hasBinding("jwtIssuer"))  config.put("jwtIssuer",  bs.getValue("jwtIssuer").stringValue());
+if (bs.hasBinding("jwtAudience")) config.put("jwtAudience", bs.getValue("jwtAudience").stringValue());
+if (bs.hasBinding("jwksUri"))config.put("jwksUri",bs.getValue("jwksUri").stringValue());
+
 Constructor<?> ctor;
 I_MCPPipeline mw;
-// Support both bare and repository-aware constructors
+// Support constructor (Repository, Map) -> (Map) -> (Repository) -> ()
+try {
+ctor = clazz.getConstructor(Repository.class, Map.class);
+mw = (I_MCPPipeline) ctor.newInstance(repository, config);
+} catch (NoSuchMethodException ex1) {
+try {
+ctor = clazz.getConstructor(Map.class);
+mw = (I_MCPPipeline) ctor.newInstance(config);
+} catch (NoSuchMethodException ex2) {
 try {
 ctor = clazz.getConstructor(Repository.class);
 mw = (I_MCPPipeline) ctor.newInstance(repository);
-} catch (NoSuchMethodException ex) {
+} catch (NoSuchMethodException ex3) {
 ctor = clazz.getConstructor();
 mw = (I_MCPPipeline) ctor.newInstance();
 }
+}
+}
+
 result.add(mw);
 log.info("[MCPConnect] loaded middleware: {} order={}", className,
  bs.getValue("order").stringValue());
