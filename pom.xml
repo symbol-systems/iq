@@ -52,6 +52,7 @@
     <!-- <module>iq-cli</module> -->
     <!-- <module>iq-cli-pro</module> -->
     <module>iq-rdf4j-graphql</module>
+    <module>iq-connect/iq-connect-core</module>
     <module>iq-mcp</module>
     <!-- <module>iq-rdf4j-nlp</module> -->
     <!-- <module>iq-codehub</module> -->

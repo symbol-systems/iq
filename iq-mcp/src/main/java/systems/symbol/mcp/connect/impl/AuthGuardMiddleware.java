@@ -8,17 +8,40 @@ import systems.symbol.mcp.MCPException;
 import systems.symbol.mcp.connect.I_MCPPipeline;
 import systems.symbol.mcp.connect.MCPChain;
 
+import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * AuthGuardMiddleware — JWT bearer token validation (order 10).
+ * AuthGuardMiddleware — JWT bearer token principal extraction (order 10).
  *
- * Extracts and validates JWT from the Authorization header,
- * populating {@code mcp.principal} and {@code mcp.roles} in the context.
+ * <p>This middleware extracts a bearer JWT from the incoming request (from
+ * {@code mcp.jwt} in the context) and populates {@code mcp.principal}.
+ *
+ * <p>⚠️ WARNING: By default this implementation does **not** verify signatures.
+ * It is intended as a development stub only.
  */
 public class AuthGuardMiddleware implements I_MCPPipeline {
 
     private static final String BEARER_PREFIX = "Bearer ";
     private static final IRI SELF = SimpleValueFactory.getInstance()
             .createIRI("urn:mcp:middleware:auth");
+
+    private final JwtPrincipalExtractor principalExtractor;
+
+    /**
+     * Default constructor uses a best-effort subject extractor.
+     */
+    public AuthGuardMiddleware() {
+        this(principalFromJwtPayload());
+    }
+
+    /**
+     * Allows custom JWT principal extraction (e.g., using a real JWT library).
+     */
+    public AuthGuardMiddleware(JwtPrincipalExtractor principalExtractor) {
+        this.principalExtractor = principalExtractor;
+    }
 
     @Override
     public IRI getSelf() {
@@ -35,7 +58,7 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
         try {
             String token = extractBearerToken(ctx);
             if (token != null) {
-                String principal = validateAndGetPrincipal(token);
+                String principal = principalExtractor.extractPrincipal(token);
                 ctx.set(MCPCallContext.KEY_PRINCIPAL, principal);
             }
             return chain.proceed(ctx);
@@ -53,9 +76,29 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
         return null;
     }
 
-    private String validateAndGetPrincipal(String token) throws Exception {
-        // Placeholder: in production, use a real JWT library with key management.
-        // For now, assume token structure and extract subject.
-        return "user";
+    private static JwtPrincipalExtractor principalFromJwtPayload() {
+        return jwt -> {
+            try {
+                String[] parts = jwt.split("\\.");
+                if (parts.length < 2) return "anonymous";
+                byte[] decoded = Base64.getUrlDecoder().decode(parts[1]);
+                String payload = new String(decoded, java.nio.charset.StandardCharsets.UTF_8);
+                Matcher m = Pattern.compile("\\\"sub\\\"\\s*:\\s*\\\"([^\\\"]+)\\\"")
+                        .matcher(payload);
+                if (m.find()) {
+                    return m.group(1);
+                }
+            } catch (Exception ignored) {
+                // ignore parsing errors; fall through
+            }
+            return "anonymous";
+        };
+    }
+
+    /**
+     * SPI interface for mapping a JWT to a principal string.
+     */
+    public interface JwtPrincipalExtractor {
+        String extractPrincipal(String jwt);
     }
 }
