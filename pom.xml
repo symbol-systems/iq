@@ -34,6 +34,7 @@
   </developers>
   <modules>
 <module>iq-abstract</module>
+<module>iq-kernel</module>
 <module>iq-aspects</module>
 <module>iq-rdf4j</module>
 <module>iq-intents</module>
@@ -49,7 +50,7 @@
 <!-- <module>iq-actions</module> -->
 <!-- <module>iq-camel</module> -->
 <!-- <module>iq-cli</module> -->
-<!-- <module>iq-cli-devops</module> -->
+<!-- <module>iq-cli-pro</module> -->
 <module>iq-rdf4j-graphql</module>
 <module>iq-mcp</module>
 <!-- <module>iq-rdf4j-nlp</module> -->

@@ -1,0 +1,48 @@
+@prefix mcp:  <urn:mcp:> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# MCP Server configuration
+
+mcp:Server a mcp:ServerConfig ;
+mcp:hasMiddleware mcp:middleware/auth ;
+mcp:hasMiddleware mcp:middleware/acl ;
+mcp:hasMiddleware mcp:middleware/quota ;
+mcp:hasMiddleware mcp:middleware/safety ;
+mcp:hasMiddleware mcp:middleware/audit .
+
+# Middleware configurations
+
+mcp:middleware/auth a mcp:Middleware ;
+mcp:name "auth" ;
+mcp:className "systems.symbol.mcp.connect.impl.AuthGuardMiddleware" ;
+mcp:order 10 ;
+rdfs:comment "JWT bearer token validation" .
+
+mcp:middleware/acl a mcp:Middleware ;
+mcp:name "acl" ;
+mcp:className "systems.symbol.mcp.connect.impl.ACLFilterMiddleware" ;
+mcp:order 30 ;
+mcp:quotaLimit 200 ;
+rdfs:comment "Per-principal tool allow/deny lists (policy from mcp:policy graph)" .
+
+mcp:middleware/quota a mcp:Middleware ;
+mcp:name "quota" ;
+mcp:className "systems.symbol.mcp.connect.impl.QuotaGuardMiddleware" ;
+mcp:order 40 ;
+mcp:quotaLimit 200 ;
+mcp:writeToolLimit 10 ;
+mcp:windowMs 60000 ;
+rdfs:comment "Per-principal, per-tool rate limiting (1-minute tumbling window)" .
+
+mcp:middleware/safety a mcp:Middleware ;
+mcp:name "safety" ;
+mcp:className "systems.symbol.mcp.connect.impl.SparqlSafetyMiddleware" ;
+mcp:order 45 ;
+rdfs:comment "SPARQL write keyword blocking" .
+
+mcp:middleware/audit a mcp:Middleware ;
+mcp:name "audit" ;
+mcp:className "systems.symbol.mcp.connect.impl.AuditWriterMiddleware" ;
+mcp:order 90 ;
+rdfs:comment "Structured audit event logging to mcp:audit named graph" .

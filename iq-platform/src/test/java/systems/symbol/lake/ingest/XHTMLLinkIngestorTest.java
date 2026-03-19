@@ -8,7 +8,6 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.junit.jupiter.api.Test;
 
-import com.squareup.okhttp.internal.framed.Ping;
 
 import java.net.URI;
 import java.net.URISyntaxException;

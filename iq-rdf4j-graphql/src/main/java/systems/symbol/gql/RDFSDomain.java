@@ -1,6 +1,6 @@
 package systems.symbol.gql;
 
-import systems.symbol.model.HasIdentity;
+import systems.symbol.platform.I_Self;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
 
@@ -57,7 +57,7 @@ return rdfsProperty;
 }
 
 public RDFSClass object(RDFSClass c) {
-objects.put(c.getIdentity(), c);
+objects.put(c.getSelf(), c);
 return c;
 }
 }
@@ -74,7 +74,7 @@ this.range = type;
 }
 }
 
-class RDFSResource implements HasIdentity {
+class RDFSResource implements I_Self {
 IRI iri;
 String description;
 
@@ -84,7 +84,7 @@ this.description=description;
 }
 
 @Override
-public IRI getIdentity() {
+public IRI getSelf() {
 return iri;
 }
 }

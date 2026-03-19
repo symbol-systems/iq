@@ -1,73 +1,53 @@
 package systems.symbol.mcp;
 
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.IRI;
-import java.util.Optional;
-
 /**
- * MCP Tool Execution Result interface.
- * 
- * Encapsulates the outcome of invoking a tool via MCP adapter:
- * - success/failure status
- * - payload (RDF Model or JSON)
- * - audit trail (who, when, why, cost)
- * - error details (if applicable)
- * 
- * Results are typically stored in the realm's audit log as RDF triples.
+ * I_MCPResult — Immutable result envelope returned by tools, resources, and prompts.
+ *
+ * <p>Keeps the adapter layer decoupled from the MCP SDK types.
+ * The server wiring layer ({@link systems.symbol.mcp.server.MCPServer}) translates
+ * {@code I_MCPResult} into the appropriate SDK DTO
+ * ({@code McpSchema.CallToolResult}, {@code McpSchema.ReadResourceResult}, etc.).
+ *
+ * <p><b>Content negotiation</b> — the MIME type signals how the server should
+ * encode the payload; common values: {@code application/json},
+ * {@code application/ld+json}, {@code text/turtle}, {@code text/plain}.
+ *
+ * <p><b>Versioning note</b> — a future reactive variant will add a
+ * {@code Publisher<I_MCPResult> stream()} method for streaming large results.
  */
 public interface I_MCPResult {
 
-/**
- * Returns true if tool execution succeeded.
- * 
- * @return success status
- */
-boolean isSuccess();
+/** Whether this result represents an error condition. */
+boolean isError();
 
 /**
- * Retrieves the tool's result payload as an RDF Model.
- * 
- * @return RDF Model (empty model if tool produced no RDF output)
+ * The primary payload.  For errors this is a JSON-encoded error object;
+ * for success results it is the serialised content.
  */
-Model getPayload();
+String getContent();
+
+/** MIME type of {@link #getContent()}. */
+String getMimeType();
 
 /**
- * Retrieves error message if execution failed.
- * 
- * @return Optional error message
+ * Optional error code (mirrors HTTP conventions; {@code 0} = no error).
+ * Examples: {@code 403} permission denied, {@code 429} quota exceeded,
+ * {@code 500} internal error.
  */
-Optional<IRI> getError();
+default int getErrorCode() { return 0; }
 
-/**
- * Retrieves the exception (if execution failed with exception).
- * 
- * @return Optional exception
- */
-Optional<Throwable> getCause();
+/** Convenience: success result carrying the given content. */
+static I_MCPResult ok(String content, String mimeType) {
+return MCPResult.ok(content, mimeType);
+}
 
-/**
- * Retrieves the execution audit trail as RDF triples.
- * Audit model should include:
- * - iq:AgentLog predicate describing who invoked the tool
- * - prov:startTime, prov:endTime for duration tracking
- * - iq:cost for resource consumption
- * - iq:signature for non-repudiation
- * 
- * @return RDF Model containing audit log triples
- */
-Model getAudit();
+/** Convenience: success result with JSON content. */
+static I_MCPResult okJson(String json) {
+return MCPResult.ok(json, "application/json");
+}
 
-/**
- * Retrieves the estimated cost (tokens, API calls, compute units).
- * 
- * @return cost as int
- */
-int getCost();
-
-/**
- * Retrieves the execution duration in milliseconds.
- * 
- * @return duration
- */
-long getDurationMillis();
+/** Convenience: error result. */
+static I_MCPResult error(int code, String message) {
+return MCPResult.error(code, message);
+}
 }

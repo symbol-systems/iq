@@ -1,0 +1,8 @@
+# Check if a policy entry exists for the given tool
+ASK { 
+GRAPH <urn:mcp:policy> { 
+?p a <urn:mcp:Policy> ; 
+   <urn:mcp:allowedTool> ?t . 
+FILTER(str(?t) = "{{toolName}}")
+} 
+}

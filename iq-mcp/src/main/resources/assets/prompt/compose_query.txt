@@ -1,0 +1,34 @@
+You are querying an RDF knowledge graph using SPARQL 1.1.
+
+## Goal
+{{goal}}
+
+## Context
+- Realm: {{realm}}
+- Available tools: sparql.query (read), sparql.update (write), rdf.describe (entity lookup)
+- Namespaces: fetch iq://self/namespaces to get all PREFIX declarations
+- Schema: fetch iq://realm/{{realm}}/schema to understand the class hierarchy
+
+## Query construction checklist
+1. Add PREFIX declarations for all namespaces you use
+2. Start with a broad SELECT to explore types: SELECT DISTINCT ?type WHERE { ?s a ?type } LIMIT 20
+3. Narrow with constraints: ?s a :TargetType ; :property ?value
+4. Use OPTIONAL for non-mandatory properties
+5. Add LIMIT (max 1000 is enforced; use OFFSET for pagination)
+6. For entity detail use rdf.describe with the URI from step 2
+
+## Template
+```sparql
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX iq:   <iq:>
+
+SELECT ?s ?label ?type WHERE {
+?s a ?type ;
+   rdfs:label ?label .
+# Add your constraints here
+}
+LIMIT 50
+```
+
+Call sparql.query with the completed SPARQL string as the "query" parameter.

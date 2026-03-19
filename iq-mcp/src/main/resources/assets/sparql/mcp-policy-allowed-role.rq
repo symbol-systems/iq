@@ -1,0 +1,7 @@
+# Check if a principal's role is allowed for the given tool
+ASK { 
+GRAPH <urn:mcp:policy> { 
+?p <urn:mcp:allowedTool> "{{toolName}}" ; 
+   <urn:mcp:allowedRole> "{{role}}" 
+} 
+}
