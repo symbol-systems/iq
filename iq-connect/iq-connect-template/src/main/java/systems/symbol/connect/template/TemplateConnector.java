@@ -42,9 +42,9 @@ return "A minimal connector template demonstrating IQ connector patterns.";
 @Override
 public Model getDescriptorModel() {
 Model m = new LinkedHashModel();
-m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/ontology/connect#Connector"));
-m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasName"), Values.***REMOVED***(getName()));
-m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasDescription"), Values.***REMOVED***(getDescription()));
+m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/v0/connect#Connector"));
+m.add(connectorId, Values.iri("https://symbol.systems/v0/connect#hasName"), Values.***REMOVED***(getName()));
+m.add(connectorId, Values.iri("https://symbol.systems/v0/connect#hasDescription"), Values.***REMOVED***(getDescription()));
 return m;
 }
 

@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-parent</artifactId>
+<version>0.91.5</version>
+<relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>iq-connect-aws</artifactId>
+  <packaging>jar</packaging>
+  <name>IQ Connect AWS</name>
+  <description>A sample AWS connector implementation for IQ.</description>
+
+  <properties>
+<aws.sdk.version>2.20.28</aws.sdk.version>
+  </properties>
+
+  <dependencies>
+<dependency>
+  <groupId>systems.symbol</groupId>
+  <artifactId>iq-connect-core</artifactId>
+  <version>${project.version}</version>
+</dependency>
+<dependency>
+  <groupId>software.amazon.awssdk</groupId>
+  <artifactId>s3</artifactId>
+  <version>${aws.sdk.version}</version>
+</dependency>
+<dependency>
+  <groupId>software.amazon.awssdk</groupId>
+  <artifactId>sts</artifactId>
+  <version>${aws.sdk.version}</version>
+</dependency>
+<dependency>
+  <groupId>org.eclipse.rdf4j</groupId>
+  <artifactId>rdf4j-model</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-api</artifactId>
+</dependency>
+  </dependencies>
+</project>

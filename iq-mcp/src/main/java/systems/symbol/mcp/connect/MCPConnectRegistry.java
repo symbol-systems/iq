@@ -67,6 +67,7 @@ if (bs.hasBinding("jwtSecret"))  config.put("jwtSecret",  bs.getValue("jwtSecret
 if (bs.hasBinding("jwtIssuer"))  config.put("jwtIssuer",  bs.getValue("jwtIssuer").stringValue());
 if (bs.hasBinding("jwtAudience")) config.put("jwtAudience", bs.getValue("jwtAudience").stringValue());
 if (bs.hasBinding("jwksUri"))config.put("jwksUri",bs.getValue("jwksUri").stringValue());
+if (bs.hasBinding("jwksCacheTtlMs")) config.put("jwksCacheTtlMs", Long.parseLong(bs.getValue("jwksCacheTtlMs").stringValue()));
 
 Constructor<?> ctor;
 I_MCPPipeline mw;

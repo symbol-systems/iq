@@ -67,10 +67,15 @@ throw new IllegalArgumentException("JWT verification failed: " + ex.getMessage()
 public static AuthGuardMiddleware.JwtPrincipalExtractor fromJwksUrl(
 String jwksUrl,
 String expectedIssuer,
-String expectedAudience) {
+String expectedAudience,
+Long cacheTtlMs) {
 Objects.requireNonNull(jwksUrl, "jwksUrl");
 try {
-return fromJwkProvider(new UrlJwkProvider(new URL(jwksUrl)), expectedIssuer, expectedAudience);
+JwkProvider provider = new UrlJwkProvider(new URL(jwksUrl));
+if (cacheTtlMs != null && cacheTtlMs > 0) {
+provider = new CachingJwkProvider(provider, cacheTtlMs);
+}
+return fromJwkProvider(provider, expectedIssuer, expectedAudience);
 } catch (MalformedURLException e) {
 throw new IllegalArgumentException("Invalid JWKS URL: " + jwksUrl, e);
 }
@@ -109,5 +114,38 @@ return (subject != null && !subject.isBlank()) ? subject : "anonymous";
 throw new IllegalArgumentException("JWT verification failed: " + ex.getMessage(), ex);
 }
 };
+}
+
+/**
+ * Cache wrapper for a {@link JwkProvider}.
+ */
+static final class CachingJwkProvider implements JwkProvider {
+private final JwkProvider delegate;
+private final long ttlMs;
+private final java.util.concurrent.ConcurrentHashMap<String, CacheEntry> cache = new java.util.concurrent.ConcurrentHashMap<>();
+
+CachingJwkProvider(JwkProvider delegate, long ttlMs) {
+this.delegate = delegate;
+this.ttlMs = ttlMs;
+}
+
+@Override
+public Jwk get(String keyId) throws JwkException {
+long now = System.currentTimeMillis();
+CacheEntry entry = cache.get(keyId);
+if (entry != null && now < entry.expiresAt) {
+return entry.jwk;
+}
+Jwk jwk = delegate.get(keyId);
+cache.put(keyId, new CacheEntry(jwk, now + ttlMs));
+return jwk;
+}
+
+@Override
+public java.util.List<Jwk> getAll() throws JwkException {
+return delegate.getAll();
+}
+
+private record CacheEntry(Jwk jwk, long expiresAt) {}
 }
 }
