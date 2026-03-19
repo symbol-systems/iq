@@ -2,35 +2,60 @@
 
 ## Purpose
 
-This connector syncs Google Cloud Platform resources (Compute, Storage, IAM, etc.) into IQ as RDF.
+This connector brings Google Cloud Platform resources and governance state into IQ as RDF.
+It should scan across a project (or organization) to provide visibility into runtime, security, and audit data.
+
+## Scope / Resources scanned
+
+The connector should be able to scan and expose resources such as:
+
+- **Governance / audit**: Cloud Audit Logs, Organization Policy, IAM bindings, Security Command Center findings
+- **Compute & containers**: Compute Engine, GKE clusters, Cloud Run, App Engine
+- **Storage**: Cloud Storage buckets, Filestore, BigQuery datasets
+- **Networking**: VPCs, subnetworks, firewall rules, load balancers
+- **Observability**: Cloud Monitoring alerts, logs, uptime checks
 
 ## Architecture
 
-- **Kernel**: Polls GCP APIs and converts resource data into RDF.
-- **Model**: Exposes connected state as an RDF `Model`.
-- **Checkpoint**: Stores continuation tokens / last updated timestamps for incremental sync.
+- **Kernel**: Polls GCP APIs and updates the connector graph.
+- **Model**: Exposes synced state as an RDF `Model` that can be queried.
+- **Checkpoint**: Stores continuation tokens and last update timestamps for incremental sync.
 
-## Integration Points
+## SDK / API
 
-- GCP APIs (authenticated via service account)
-- IQ RDF repository (`Model` view)
-- Connector registry for discovery
+- Uses Google Cloud Java client libraries (recommended) or REST endpoints.
+- Auth via service account key, workload identity, or application default credentials.
+
+## Configuration & Secrets
+
+- **Config**:
+  - `gcp.projectId`, `gcp.organizationId`, `gcp.pollInterval`, `gcp.scanServices`
+  - `gcp.graphIri` (named graph for state)
+- **Secrets**:
+  - Store service account key material in IQ secret store.
+  - Prefer workload identity / ADC to avoid long-lived keys.
+
+## Risks & Issues
+
+- **API quotas**: Large orgs may exceed rate limits; implement throttling/backoff.
+- **Data volume**: GCP inventory can be huge; support filtering and incremental sync.
+- **Permission drift**: Insufficient roles may lead to incomplete snapshots — surface missing permission details.
 
 ## State Model
 
-Graph example: `spiffe://{domain}/connector:gcp`.
+Graph example: `urn:iq:connector:gcp`.
 
-### RDF concepts
+### Key RDF concepts
 
 - Connector metadata (`connector:lastSyncedAt`, `connector:syncStatus`)
-- Resource snapshots (e.g., `:instance123 a :GcpComputeInstance`)
+- Resource snapshots (`:instance123 a :GcpComputeInstance`)
 - Checkpoint (`connector:checkpoint`)
 
 ## Sync Modes
 
-- **Read-only**: Keep IQ up-to-date with GCP.
-- **Write-only**: (Optional) Apply configuration changes from IQ to GCP.
-- **Read-write**: Bidirectional synchronisation.
+- **Read-only**: Import GCP state into IQ.
+- **Write-only**: (Optional) Apply changes from IQ to GCP.
+- **Read-write**: Bidirectional sync.
 
 ## Registration
 
@@ -43,12 +68,12 @@ Provide a `ConnectorDescriptor` RDF model describing:
 ## Implementation checklist
 
 - [ ] `I_Connector` implementation
-- [ ] `I_ConnectorKernel` and sync loop
+- [ ] `I_ConnectorKernel` sync loop
 - [ ] `I_Checkpoint` implementation
 - [ ] `Model` view for state
 - [ ] Registry descriptor
 
 ## Extension ideas
 
-- Add audit trail mapping via RDF to represent who changed what.
-- Support real-time updates using Pub/Sub subscriptions.
+- Add Pub/Sub subscription to receive real-time audit events.
+- Surface Cloud Asset Inventory as RDF for large-scale resource discovery.
