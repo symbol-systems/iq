@@ -15,6 +15,7 @@ steps:
 uses: actions/setup-java@v4
 with:
   java-version: '21'
+  distribution: 'temurin'
   - name: Install Maven
 run: sudo apt-get install -y maven
   - name: Run unit tests (skip ITs)
