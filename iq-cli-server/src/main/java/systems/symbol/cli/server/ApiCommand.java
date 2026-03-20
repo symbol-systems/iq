@@ -13,7 +13,6 @@ import picocli.CommandLine;
 })
 public class ApiCommand implements ServerRuntimeScope {
 
-    @Override
     public void run() {
         System.out.println("Use --help for api commands");
     }

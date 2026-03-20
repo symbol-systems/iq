@@ -3,6 +3,7 @@ package systems.symbol.secrets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class APISecrets implements I_Secrets {
 
     public String getSecret(String url) {
         if (url == null) return null;
-        if (secrets==null) return null;
+        if (secrets == null) return null;
         String found = null;
         String name = null;
         for (String urlPrefix : grants.keySet()) {
@@ -37,7 +38,17 @@ public class APISecrets implements I_Secrets {
             return null;
         }
         String secret = secrets.getSecret(name);
-        log.info("secret.found: {} -> {} => {}", found, name, secret==null?"NONE":secret.substring(0,2));
+        log.info("secret.found: {} -> {} => {}", found, name, secret == null ? "NONE" : secret.substring(0, Math.min(secret.length(), 2)));
         return secret;
+    }
+
+    public Map<String, String> getAllSecrets() {
+        if (secrets == null) {
+            return Collections.emptyMap();
+        }
+        if (secrets instanceof SimpleSecrets) {
+            return ((SimpleSecrets) secrets).getAllSecrets();
+        }
+        return Collections.emptyMap();
     }
 }

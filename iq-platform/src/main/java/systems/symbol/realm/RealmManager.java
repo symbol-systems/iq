@@ -53,7 +53,7 @@ public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
         log.info("realms.home: {}", this.home.getPublicURIString());
         log.info("realms.lake: {}", this.lake.getPublicURIString());
         this.manager = new SafeRepositoryManager(home);
-        this.secrets = new VFSPasswordVault(this.vfs, this.home.resolveFile("vault/secrets"));
+        this.secrets = SecretsStoreFactory.createDefault(home);
         log.info("realms.boot: {}", new Date());
     }
 

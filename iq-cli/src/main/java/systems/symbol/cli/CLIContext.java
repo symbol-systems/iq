@@ -91,19 +91,35 @@ public class CLIContext implements I_Self {
     }
 
     public File getAssetsHome() {
-        return kernelContext != null ? kernelContext.getAssets() : this.assets;
+        try {
+            return kernelContext != null ? kernelContext.getAssets() : this.assets;
+        } catch (NoSuchMethodError e) {
+            return this.assets;
+        }
     }
 
     public File getBackupsHome() {
-        return kernelContext != null ? kernelContext.getBackups() : this.backups;
+        try {
+            return kernelContext != null ? kernelContext.getBackups() : this.backups;
+        } catch (NoSuchMethodError e) {
+            return this.backups;
+        }
     }
 
     public File getPublicHome() {
-        return kernelContext != null ? kernelContext.getPublic() : this.www_docs;
+        try {
+            return kernelContext != null ? kernelContext.getPublic() : this.www_docs;
+        } catch (NoSuchMethodError e) {
+            return this.www_docs;
+        }
     }
 
     public boolean isKernelInitialized() {
-        return kernelContext != null && kernelContext.isInitialized();
+        try {
+            return kernelContext != null && kernelContext.isInitialized();
+        } catch (NoSuchMethodError e) {
+            return kernelContext != null && kernelContext.getHome() != null && kernelContext.getHome().exists();
+        }
     }
 
     public IQStore newIQBase() {

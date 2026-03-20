@@ -3,7 +3,7 @@
   <parent>
     <artifactId>iq-parent</artifactId>
     <groupId>systems.symbol</groupId>
-    <version>0.81.9</version>
+    <version>0.91.5</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
@@ -23,13 +23,6 @@
       <timezone>+11</timezone>
     </developer>
   </developers>
-  <licenses>
-    <license>
-      <name>GNU Affero General Public License v3.0</name>
-      <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
   <scm>
     <connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
     <url>github.com/symbol-systems/iq-todo.git</url>
@@ -155,7 +148,7 @@
     <dependency>
       <groupId>org.eclipse.rdf4j</groupId>
       <artifactId>rdf4j-runtime</artifactId>
-      <version>4.3.12</version>
+      <version>5.0.2</version>
       <type>pom</type>
       <scope>compile</scope>
       <exclusions>
@@ -168,7 +161,7 @@
     <dependency>
       <groupId>org.eclipse.rdf4j</groupId>
       <artifactId>rdf4j-storage</artifactId>
-      <version>4.3.12</version>
+      <version>5.0.2</version>
       <type>pom</type>
       <scope>compile</scope>
       <exclusions>
@@ -205,7 +198,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
     <groovy.version>5.0.0-alpha-8</groovy.version>
-    
     <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
     <logback.version>1.5.3</logback.version>
     <handlebars.version>4.3.1</handlebars.version>
