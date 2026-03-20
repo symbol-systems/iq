@@ -4,7 +4,7 @@
 
 **Context:** Fast feedback loops are critical when working with RDF/SPARQL schemas and LLM prompts.
 
-**Decision:** Use `mvnw -pl iq-run-apis -am quarkus:dev` as the default local dev workflow.
+**Decision:** Use `mvnw -pl iq-apis -am quarkus:dev` as the default local dev workflow.
 
 **Consequences:**
 - Hot-reload supports changes to Java, resources, and most config without restart.

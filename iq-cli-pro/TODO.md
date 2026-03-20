@@ -2,7 +2,7 @@
 
 > **Status:** Draft — March 2026
 > **Scope:** Analysis of gaps and planned features for the commercial-open-source CLI (`systems.symbol.PowerCLI` / Picocli).
-> **Basis:** `iq-kernel` SPEC (phases 1–3); commands inspired by `iq-mcp` tool registry (`actor.*`, `realm.*`, `llm.*`, `trust.*`) and `iq-run-apis` controller patterns (`IntentAPI`, `TokenAPI`, `ModelAPI`, `RealmAPI`).
+> **Basis:** `iq-kernel` SPEC (phases 1–3); commands inspired by `iq-mcp` tool registry (`actor.*`, `realm.*`, `llm.*`, `trust.*`) and `iq-apis` controller patterns (`IntentAPI`, `TokenAPI`, `ModelAPI`, `RealmAPI`).
 
 ---
 
@@ -69,12 +69,12 @@ PowerCLI boot --actor urn:iq:actor:dispatcher --wait
 ```
 
 Implementation:
-1. Resolve `AgentService` from `KernelContext` (move `AgentService` from `iq-run-apis` → `iq-platform` per SPEC Phase 2, step 7).
+1. Resolve `AgentService` from `KernelContext` (move `AgentService` from `iq-apis` → `iq-platform` per SPEC Phase 2, step 7).
 2. Call `AgentService.onStart(realm)` — starts all actors declared in the graph.
 3. `--wait` blocks until all actors reach `READY` state (poll via `I_StateMachine.getState()`).
 4. Output: ASCII table of actor IRIs + states.
 
-**Inspired by:** `actor.execute` / `actor.status` MCP tools (MCP_TOOLS.md), `IntentAPI` (iq-run-apis).
+**Inspired by:** `actor.execute` / `actor.status` MCP tools (MCP_TOOLS.md), `IntentAPI` (iq-apis).
 
 **Dependencies:** `iq-agentic` (AgentService, I_StateMachine), `iq-platform` (RealmManager). **COSS boundary: agent lifecycle.**
 
@@ -118,12 +118,12 @@ PowerCLI trigger --topic urn:iq:event:nightly-infer
 Implementation:
 1. Obtain `I_EventHub` from `KernelContext`:
    - Local (no server): `SimpleEventHub` — synchronous, in-process.
-   - Server mode (with running `iq-run-apis`): HTTP POST to `ux/intent/{realm}` (`IntentAPI`).
+   - Server mode (with running `iq-apis`): HTTP POST to `ux/intent/{realm}` (`IntentAPI`).
    - Camel mode: `CamelEventHub` (when `iq-camel` is on classpath).
 2. Build a `KernelEvent` (topic IRI, bindings payload), call `hub.publish(event)`.
 3. Wait for acknowledgement with `--wait` flag.
 
-**Inspired by:** `ActorTriggerAdapter` (iq-mcp), `IntentAPI` + `AgentService.next()` (iq-run-apis).
+**Inspired by:** `ActorTriggerAdapter` (iq-mcp), `IntentAPI` + `AgentService.next()` (iq-apis).
 
 **COSS boundary:** requires `iq-agentic` (FSM transitions) and for Camel-backed routing, `iq-camel`.
 
@@ -148,7 +148,7 @@ Implementation:
 3. `trust --provider github`: mirror `TokenAPI` OAuth flow — nonce → redirect → token → `iq:trusts` arc with issuer annotation.
 4. Uses `TrustFactory` (already exists in `iq-cli-pro/trust/`).
 
-**Inspired by:** `trust.login` conceptual MCP tool (MCP_TOOLS.md §iq:trusts), `TokenAPI` + `NonceAPI` (iq-run-apis), `iq:trusts` predicate pattern.
+**Inspired by:** `trust.login` conceptual MCP tool (MCP_TOOLS.md §iq:trusts), `TokenAPI` + `NonceAPI` (iq-apis), `iq:trusts` predicate pattern.
 
 **COSS boundary:** `iq-trusted` (VFSPasswordVault, PKI, JWK verification).
 
@@ -169,9 +169,9 @@ Implementation:
 3. Both: start both, share the `KernelContext` singleton.
 4. Ctrl-C triggers graceful shutdown via `I_Kernel.stop()`.
 
-**Inspired by:** `MCPServerBuilder` (iq-mcp), `RealmPlatform` (iq-run-apis).
+**Inspired by:** `MCPServerBuilder` (iq-mcp), `RealmPlatform` (iq-apis).
 
-**COSS boundary:** requires Quarkus (`iq-run-apis`) and/or MCP SDK (`iq-mcp`).
+**COSS boundary:** requires Quarkus (`iq-apis`) and/or MCP SDK (`iq-mcp`).
 
 ### 3.6 `agent` sub-commands — new (analogue of `actor.*` MCP tools)
 
@@ -214,7 +214,7 @@ PowerCLI realm export --format turtle   # full realm dump with provenance header
 PowerCLI realm schema   # display VOID description + namespaces
 ```
 
-**Inspired by:** `realm.status`, `realm.export`, `realm.schema`, `realm.search` MCP tools; `AboutAPI`, `HealthCheckAPI` (iq-run-apis).
+**Inspired by:** `realm.status`, `realm.export`, `realm.schema`, `realm.search` MCP tools; `AboutAPI`, `HealthCheckAPI` (iq-apis).
 
 **Dependencies:** `iq-platform` (RealmManager, Workspace). `realm export` extends existing `BackupCommand` with provenance.
 
@@ -290,7 +290,7 @@ All unit tests use `SimpleEventHub`, in-memory RDF4J store, and stubbed vault. I
 | Groovy / Nashorn script execution (`run`) | `iq-platform` Groovy engine — heavyweight dep not in OSS footprint |
 | Event trigger (`trigger`) | `iq-agentic` (FSM transitions) + optionally `iq-camel` (Camel routing) |
 | Trust / PKI (`trust`) | `iq-trusted` (VFSPasswordVault, JWK, DID resolution) |
-| Embedded server launch (`serve`) | Quarkus (`iq-run-apis`) and/or MCP SDK (`iq-mcp`) |
+| Embedded server launch (`serve`) | Quarkus (`iq-apis`) and/or MCP SDK (`iq-mcp`) |
 | Agent lifecycle management (`agent *`) | `iq-agentic` |
 | LLM model management (`model *`) | `iq-platform` LLMFactory + vault secrets |
 | Realm admin (`realm *`) | `iq-platform` RealmManager (full) |

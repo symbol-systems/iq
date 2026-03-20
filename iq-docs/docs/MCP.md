@@ -127,7 +127,7 @@ Successfully created the **iq-mcp** Maven module integrating **Model Context Pro
 
 ## Integration Points
 
-### With iq-run-apis
+### With iq-apis
 - MCPServer implementation exposes REST endpoints (`/mcp/tools/*`)
 - Quarkus dev mode support via `-Dmcp.enabled=true`
 
@@ -141,7 +141,7 @@ Successfully created the **iq-mcp** Maven module integrating **Model Context Pro
 
 ### With iq-trusted (Secrets)
 - Authorization via VFSPasswordVault and EnvsAsSecrets
-- Token issuance through TokenAPI (iq-run-apis)
+- Token issuance through TokenAPI (iq-apis)
 
 ---
 
@@ -175,7 +175,7 @@ Successfully created the **iq-mcp** Maven module integrating **Model Context Pro
 
 3. **TrustAdapter** → JWT token issuance/refresh
    - Implements: I_MCPAdapter
-   - Depends: iq-run-apis TokenAPI
+   - Depends: iq-apis TokenAPI
    - Complexity: Low (~100-150 lines)
 
 4. **LlmAdapter** → LLM invocation with context
@@ -188,7 +188,7 @@ Successfully created the **iq-mcp** Maven module integrating **Model Context Pro
    - Depends: I_Realm, RDF4J repository
    - Complexity: Low (~100-200 lines)
 
-### Server Implementation (iq-run-apis)
+### Server Implementation (iq-apis)
 
 1. **MCPRealmService** → Quarkus REST resource
    - Implements: I_MCPService
@@ -264,14 +264,14 @@ MCP_COMPLETE_REFERENCE.md   (This file)
 ./mvnw test -pl iq-mcp
 ```
 
-### Deploy in iq-run-apis
+### Deploy in iq-apis
 
 ```bash
-# Build iq-run-apis with MCP support
-./mvnw clean install -pl iq-run-apis -am
+# Build iq-apis with MCP support
+./mvnw clean install -pl iq-apis -am
 
 # Start dev mode
-./mvnw compile quarkus:dev -pl iq-run-apis -am
+./mvnw compile quarkus:dev -pl iq-apis -am
 # Dev UI: http://localhost:8080/q/dev/
 # MCP endpoints: http://localhost:8080/mcp/tools/*
 ```
@@ -317,7 +317,7 @@ curl -X POST http://localhost:8080/mcp/tools/fact.sparql-query \
 ### Phase 2: Server & API (Week 2-3)
 - [ ] Implement MCPRealmService (Quarkus REST)
 - [ ] Add authentication middleware
-- [ ] Deploy to iq-run-apis
+- [ ] Deploy to iq-apis
 
 ### Phase 3: Polish (Week 3-4)
 - [ ] JSON↔RDF interop layer
@@ -347,7 +347,7 @@ For questions on the iq-mcp module:
 
 ## Conclusion
 
-The **iq-mcp** module provides a clean, idiomatic bridge between IQ's RDF-first architecture and the Model Context Protocol. With four core interface contracts, 11 tool specifications, and comprehensive documentation, the module is ready for adapter implementations and integration with iq-run-apis.
+The **iq-mcp** module provides a clean, idiomatic bridge between IQ's RDF-first architecture and the Model Context Protocol. With four core interface contracts, 11 tool specifications, and comprehensive documentation, the module is ready for adapter implementations and integration with iq-apis.
 
 **Module Status**: ✅ **SCAFFOLDING COMPLETE**  
 **Next Action**: Implement FactAdapter and ActorAdapter

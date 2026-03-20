@@ -3,7 +3,7 @@
 This file lists concrete, discoverable use cases implemented or demonstrated in the repo.
 
 1) LLM-backed APIs (RAG & prompt maps) ✅
-- Files: `iq-run-apis/docs/API_LLM.md`, `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java`.
+- Files: `iq-apis/docs/API_LLM.md`, `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java`.
 - What: Expose LLM endpoints that map named prompts, perform RAG from RDF and call provider APIs (OpenAI/Groq/etc.).
 - How to test: use `./bin/curl_api` or the Quarkus Dev UI (http://localhost:8080/q/dev/).
 

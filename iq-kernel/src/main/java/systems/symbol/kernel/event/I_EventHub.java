@@ -11,7 +11,7 @@ import systems.symbol.kernel.KernelException;
  * <ul>
  *   <li>{@link SimpleEventHub} — in-process, synchronous (tests and CLI)</li>
  *   <li>{@code CamelEventHub} in {@code iq-camel} — wraps {@code ProducerTemplate}</li>
- *   <li>{@code VertxEventHub} in {@code iq-run-apis} — wraps Quarkus event bus</li>
+ *   <li>{@code VertxEventHub} in {@code iq-apis} — wraps Quarkus event bus</li>
  * </ul>
  *
  * <p>The interface is intentionally minimal; advanced routing, filtering,

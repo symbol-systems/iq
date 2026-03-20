@@ -1,20 +1,20 @@
 # Copilot instructions for IQ (systems.symbol)
 
 ## Quick orientation
-- Big picture: IQ is a multi-module Java (Maven) project that turns RDF graphs into an executable knowledge/playbook. Key runtime is Quarkus (`iq-run-apis`) and core libraries live in `iq-platform`, `iq-rdf4j` and `iq-trusted`.
+- Big picture: IQ is a multi-module Java (Maven) project that turns RDF graphs into an executable knowledge/playbook. Key runtime is Quarkus (`iq-apis`) and core libraries live in `iq-platform`, `iq-rdf4j` and `iq-trusted`.
 - Language & platforms: Java 21, Quarkus 3.x, RDF4J for RDF/SPARQL, JUnit5 for tests.
 
 ## Where to start (files to read)
 - Top-level: `README.md` and `BUILD.md` (build commands, Java version, Quarkus tips).
-- Runtime & APIs: `iq-run-apis/README.md` + `iq-run-apis/docs/API_LLM.md` (LLM endpoints and examples).
+- Runtime & APIs: `iq-apis/README.md` + `iq-apis/docs/API_LLM.md` (LLM endpoints and examples).
 - LLM integration: `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java` and tests under `iq-platform/src/test/java/systems/symbol/llm/gpt/`.
 - RDF/SPARQL patterns: look in `iq-*/src/main/resources/**.ttl` and `.sparql` files and classes under `systems.symbol.rdf4j` or `iq-rdf4j`.
-- Secrets & local store: `.iq/` (example vault, repositories). See `EnvsAsSecrets` / `VFSPasswordVault` uses in `iq-run-apis` / `iq-trusted`.
+- Secrets & local store: `.iq/` (example vault, repositories). See `EnvsAsSecrets` / `VFSPasswordVault` uses in `iq-apis` / `iq-trusted`.
 
 ## Common developer workflows (commands)
 - Full build: `./mvnw clean install` (or `mvn clean install`). Use the wrapper when available.
-- Dev mode (live coding): `./mvnw compile quarkus:dev -pl iq-run-apis -am` (also `./bin/iq`). Dev UI is at `http://localhost:8080/q/dev/`.
-- Compile only (fast): `./bin/compile-apis` or `mvn compile -pl iq-run-apis -am`.
+- Dev mode (live coding): `./mvnw compile quarkus:dev -pl iq-apis -am` (also `./bin/iq`). Dev UI is at `http://localhost:8080/q/dev/`.
+- Compile only (fast): `./bin/compile-apis` or `mvn compile -pl iq-apis -am`.
 - Build container image: `./bin/build-image` or `./mvnw -Dquarkus.container-image.build=true -DskipTests install`.
 - Run unit tests: `mvn test` (JUnit5). Integration tests are skipped by default with property `-DskipITs=true`.
 - Run integration tests: `mvn -DskipITs=false verify -pl <module>` (set the property or unset it in CI when needed).
@@ -27,7 +27,7 @@
 - Tests that require real LLM keys or external services are often commented or in integration tests — prefer stubbing or mocking in unit tests.
 
 ## Integration points & external dependencies
-- LLM providers (OpenAI / Groq / custom) — see `iq-run-apis/docs/API_LLM.md` and `LLMFactory`.
+- LLM providers (OpenAI / Groq / custom) — see `iq-apis/docs/API_LLM.md` and `LLMFactory`.
 - RDF storage: RDF4J repositories under `.iq/repositories` or in-memory stores used in tests.
 - CI: GitHub Actions workflows (`.github/workflows/jars.yaml`, `docker.yaml`) use JDK 21 and `git lfs` (model files). Follow the workflow conventions (build with `-DskipITs` in CI).
 
@@ -43,7 +43,7 @@
 - Avoid editing `.iq/vault` checked-in examples unless you are adding sanitized sample data; do not add credentials.
 
 ## Where to add more documentation
-- Small changes: update the module `README.md` (e.g., `iq-run-apis/README.md`, `iq-platform/README.md`).
-- API changes: add or update `iq-run-apis/docs/` (for LLM APIs, endpoints and examples).
+- Small changes: update the module `README.md` (e.g., `iq-apis/README.md`, `iq-platform/README.md`).
+- API changes: add or update `iq-apis/docs/` (for LLM APIs, endpoints and examples).
 
 If anything here is unclear or you'd like me to expand a section (e.g., a specific module's architecture, test knobs, or example PR checklist), say which area and I'll iterate. ✅

@@ -150,7 +150,7 @@
 </dependency>
 <dependency>
 <groupId>systems.symbol</groupId>
-<artifactId>iq-run-apis</artifactId>
+<artifactId>iq-apis</artifactId>
 <version>${project.version}</version>
 </dependency>
 

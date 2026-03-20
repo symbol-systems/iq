@@ -28,7 +28,7 @@ IQ is a platform for building, running and governing neuro-symbolic agents and p
 
 ## Files to read for context
 - `README.md` and `BUILD.md` — high-level and build commands
-- `iq-run-apis/README.md` and `iq-run-apis/docs/API_LLM.md` — runtime and LLM examples
+- `iq-apis/README.md` and `iq-apis/docs/API_LLM.md` — runtime and LLM examples
 - `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java` — LLM config resolution
 - `IQScriptCatalog` / `ModelScriptCatalog` classes — where scripts and queries are discovered
 - `.iq/` — sample vaults, repositories and prompt maps
