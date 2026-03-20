@@ -220,13 +220,13 @@ eventHub.publish(KernelEvent.builder()
 
 ### 3. Wrapper Pattern (Non-Invasive Instrumentation)
 
-**Example: `ObservedRepositoryConnection` for RDF4J events**
+**Example: `KernelRepositoryConnection` for RDF4J events**
 
 ```java
-public class ObservedRepositoryConnection extends RepositoryConnectionWrapper {
+public class KernelRepositoryConnection extends RepositoryConnectionWrapper {
 private final I_EventHub eventHub;
 
-public ObservedRepositoryConnection(RepositoryConnection delegate, I_EventHub hub) {
+public KernelRepositoryConnection(RepositoryConnection delegate, I_EventHub hub) {
 super(delegate, getRepository(delegate));
 this.eventHub = hub != null ? hub : new NoopEventHub();
 }
