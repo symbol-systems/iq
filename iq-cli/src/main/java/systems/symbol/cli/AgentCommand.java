@@ -1,12 +1,18 @@
 package systems.symbol.cli;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import systems.symbol.io.Display;
+import systems.symbol.platform.AgentService;
 import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import picocli.CommandLine;
 
+import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +98,19 @@ public class AgentCommand extends AbstractCLICommand {
 
     private void triggerTransition(String actor, String intent) {
         try (RepositoryConnection conn = context.getRepository().getConnection()) {
-            // Minimal local transition stub: write an audit triple or just log.
-            display("Agent transition executed (stub): actor=" + actor + " intent=" + intent);
-            display("Use IntentAPI for production intent execution.");
+            IRI actorIRI = SimpleValueFactory.getInstance().createIRI(actor);
+            AgentService service = new AgentService(actorIRI, conn, context.getKernelContext().getSecrets(), new SimpleBindings());
+
+            if (service.getAgent() == null) {
+                display("Agent not found: " + actor);
+                return;
+            }
+
+            Resource before = service.getAgent().getStateMachine().getState();
+            Resource after = service.next(intent);
+
+            display("Agent transition executed: actor=" + actor + " intent=" + intent);
+            display("before=" + before + " after=" + after);
         } catch (Exception e) {
             display("Agent transition failed: " + e.getMessage());
             log.error("Agent transition error", e);
