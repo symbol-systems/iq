@@ -28,14 +28,19 @@ public final class KernelContext implements I_KernelContext {
     private final File          home;
     private final String        version;
     private final Map<String, Object> attributes;
+    private final systems.symbol.kernel.agent.I_AgentRegistry agentRegistry;
 
     KernelContext(IRI self, I_Secrets secrets, File home, String version,
-                  Map<String, Object> attributes) {
-        this.self       = self;
-        this.secrets    = secrets;
-        this.home       = home;
-        this.version    = version;
-        this.attributes = Collections.unmodifiableMap(new HashMap<>(attributes));
+                  Map<String, Object> attributes,
+                  systems.symbol.kernel.agent.I_AgentRegistry agentRegistry) {
+        this.self          = self;
+        this.secrets       = secrets;
+        this.home          = home;
+        this.version       = version;
+        this.attributes    = Collections.unmodifiableMap(new HashMap<>(attributes));
+        this.agentRegistry = agentRegistry != null
+                ? agentRegistry
+                : new systems.symbol.kernel.agent.SimpleAgentRegistry();
     }
 
     /** The canonical IRI of this running instance (from {@code MY_IQ} env or default). */
@@ -107,6 +112,10 @@ public final class KernelContext implements I_KernelContext {
     public <T> T get(String key) { return (T) attributes.get(key); }
 
     public boolean has(String key) { return attributes.containsKey(key); }
+
+    public systems.symbol.kernel.agent.I_AgentRegistry getAgentRegistry() {
+        return agentRegistry;
+    }
 
     @Override
     public String toString() {

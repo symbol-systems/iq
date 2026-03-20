@@ -4,6 +4,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.kernel.agent.I_AgentRegistry;
+import systems.symbol.kernel.agent.SimpleAgentRegistry;
 import systems.symbol.kernel.event.I_EventHub;
 import systems.symbol.platform.I_Self;
 import systems.symbol.secrets.I_Secrets;
@@ -99,7 +101,7 @@ public class KernelBuilder {
     public I_AgentRegistry getAgentRegistry() {
         return this.agentRegistry != null
                 ? this.agentRegistry
-                : new systems.symbol.kernel.agent.SimpleAgentRegistry();
+                : new SimpleAgentRegistry();
     }
 
     /**
