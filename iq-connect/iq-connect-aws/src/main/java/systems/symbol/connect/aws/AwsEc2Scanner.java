@@ -2,16 +2,22 @@ package systems.symbol.connect.aws;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.Instance;
 import software.amazon.awssdk.services.ec2.model.Reservation;
 
-final class AwsEc2Scanner {
+final class AwsEc2Scanner implements ConnectorScanner<AwsScanContext> {
 
-private AwsEc2Scanner() {
+private final Ec2Client ec2;
+
+AwsEc2Scanner(Ec2Client ec2) {
+this.ec2 = ec2;
 }
 
-static void scan(Ec2Client ec2, AwsScanContext context) {
+@Override
+public void scan(AwsScanContext context) {
 AwsModeller modeller = context.modeller();
 IRI connectorId = context.connectorId();
 IRI accountIri = context.accountIri();

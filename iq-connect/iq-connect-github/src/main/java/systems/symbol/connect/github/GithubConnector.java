@@ -12,6 +12,7 @@ import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GitHub;
 
 import systems.symbol.connect.core.ConnectorMode;
+import systems.symbol.connect.core.ConnectorScanner;
 
 /**
  * Example GitHub connector implementation.
@@ -45,12 +46,15 @@ GitHub github = GitHub.connectUsingOAuth(config.getAccessToken());
 GithubModeller modeller = new GithubModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
 GithubScanContext context = new GithubScanContext(getConnectorId(), modeller);
 
+ConnectorScanner<GithubScanContext> scanner;
 if (config.getOrganization().isPresent()) {
 GHOrganization organization = github.getOrganization(config.getOrganization().get());
-GithubOrganizationScanner.scan(organization, context);
+scanner = new GithubOrganizationScanner(organization);
 } else {
 GHMyself me = github.getMyself();
-GithubMyselfScanner.scan(me, context);
+scanner = new GithubMyselfScanner(me);
 }
+
+scanner.scan(context);
 }
 }

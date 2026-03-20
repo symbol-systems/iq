@@ -4,17 +4,23 @@ import java.io.IOException;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTeam;
 import org.kohsuke.github.GHUser;
 
-final class GithubOrganizationScanner {
+final class GithubOrganizationScanner implements ConnectorScanner<GithubScanContext> {
 
-private GithubOrganizationScanner() {
+private final GHOrganization organization;
+
+GithubOrganizationScanner(GHOrganization organization) {
+this.organization = organization;
 }
 
-static void scan(GHOrganization organization, GithubScanContext context) throws IOException {
+@Override
+public void scan(GithubScanContext context) throws IOException {
 IRI orgIri = context.modeller().organization(context.connectorId(), organization.getLogin(), organization.getName());
 
 for (GHRepository repo : organization.listRepositories()) {

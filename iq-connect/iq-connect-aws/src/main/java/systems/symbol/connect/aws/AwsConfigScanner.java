@@ -2,15 +2,21 @@ package systems.symbol.connect.aws;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import software.amazon.awssdk.services.config.ConfigClient;
 import software.amazon.awssdk.services.config.model.ConfigurationRecorder;
 
-final class AwsConfigScanner {
+final class AwsConfigScanner implements ConnectorScanner<AwsScanContext> {
 
-private AwsConfigScanner() {
+private final ConfigClient configClient;
+
+AwsConfigScanner(ConfigClient configClient) {
+this.configClient = configClient;
 }
 
-static void scan(ConfigClient configClient, AwsScanContext context) {
+@Override
+public void scan(AwsScanContext context) {
 AwsModeller modeller = context.modeller();
 IRI connectorId = context.connectorId();
 IRI accountIri = context.accountIri();

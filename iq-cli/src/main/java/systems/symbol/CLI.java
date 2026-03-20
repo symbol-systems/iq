@@ -45,6 +45,7 @@ cli.addSubcommand(new ImportCommand(context));
 cli.addSubcommand(new ExportCommand(context));
 cli.addSubcommand(new BackupCommand(context));
 cli.addSubcommand(new RecoverCommand(context));
+cli.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
 } else {
 context.display("run `iq init`");
 }

@@ -4,16 +4,22 @@ import java.io.IOException;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 
-final class GithubMyselfScanner {
+final class GithubMyselfScanner implements ConnectorScanner<GithubScanContext> {
 
-private GithubMyselfScanner() {
+private final GHMyself me;
+
+GithubMyselfScanner(GHMyself me) {
+this.me = me;
 }
 
-static void scan(GHMyself me, GithubScanContext context) throws IOException {
+@Override
+public void scan(GithubScanContext context) throws IOException {
 IRI userIri = context.modeller().rootUser(context.connectorId(), me.getLogin(), me.getName());
 
 for (GHRepository repo : me.listRepositories()) {

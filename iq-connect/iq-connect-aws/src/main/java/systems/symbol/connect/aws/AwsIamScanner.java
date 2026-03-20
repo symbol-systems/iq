@@ -2,18 +2,24 @@ package systems.symbol.connect.aws;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import software.amazon.awssdk.services.iam.IamClient;
 import software.amazon.awssdk.services.iam.model.Group;
 import software.amazon.awssdk.services.iam.model.Policy;
 import software.amazon.awssdk.services.iam.model.Role;
 import software.amazon.awssdk.services.iam.model.User;
 
-final class AwsIamScanner {
+final class AwsIamScanner implements ConnectorScanner<AwsScanContext> {
 
-private AwsIamScanner() {
+private final IamClient iam;
+
+AwsIamScanner(IamClient iam) {
+this.iam = iam;
 }
 
-static void scan(IamClient iam, AwsScanContext context) {
+@Override
+public void scan(AwsScanContext context) {
 AwsModeller modeller = context.modeller();
 IRI connectorId = context.connectorId();
 

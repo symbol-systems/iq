@@ -38,6 +38,7 @@ String usage = sw.toString();
 assertEquals(0, exitCode);
 assertTrue(usage.toLowerCase().contains("usage"));
 assertTrue(usage.toLowerCase().contains("options"));
+assertTrue(usage.toLowerCase().contains("server"));
 
 context.close();
 
