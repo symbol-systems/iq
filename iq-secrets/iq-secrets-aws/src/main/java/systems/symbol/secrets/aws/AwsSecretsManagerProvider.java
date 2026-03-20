@@ -65,7 +65,7 @@ nextToken = response.nextToken();
 } while (nextToken != null);
 return secrets;
 } catch (Exception e) {
-throw new SecretsException("Failed to read secrets from AWS Secrets Manager", e);
+throw new SecretsException("Failed to read secrets from AWS Secrets Manager: " + e.getMessage());
 }
 }
 

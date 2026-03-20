@@ -15,9 +15,9 @@
 
   <modules>
 <module>iq-secrets-core</module>
-<module>iq-secrets-hashicorp</module>
-<module>iq-secrets-azure</module>
 <module>iq-secrets-aws</module>
+<module>iq-secrets-azure</module>
+<module>iq-secrets-hashicorp</module>
 <module>iq-secrets-gcp</module>
   </modules>
 </project>
