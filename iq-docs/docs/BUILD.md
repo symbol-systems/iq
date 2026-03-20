@@ -41,6 +41,6 @@ IQ comprises a set of integrated modules handling data, communication and intera
 
 8. **API Platform:**
 
-`mvn compile quarkus:dev -pl iq-run-apis -am`
+`mvn compile quarkus:dev -pl iq-apis -am`
 - Run the Quarkus in development mode for live coding and testing. 
 

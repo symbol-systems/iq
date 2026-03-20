@@ -14,7 +14,7 @@ local
 old
 logs
 repositories
-iq-run-apis/.iq
+iq-apis/.iq
 tmp
 *.class
 
@@ -28,5 +28,6 @@ tmp
 *.njsproj
 *.sln
 todo
-
 .env
+.run
+

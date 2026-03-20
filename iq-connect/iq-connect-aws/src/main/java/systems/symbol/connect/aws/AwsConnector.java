@@ -1,11 +1,11 @@
 package systems.symbol.connect.aws;
 
-import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
 
 import systems.symbol.connect.core.Modeller;
@@ -16,8 +16,6 @@ import software.amazon.awssdk.services.cloudtrail.CloudTrailClient;
 import software.amazon.awssdk.services.cloudtrail.model.Trail;
 import software.amazon.awssdk.services.config.ConfigClient;
 import software.amazon.awssdk.services.config.model.ConfigurationRecorder;
-import software.amazon.awssdk.services.config.model.DescribeConfigRulesResponse;
-import software.amazon.awssdk.services.config.model.ConfigRule;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.DescribeRegionsResponse;
 import software.amazon.awssdk.services.ec2.model.Instance;
@@ -49,8 +47,8 @@ import systems.symbol.connect.core.I_ConnectorDescriptor;
  * Example AWS connector implementation.
  *
  * <p>This connector is intended as a complete implementation showing how to
- * integrate AWS SDK calls with the IQ connector model. It performs a simple
- * scan of all AWS resource and writes metadata into the connector state model.
+ * integrate AWS SDK calls with the IQ connector model and writes metadata into
+ * the connector state model.
  */
 public final class AwsConnector implements I_Connector, I_ConnectorDescriptor {
 
@@ -144,69 +142,147 @@ public final class AwsConnector implements I_Connector, I_ConnectorDescriptor {
 
             // Account identity
             GetCallerIdentityResponse identity = sts.getCallerIdentity();
-            modeller.account(connectorId, identity.account(), identity.arn());
+            IRI accountIri = modeller.account(connectorId, identity.account(), identity.arn());
+
+            Map<String, IRI> regionIrisById = new HashMap<>();
+            Map<String, IRI> bucketIrisByName = new HashMap<>();
 
             // Regions: account -> zone discovery (configured + active)
-            modeller.region(connectorId, region.id(), null);
+            ensureRegion(modeller, regionIrisById, accountIri, region.id(), null);
 
             DescribeRegionsResponse regionsResponse = ec2.describeRegions();
             for (software.amazon.awssdk.services.ec2.model.Region awsRegion : regionsResponse.regions()) {
-                modeller.region(connectorId, awsRegion.regionName(), awsRegion.endpoint());
+                ensureRegion(modeller, regionIrisById, accountIri, awsRegion.regionName(), awsRegion.endpoint());
             }
 
             // S3 buckets
             for (Bucket bucket : s3.listBuckets().buckets()) {
-                modeller.s3Bucket(connectorId, bucket.name());
+                IRI bucketIri = modeller.s3Bucket(connectorId, accountIri, null, bucket.name());
+                bucketIrisByName.put(bucket.name(), bucketIri);
             }
 
             // EC2 instances
-            for (Reservation reservation : ec2.describeInstances().reservations()) {
+            for (var instancePage : ec2.describeInstancesPaginator()) {
+                for (Reservation reservation : instancePage.reservations()) {
                 for (Instance instance : reservation.instances()) {
-                    modeller.ec2Instance(
+                    String availabilityZone = instance.placement() != null ? instance.placement().availabilityZone() : null;
+                    String instanceRegionId = regionFromAvailabilityZone(availabilityZone).orElse(region.id());
+                    IRI instanceRegionIri = ensureRegion(modeller, regionIrisById, accountIri, instanceRegionId, null);
+
+                    IRI instanceIri = modeller.ec2Instance(
                         connectorId,
+                        accountIri,
+                        instanceRegionIri,
                         instance.instanceId(),
                         instance.instanceTypeAsString(),
-                        instance.state().nameAsString());
+                        instance.state().nameAsString(),
+                        availabilityZone);
+
+                    if (instance.vpcId() != null && !instance.vpcId().isBlank()) {
+                        IRI vpcIri = modeller.vpc(connectorId, accountIri, instanceRegionIri, instance.vpcId());
+                        modeller.ec2InstanceInVpc(instanceIri, vpcIri);
+                    }
+
+                    if (instance.subnetId() != null && !instance.subnetId().isBlank()) {
+                        IRI subnetIri = modeller.subnet(connectorId, accountIri, instanceRegionIri, instance.subnetId());
+                        modeller.ec2InstanceInSubnet(instanceIri, subnetIri);
+                    }
+
+                    if (instance.securityGroups() != null) {
+                        for (var securityGroup : instance.securityGroups()) {
+                            if (securityGroup.groupId() == null || securityGroup.groupId().isBlank()) {
+                                continue;
+                            }
+                            IRI securityGroupIri = modeller.securityGroup(connectorId, accountIri, instanceRegionIri, securityGroup.groupId());
+                            modeller.ec2InstanceHasSecurityGroup(instanceIri, securityGroupIri);
+                        }
+                    }
+
+                    if (instance.iamInstanceProfile() != null && instance.iamInstanceProfile().arn() != null && !instance.iamInstanceProfile().arn().isBlank()) {
+                        IRI profileIri = modeller.iamInstanceProfile(connectorId, accountIri, instance.iamInstanceProfile().arn());
+                        modeller.ec2InstanceUsesInstanceProfile(instanceIri, profileIri);
+                    }
+                }
                 }
             }
 
-            // IAM users, roles, groups, policies
-            for (User user : iam.listUsers().users()) {
-                modeller.iamUser(connectorId, user.userName(), user.arn());
+            // IAM users, roles, groups, policies (all pages)
+            for (var usersPage : iam.listUsersPaginator()) {
+                for (User user : usersPage.users()) {
+                    modeller.iamUser(connectorId, user.userName(), user.arn());
+                }
             }
 
-            for (Role role : iam.listRoles().roles()) {
-                modeller.iamRole(connectorId, role.roleName(), role.arn());
+            for (var rolesPage : iam.listRolesPaginator()) {
+                for (Role role : rolesPage.roles()) {
+                    modeller.iamRole(connectorId, role.roleName(), role.arn());
+                }
             }
 
-            for (Group group : iam.listGroups().groups()) {
-                modeller.iamGroup(connectorId, group.groupName());
+            for (var groupsPage : iam.listGroupsPaginator()) {
+                for (Group group : groupsPage.groups()) {
+                    modeller.iamGroup(connectorId, group.groupName());
+                }
             }
 
-            for (Policy policy : iam.listPolicies().policies()) {
-                modeller.iamPolicy(connectorId, policy.policyName(), policy.arn());
+            for (var policiesPage : iam.listPoliciesPaginator()) {
+                for (Policy policy : policiesPage.policies()) {
+                    modeller.iamPolicy(connectorId, policy.policyName(), policy.arn());
+                }
             }
 
-            // CloudTrail trails
-            for (Trail trail : cloudTrail.describeTrails().trailList()) {
-                modeller.cloudTrail(connectorId, trail.name(), trail.s3BucketName());
+            // CloudTrail trails, linked to bucket and region
+            var trailsResponse = cloudTrail.describeTrails(
+                software.amazon.awssdk.services.cloudtrail.model.DescribeTrailsRequest.builder()
+                    .includeShadowTrails(true)
+                    .build());
+            for (Trail trail : trailsResponse.trailList()) {
+                IRI trailRegionIri = ensureRegion(modeller, regionIrisById, accountIri, trail.homeRegion(), null);
+                IRI trailBucketIri = ensureBucket(modeller, bucketIrisByName, accountIri, trail.s3BucketName());
+                modeller.cloudTrail(connectorId, accountIri, trailRegionIri, trail.name(), trailBucketIri, trail.s3BucketName());
             }
 
-            // Config rules and recorders
+            // Config recorders
+            IRI configRecorderIri = null;
             for (ConfigurationRecorder recorder : configClient.describeConfigurationRecorders().configurationRecorders()) {
-                modeller.configRecorder(connectorId, recorder.name());
+                configRecorderIri = modeller.configRecorder(connectorId, accountIri, ensureRegion(modeller, regionIrisById, accountIri, region.id(), null), recorder.name());
             }
 
-            DescribeConfigRulesResponse configRules = configClient.describeConfigRules();
-            for (software.amazon.awssdk.services.config.model.ConfigRule rule : configRules.configRules()) {
-                modeller.configRule(connectorId, rule.configRuleName(), rule.source().ownerAsString());
-            }
+            // Config rules (all pages)
+            String configRulesNextToken = null;
+            do {
+                var request = software.amazon.awssdk.services.config.model.DescribeConfigRulesRequest.builder();
+                if (configRulesNextToken != null && !configRulesNextToken.isBlank()) {
+                    request.nextToken(configRulesNextToken);
+                }
 
-            // Pricing service catalog snapshot (limited to first page)
-            DescribeServicesResponse pricingServicesResponse = pricing.describeServices(DescribeServicesRequest.builder().maxResults(50).build());
-            for (Service pricingService : pricingServicesResponse.services()) {
-                modeller.pricingService(connectorId, pricingService.serviceCode(), String.join(",", pricingService.attributeNames()));
-            }
+                var configRules = configClient.describeConfigRules(request.build());
+                for (software.amazon.awssdk.services.config.model.ConfigRule rule : configRules.configRules()) {
+                    String sourceOwner = rule.source() != null ? rule.source().ownerAsString() : null;
+                    modeller.configRule(connectorId,
+                        accountIri,
+                        ensureRegion(modeller, regionIrisById, accountIri, region.id(), null),
+                        configRecorderIri,
+                        rule.configRuleName(),
+                        sourceOwner);
+                }
+                configRulesNextToken = configRules.nextToken();
+            } while (configRulesNextToken != null && !configRulesNextToken.isBlank());
+
+            // Pricing service catalog (all pages)
+            String pricingNextToken = null;
+            do {
+                DescribeServicesRequest.Builder request = DescribeServicesRequest.builder();
+                if (pricingNextToken != null && !pricingNextToken.isBlank()) {
+                    request.nextToken(pricingNextToken);
+                }
+
+                DescribeServicesResponse pricingServicesResponse = pricing.describeServices(request.build());
+                for (Service pricingService : pricingServicesResponse.services()) {
+                    modeller.pricingService(connectorId, pricingService.serviceCode(), pricingService.attributeNames());
+                }
+                pricingNextToken = pricingServicesResponse.nextToken();
+            } while (pricingNextToken != null && !pricingNextToken.isBlank());
 
             checkpoint = Optional.of(Checkpoints.of(state));
             status = ConnectorStatus.IDLE;
@@ -219,24 +295,36 @@ public final class AwsConnector implements I_Connector, I_ConnectorDescriptor {
         }
     }
 
-    // I_ConnectorDescriptor implementation
-
-    @Override
-    public String getName() {
-        return "AWS Connector";
+    private IRI ensureRegion(AwsModeller modeller,
+                             Map<String, IRI> regionIrisById,
+                             IRI accountIri,
+                             String regionId,
+                             String endpoint) {
+        if (regionId == null || regionId.isBlank()) {
+            return null;
+        }
+        return regionIrisById.computeIfAbsent(regionId, key -> modeller.region(connectorId, accountIri, key, endpoint));
     }
 
-    @Override
-    public String getDescription() {
-        return "Syncs AWS account state into IQ.";
+    private IRI ensureBucket(AwsModeller modeller,
+                             Map<String, IRI> bucketIrisByName,
+                             IRI accountIri,
+                             String bucketName) {
+        if (bucketName == null || bucketName.isBlank()) {
+            return null;
+        }
+        return bucketIrisByName.computeIfAbsent(bucketName, key -> modeller.s3Bucket(connectorId, accountIri, null, key));
     }
 
-    @Override
-    public Model getDescriptorModel() {
-        Model m = new LinkedHashModel();
-        m.add(connectorId, Modeller.rdfType(), Modeller.connect("Connector"));
-        m.add(connectorId, Modeller.connect("hasName"), Values.literal(getName()));
-        m.add(connectorId, Modeller.connect("hasDescription"), Values.literal(getDescription()));
-        return m;
+    private Optional<String> regionFromAvailabilityZone(String availabilityZone) {
+        if (availabilityZone == null || availabilityZone.isBlank()) {
+            return Optional.empty();
+        }
+
+        char last = availabilityZone.charAt(availabilityZone.length() - 1);
+        if (Character.isLetter(last) && availabilityZone.length() > 1) {
+            return Optional.of(availabilityZone.substring(0, availabilityZone.length() - 1));
+        }
+        return Optional.of(availabilityZone);
     }
 }

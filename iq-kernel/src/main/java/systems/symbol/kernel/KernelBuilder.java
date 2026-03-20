@@ -22,7 +22,7 @@ import java.util.Properties;
  *
  * <p>Replaces the boot logic currently scattered across:
  * <ul>
- *   <li>{@code RealmPlatform.onStart()} — {@code iq-run-apis}</li>
+ *   <li>{@code RealmPlatform.onStart()} — {@code iq-apis}</li>
  *   <li>{@code CLIContext.init()} — {@code iq-cli}</li>
  *   <li>Quarkus CDI producers in {@code iq-mcp}</li>
  * </ul>

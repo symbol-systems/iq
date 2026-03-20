@@ -7,7 +7,7 @@
        <version>0.91.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>iq-run-apis</artifactId>
+    <artifactId>iq-apis</artifactId>
     <name>IQ Runtime</name>
     <description>IQ - operating environment for cognitive AI.</description>
     <url>https://symbol.systems</url>

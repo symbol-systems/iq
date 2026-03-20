@@ -76,7 +76,7 @@
   - Description: realm abstraction (self identity, repository access, secrets, keys).
   - Key methods: `getModel()`, `getRepository()`, `getSecrets()`, `keys()`
 
-- **`I_Response`** — `iq-run-apis/src/main/java/systems/symbol/controller/responses/I_Response.java`
+- **`I_Response`** — `iq-apis/src/main/java/systems/symbol/controller/responses/I_Response.java`
   - Description: API response contract used across controllers.
 
 - **`I_RiskException` / `I_Sovereign` / `I_Authority` / `I_TrustZone`** — `iq-platform/src/main/java/systems/symbol/trust/*`

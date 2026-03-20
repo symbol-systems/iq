@@ -12,7 +12,7 @@
             "name": "IQ APIs",
             "request": "launch",
             "mainClass": "systems.symbol.platform.RealmPlatform",
-            "projectName": "iq-run-apis",
+            "projectName": "iq-apis",
             "env": {
                 "MY_DISCORD_BOT_TOKEN": "MTI0ODk3NjE3NjM2NjQ4OTYwMA.G7x6wl.GAz7KoJtq-MCXqr8knG0fAQDazPXWLBzJHqe2k",
                 "MY_DISCORD_SECRET": "1248976176366489600:Lfzl9DRpfP-ZpvnRWs4Q74Lva00-auii",

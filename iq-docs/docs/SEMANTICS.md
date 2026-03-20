@@ -15,7 +15,7 @@ If you want, I can add a short example demonstrating the recommended `TTL + SPAR
 
 Patterns to follow
 - Use SPARQL to `CONSTRUCT`, `SELECT`, `INSERT` and `DELETE` to manipulate knowledge. Example SPARQL files: `.iq/lake/` and many `.sparql` resources under modules.
-- Keep behavioral logic as scripts and models (look for `.groovy`, `.sparql`, and `.ttl` under `iq-run-apis/.iq` and `iq-*/src/main/resources`).
+- Keep behavioral logic as scripts and models (look for `.groovy`, `.sparql`, and `.ttl` under `iq-apis/.iq` and `iq-*/src/main/resources`).
 - Use `IQScriptCatalog` and `ModelScriptCatalog` to register and manage scripts and model queries — changes here often accompany feature work.
 
 Secrets & repositories
@@ -23,7 +23,7 @@ Secrets & repositories
 - RDF repositories are visible under `.iq/repositories` for local dev and testing; tests often use in-memory stores.
 
 Files worth reading
-- `iq-run-apis/.iq/*` (example lake, prompts, repos)
+- `iq-apis/.iq/*` (example lake, prompts, repos)
 - `iq-platform/src/main/java/systems/symbol/rdf4j/**` and `iq-rdf4j` module
 - `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java` (LLM configuration semantics)
 

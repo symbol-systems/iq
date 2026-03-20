@@ -2,6 +2,6 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile -pl iq-run-apis -am -Dorg.eclipse.rdf4j.repository.debug="false"
+./mvnw compile -pl iq-apis -am -Dorg.eclipse.rdf4j.repository.debug="false"
 
 
