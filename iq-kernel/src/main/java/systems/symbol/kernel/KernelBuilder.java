@@ -47,6 +47,7 @@ public class KernelBuilder {
     private IRI       self;
     private I_Secrets secrets    = System::getenv;  // reads process env vars by default
     private File      home       = defaultHome();
+    private I_AgentRegistry agentRegistry = null;
     private final Map<String, Object> attributes = new HashMap<>();
 
     private KernelBuilder() {}
@@ -95,11 +96,25 @@ public class KernelBuilder {
         return this;
     }
 
+    public I_AgentRegistry getAgentRegistry() {
+        return this.agentRegistry != null
+                ? this.agentRegistry
+                : new systems.symbol.kernel.agent.SimpleAgentRegistry();
+    }
+
     /**
      * Installs an event hub into the kernel context.
      */
     public KernelBuilder withEventHub(I_EventHub eventHub) {
         this.attributes.put("eventHub", eventHub);
+        return this;
+    }
+
+    /**
+     * Installs an agent registry into the kernel context.
+     */
+    public KernelBuilder withAgentRegistry(I_AgentRegistry agentRegistry) {
+        this.agentRegistry = agentRegistry;
         return this;
     }
 
@@ -115,8 +130,12 @@ public class KernelBuilder {
 
         log.info("kernel.build: {} @ {} v{}", resolvedSelf, home.getAbsolutePath(), version);
 
+        I_AgentRegistry registry = this.agentRegistry != null
+                ? this.agentRegistry
+                : new systems.symbol.kernel.agent.SimpleAgentRegistry();
+
         KernelContext ctx = new KernelContext(resolvedSelf, secrets, home, version,
-                Map.copyOf(attributes));
+                Map.copyOf(attributes), registry);
         return new DefaultKernel(ctx);
     }
 
