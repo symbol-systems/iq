@@ -36,9 +36,9 @@ public class SimpleSecrets implements I_Secrets, Serializable {
         return secretStore.get(key);
     }
 
-    // public Map<String, String> getAllSecrets() {
-    //     return Collections.unmodifiableMap(secretStore);
-    // }
+    public Map<String, String> getAllSecrets() {
+        return Collections.unmodifiableMap(secretStore);
+    }
 
     /**
      * Provide a string representation of the secrets and access control

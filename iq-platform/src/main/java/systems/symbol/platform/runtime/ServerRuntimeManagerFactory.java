@@ -2,10 +2,24 @@ package systems.symbol.platform.runtime;
 
 public class ServerRuntimeManagerFactory {
 
-    private static final ServerRuntimeManager INSTANCE = new ProcessServerRuntimeManager();
-
     public static ServerRuntimeManager getInstance() {
-        return INSTANCE;
+        String manager = System.getProperty("iq.runtime.manager");
+        if (manager == null || manager.isBlank()) {
+            manager = System.getenv("IQ_RUNTIME_MANAGER");
+        }
+        if (manager == null || manager.isBlank()) {
+            manager = "process";
+        }
+
+        switch (manager.toLowerCase()) {
+            case "quarkus":
+                return new QuarkusRuntimeManager();
+            case "default":
+                return new DefaultServerRuntimeManager();
+            case "process":
+            default:
+                return new ProcessServerRuntimeManager();
+        }
     }
 
     private ServerRuntimeManagerFactory() {

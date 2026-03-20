@@ -64,7 +64,7 @@ public class GcpSecretManagerProvider implements I_SecretsStore {
             }
             return secrets;
         } catch (Exception e) {
-            throw new SecretsException("Failed to read secrets from GCP Secret Manager", e);
+            throw new SecretsException("Failed to read secrets from GCP Secret Manager: " + e.getMessage());
         }
     }
 

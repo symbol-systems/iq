@@ -817,4 +817,5 @@ The following must hold across all upgrades:
 5. **Test before merge.** Every new class requires at least one unit test. Every command requires a `TestCLIExecutor` scenario. Integration tests gated by `skipITs=false`.
 6. **Idiomatic interfaces.** New public APIs extend existing `I_*` interfaces from `iq-abstract` or `iq-kernel`; do not introduce a fourth parallel exception hierarchy. Consolidate into `iq-abstract` or `iq-kernel` - MECE.
 7. **Audit everything.** Secret reads, LLM calls, FSM transitions, and trust changes must each produce an audit event. Never log secret values.
+8. **Clean-up errors/warning.** run tests, remove warnings and errors
 
