@@ -7,7 +7,7 @@
        <version>0.91.5</version>
     </parent>
 
-    <artifactId>iq-test-apis</artifactId>
+    <artifactId>iq-test-servers</artifactId>
     <name>IQ API Tests</name>
     <description>IQ Tests.</description>
     <url>https://symbol.systems</url>

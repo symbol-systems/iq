@@ -44,20 +44,14 @@
     <module>iq-agentic</module>
     <module>iq-apis</module>
     <!-- <module>iq-persona</module> -->
-    <module>iq-analytics</module>
-    <module>iq-test-apis</module>
+    <module>iq-rdf4j-graphs</module>
+    <module>iq-test-servers</module>
     <module>iq-cli</module>
-    <module>iq-cli-pro</module>
-      <!--    <module>iq-dao</module>-->
-    <!-- <module>iq-actions</module> -->
-    <!-- <module>iq-camel</module> -->
-    <!-- <module>iq-cli</module> -->
-    <!-- <module>iq-cli-pro</module> -->
+    <module>iq-cli-server</module>
+    <module>iq-camel</module>
     <module>iq-rdf4j-graphql</module>
     <module>iq-connect/iq-connect-core</module>
     <module>iq-mcp</module>
-    <!-- <module>iq-rdf4j-nlp</module> -->
-    <!-- <module>iq-codehub</module> -->
   </modules>
   <scm>
     <url>github.com/symbol-systems/iq.git</url>
