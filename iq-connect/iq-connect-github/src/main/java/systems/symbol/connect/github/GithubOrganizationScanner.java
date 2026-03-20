@@ -1,5 +1,7 @@
 package systems.symbol.connect.github;
 
+import java.io.IOException;
+
 import org.eclipse.rdf4j.model.IRI;
 
 import org.kohsuke.github.GHOrganization;
@@ -12,7 +14,7 @@ final class GithubOrganizationScanner {
     private GithubOrganizationScanner() {
     }
 
-    static void scan(GHOrganization organization, GithubScanContext context) {
+    static void scan(GHOrganization organization, GithubScanContext context) throws IOException {
         IRI orgIri = context.modeller().organization(context.connectorId(), organization.getLogin(), organization.getName());
 
         for (GHRepository repo : organization.listRepositories()) {
