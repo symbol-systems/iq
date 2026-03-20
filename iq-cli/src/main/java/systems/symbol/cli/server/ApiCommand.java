@@ -11,7 +11,7 @@ ServerHealthCommand.class,
 ServerDebugCommand.class,
 ServerDumpCommand.class
 })
-public class ApiCommand implements ServerRuntimeScope {
+public class ApiCommand implements ServerRuntimeScope, Runnable {
 
 @Override
 public void run() {

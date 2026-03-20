@@ -1,6 +1,7 @@
 package systems.symbol.secrets;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,10 @@ secretStore.put(key, secret);
 @Override
 public String getSecret(String key) {
 return secretStore.get(key);
+}
+
+public Map<String, String> getAllSecrets() {
+return Collections.unmodifiableMap(secretStore);
 }
 
 /**

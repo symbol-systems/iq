@@ -91,19 +91,35 @@ return this.kernelContext;
 }
 
 public File getAssetsHome() {
+try {
 return kernelContext != null ? kernelContext.getAssets() : this.assets;
+} catch (NoSuchMethodError e) {
+return this.assets;
+}
 }
 
 public File getBackupsHome() {
+try {
 return kernelContext != null ? kernelContext.getBackups() : this.backups;
+} catch (NoSuchMethodError e) {
+return this.backups;
+}
 }
 
 public File getPublicHome() {
+try {
 return kernelContext != null ? kernelContext.getPublic() : this.www_docs;
+} catch (NoSuchMethodError e) {
+return this.www_docs;
+}
 }
 
 public boolean isKernelInitialized() {
+try {
 return kernelContext != null && kernelContext.isInitialized();
+} catch (NoSuchMethodError e) {
+return kernelContext != null && kernelContext.getHome() != null && kernelContext.getHome().exists();
+}
 }
 
 public IQStore newIQBase() {

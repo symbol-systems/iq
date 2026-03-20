@@ -11,7 +11,7 @@ ServerHealthCommand.class,
 ServerDebugCommand.class,
 ServerDumpCommand.class
 })
-public class McpCommand implements ServerRuntimeScope {
+public class McpCommand implements ServerRuntimeScope, Runnable {
 
 @Override
 public void run() {
