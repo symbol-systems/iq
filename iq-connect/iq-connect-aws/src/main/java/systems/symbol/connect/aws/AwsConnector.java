@@ -1,5 +1,7 @@
 package systems.symbol.connect.aws;
 
+import java.util.List;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.util.Values;
@@ -19,6 +21,7 @@ import software.amazon.awssdk.services.sts.model.GetCallerIdentityResponse;
 
 import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
+import systems.symbol.connect.core.ConnectorScanner;
 
 /**
  * Example AWS connector implementation.
@@ -53,7 +56,7 @@ public final class AwsConnector extends AbstractConnector {
     }
 
     @Override
-    protected void doRefresh() {
+    protected void doRefresh() throws Exception {
         IRI connectorId = getConnectorId();
         Region region = Region.of(config.getRegion().orElse(DEFAULT_REGION));
         AwsModeller modeller = new AwsModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
@@ -70,13 +73,27 @@ public final class AwsConnector extends AbstractConnector {
             IRI accountIri = modeller.account(connectorId, identity.account(), identity.arn());
             AwsScanContext context = new AwsScanContext(connectorId, accountIri, region, modeller);
 
-            AwsRegionScanner.scan(ec2, context);
-            AwsS3Scanner.scan(s3, context);
-            AwsEc2Scanner.scan(ec2, context);
-            AwsIamScanner.scan(iam, context);
-            AwsCloudTrailScanner.scan(cloudTrail, context);
-            AwsConfigScanner.scan(configClient, context);
-            AwsPricingScanner.scan(pricing, context);
+            List<ConnectorScanner<AwsScanContext>> scanners = createScanners(s3, ec2, iam, cloudTrail, configClient, pricing);
+
+            for (ConnectorScanner<AwsScanContext> scanner : scanners) {
+                scanner.scan(context);
+            }
         }
+    }
+
+    List<ConnectorScanner<AwsScanContext>> createScanners(S3Client s3,
+                                                          Ec2Client ec2,
+                                                          IamClient iam,
+                                                          CloudTrailClient cloudTrail,
+                                                          ConfigClient configClient,
+                                                          PricingClient pricing) {
+        return List.of(
+            new AwsRegionScanner(ec2),
+            new AwsS3Scanner(s3),
+            new AwsEc2Scanner(ec2),
+            new AwsIamScanner(iam),
+            new AwsCloudTrailScanner(cloudTrail),
+            new AwsConfigScanner(configClient),
+            new AwsPricingScanner(pricing));
     }
 }

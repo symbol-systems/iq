@@ -33,7 +33,9 @@ public class PowerCLI extends CLI {
                 // commands.addSubcommand(new ModelsCommand(context, commands));
                 // commands.addSubcommand(new RunCommand(context, commands));
                 // commands.addSubcommand(new TriggerCommand(context));
+                commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
                 commands.addSubcommand(new TrustCommand(context));
+                commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
                 commands.addSubcommand(new BootCommand(context));
             }
 

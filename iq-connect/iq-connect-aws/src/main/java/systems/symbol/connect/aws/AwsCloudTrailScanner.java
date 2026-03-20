@@ -2,16 +2,22 @@ package systems.symbol.connect.aws;
 
 import org.eclipse.rdf4j.model.IRI;
 
+import systems.symbol.connect.core.ConnectorScanner;
+
 import software.amazon.awssdk.services.cloudtrail.CloudTrailClient;
 import software.amazon.awssdk.services.cloudtrail.model.DescribeTrailsRequest;
 import software.amazon.awssdk.services.cloudtrail.model.Trail;
 
-final class AwsCloudTrailScanner {
+final class AwsCloudTrailScanner implements ConnectorScanner<AwsScanContext> {
 
-    private AwsCloudTrailScanner() {
+    private final CloudTrailClient cloudTrail;
+
+    AwsCloudTrailScanner(CloudTrailClient cloudTrail) {
+        this.cloudTrail = cloudTrail;
     }
 
-    static void scan(CloudTrailClient cloudTrail, AwsScanContext context) {
+    @Override
+    public void scan(AwsScanContext context) {
         AwsModeller modeller = context.modeller();
         IRI connectorId = context.connectorId();
         IRI accountIri = context.accountIri();

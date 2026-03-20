@@ -40,6 +40,12 @@
         </dependency>
 
         <dependency>
+            <groupId>systems.symbol</groupId>
+            <artifactId>iq-secrets-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <type>pom</type>

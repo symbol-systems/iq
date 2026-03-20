@@ -1,29 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</project>  </dependencies>    </dependency>      <version>5.1.0</version>      <artifactId>vault-java-driver</artifactId>      <groupId>com.bettercloud</groupId>    <dependency>    </dependency>      <version>${project.version}</version>      <artifactId>iq-secrets-core</artifactId>      <groupId>systems.symbol</groupId>    <dependency>  <dependencies>  <description>HashiCorp Vault secrets provider for IQ.</description>  <name>IQ Secrets HashiCorp</name>  <artifactId>iq-secrets-hashicorp</artifactId>  </parent>    <relativePath>../../pom.xml</relativePath>    <version>0.91.5</version>    <artifactId>iq-parent</artifactId>    <groupId>systems.symbol</groupId>  <parent>  <modelVersion>4.0.0</modelVersion>  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>systems.symbol</groupId>
