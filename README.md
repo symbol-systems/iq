@@ -23,3 +23,8 @@ IQ is built to bridge real-world systems, data sources, and decision processes u
 - Plugin architecture: add new connectors and capabilities as your needs grow.
 - Cloud and on-premises ready: run locally, in containers, or in managed setups.
 
+## Core principles
+
+- Knowledge-first: IQ represents domain data as graphs (RDF) and operates using declarative patterns.
+- Connector-driven: each integration is a connector module (iq-connect/*), with uniform lifecycle and status semantics.
+- Policy and content as code: behavior is authored using scripts and RDF templates, not hardcoded by business logic.

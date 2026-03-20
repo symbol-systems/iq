@@ -34,10 +34,9 @@ super(context);
 }
 
 @Override
-public Object call() throws Exception {
+protected Object doCall() throws Exception {
 if (!context.isInitialized()) {
-display("Workspace is not initialized. run `iq init` first.");
-return 1;
+throw new CLIException("Workspace is not initialized. run `iq init` first.");
 }
 
 if (list || !trigger) {
@@ -46,8 +45,7 @@ listTransitions();
 
 if (trigger) {
 if ((actor == null || actor.isBlank()) || (intent == null || intent.isBlank())) {
-display("--trigger requires --actor and --intent");
-return 1;
+throw new CLIException("--trigger requires --actor and --intent");
 }
 triggerTransition(actor, intent);
 }
@@ -93,8 +91,13 @@ display("Failed to list transitions: " + ex.getMessage());
 }
 
 private void triggerTransition(String actor, String intent) {
-// Placeholder: real engine integration requires IntentAPI / agent execution path.
-display("Trigger requested: actor=" + actor + " intent=" + intent + ".");
-display("This is a stub in iq-cli; integrate with IntentAPI or iq-mcp DynamicAgentBridge for real runs.");
+try (RepositoryConnection conn = context.getRepository().getConnection()) {
+// Minimal local transition stub: write an audit triple or just log.
+display("Agent transition executed (stub): actor=" + actor + " intent=" + intent);
+display("Use IntentAPI for production intent execution.");
+} catch (Exception e) {
+display("Agent transition failed: " + e.getMessage());
+log.error("Agent transition error", e);
+}
 }
 }

@@ -1,9 +1,16 @@
 package systems.symbol.cli;
 
-public class CLIException extends Exception {
+import systems.symbol.kernel.KernelCommandException;
+
+public class CLIException extends KernelCommandException {
 
 static final long serialVersionUID = 123456789;
+
 public CLIException(String msg) {
-super(msg);
+super("cli.error", msg);
+}
+
+public CLIException(String msg, Throwable cause) {
+super("cli.error", msg, cause);
 }
 }

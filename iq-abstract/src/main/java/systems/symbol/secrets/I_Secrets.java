@@ -9,6 +9,9 @@
 
 package systems.symbol.secrets;
 
+import java.util.Collections;
+import java.util.Map;
+
 public interface I_Secrets {
 
 /**
@@ -18,6 +21,15 @@ public interface I_Secrets {
  * @return the value of the secret associated with the specified key, or {@code null} if the key is not found.
  */
 String getSecret(String key);
+
+/**
+ * Optional: returns all secrets in this object.
+ *
+ * @return an unmodifiable Map of secret keys and values.
+ */
+default Map<String, String> getAllSecrets() {
+return Collections.emptyMap();
+}
 
 }
 

@@ -9,6 +9,7 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +29,7 @@ super(context);
 }
 
 @Override
-public Object call() throws Exception {
-if (!context.isInitialized())
-throw new CLIException("IQ not ready");
-
+protected Object doCall() throws Exception {
 SimpleValueFactory vf = SimpleValueFactory.getInstance();
 IRI commandsIRI = vf.createIRI(context.getSelf() + "iq-render");
 
@@ -47,43 +45,26 @@ return 0;
 private void doRender(IQConnection iq, IRI commandsIRI) throws CLIException, IOException {
 SPARQLMapper sparql = new SPARQLMapper(iq);
 List<Map<String, Object>> models = sparql.models(commandsIRI);
-log.info("iq.render.models: " + models.size());
+log.info("iq.render.models: {}", models.size());
 
-// TripleRenderer renderer = new TripleRenderer(iq);
-// if (!useStandardSyntax)
-// renderer.blockSyntax();
-//
-// for (Map<String,Object> m : models) {
-// log.info("iq.render: {}", Model.getIdentity(m));
-//
-// Object id = m.get(NS.KEY_AT_ID);
-// Object template = m.get("template");
-// if (template != null && id != null) {
-// IRI ctx = iq.getIdentity();
-// IRI modelIRI = iq.toIRI(id.toString());
-//
-// // localize IRI to Folder / File
-// File toFolder = this.toFolder == null ? context.www_docs : this.toFolder;
-// File file = Files.locate(toFolder, ctx, modelIRI);
-//// log.info("iq.render: {} @ {}", modelIRI, file.getAbsolutePath());
-//
-// if (file != null && file.isDirectory()) {
-// file = new File(file, indexFile);
-// log.info("iq.render.index: {}", file.getAbsolutePath());
-// }
-// // render, if required
-// if (file != null && context.isStale(file)) {
-// file.getParentFile().mkdirs();
-// Map<String, Object> model = TripleFinder.mapOf(iq.getTriples(), new
-// NS(ctx.stringValue()), modelIRI, null, ctx);
-// log.info("iq.render.file: {} -> {}", modelIRI, model);
-// FileOutputStream fos = new FileOutputStream(file);
-// renderer.render(template.toString(), model, fos);
-// fos.close();
-// } else {
-// log.info("iq.render.skip: " + id);
-// }
-// }
-// }
+File outputFolder = this.toFolder != null ? this.toFolder : context.getPublicHome();
+if (outputFolder == null) {
+outputFolder = new File(context.getKernelContext().getHome(), "render");
+}
+outputFolder.mkdirs();
+
+int rendered = 0;
+for (int i = 0; i < models.size(); i++) {
+Map<String, Object> m = models.get(i);
+String identity = m.getOrDefault("@id", "model-" + (i + 1)).toString();
+String sanitized = identity.replaceAll("[^a-zA-Z0-9-_\\.]+", "_");
+File target = new File(outputFolder, sanitized + ".txt");
+String content = "Rendered model: " + identity + "\n" + m.toString() + "\n";
+Files.writeString(target.toPath(), content, java.nio.charset.StandardCharsets.UTF_8);
+rendered++;
+}
+
+display("Rendered " + rendered + " models to " + outputFolder.getAbsolutePath());
 }
 }
+
