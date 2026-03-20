@@ -4,13 +4,13 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 
-import systems.symbol.connect.core.ConnectorGraphModeller;
+import systems.symbol.connect.core.AbstractConnectorModeller;
 import systems.symbol.connect.core.ConnectorModels;
 
 /**
  * GitHub graph modeller that maps discovered GitHub resources into connector RDF state.
  */
-public final class GithubModeller extends ConnectorGraphModeller {
+public final class GithubModeller extends AbstractConnectorModeller {
 
 public GithubModeller(Model model, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
 super(model, graphIri, ontologyBaseIri, entityBaseIri);
@@ -18,7 +18,7 @@ super(model, graphIri, ontologyBaseIri, entityBaseIri);
 
 public IRI organization(IRI connectorId, String login, String name) {
 IRI orgIri = organization(login, name);
-link(connectorId, ConnectorModels.HAS_RESOURCE, orgIri);
+linkConnectorResource(connectorId, orgIri);
 return orgIri;
 }
 
@@ -32,7 +32,7 @@ return orgIri;
 
 public IRI rootUser(IRI connectorId, String login, String name) {
 IRI userIri = user(login, name);
-link(connectorId, ConnectorModels.HAS_RESOURCE, userIri);
+linkConnectorResource(connectorId, userIri);
 return userIri;
 }
 
@@ -58,7 +58,7 @@ public IRI repository(IRI connectorId,
   int openIssuesCount,
   String defaultBranch) {
 IRI repoIri = entity("repo", fullName);
-link(connectorId, ConnectorModels.HAS_RESOURCE, repoIri);
+linkConnectorResource(connectorId, repoIri);
 link(ownerIri, ConnectorModels.HAS_RESOURCE, repoIri);
 addType(repoIri, "Repository");
 addLiteral(repoIri, "name", name);

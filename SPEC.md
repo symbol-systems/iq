@@ -13,7 +13,8 @@ This document describes key architecture concepts and conventions used in the IQ
 - `iq-platform`: core libraries and shared services.
 - `iq-connect`: connectors for services (AWS, Azure, GitHub, Slack, etc.).
 - `iq-apis`: REST API runtime layer over platform services.
-- `iq-cli`, `iq-cli-pro`: command line tools for user interaction and orchestration.
+- `iq-mcp`: MCP runtime layer over platform services.
+- `iq-cli`, `iq-cli-pro`, `iq-cli-server`: command line tools for user interaction and orchestration.
 
 ## 3. Runtime model
 

@@ -34,14 +34,8 @@ import software.amazon.awssdk.services.pricing.model.Service;
 import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.sts.model.GetCallerIdentityResponse;
 
-import systems.symbol.connect.core.Checkpoints;
+import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
-import systems.symbol.connect.core.ConnectorProvenance;
-import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.ConnectorSyncMetadata;
-import systems.symbol.connect.core.I_Checkpoint;
-import systems.symbol.connect.core.I_Connector;
-import systems.symbol.connect.core.I_ConnectorDescriptor;
 
 /**
  * Example AWS connector implementation.
@@ -50,19 +44,11 @@ import systems.symbol.connect.core.I_ConnectorDescriptor;
  * integrate AWS SDK calls with the IQ connector model and writes metadata into
  * the connector state model.
  */
-public final class AwsConnector implements I_Connector, I_ConnectorDescriptor {
+public final class AwsConnector extends AbstractConnector {
 
 private static final String DEFAULT_REGION = "us-east-1";
 
-private final IRI connectorId;
-private final Model state;
 private final AwsConfig config;
-private final IRI graphIri;
-private final IRI ontologyBaseIri;
-private final IRI entityBaseIri;
-
-private volatile ConnectorStatus status = ConnectorStatus.IDLE;
-private volatile Optional<I_Checkpoint> checkpoint = Optional.empty();
 
 public AwsConnector(String connectorId, AwsConfig config, Model state) {
 this(connectorId,
@@ -74,22 +60,8 @@ Values.iri("urn:aws:"));
 }
 
 public AwsConnector(String connectorId, AwsConfig config, Model state, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
-this.connectorId = Values.iri(connectorId);
+super(connectorId, state, graphIri, ontologyBaseIri, entityBaseIri);
 this.config = config;
-this.state = state;
-this.graphIri = graphIri;
-this.ontologyBaseIri = ontologyBaseIri;
-this.entityBaseIri = entityBaseIri;
-}
-
-@Override
-public IRI getSelf() {
-return connectorId;
-}
-
-@Override
-public IRI getConnectorId() {
-return connectorId;
 }
 
 @Override
@@ -98,39 +70,10 @@ return ConnectorMode.READ_WRITE;
 }
 
 @Override
-public ConnectorStatus getStatus() {
-return status;
-}
-
-@Override
-public Model getModel() {
-return state;
-}
-
-@Override
-public Optional<I_Checkpoint> getCheckpoint() {
-return checkpoint;
-}
-
-@Override
-public void start() {
-status = ConnectorStatus.SYNCING;
-}
-
-@Override
-public void stop() {
-status = ConnectorStatus.IDLE;
-}
-
-@Override
-public void refresh() {
-status = ConnectorStatus.SYNCING;
-state.remove(null, null, null, graphIri);
-ConnectorSyncMetadata.markSyncing(state, connectorId, graphIri);
-
-IRI activity = ConnectorProvenance.markSyncStarted(state, connectorId, graphIri);
+protected void doRefresh() {
+IRI connectorId = getConnectorId();
 Region region = Region.of(config.getRegion().orElse(DEFAULT_REGION));
-AwsModeller modeller = new AwsModeller(state, graphIri, ontologyBaseIri, entityBaseIri);
+AwsModeller modeller = new AwsModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
 
 try (S3Client s3 = S3Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
  StsClient sts = StsClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
@@ -245,7 +188,12 @@ modeller.cloudTrail(connectorId, accountIri, trailRegionIri, trail.name(), trail
 // Config recorders
 IRI configRecorderIri = null;
 for (ConfigurationRecorder recorder : configClient.describeConfigurationRecorders().configurationRecorders()) {
-configRecorderIri = modeller.configRecorder(connectorId, accountIri, ensureRegion(modeller, regionIrisById, accountIri, region.id(), null), recorder.name());
+IRI discoveredRecorderIri = modeller.configRecorder(connectorId, accountIri, ensureRegion(modeller, regionIrisById, accountIri, region.id(), null), recorder.name());
+if (configRecorderIri == null) {
+configRecorderIri = discoveredRecorderIri;
+} else {
+configRecorderIri = null;
+}
 }
 
 // Config rules (all pages)
@@ -283,15 +231,6 @@ modeller.pricingService(connectorId, pricingService.serviceCode(), pricingServic
 }
 pricingNextToken = pricingServicesResponse.nextToken();
 } while (pricingNextToken != null && !pricingNextToken.isBlank());
-
-checkpoint = Optional.of(Checkpoints.of(state));
-status = ConnectorStatus.IDLE;
-ConnectorSyncMetadata.markSynced(state, connectorId, graphIri);
-ConnectorProvenance.markSyncCompleted(state, activity, graphIri);
-} catch (Exception e) {
-status = ConnectorStatus.ERROR;
-ConnectorSyncMetadata.markError(state, connectorId, graphIri);
-ConnectorProvenance.markSyncFailed(state, activity, e, graphIri);
 }
 }
 
@@ -303,7 +242,7 @@ private IRI ensureRegion(AwsModeller modeller,
 if (regionId == null || regionId.isBlank()) {
 return null;
 }
-return regionIrisById.computeIfAbsent(regionId, key -> modeller.region(connectorId, accountIri, key, endpoint));
+return regionIrisById.computeIfAbsent(regionId, key -> modeller.region(getConnectorId(), accountIri, key, endpoint));
 }
 
 private IRI ensureBucket(AwsModeller modeller,
@@ -313,7 +252,7 @@ private IRI ensureBucket(AwsModeller modeller,
 if (bucketName == null || bucketName.isBlank()) {
 return null;
 }
-return bucketIrisByName.computeIfAbsent(bucketName, key -> modeller.s3Bucket(connectorId, accountIri, null, key));
+return bucketIrisByName.computeIfAbsent(bucketName, key -> modeller.s3Bucket(getConnectorId(), accountIri, null, key));
 }
 
 private Optional<String> regionFromAvailabilityZone(String availabilityZone) {

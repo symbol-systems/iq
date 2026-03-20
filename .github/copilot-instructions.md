@@ -1,49 +1,48 @@
 # Copilot instructions for IQ (systems.symbol)
 
-## Quick orientation
-- Big picture: IQ is a multi-module Java (Maven) project that turns RDF graphs into an executable knowledge/playbook. Key runtime is Quarkus (`iq-apis`) and core libraries live in `iq-platform`, `iq-rdf4j` and `iq-trusted`.
-- Language & platforms: Java 21, Quarkus 3.x, RDF4J for RDF/SPARQL, JUnit5 for tests.
+## Big picture architecture
+- Multi-module Maven project, root `pom.xml` controls versions.
+- Key components:
+  - `iq-apis`: Quarkus REST/LLM runtime entrypoint (LLM endpoints in `src/main/java/systems/symbol/`).
+  - `iq-platform`: core business logic (LLM provider wrappers, RDF/SPARQL orchestration, `LLMFactory`, `GPTWrapper`).
+  - `iq-rdf4j`, `iq-rdf4-graphs`, `iq-trusted`: RDF repository + model drivers and graph transforms.
+  - `iq-connect/*`: connector library family (AWS, Azure, Slack, JDBC, etc.); each submodule has own `src/main/java` and `README`.
+- Data flow: `.ttl`/`.sparql` scripts drive domain behavior; `IQScriptCatalog` / `ModelScriptCatalog` loads them.
 
-## Where to start (files to read)
-- Top-level: `README.md` and `BUILD.md` (build commands, Java version, Quarkus tips).
-- Runtime & APIs: `iq-apis/README.md` + `iq-apis/docs/API_LLM.md` (LLM endpoints and examples).
-- LLM integration: `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java` and tests under `iq-platform/src/test/java/systems/symbol/llm/gpt/`.
-- RDF/SPARQL patterns: look in `iq-*/src/main/resources/**.ttl` and `.sparql` files and classes under `systems.symbol.rdf4j` or `iq-rdf4j`.
-- Secrets & local store: `.iq/` (example vault, repositories). See `EnvsAsSecrets` / `VFSPasswordVault` uses in `iq-apis` / `iq-trusted`.
+## Critical workflows (must-copy commands)
+- Full build: `./mvnw clean install` from repo root (wrapper preferred). Optionally `mvn -DskipTests=true -DskipITs=true clean install` for faster local edits.
+- Module build: `./mvnw -pl iq-apis -am compile` or `-pl iq-connect/iq-connect-aws -am test`.
+- Dev run: `./mvnw compile quarkus:dev -pl iq-apis -am`; dev UI at `http://localhost:8080/q/dev/`.
+- CLI run: `./bin/iq` (uses built artifacts + runtime config in `.iq/`).
+- Tests:
+  - unit: `mvn test` (JUnit5)
+  - integration: `mvn -DskipITs=false verify -pl <module>`
+  - skip IT: `-DskipITs=true` (default in CI/workspace)
+- Container image: `./bin/build-image` or `./mvnw -Dquarkus.container-image.build=true -DskipTests install`.
 
-## Common developer workflows (commands)
-- Full build: `./mvnw clean install` (or `mvn clean install`). Use the wrapper when available.
-- Dev mode (live coding): `./mvnw compile quarkus:dev -pl iq-apis -am` (also `./bin/iq`). Dev UI is at `http://localhost:8080/q/dev/`.
-- Compile only (fast): `./bin/compile-apis` or `mvn compile -pl iq-apis -am`.
-- Build container image: `./bin/build-image` or `./mvnw -Dquarkus.container-image.build=true -DskipTests install`.
-- Run unit tests: `mvn test` (JUnit5). Integration tests are skipped by default with property `-DskipITs=true`.
-- Run integration tests: `mvn -DskipITs=false verify -pl <module>` (set the property or unset it in CI when needed).
+## Project-specific conventions
+- Always prefer `-pl <module> -am` for incremental compile/test.
+- RDF-first logic: new features usually add `.ttl` / `.sparql` plus Java hook in `iq-platform`/`iq-trusted`.
+- LLM configuration: text prompts, instructions and provider maps are in `.iq/` and `iq-apis/docs/API_LLM.md`.
+- No hardcoded secrets: use env vars and `.iq/vault` with `VFSPasswordVault`/`EnvsAsSecrets`.
+- Module tests mostly isolated; integration tests access real endpoints and are controlled by `skipITs` flag.
 
-## Conventions & patterns to follow
-- Multi-module builds: prefer `-pl <module> -am` to compile only affected modules.
-- RDF-first design: domain logic is expressed as RDF/TTL + SPARQL. When adding features, check for corresponding `.ttl` or `.sparql` artifacts and update `IQScriptCatalog`/`ModelScriptCatalog` where appropriate.
-- LLM configs are named maps (providers → named maps); changes to LLM behaviour usually touch `LLMFactory`, `GPTWrapper`, and mapped prompts in `.iq` or `/docs`.
-- Secrets: runtime reads secrets from environment variables and `.iq/vault` (VFSPasswordVault). Never commit real credentials — use env vars or local `.iq` copies for dev.
-- Tests that require real LLM keys or external services are often commented or in integration tests — prefer stubbing or mocking in unit tests.
+## Integration & external points
+- LLM providers: openai/groq/custom via `iq-platform/src/main/java/systems/symbol/llm/gpt/LLMFactory.java`.
+- RDF store: in-memory for tests, persistent config via `.iq/repositories`; drivers in `iq-rdf4j`.
+- Connectors: `iq-connect/*` modules provide pluggable service adapters (AWS, Slack, Kafka, etc.).
+- CI workflow: `.github/workflows/jars.yaml`, `docker.yaml`, with JDK 21 + git-lfs; “release” tasks in `bin/release`.
 
-## Integration points & external dependencies
-- LLM providers (OpenAI / Groq / custom) — see `iq-apis/docs/API_LLM.md` and `LLMFactory`.
-- RDF storage: RDF4J repositories under `.iq/repositories` or in-memory stores used in tests.
-- CI: GitHub Actions workflows (`.github/workflows/jars.yaml`, `docker.yaml`) use JDK 21 and `git lfs` (model files). Follow the workflow conventions (build with `-DskipITs` in CI).
+## Debug & troubleshooting quick hits
+- Quarkus logs are most informative; run `./mvnw -pl iq-apis -am quarkus:dev` and inspect startup logs for LLM map resolution.
+- For failing RDF/SPARQL, examine `src/main/resources/**/*.sparql`, and check `IQScriptCatalog` in `iq-platform`.
+- If modules compile but tests fail, clear caches: `./mvnw -pl <mod> -am clean test`.
 
-## Testing and debugging tips
-- Use Quarkus dev mode and the Dev UI to call endpoints quickly during development.
-- Logs: Quarkus logs go to console; many subsystems (LLMFactory, VFSPasswordVault) log helpful messages on startup showing secrets/LLM map resolution — scan those messages when debugging provider configuration.
-- Unit vs integration: keep expensive LLM or external calls out of unit tests; create small integration test suites that run only when `-DskipITs=false`.
+## PR/agent behavior
+- Keep changes small and focused; run `mvn -DskipTests=false -DskipITs=true package` locally.
+- Document `.ttl/.sparql` behavior and update related script catalogs when adding model rules.
+- For LLM integration changes, mock provider behavior in `iq-platform` tests (avoid live API keys in unit tests).
+- Do not commit production secrets to `.iq/vault`; change is valid only with sanitized sample data.
 
-## PR/Agent behaviour guidance (when you're an automated code author)
-- Make small, focused changes and run `mvn -DskipTests=false -DskipITs=true package` locally before opening a PR.
-- If code touches LLM flows, add tests that mock the provider; if adding integration tests, mark them so CI runs them separately and document required env secrets in the PR description (don’t include secrets).
-- When modifying RDF models or scripts (`.ttl`, `.sparql`, `.groovy`), include a short README or comment explaining the intent and verify expected SPARQL queries still work.
-- Avoid editing `.iq/vault` checked-in examples unless you are adding sanitized sample data; do not add credentials.
-
-## Where to add more documentation
-- Small changes: update the module `README.md` (e.g., `iq-apis/README.md`, `iq-platform/README.md`).
-- API changes: add or update `iq-apis/docs/` (for LLM APIs, endpoints and examples).
-
-If anything here is unclear or you'd like me to expand a section (e.g., a specific module's architecture, test knobs, or example PR checklist), say which area and I'll iterate. ✅
+## Feedback loop
+- After updating instructions, ask maintainers: “Is there a missing workflow (e.g., `iq-cli-pro` setup) or connector pattern I should capture?”
