@@ -64,12 +64,14 @@ private IRI  caller;
 private IRI  realm;
 private Bindings params  = new SimpleBindings();
 private Modelmodel   = null;
+private systems.symbol.agent.I_Command command = null;
 
 private Builder(IRI subject) { this.subject = subject; }
 
 public Builder caller(IRI caller){ this.caller = caller; return this; }
 public Builder realm(IRI realm)  { this.realm  = realm;  return this; }
 public Builder model(Model model){ this.model  = model;  return this; }
+public Builder command(systems.symbol.agent.I_Command cmd) { this.command = cmd; return this; }
 
 public Builder param(String key, Object value) {
 params.put(key, value);

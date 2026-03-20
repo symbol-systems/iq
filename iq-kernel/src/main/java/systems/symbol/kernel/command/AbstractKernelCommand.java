@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.kernel.KernelContext;
 import systems.symbol.kernel.KernelCommandException;
 import systems.symbol.kernel.KernelException;
+import systems.symbol.kernel.event.KernelTopics;
 
 /**
  * Base class for kernel commands.
@@ -49,16 +50,64 @@ protected abstract KernelResult<T> doExecute(KernelRequest request) throws Kerne
 @Override
 public final KernelResult<T> execute(KernelRequest request) {
 log.debug("kernel.command.execute: {} -> {}", getClass().getSimpleName(), request);
+
+systems.symbol.kernel.event.I_EventHub hub = ctx.getEventHub();
+publishCommandEvent(hub, KernelTopics.AGENT_COMMAND_RECEIVED, request, null);
+
 try {
-return doExecute(request);
+KernelResult<T> result = doExecute(request);
+publishCommandEvent(hub, KernelTopics.AGENT_COMMAND_EXECUTED, request, null);
+return result;
+
 } catch (KernelException ke) {
 log.warn("kernel.command.error: {} -> {}", getClass().getSimpleName(), ke.getCode());
+publishCommandEvent(hub, KernelTopics.AGENT_COMMAND_FAILED, request, ke);
 return KernelResult.error(ke);
 } catch (Exception e) {
 log.error("kernel.command.fatal: {}", getClass().getSimpleName(), e);
-return KernelResult.error(
-new KernelCommandException(
-"kernel.command.unexpected", e.getMessage(), e));
+KernelCommandException ex = new KernelCommandException(
+"kernel.command.unexpected", e.getMessage(), e);
+publishCommandEvent(hub, KernelTopics.AGENT_COMMAND_FAILED, request, ex);
+return KernelResult.error(ex);
+}
+}
+
+private void publishCommandEvent(systems.symbol.kernel.event.I_EventHub hub,
+ org.eclipse.rdf4j.model.IRI topic,
+ KernelRequest request,
+ Throwable problem) {
+if (hub == null) {
+return;
+}
+
+StringBuilder payload = new StringBuilder();
+payload.append('{');
+payload.append("\"subject\":\"").append(request.getSubject()).append("\"");
+if (request.getCaller() != null) {
+payload.append(",\"caller\":\"").append(request.getCaller()).append("\"");
+}
+if (request.getRealm() != null) {
+payload.append(",\"realm\":\"").append(request.getRealm()).append("\"");
+}
+if (request.getCommand() != null) {
+systems.symbol.agent.I_Command cmd = request.getCommand();
+payload.append(",\"cmd_actor\":\"").append(cmd.getActor()).append("\"");
+payload.append(",\"cmd_action\":\"").append(cmd.getAction()).append("\"");
+payload.append(",\"cmd_target\":\"").append(cmd.getTarget()).append("\"");
+}
+if (problem != null) {
+payload.append(",\"error\":\"").append(problem.getMessage().replace("\"", "\\\"")).append("\"");
+}
+payload.append('}');
+
+try {
+hub.publish(systems.symbol.kernel.event.KernelEvent.on(topic)
+.source(ctx.getSelf())
+.contentType("application/json")
+.payload(payload.toString())
+.build());
+} catch (Exception e) {
+log.warn("Failed to publish command event {}: {}", topic, e.getMessage(), e);
 }
 }
 }
