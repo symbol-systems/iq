@@ -17,7 +17,7 @@ public final class InMemoryConnectorRegistry implements I_ConnectorRegistry {
 
     @Override
     public synchronized void register(I_Connector connector) {
-        connectors.put(connector.getSelf().toString(), connector);
+        connectors.put(connector.getConnectorId().toString(), connector);
     }
 
     @Override

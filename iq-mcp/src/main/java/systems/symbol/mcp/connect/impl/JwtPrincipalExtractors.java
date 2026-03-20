@@ -196,9 +196,8 @@ public final class JwtPrincipalExtractors {
             return jwk;
         }
 
-        @Override
         public java.util.List<Jwk> getAll() throws JwkException {
-            return delegate.getAll();
+            return ((UrlJwkProvider) delegate).getAll();
         }
 
         private record CacheEntry(Jwk jwk, long expiresAt) {}

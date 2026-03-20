@@ -54,11 +54,11 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
      *   <li>jwksCacheTtlMs (time in ms to cache JWKS keys)</li>
      * </ul>
      */
-    public AuthGuardMiddleware(java.util.Map<String, Object> config) {
+    public AuthGuardMiddleware(java.util.Map<String, ?> config) {
         this(buildExtractorFromConfig(config));
     }
 
-    private static JwtPrincipalExtractor buildExtractorFromConfig(java.util.Map<String, Object> config) {
+    private static JwtPrincipalExtractor buildExtractorFromConfig(java.util.Map<String, ?> config) {
         if (config == null || config.isEmpty()) {
             return principalFromJwtPayload();
         }
@@ -69,6 +69,19 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
         String issuer = asString(config.get("jwtIssuer"));
         String audience = asString(config.get("jwtAudience"));
         Long cacheTtlMs = asLong(config.get("jwksCacheTtlMs"));
+
+        boolean needsJwtValidation = ((oidcDiscoveryUrl != null && !oidcDiscoveryUrl.isBlank())
+                || (jwksUri != null && !jwksUri.isBlank())
+                || (secret != null && !secret.isBlank()));
+
+        if (needsJwtValidation) {
+            if (issuer == null || issuer.isBlank()) {
+                throw new IllegalArgumentException("jwtIssuer is required when JWT validation is configured");
+            }
+            if (audience == null || audience.isBlank()) {
+                throw new IllegalArgumentException("jwtAudience is required when JWT validation is configured");
+            }
+        }
 
         if (oidcDiscoveryUrl != null && !oidcDiscoveryUrl.isBlank()) {
             return JwtPrincipalExtractors.fromOidcDiscoveryUrl(oidcDiscoveryUrl, issuer, audience, cacheTtlMs);

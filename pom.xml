@@ -43,9 +43,11 @@
     <module>iq-finder</module>
     <module>iq-agentic</module>
     <module>iq-run-apis</module>
-    <module>iq-persona</module>
+    <!-- <module>iq-persona</module> -->
     <module>iq-analytics</module>
-      <module>iq-test-apis</module>
+    <module>iq-test-apis</module>
+    <module>iq-cli</module>
+    <module>iq-cli-pro</module>
       <!--    <module>iq-dao</module>-->
     <!-- <module>iq-actions</module> -->
     <!-- <module>iq-camel</module> -->
@@ -116,7 +118,7 @@
         <artifactId>rdf4j-bom</artifactId>
         <version>${rdf4j.version}</version>
         <type>pom</type>
-        <!-- <scope>import</scope> -->
+        <scope>import</scope>
       </dependency>
         <dependency>
           <groupId>org.eclipse.rdf4j</groupId>

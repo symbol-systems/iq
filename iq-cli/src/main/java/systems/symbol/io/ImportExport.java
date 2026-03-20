@@ -1,8 +1,10 @@
 package systems.symbol.io;
 
 import systems.symbol.cli.CLIContext;
-import systems.symbol.rdf4j.io.BootstrapLake;
+import systems.symbol.lake.BootstrapLake;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
@@ -20,8 +22,13 @@ public class ImportExport {
 
 
     public static BootstrapLake getBulkAssetLoader(CLIContext context, boolean forceDelete) {
+        return getBulkAssetLoader(context, forceDelete, null);
+    }
+
+    public static BootstrapLake getBulkAssetLoader(CLIContext context, boolean forceDelete, String realm) {
+        String source = (realm == null || realm.isBlank()) ? context.getSelf().stringValue() : realm;
         RepositoryConnection connection = context.getRepository().getConnection();
-        return new BootstrapLake(context.getSelf().stringValue(), connection, forceDelete, true, true, true);
+        return new BootstrapLake(source, connection, forceDelete, true, true, true);
     }
 
     public static void restore(CLIContext context) throws IOException {
@@ -32,7 +39,11 @@ public class ImportExport {
     }
 
     public static BootstrapLake load(CLIContext context, File userFile, boolean forceDelete) throws IOException {
-        BootstrapLake loader = getBulkAssetLoader(context, forceDelete);
+        return load(context, userFile, forceDelete, null);
+    }
+
+    public static BootstrapLake load(CLIContext context, File userFile, boolean forceDelete, String realm) throws IOException {
+        BootstrapLake loader = getBulkAssetLoader(context, forceDelete, realm);
         if (userFile!=null && userFile.exists()) {
             log.info("iq.loader.load.file: "+userFile.getAbsolutePath());
             loader.deploy(userFile);
@@ -41,18 +52,23 @@ public class ImportExport {
     }
 
     public static void export(CLIContext context, File toFolder, String comment) throws IOException {
+        export(context, toFolder, comment, null);
+    }
+
+    public static void export(CLIContext context, File toFolder, String comment, String realm) throws IOException {
         toFolder.mkdirs();
         Repository repository = context.getRepository();
-        File outputFile = new File("export.tll");
+        File outputFile = new File(toFolder, "export.ttl");
         RDFFormat format = RDFFormat.TURTLE;
+        IRI contextGraph = (realm == null || realm.isBlank()) ? context.getSelf() : Values.iri(realm);
         try (RepositoryConnection connection = repository.getConnection()) {
-            RepositoryResult<Statement> statements = connection.getStatements(null, null, null, true, context.getSelf());
+            RepositoryResult<Statement> statements = connection.getStatements(null, null, null, true, contextGraph);
 
             try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 Rio.write(statements, outputStream, format);
             }
         }
 
-        log.info("iq.exported: {} -> {}", context.getSelf(), outputFile.getAbsolutePath());
+        log.info("iq.exported: {} -> {}", contextGraph, outputFile.getAbsolutePath());
     }
 }

@@ -54,6 +54,11 @@ public final class TemplateConnector implements I_Connector, systems.symbol.conn
     }
 
     @Override
+    public IRI getConnectorId() {
+        return connectorId;
+    }
+
+    @Override
     public ConnectorMode getMode() {
         return ConnectorMode.READ_ONLY;
     }

@@ -4,7 +4,7 @@ import com.github.freva.asciitable.AsciiTable;
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
 import systems.symbol.platform.I_Self;
-import systems.symbol.rdf4j.io.BootstrapLake;
+import systems.symbol.lake.BootstrapLake;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,8 @@ import java.io.IOException;
 public class ImportCommand extends AbstractCLICommand{
     @CommandLine.Option(names = "--from", description = "Load assets from this folder")
     File from;
+    @CommandLine.Option(names = "--realm", description = "Import into this realm graph (default workspace root)")
+    String realm = "";
     @CommandLine.Option(names = "--force", description = "Remove existing before importing", defaultValue = "false")
     boolean forceDelete = false;
 
@@ -33,8 +35,8 @@ public class ImportCommand extends AbstractCLICommand{
     }
 
     private void doImport() throws IOException {
-        System.out.printf("importing from: %s\n", from.getAbsolutePath());
-        BootstrapLake load = ImportExport.load(context, from, forceDelete);
+        System.out.printf("importing from: %s into realm: %s\n", from.getAbsolutePath(), realm.isBlank() ? context.getSelf() : realm);
+        BootstrapLake load = ImportExport.load(context, from, forceDelete, realm);
 
         String[] columns = { "total", "assets", "rdf", "errors" };
         Object[] row = { load.total_files, load.total_asset_files, load.total_rdf_files, load.total_errors };

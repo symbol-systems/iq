@@ -1,6 +1,8 @@
 package systems.symbol;
 
 import systems.symbol.cli.*;
+import systems.symbol.kernel.I_Kernel;
+import systems.symbol.kernel.KernelBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -35,6 +37,7 @@ public class CLI implements Callable<Number> {
                 cli.addSubcommand(new ListCommand(context));
                 cli.addSubcommand(new ScriptCommand(context));
                 cli.addSubcommand(new SPARQLCommand(context));
+                cli.addSubcommand(new AgentCommand(context));
                 cli.addSubcommand(new RenderCommand(context));
                 cli.addSubcommand(new InferCommand(context));
 
@@ -70,10 +73,14 @@ public class CLI implements Callable<Number> {
 
     public static void main(String[] args) {
         CLI cli = new CLI();
+        I_Kernel kernel = null;
+        CLIContext context = null;
         try {
             File home = cli.getHomeFolder();
             log.info("iq.cli.home: {}", home.getAbsolutePath());
-            CLIContext context = new CLIContext(home);
+            kernel = KernelBuilder.create().withHome(home).build();
+            kernel.start();
+            context = new CLIContext(kernel);
             CommandLine commands = cli.getCommandLine(context);
             if (commands == null) {
                 System.exit(1);
@@ -83,8 +90,18 @@ public class CLI implements Callable<Number> {
             System.exit(exitCode);
         } catch (IOException e) {
             log.error("iq.cli.io.error: {} -> {}", e, e.getStackTrace());
+            System.exit(2);
         } catch (CLIException e) {
-            throw new RuntimeException(e);
+            log.error("iq.cli.cli.error: {}", e.getMessage(), e);
+            System.exit(3);
+        } catch (Exception e) {
+            log.error("iq.cli.unexpected.error: {}", e.getMessage(), e);
+            System.exit(4);
+        } finally {
+            if (context != null) context.close();
+            else if (kernel != null) {
+                try { kernel.stop(); } catch (Exception ignored) {}
+            }
         }
     }
 

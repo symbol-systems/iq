@@ -45,4 +45,24 @@ class AuthGuardMiddlewareTest {
         assertFalse(result.isError());
         assertEquals("anonymous", ctx.principal());
     }
+
+    @Test
+    void testConfigValidationRequiresIssuerAndAudienceForJwt() {
+        var config = java.util.Map.of(
+                "jwtSecret", "secret123"
+        );
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> new AuthGuardMiddleware(config));
+        assertEquals("jwtIssuer is required when JWT validation is configured", ex.getMessage());
+
+        var config2 = java.util.Map.of(
+                "jwtSecret", "secret123",
+                "jwtIssuer", "https://example.com"
+        );
+
+        IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class,
+                () -> new AuthGuardMiddleware(config2));
+        assertEquals("jwtAudience is required when JWT validation is configured", ex2.getMessage());
+    }
 }
