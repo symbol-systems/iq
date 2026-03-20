@@ -1,7 +1,6 @@
 package systems.symbol.connect.github;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Optional;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -11,7 +10,6 @@ import org.eclipse.rdf4j.model.util.Values;
 
 import systems.symbol.connect.core.Modeller;
 
-import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
@@ -21,8 +19,9 @@ import org.kohsuke.github.GitHub;
 
 import systems.symbol.connect.core.Checkpoints;
 import systems.symbol.connect.core.ConnectorMode;
-import systems.symbol.connect.core.ConnectorModels;
+import systems.symbol.connect.core.ConnectorProvenance;
 import systems.symbol.connect.core.ConnectorStatus;
+import systems.symbol.connect.core.ConnectorSyncMetadata;
 import systems.symbol.connect.core.I_Checkpoint;
 import systems.symbol.connect.core.I_Connector;
 import systems.symbol.connect.core.I_ConnectorDescriptor;
@@ -35,14 +34,29 @@ public final class GithubConnector implements I_Connector, I_ConnectorDescriptor
 private final IRI connectorId;
 private final Model state;
 private final GithubConfig config;
+private final IRI graphIri;
+private final IRI ontologyBaseIri;
+private final IRI entityBaseIri;
 
 private volatile ConnectorStatus status = ConnectorStatus.IDLE;
 private volatile Optional<I_Checkpoint> checkpoint = Optional.empty();
 
 public GithubConnector(String connectorId, GithubConfig config, Model state) {
+this(connectorId,
+config,
+state,
+Values.iri(connectorId + "/graph/current"),
+Values.iri(Modeller.getGithubOntology()),
+Values.iri("urn:github:"));
+}
+
+public GithubConnector(String connectorId, GithubConfig config, Model state, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
 this.connectorId = Values.iri(connectorId);
 this.config = config;
 this.state = state;
+this.graphIri = graphIri;
+this.ontologyBaseIri = ontologyBaseIri;
+this.entityBaseIri = entityBaseIri;
 }
 
 @Override
@@ -88,143 +102,107 @@ status = ConnectorStatus.IDLE;
 @Override
 public void refresh() {
 status = ConnectorStatus.SYNCING;
+state.remove(null, null, null, graphIri);
+ConnectorSyncMetadata.markSyncing(state, connectorId, graphIri);
+IRI activity = ConnectorProvenance.markSyncStarted(state, connectorId, graphIri);
 
 try {
 GitHub github = GitHub.connectUsingOAuth(config.getAccessToken());
-
-state.clear();
-state.add(connectorId, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.***REMOVED***("SYNCING"));
-state.add(connectorId, Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()));
+GithubModeller modeller = new GithubModeller(state, graphIri, ontologyBaseIri, entityBaseIri);
 
 if (config.getOrganization().isPresent()) {
 GHOrganization organization = github.getOrganization(config.getOrganization().get());
-IRI orgIri = Modeller.toDomainURN("github:org", organization.getLogin());
-state.add(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE), orgIri);
-state.add(orgIri, Modeller.rdfType(), Modeller.github("Organization"));
-state.add(orgIri, Modeller.github("name"), Values.***REMOVED***(organization.getName()));
-state.add(orgIri, Modeller.github("login"), Values.***REMOVED***(organization.getLogin()));
+IRI orgIri = modeller.organization(connectorId, organization.getLogin(), organization.getName());
 
 for (GHRepository repo : organization.listRepositories().toList()) {
-addRepository(repo, orgIri);
+addRepository(repo, orgIri, modeller);
 }
 
 for (GHUser member : organization.listMembers().toList()) {
-addUser(member, orgIri);
+addUser(member, orgIri, modeller);
 }
 
 for (GHTeam team : organization.listTeams()) {
-addTeam(team, orgIri);
+addTeam(team, orgIri, organization.getLogin(), modeller);
 }
 } else {
 GHMyself me = github.getMyself();
-IRI userIri = Modeller.toDomainURN("github:user", me.getLogin());
-state.add(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE), userIri);
-state.add(userIri, Modeller.rdfType(), Modeller.github("User"));
-state.add(userIri, Modeller.github("name"), Values.***REMOVED***(me.getName()));
-state.add(userIri, Modeller.github("login"), Values.***REMOVED***(me.getLogin()));
+IRI userIri = modeller.rootUser(connectorId, me.getLogin(), me.getName());
 
 for (GHRepository repo : me.listRepositories().toList()) {
-addRepository(repo, userIri);
+addRepository(repo, userIri, modeller);
 }
 
 for (GHOrganization org : me.getAllOrganizations()) {
-IRI orgIri = Modeller.toDomainURN("github:org", org.getLogin());
-state.add(userIri, Values.iri(ConnectorModels.HAS_RESOURCE), orgIri);
-state.add(orgIri, Modeller.rdfType(), Modeller.github("Organization"));
-state.add(orgIri, Modeller.github("name"), Values.***REMOVED***(org.getName()));
-state.add(orgIri, Modeller.github("login"), Values.***REMOVED***(org.getLogin()));
+IRI orgIri = modeller.organization(org.getLogin(), org.getName());
+modeller.linkResource(userIri, orgIri);
 }
 }
 
 checkpoint = Optional.of(Checkpoints.of(state));
 status = ConnectorStatus.IDLE;
+ConnectorSyncMetadata.markSynced(state, connectorId, graphIri);
+ConnectorProvenance.markSyncCompleted(state, activity, graphIri);
 } catch (Exception e) {
 status = ConnectorStatus.ERROR;
-state.add(connectorId, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.***REMOVED***("ERROR"));
-state.add(connectorId, Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()));
+ConnectorSyncMetadata.markError(state, connectorId, graphIri);
+ConnectorProvenance.markSyncFailed(state, activity, e, graphIri);
 }
 }
 
-private void addRepository(GHRepository repo, IRI ownerIri) {
+private void addRepository(GHRepository repo, IRI ownerIri, GithubModeller modeller) {
 try {
-IRI repoIri = Modeller.toDomainURN("github:repo", repo.getFullName());
-state.add(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE), repoIri);
-state.add(ownerIri, Values.iri(ConnectorModels.HAS_RESOURCE), repoIri);
-state.add(repoIri, Modeller.rdfType(), Modeller.github("Repository"));
-state.add(repoIri, Modeller.github("name"), Values.***REMOVED***(repo.getName()));
-state.add(repoIri, Modeller.github("fullName"), Values.***REMOVED***(repo.getFullName()));
-state.add(repoIri, Modeller.github("private"), Values.***REMOVED***(repo.isPrivate()));
-state.add(repoIri, Modeller.github("forksCount"), Values.***REMOVED***(repo.getForksCount()));
-state.add(repoIri, Modeller.github("stargazersCount"), Values.***REMOVED***(repo.getStargazersCount()));
-state.add(repoIri, Modeller.github("openIssuesCount"), Values.***REMOVED***(repo.getOpenIssueCount()));
-state.add(repoIri, Modeller.github("defaultBranch"), Values.***REMOVED***(repo.getDefaultBranch()));
+IRI repoIri = modeller.repository(
+connectorId,
+ownerIri,
+repo.getName(),
+repo.getFullName(),
+repo.isPrivate(),
+repo.getForksCount(),
+repo.getStargazersCount(),
+repo.getOpenIssueCount(),
+repo.getDefaultBranch());
 
 repo.getBranches().forEach((name, branch) -> {
-IRI branchIri = Modeller.toDomainURN("github:branch", repo.getFullName() + ":" + name);
-state.add(repoIri, Values.iri(ConnectorModels.HAS_RESOURCE), branchIri);
-state.add(branchIri, Modeller.rdfType(), Modeller.github("Branch"));
-state.add(branchIri, Modeller.github("name"), Values.***REMOVED***(name));
-state.add(branchIri, Modeller.github("protectionEnabled"), Values.***REMOVED***(branch.isProtected()));
+modeller.branch(repoIri, repo.getFullName(), name, branch.isProtected());
 });
 
 for (org.kohsuke.github.GHHook h : repo.getHooks()) {
-IRI hookIri = Modeller.toDomainURN("github:webhook", repo.getFullName() + ":" + h.getId());
-state.add(repoIri, Values.iri(ConnectorModels.HAS_CONTROL), hookIri);
-state.add(hookIri, Modeller.rdfType(), Modeller.github("WebHook"));
+String hookUrl = null;
 if (h.getConfig() != null) {
-String hookUrl = h.getConfig().get("url");
-if (hookUrl != null) {
-state.add(hookIri, Modeller.github("configUrl"), Values.***REMOVED***(hookUrl));
+hookUrl = h.getConfig().get("url");
 }
-}
-state.add(hookIri, Modeller.github("active"), Values.***REMOVED***(h.isActive()));
+modeller.webHook(repoIri, repo.getFullName(), h.getId(), hookUrl, h.isActive());
 }
 
 // Collaborators and access control
 for (GHUser collaborator : repo.listCollaborators().toList()) {
-IRI collaboratorIri = Modeller.toDomainURN("github:user", collaborator.getLogin());
-state.add(repoIri, Values.iri(ConnectorModels.HAS_USER), collaboratorIri);
-state.add(collaboratorIri, Modeller.rdfType(), Modeller.github("User"));
-state.add(collaboratorIri, Modeller.github("login"), Values.***REMOVED***(collaborator.getLogin()));
+modeller.collaborator(repoIri, collaborator.getLogin());
 }
 
 // Topics/tags for repository governance visibility
 for (String topic : repo.listTopics()) {
-IRI topicIri = Modeller.toDomainURN("github:topic", repo.getFullName() + ":" + topic);
-state.add(repoIri, Values.iri(ConnectorModels.HAS_SUBSYSTEM), topicIri);
-state.add(topicIri, Modeller.rdfType(), Modeller.github("Topic"));
-state.add(topicIri, Modeller.github("name"), Values.***REMOVED***(topic));
+modeller.topic(repoIri, repo.getFullName(), topic);
 }
 } catch (IOException e) {
 // best-effort ignore PMS and continue the sync; preserve status field metadata in outer catch
 }
 }
 
-private void addUser(GHUser user, IRI orgIri) {
+private void addUser(GHUser user, IRI orgIri, GithubModeller modeller) {
 try {
-IRI userIri = Modeller.toDomainURN("github:user", user.getLogin());
-state.add(orgIri, Values.iri(ConnectorModels.HAS_USER), userIri);
-state.add(userIri, Modeller.rdfType(), Modeller.github("User"));
-state.add(userIri, Modeller.github("name"), Values.***REMOVED***(user.getName()));
-state.add(userIri, Modeller.github("login"), Values.***REMOVED***(user.getLogin()));
+modeller.orgUser(orgIri, user.getLogin(), user.getName());
 } catch (IOException e) {
 // best-effort metadata extraction
 }
 }
 
-private void addTeam(GHTeam team, IRI orgIri) {
-IRI teamIri = Modeller.toDomainURN("github:team", orgIri.stringValue() + ":" + team.getSlug());
-state.add(orgIri, Values.iri(ConnectorModels.HAS_TEAM), teamIri);
-state.add(teamIri, Modeller.rdfType(), Modeller.github("Team"));
-state.add(teamIri, Modeller.github("name"), Values.***REMOVED***(team.getName()));
-state.add(teamIri, Modeller.github("privacy"), Values.***REMOVED***(team.getPrivacy()));
+private void addTeam(GHTeam team, IRI orgIri, String orgLogin, GithubModeller modeller) {
+IRI teamIri = modeller.team(orgIri, orgLogin + ":" + team.getSlug(), team.getName(), String.valueOf(team.getPrivacy()));
 
 try {
 for (GHUser member : team.getMembers()) {
-IRI memberIri = Modeller.toDomainURN("github:user", member.getLogin());
-state.add(teamIri, Values.iri(ConnectorModels.HAS_USER), memberIri);
-state.add(memberIri, Modeller.rdfType(), Modeller.github("User"));
-state.add(memberIri, Modeller.github("login"), Values.***REMOVED***(member.getLogin()));
+modeller.teamMember(teamIri, member.getLogin());
 }
 } catch (IOException e) {
 // best-effort skip member listing when unavailable
