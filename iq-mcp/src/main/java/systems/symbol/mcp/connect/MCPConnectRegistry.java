@@ -113,6 +113,7 @@ return result;
  */
 public static List<I_MCPPipeline> defaultPipeline() {
 return List.of(
+new systems.symbol.mcp.connect.impl.WorkspaceInitMiddleware(),
 new systems.symbol.mcp.connect.impl.AuthGuardMiddleware(),
 new systems.symbol.mcp.connect.impl.ACLFilterMiddleware(),
 new systems.symbol.mcp.connect.impl.QuotaGuardMiddleware(),
