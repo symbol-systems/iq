@@ -42,6 +42,11 @@ public static final IRI FSM_TRANSITION_BEFORE = vf.createIRI("urn:iq:event:fsm:t
 public static final IRI FSM_TRANSITION_AFTER = vf.createIRI("urn:iq:event:fsm:transition:after");
 public static final IRI FSM_TRANSITION_ERROR = vf.createIRI("urn:iq:event:fsm:transition:error");
 
+// agent command lifecycle
+public static final IRI AGENT_COMMAND_RECEIVED = vf.createIRI("urn:iq:event:agent:command:received");
+public static final IRI AGENT_COMMAND_EXECUTED = vf.createIRI("urn:iq:event:agent:command:executed");
+public static final IRI AGENT_COMMAND_FAILED = vf.createIRI("urn:iq:event:agent:command:failed");
+
 // lake operations
 public static final IRI LAKE_PARTITION_LOAD = vf.createIRI("urn:iq:event:lake:partition:load");
 public static final IRI LAKE_PARTITION_STORE = vf.createIRI("urn:iq:event:lake:partition:store");

@@ -27,8 +27,9 @@ public class KernelRequest {
 private final IRI subject;   // the resource this command acts on
 private final IRI caller;// authenticated principal IRI (may be null)
 private final IRI realm; // realm context IRI
-private final Bindings params;   // command parameters (SPARQL bindings compatible)
+private final javax.script.Bindings params;   // command parameters (SPARQL bindings compatible)
 private final Model   model; // optional RDF payload (may be null)
+private final systems.symbol.agent.I_Command command; // optional agent command payload
 
 private KernelRequest(Builder b) {
 this.subject = b.subject;
@@ -36,6 +37,7 @@ this.caller  = b.caller;
 this.realm   = b.realm;
 this.params  = b.params;
 this.model   = b.model;
+this.command = b.command;
 }
 
 public IRI getSubject() { return subject; }
@@ -43,6 +45,7 @@ public IRI getCaller()  { return caller; }
 public IRI getRealm()   { return realm; }
 public Bindings getParams() { return params; }
 public Model   getModel()   { return model; }
+public systems.symbol.agent.I_Command getCommand() { return command; }
 
 @Override
 public String toString() {
