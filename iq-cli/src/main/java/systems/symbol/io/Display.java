@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.rdf4j.NS;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -51,7 +51,7 @@ out.println();
 }
 }
 
-public static List<Map<String, Object>> models(IQ iq, String queryPath) {
+public static List<Map<String, Object>> models(IQStore iq, String queryPath) {
 queryPath = normalizeQuery(queryPath);
 IRI queryIRI = iq.toIRI(queryPath);
 // log.info("iq.models.sparql: {} as {}" , queryPath, queryIRI);

@@ -197,6 +197,13 @@
 
 <dependency>
 <groupId>systems.symbol</groupId>
+<artifactId>iq-kernel</artifactId>
+<version>${project.version}</version>
+<scope>compile</scope>
+</dependency>
+
+<dependency>
+<groupId>systems.symbol</groupId>
 <artifactId>iq-rdf4j</artifactId>
 <version>${project.version}</version>
 </dependency>

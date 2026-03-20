@@ -17,7 +17,7 @@ private final Map<String, I_Connector> connectors = new LinkedHashMap<>();
 
 @Override
 public synchronized void register(I_Connector connector) {
-connectors.put(connector.getSelf().toString(), connector);
+connectors.put(connector.getConnectorId().toString(), connector);
 }
 
 @Override

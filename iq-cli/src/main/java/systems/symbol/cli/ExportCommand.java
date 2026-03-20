@@ -13,6 +13,8 @@ import static systems.symbol.io.ImportExport.export;
 public class ExportCommand extends AbstractCLICommand {
 @CommandLine.Option(names = "--to", description = "Export to this folder", defaultValue = IQ_NS.IQ + ".ttl")
 File to;
+@CommandLine.Option(names = "--realm", description = "Export this realm graph (default workspace root)")
+String realm = "";
 @CommandLine.Option(names = "--comment", description = "Comment for the exported file")
 String comment = "knowledge export";
 @CommandLine.Option(names = "--ns", description = "The namespace for your " + IQ_NS.IQ, defaultValue = "urn:"+ IQ_NS.IQ + ":")
@@ -29,8 +31,8 @@ display("missing --to");
 return 1;
 }
 File toFolder = FileHelper.toTodayFile(to);
-System.out.printf("export <%s> to %s", context.getSelf(), to.getAbsolutePath());
-export(context, toFolder, comment);
+System.out.printf("export < %s > to %s\n", realm.isBlank() ? context.getSelf() : realm, toFolder.getAbsolutePath());
+export(context, toFolder, comment, realm);
 return 0;
 }
 }

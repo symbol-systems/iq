@@ -54,6 +54,11 @@ return connectorId;
 }
 
 @Override
+public IRI getConnectorId() {
+return connectorId;
+}
+
+@Override
 public ConnectorMode getMode() {
 return ConnectorMode.READ_ONLY;
 }

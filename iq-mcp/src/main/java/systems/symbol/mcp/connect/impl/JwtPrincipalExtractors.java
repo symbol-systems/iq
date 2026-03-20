@@ -196,9 +196,8 @@ cache.put(keyId, new CacheEntry(jwk, now + ttlMs));
 return jwk;
 }
 
-@Override
 public java.util.List<Jwk> getAll() throws JwkException {
-return delegate.getAll();
+return ((UrlJwkProvider) delegate).getAll();
 }
 
 private record CacheEntry(Jwk jwk, long expiresAt) {}

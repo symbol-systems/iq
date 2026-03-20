@@ -1,7 +1,6 @@
 package systems.symbol.kernel;
 
 import org.eclipse.rdf4j.model.IRI;
-import systems.symbol.platform.I_Self;
 import systems.symbol.secrets.I_Secrets;
 
 import java.io.File;
@@ -49,6 +48,44 @@ public File getHome() { return home; }
 
 /** Implementation version from MANIFEST.MF, or {@code "dev"} if not in a JAR. */
 public String getVersion() { return version; }
+
+/**
+ * Assets subfolder, e.g. for local query scripts and sample data.
+ */
+public java.io.File getAssets() {
+java.io.File f = new java.io.File(home, "assets");
+if (!f.exists() && !f.mkdirs()) {
+// best-effort, keep calling code responsible for handling failures
+}
+return f;
+}
+
+/**
+ * Backups subfolder.
+ */
+public java.io.File getBackups() {
+java.io.File f = new java.io.File(home, "backups");
+if (!f.exists() && !f.mkdirs()) {
+}
+return f;
+}
+
+/**
+ * Public web assets subfolder.
+ */
+public java.io.File getPublic() {
+java.io.File f = new java.io.File(home, "public");
+if (!f.exists() && !f.mkdirs()) {
+}
+return f;
+}
+
+/**
+ * Convenience check if home exists and is a directory.
+ */
+public boolean isInitialized() {
+return home != null && home.exists() && home.isDirectory();
+}
 
 /**
  * Extension attributes set during build (e.g. surface-specific singletons).

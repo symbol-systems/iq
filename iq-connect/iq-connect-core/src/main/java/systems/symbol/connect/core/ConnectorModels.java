@@ -1,13 +1,29 @@
 package systems.symbol.connect.core;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.util.Values;
 
 /**
  * Convenience helpers for working with connector state models.
  */
 public final class ConnectorModels {
+
+public static final String PREFIX = "https://symbol.systems/v0/connect#";
+
+public static final String HAS_SYNC_STATUS = PREFIX + "syncStatus";
+public static final String LAST_SYNCED_AT = PREFIX + "lastSyncedAt";
+public static final String CHECKPOINT = PREFIX + "checkpoint";
+public static final String HAS_RESOURCE = PREFIX + "hasResource";
+public static final String HAS_ACCOUNT = PREFIX + "hasAccount";
+public static final String HAS_REGION = PREFIX + "hasRegion";
+public static final String HAS_SUBSYSTEM = PREFIX + "hasSubsystem";
+public static final String HAS_ROLE = PREFIX + "hasRole";
+public static final String HAS_USER = PREFIX + "hasUser";
+public static final String HAS_TEAM = PREFIX + "hasTeam";
+public static final String HAS_POLICY = PREFIX + "hasPolicy";
+public static final String HAS_CONTROL = PREFIX + "hasControl";
 
 private ConnectorModels() {
 // utility
@@ -15,8 +31,6 @@ private ConnectorModels() {
 
 /**
  * Copies all triples from {@code source} into {@code target}.
- *
- * <p>This is useful when applying a checkpoint snapshot to a target model.</p>
  */
 public static void sync(Model source, Model target) {
 target.clear();
@@ -30,5 +44,17 @@ target.add(st);
  */
 public static Model forSelf(Model model, org.eclipse.rdf4j.model.Resource self) {
 return model.filter(self, null, null);
+}
+
+public static IRI toDomainURN(String domain, String localName) {
+return Values.iri("urn:" + domain + ":" + localName);
+}
+
+public static IRI toSPIFFE(String domain, String localName) {
+return Values.iri("spiffe://" + domain + "/" + localName);
+}
+
+public static IRI toIRI(String localName) {
+return Values.iri(PREFIX + localName);
 }
 }

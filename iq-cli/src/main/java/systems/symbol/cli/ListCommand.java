@@ -3,7 +3,7 @@ package systems.symbol.cli;
 import com.github.freva.asciitable.AsciiTable;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import systems.symbol.io.Display;
-import systems.symbol.rdf4j.store.IQ;
+import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import org.eclipse.rdf4j.model.IRI;
@@ -32,7 +32,7 @@ return null;
 }
 
 try (RepositoryConnection connection = context.getRepository().getConnection()) {
-IQ iq = new IQConnection(context.getSelf(), connection);
+IQStore iq = new IQConnection(context.getSelf(), connection);
 List<Map<String,Object>> models = Display.models(iq, query);
 if (models==null) {
 context.display("query not found: "+query);
@@ -48,7 +48,7 @@ return 0;
 public void showDefaultQueries(CLIContext context) {
 String[] columns = { "name", "IRI" };
 try (RepositoryConnection conn = context.getRepository().getConnection()) {
-IQ iq = new IQConnection(context.getSelf(), conn);
+IQStore iq = new IQConnection(context.getSelf(), conn);
 Map<IRI, String> defaults = SPARQLMapper.defaults(iq);
 List<String[]> rows = new ArrayList<>();
 defaults.forEach( (iri, query) -> {

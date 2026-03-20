@@ -29,9 +29,9 @@ with:
   java-version: '21'
   distribution: 'adopt'
   
-  # Build Maven package
-  - name: Build Maven package
-run: mvn --batch-mode --update-snapshots package -Dquarkus.container-image.build=false -Dquarkus.container-image.push=false -DskipITs
+  # Build Maven package and run tests
+  - name: Run tests and package
+run: mvn --batch-mode --update-snapshots test package -Dquarkus.container-image.build=false -Dquarkus.container-image.push=false -DskipITs
   # Publish to GitHub packages
   - name: Publish to GitHub packages
 run: mvn --batch-mode deploy

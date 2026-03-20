@@ -8,15 +8,39 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
 
+import systems.symbol.connect.core.Modeller;
+
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.cloudtrail.CloudTrailClient;
+import software.amazon.awssdk.services.cloudtrail.model.Trail;
+import software.amazon.awssdk.services.config.ConfigClient;
+import software.amazon.awssdk.services.config.model.ConfigurationRecorder;
+import software.amazon.awssdk.services.config.model.DescribeConfigRulesResponse;
+import software.amazon.awssdk.services.config.model.ConfigRule;
+import software.amazon.awssdk.services.ec2.Ec2Client;
+import software.amazon.awssdk.services.ec2.model.DescribeRegionsResponse;
+import software.amazon.awssdk.services.ec2.model.Instance;
+import software.amazon.awssdk.services.ec2.model.Reservation;
+import software.amazon.awssdk.services.iam.IamClient;
+import software.amazon.awssdk.services.iam.model.Group;
+import software.amazon.awssdk.services.iam.model.Policy;
+import software.amazon.awssdk.services.iam.model.Role;
+import software.amazon.awssdk.services.iam.model.User;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.services.pricing.PricingClient;
+import software.amazon.awssdk.services.pricing.model.DescribeServicesRequest;
+import software.amazon.awssdk.services.pricing.model.DescribeServicesResponse;
+import software.amazon.awssdk.services.pricing.model.Service;
+import software.amazon.awssdk.services.sts.StsClient;
+import software.amazon.awssdk.services.sts.model.GetCallerIdentityResponse;
 
 import systems.symbol.connect.core.Checkpoints;
 import systems.symbol.connect.core.ConnectorMode;
+import systems.symbol.connect.core.ConnectorProvenance;
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.ConnectorVocabulary;
+import systems.symbol.connect.core.ConnectorSyncMetadata;
 import systems.symbol.connect.core.I_Checkpoint;
 import systems.symbol.connect.core.I_Connector;
 import systems.symbol.connect.core.I_ConnectorDescriptor;
@@ -35,18 +59,38 @@ private static final String DEFAULT_REGION = "us-east-1";
 private final IRI connectorId;
 private final Model state;
 private final AwsConfig config;
+private final IRI graphIri;
+private final IRI ontologyBaseIri;
+private final IRI entityBaseIri;
 
 private volatile ConnectorStatus status = ConnectorStatus.IDLE;
 private volatile Optional<I_Checkpoint> checkpoint = Optional.empty();
 
 public AwsConnector(String connectorId, AwsConfig config, Model state) {
+this(connectorId,
+config,
+state,
+Values.iri(connectorId + "/graph/current"),
+Values.iri(Modeller.getAwsOntology()),
+Values.iri("urn:aws:"));
+}
+
+public AwsConnector(String connectorId, AwsConfig config, Model state, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
 this.connectorId = Values.iri(connectorId);
 this.config = config;
 this.state = state;
+this.graphIri = graphIri;
+this.ontologyBaseIri = ontologyBaseIri;
+this.entityBaseIri = entityBaseIri;
 }
 
 @Override
 public IRI getSelf() {
+return connectorId;
+}
+
+@Override
+public IRI getConnectorId() {
 return connectorId;
 }
 
@@ -61,7 +105,7 @@ return status;
 }
 
 @Override
-public Model getStateModel() {
+public Model getModel() {
 return state;
 }
 
@@ -83,28 +127,95 @@ status = ConnectorStatus.IDLE;
 @Override
 public void refresh() {
 status = ConnectorStatus.SYNCING;
+state.remove(null, null, null, graphIri);
+ConnectorSyncMetadata.markSyncing(state, connectorId, graphIri);
 
+IRI activity = ConnectorProvenance.markSyncStarted(state, connectorId, graphIri);
 Region region = Region.of(config.getRegion().orElse(DEFAULT_REGION));
+AwsModeller modeller = new AwsModeller(state, graphIri, ontologyBaseIri, entityBaseIri);
 
-try (S3Client s3 = S3Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build()) {
-state.clear();
+try (S3Client s3 = S3Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ StsClient sts = StsClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ Ec2Client ec2 = Ec2Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ IamClient iam = IamClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ CloudTrailClient cloudTrail = CloudTrailClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ ConfigClient configClient = ConfigClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
+ PricingClient pricing = PricingClient.builder().region(Region.US_EAST_1).credentialsProvider(DefaultCredentialsProvider.create()).build()) {
 
-state.add(connectorId, Values.iri(ConnectorVocabulary.SYNC_STATUS), Values.***REMOVED***("SYNCING"));
-state.add(connectorId, Values.iri(ConnectorVocabulary.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()));
+// Account identity
+GetCallerIdentityResponse identity = sts.getCallerIdentity();
+modeller.account(connectorId, identity.account(), identity.arn());
 
+// Regions: account -> zone discovery (configured + active)
+modeller.region(connectorId, region.id(), null);
+
+DescribeRegionsResponse regionsResponse = ec2.describeRegions();
+for (software.amazon.awssdk.services.ec2.model.Region awsRegion : regionsResponse.regions()) {
+modeller.region(connectorId, awsRegion.regionName(), awsRegion.endpoint());
+}
+
+// S3 buckets
 for (Bucket bucket : s3.listBuckets().buckets()) {
-IRI bucketIri = Values.iri("urn:aws:s3:" + bucket.name());
-state.add(connectorId, Values.iri(ConnectorVocabulary.HAS_RESOURCE), bucketIri);
-state.add(bucketIri, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/ontology/aws#S3Bucket"));
-state.add(bucketIri, Values.iri("https://symbol.systems/ontology/aws#name"), Values.***REMOVED***(bucket.name()));
+modeller.s3Bucket(connectorId, bucket.name());
+}
+
+// EC2 instances
+for (Reservation reservation : ec2.describeInstances().reservations()) {
+for (Instance instance : reservation.instances()) {
+modeller.ec2Instance(
+connectorId,
+instance.instanceId(),
+instance.instanceTypeAsString(),
+instance.state().nameAsString());
+}
+}
+
+// IAM users, roles, groups, policies
+for (User user : iam.listUsers().users()) {
+modeller.iamUser(connectorId, user.userName(), user.arn());
+}
+
+for (Role role : iam.listRoles().roles()) {
+modeller.iamRole(connectorId, role.roleName(), role.arn());
+}
+
+for (Group group : iam.listGroups().groups()) {
+modeller.iamGroup(connectorId, group.groupName());
+}
+
+for (Policy policy : iam.listPolicies().policies()) {
+modeller.iamPolicy(connectorId, policy.policyName(), policy.arn());
+}
+
+// CloudTrail trails
+for (Trail trail : cloudTrail.describeTrails().trailList()) {
+modeller.cloudTrail(connectorId, trail.name(), trail.s3BucketName());
+}
+
+// Config rules and recorders
+for (ConfigurationRecorder recorder : configClient.describeConfigurationRecorders().configurationRecorders()) {
+modeller.configRecorder(connectorId, recorder.name());
+}
+
+DescribeConfigRulesResponse configRules = configClient.describeConfigRules();
+for (software.amazon.awssdk.services.config.model.ConfigRule rule : configRules.configRules()) {
+modeller.configRule(connectorId, rule.configRuleName(), rule.source().ownerAsString());
+}
+
+// Pricing service catalog snapshot (limited to first page)
+DescribeServicesResponse pricingServicesResponse = pricing.describeServices(DescribeServicesRequest.builder().maxResults(50).build());
+for (Service pricingService : pricingServicesResponse.services()) {
+modeller.pricingService(connectorId, pricingService.serviceCode(), String.join(",", pricingService.attributeNames()));
 }
 
 checkpoint = Optional.of(Checkpoints.of(state));
 status = ConnectorStatus.IDLE;
+ConnectorSyncMetadata.markSynced(state, connectorId, graphIri);
+ConnectorProvenance.markSyncCompleted(state, activity, graphIri);
 } catch (Exception e) {
 status = ConnectorStatus.ERROR;
-state.add(connectorId, Values.iri(ConnectorVocabulary.SYNC_STATUS), Values.***REMOVED***("ERROR"));
-state.add(connectorId, Values.iri(ConnectorVocabulary.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()));
+ConnectorSyncMetadata.markError(state, connectorId, graphIri);
+ConnectorProvenance.markSyncFailed(state, activity, e, graphIri);
 }
 }
 
@@ -123,9 +234,9 @@ return "Syncs AWS account state into IQ.";
 @Override
 public Model getDescriptorModel() {
 Model m = new LinkedHashModel();
-m.add(connectorId, Values.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), Values.iri("https://symbol.systems/ontology/connect#Connector"));
-m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasName"), Values.***REMOVED***(getName()));
-m.add(connectorId, Values.iri("https://symbol.systems/ontology/connect#hasDescription"), Values.***REMOVED***(getDescription()));
+m.add(connectorId, Modeller.rdfType(), Modeller.connect("Connector"));
+m.add(connectorId, Modeller.connect("hasName"), Values.***REMOVED***(getName()));
+m.add(connectorId, Modeller.connect("hasDescription"), Values.***REMOVED***(getDescription()));
 return m;
 }
 }

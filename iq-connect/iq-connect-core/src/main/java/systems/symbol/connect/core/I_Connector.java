@@ -14,7 +14,7 @@ import org.eclipse.rdf4j.model.Model;
 public interface I_Connector {
 
 /** Returns the stable IRI that identifies this connector instance. */
-IRI getSelf();
+IRI getConnectorId();
 
 /** Returns the operational mode of the connector (read-only, write-only, etc.). */
 ConnectorMode getMode();

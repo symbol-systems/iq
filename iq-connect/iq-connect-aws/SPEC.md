@@ -3,6 +3,7 @@
 ## Purpose
 
 This connector brings AWS into IQ as an RDF-first index of both **runtime** and **governance** state.
+
 It is intended to scan and model **everything within an AWS account/region** that is relevant to operations,
 audit, and compliance.
 
