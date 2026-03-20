@@ -16,10 +16,10 @@ import javax.crypto.NoSuchPaddingException;
  * Simple implementation of secrets with access control.
  * Stores key-value pairs and manages access control for each key.
  */
-public class SafeSecrets implements I_Secrets, Serializable {
+public class EncryptedSecrets implements I_Secrets, Serializable {
     I_Secrets secrets;
 
-    public SafeSecrets(ByteArrayInputStream in, String password) throws InvalidKeyException, NoSuchAlgorithmException,
+    public EncryptedSecrets(ByteArrayInputStream in, String password) throws InvalidKeyException, NoSuchAlgorithmException,
             InvalidKeySpecException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException,
             InvalidAlgorithmParameterException, ClassNotFoundException, IOException {
         this.secrets = SecretsHelper.decrypt(in, password);

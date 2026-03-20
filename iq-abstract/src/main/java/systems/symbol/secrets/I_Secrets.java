@@ -2,13 +2,12 @@
  * Interface for representing secrets associated with an agent in the IQ operating environment.
  *
  * This interface defines the method for retrieving a secret based on a provided key.
+ * 
+ * No other operations (such as listing/setting secrets) may be defined in this interface, as it is intended to be a simple read-only view of secrets for an agent.
  *
  */
 
 package systems.symbol.secrets;
-
-import java.util.Collections;
-import java.util.Map;
 
 public interface I_Secrets {
 
@@ -20,12 +19,5 @@ public interface I_Secrets {
      */
     String getSecret(String key);
 
-    /**
-     * Returns all secrets in this object as an immutable map. Optional operation.
-     * Default implementation returns empty map.
-     */
-    default Map<String, String> getAllSecrets() {
-        return Collections.emptyMap();
-    }
 }
 

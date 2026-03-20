@@ -32,16 +32,6 @@ public class EnvsAsSecrets implements I_Secrets {
         return v;
     }
 
-    public Map<String, String> getAllSecrets() {
-        Map<String, String> all = new HashMap<>();
-        for (Map.Entry<String, String> env : System.getenv().entrySet()) {
-            if (env.getKey().startsWith(this.prefix)) {
-                all.put(env.getKey().substring(this.prefix.length()), env.getValue());
-            }
-        }
-        return Collections.unmodifiableMap(all);
-    }
-
     public void load(File file) {
         log.debug("Loading secrets from file: {}", file.getAbsolutePath());
         if (file.exists()) {
@@ -66,5 +56,15 @@ public class EnvsAsSecrets implements I_Secrets {
             log.warn(".env file not found at path: {}", file.getAbsolutePath());
         }
     }
+    public Map<String, String> getAllSecrets() {
+        Map<String, String> all = new HashMap<>();
+        for (Map.Entry<String, String> env : System.getenv().entrySet()) {
+            if (env.getKey().startsWith(this.prefix)) {
+                all.put(env.getKey().substring(this.prefix.length()), env.getValue());
+            }
+        }
+        return Collections.unmodifiableMap(all);
+    }
+
 }
 

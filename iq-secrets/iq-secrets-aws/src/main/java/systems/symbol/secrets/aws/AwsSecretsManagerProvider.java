@@ -65,7 +65,7 @@ public class AwsSecretsManagerProvider implements I_SecretsStore {
             } while (nextToken != null);
             return secrets;
         } catch (Exception e) {
-            throw new SecretsException("Failed to read secrets from AWS Secrets Manager", e);
+            throw new SecretsException("Failed to read secrets from AWS Secrets Manager: " + e.getMessage());
         }
     }
 

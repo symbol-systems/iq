@@ -50,7 +50,7 @@ public class AzureKeyVaultSecretsProvider implements I_SecretsStore {
             });
             return secrets;
         } catch (Exception e) {
-            throw new SecretsException("Failed to read secrets from Azure Key Vault", e);
+            throw new SecretsException("Failed to read secrets from Azure Key Vault: " + e.getMessage());
         }
     }
 

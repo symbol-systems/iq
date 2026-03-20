@@ -2,14 +2,15 @@ package systems.symbol.secrets.gcp;
 
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.AddSecretVersionRequest;
+import com.google.cloud.secretmanager.v1.CreateSecretRequest;
 import com.google.cloud.secretmanager.v1.Secret;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretName;
 import com.google.cloud.secretmanager.v1.ProjectName;
 import com.google.cloud.secretmanager.v1.SecretPayload;
 import com.google.cloud.secretmanager.v1.SecretVersionName;
+import com.google.cloud.secretmanager.v1.Replication;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient.ListSecretsPagedResponse;
-import com.google.cloud.secretmanager.v1.SecretManagerServiceClient.ListSecretVersionsPagedResponse;
 import org.eclipse.rdf4j.model.IRI;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.I_SecretsStore;
@@ -84,12 +85,15 @@ public class GcpSecretManagerProvider implements I_SecretsStore {
                 exists = false;
             }
             if (!exists) {
-                client.createSecret(
-                        ProjectName.of(projectId),
-                        shortName,
-                        Secret.newBuilder().setReplication(
-                                Secret.Replication.newBuilder().setAutomatic(Secret.Replication.Automatic.getDefaultInstance()).build())
-                                .build());
+                client.createSecret(CreateSecretRequest.newBuilder()
+                        .setParent(ProjectName.of(projectId).toString())
+                        .setSecretId(shortName)
+                        .setSecret(Secret.newBuilder()
+                                .setReplication(Replication.newBuilder()
+                                        .setAutomatic(Replication.Automatic.getDefaultInstance())
+                                        .build())
+                                .build())
+                        .build());
             }
             client.addSecretVersion(AddSecretVersionRequest.newBuilder()
                     .setParent(secretName.toString())
