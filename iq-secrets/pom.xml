@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>systems.symbol</groupId>
+    <artifactId>iq-parent</artifactId>
+    <version>0.91.5</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>iq-secrets</artifactId>
+  <packaging>pom</packaging>
+  <name>IQ Secrets</name>
+  <description>Base secret management package and SaaS vendor adapters.</description>
+
+  <modules>
+    <module>iq-secrets-core</module>
+    <module>iq-secrets-hashicorp</module>
+    <module>iq-secrets-azure</module>
+    <module>iq-secrets-aws</module>
+    <module>iq-secrets-gcp</module>
+  </modules>
+</project>

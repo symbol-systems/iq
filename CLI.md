@@ -44,7 +44,13 @@ For API mode, use module `iq-apis`:
 - `./bin/compile-apis` builds just API modules fast.
 - `./bin/build-image` builds Docker image when ready to deploy.
 
-## 7. Troubleshooting
+## 7. Server lifecycle commands (even with iq-cli-server)
+
+- `java -jar iq-cli-server/target/iq-cli-server.jar server api start`
+- `java -jar iq-cli-server/target/iq-cli-server.jar server api health --verbose`
+- `java -jar iq-cli-server/target/iq-cli-server.jar server mcp stop`
+
+## 8. Troubleshooting
 
 - Ensure JAVA_HOME points to JDK 21+.
 - Ensure Maven can download dependencies from the internet.

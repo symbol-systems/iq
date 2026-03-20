@@ -81,6 +81,7 @@ public class MCPToolRegistry {
         tools.add(new SparqlQueryAdapter(repository));
         tools.add(new SparqlUpdateAdapter(repository));
         tools.add(new RdfDescribeAdapter(repository));
+        tools.add(new systems.symbol.mcp.tool.ServerMgmtTool());
 
         // Pillar C: actor trigger (agentic bridge)
         ActorTriggerAdapter actorAdapter = intentDispatcher != null

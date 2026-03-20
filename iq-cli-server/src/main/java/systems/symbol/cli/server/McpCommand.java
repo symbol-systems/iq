@@ -3,7 +3,9 @@ package systems.symbol.cli.server;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "mcp", description = "Manage MCP runtime", subcommands = {
-        ServerLifecycleCommand.class,
+        ServerStartCommand.class,
+        ServerStopCommand.class,
+        ServerRebootCommand.class,
         ServerStatusCommand.class,
         ServerHealthCommand.class,
         ServerDebugCommand.class,
