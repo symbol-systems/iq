@@ -1,6 +1,8 @@
 package systems.symbol.kernel;
 
 import org.eclipse.rdf4j.model.IRI;
+import systems.symbol.kernel.event.I_EventHub;
+import systems.symbol.kernel.event.NoopEventHub;
 import systems.symbol.secrets.I_Secrets;
 
 import java.io.File;
@@ -42,6 +44,15 @@ public IRI getSelf() { return self; }
 
 /** Secrets provider wired at boot time (env vars, VFS vault, …). */
 public I_Secrets getSecrets() { return secrets; }
+
+/** Event hub installed for hooks; defaults to {@link NoopEventHub}. */
+@SuppressWarnings("unchecked")
+public I_EventHub getEventHub() {
+I_EventHub hub = attributes.containsKey("eventHub")
+? (I_EventHub) attributes.get("eventHub")
+: null;
+return hub != null ? hub : new NoopEventHub();
+}
 
 /** Root {@code .iq/} home directory. {@code null} in stateless / cloud deployments. */
 public File getHome() { return home; }

@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.kernel.event.I_EventHub;
 import systems.symbol.platform.I_Self;
 import systems.symbol.secrets.I_Secrets;
 
@@ -91,6 +92,14 @@ return this;
  */
 public KernelBuilder withAttribute(String key, Object value) {
 this.attributes.put(key, value);
+return this;
+}
+
+/**
+ * Installs an event hub into the kernel context.
+ */
+public KernelBuilder withEventHub(I_EventHub eventHub) {
+this.attributes.put("eventHub", eventHub);
 return this;
 }
 
