@@ -7,7 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
-  <name>Open IQ</name>
+  <name>IQ CLI</name>
   <description>IQ - operating environment for cognitive AI.</description>
   <url>https://symbol.systems</url>
   <developers>
@@ -65,11 +65,11 @@
       <plugins>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.3</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-5</version>
+          <version>3.7.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
@@ -413,7 +413,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>default-clean</id>
@@ -527,7 +527,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12.4</version>
+        <version>3.2.5</version>
         <executions>
           <execution>
             <id>default-test</id>
@@ -540,7 +540,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.1.2</version>
         <executions>
           <execution>
             <id>default-install</id>
@@ -553,7 +553,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.7</version>
+        <version>3.1.2</version>
         <executions>
           <execution>
             <id>default-deploy</id>
