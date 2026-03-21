@@ -51,7 +51,7 @@ void testDeniedWhenNoAcl() throws Exception {
 graphql.schema.DataFetcher<java.util.Collection<java.util.Map<String,Object>>> delegate = (DataFetchingEnvironment env) -> Collections.emptyList();
 // use AskPolicyEngine
 AskPolicyEngine peg = new AskPolicyEngine(repo, null);
-AuthorizationDataFetcher auth = new AuthorizationDataFetcher(TYPE, peg, delegate);
+AuthorizationDataFetcher auth = new AuthorizationDataFetcher(repo, TYPE, peg, delegate);
 
 DataFetchingEnvironment env = buildEnvWithActor(ACTOR);
 assertThrows(SecurityException.class, () -> auth.get(env));
@@ -68,7 +68,7 @@ conn.add(new StringReader(ttl), "http://example/base", RDFFormat.TURTLE);
 
 graphql.schema.DataFetcher<java.util.Collection<java.util.Map<String,Object>>> delegate = (DataFetchingEnvironment env) -> List.of(Map.of("ok", true));
 AskPolicyEngine peg = new AskPolicyEngine(repo, null);
-AuthorizationDataFetcher auth = new AuthorizationDataFetcher(TYPE, peg, delegate);
+AuthorizationDataFetcher auth = new AuthorizationDataFetcher(repo, TYPE, peg, delegate);
 
 DataFetchingEnvironment env = buildEnvWithActor(ACTOR);
 Collection<Map<String,Object>> res = auth.get(env);

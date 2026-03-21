@@ -18,6 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RDF4JProcessorTest {
 static Repository repo;
 
+private static Repository repo() {
+if (repo == null) {
+try {
+initRepo();
+} catch (Exception e) {
+throw new RuntimeException(e);
+}
+}
+return repo;
+}
+
 @BeforeAll
 public static void initRepo() throws Exception {
 repo = new SailRepository(new MemoryStore());
@@ -40,7 +51,7 @@ Exchange ex = new DefaultExchange(ctx);
 ex.getIn().setBody("SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
 ex.getIn().setHeader("Accept", "application/sparql-results+json");
 
-var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "select", true, 0, null);
+var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo(), "select", true, 0, null);
 processor.process(ex);
 
 String body = ex.getMessage().getBody(String.class);
@@ -55,7 +66,7 @@ Exchange ex = new DefaultExchange(ctx);
 ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
 // no Accept header -> default to returning GraphQueryResult object
 
-var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo(), "construct", true, 0, null);
 processor.process(ex);
 
 Object body = ex.getMessage().getBody();
@@ -69,7 +80,7 @@ Exchange ex = new DefaultExchange(ctx);
 ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
 ex.getIn().setHeader("Accept", "text/turtle");
 
-var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo(), "construct", true, 0, null);
 processor.process(ex);
 
 String body = ex.getMessage().getBody(String.class);
@@ -84,7 +95,7 @@ Exchange ex = new DefaultExchange(ctx);
 ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
 ex.getIn().setHeader("Accept", "application/ld+json");
 
-var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo(), "construct", true, 0, null);
 processor.process(ex);
 
 String body = ex.getMessage().getBody(String.class);

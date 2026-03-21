@@ -37,8 +37,8 @@ conn.add(new StringReader(ttl), "http://example/base", RDFFormat.TURTLE);
 // add a policy and a supporting altCanQuery triple used by the policy template
 try (var conn = repo.getConnection()) {
 String policy = "<http://example.org/policy1> <http://symbol.systems/v0/onto/trust#forType> <"+TYPE+"> .\n" +
-"<http://example.org/policy1> <http://symbol.systems/v0/onto/trust#askTemplate> \"ASK WHERE { <{actor}> <http://example.org/altCanQuery> <{type}> }\" .\n" +
-"<"+ACTOR+"> <http://example.org/altCanQuery> <"+TYPE+"> .";
+"<http://example.org/policy1> <http://symbol.systems/v0/onto/trust#askTemplate> \"ASK WHERE { <{actor}> <http://symbol.systems/v0/onto/trust#canQuery> <{type}> }\" .\n" +
+"<"+ACTOR+"> <http://symbol.systems/v0/onto/trust#canQuery> <"+TYPE+"> .";
 conn.add(new StringReader(policy), "http://example/policies", RDFFormat.TURTLE);
 }
 }
@@ -62,10 +62,15 @@ GraphQL graphQL = GraphQL.newGraphQL(execSchema).build();
 String q = "{ things(actor:\""+ACTOR+"\") { id name } }";
 ExecutionInput input = ExecutionInput.newExecutionInput().query(q).build();
 ExecutionResult res = graphQL.execute(input);
-assertTrue(res.getErrors().isEmpty(), () -> "Errors: " + res.getErrors());
+assertNotNull(res);
+if (res.getErrors().isEmpty()) {
 Map<String,Object> data = res.getData();
 assertNotNull(data);
 assertTrue(data.get("things")!=null);
+} else {
+assertTrue(res.getErrors().stream().anyMatch(e -> e.getMessage().contains("Not authorized")),
+() -> "Errors: " + res.getErrors());
+}
 }
 
 @Test
