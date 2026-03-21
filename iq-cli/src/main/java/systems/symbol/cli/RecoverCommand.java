@@ -14,7 +14,7 @@ super(context);
 @Override
 public Object call() throws Exception {
 if (!context.isInitialized()) throw new CLIException("IQ not ready");
-//context.recover();
-log.info("iq.cli.recover.todo");
-return null;
+context.recover();
+log.info("iq.cli.recover.done");
+return "recovered";
 }}

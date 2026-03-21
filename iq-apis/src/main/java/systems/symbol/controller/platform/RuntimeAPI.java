@@ -68,7 +68,6 @@ boolean ok = ServerRuntimeManagerFactory.getInstance().debug(target, enable);
 return Response.ok(new HealthCheck(ok, WebURLs.getRequestURL(info, headers))).build();
 }
 
-@Override
 protected Response getUnauthorizedResponse() {
 return new OopsResponse("ux.runtime.unauthorized", Response.Status.UNAUTHORIZED).build();
 }

@@ -1,8 +1,8 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.output.Response;
+import systems.symbol.onnx.data.embedding.Embedding;
+import systems.symbol.onnx.model.embedding.EmbeddingModel;
+import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
 
@@ -56,6 +56,28 @@ I_Found<IRI> found = results.iterator().next();
 assertNotNull(found);
 System.out.println("search.matrix.found:" + found.intent() + " -> " + found.score());
 assertEquals(found.intent(), entity);
+}
+
+@Test
+public void testReindexSameContentDifferentConcept() throws StateException {
+IRI concept1 = Values.iri(BASE_IRI.stringValue() + "concept1");
+IRI concept2 = Values.iri(BASE_IRI.stringValue() + "concept2");
+IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
+String content = "Sample content";
+
+SearchMatrix searchMatrix = new SearchMatrix();
+searchMatrix.reindex(entity, content, concept1);
+
+// Reindex same text under a new concept should still include entity in both scopes
+searchMatrix.reindex(entity, content, concept2);
+
+Collection<I_Found<IRI>> results1 = searchMatrix.byConcept(concept1).search("Sample", 10, 0.1);
+Collection<I_Found<IRI>> results2 = searchMatrix.byConcept(concept2).search("Sample", 10, 0.1);
+
+assertEquals(1, results1.size());
+assertEquals(1, results2.size());
+assertEquals(entity, results1.iterator().next().intent());
+assertEquals(entity, results2.iterator().next().intent());
 }
 
 @Test

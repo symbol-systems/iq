@@ -1,6 +1,13 @@
 package systems.symbol.mcp.server;
 
+import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
+import io.modelcontextprotocol.json.McpJsonMapper;
+import io.modelcontextprotocol.json.McpJsonMapperSupplier;
+import io.modelcontextprotocol.spec.McpServerTransportProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.mcp.I_MCPPrompt;
 import systems.symbol.mcp.I_MCPResource;
 import systems.symbol.mcp.I_MCPTool;
@@ -105,9 +112,28 @@ public Map<String, Object> getServerMetadata() { return serverMetadata; }
  * @return null (transports configured at runtime)
  * @see <a href="https://github.com/modelcontextprotocol/sdk-java">MCP SDK Java</a>
  */
+private static final Logger log = LoggerFactory.getLogger(MCPServerBuilder.class);
+
 public McpSyncServer build() {
-// SDK 1.1.0: Transport setup deferred to Quarkus runtime
-// Server creation (with tool/resource/prompt bindings) happens in CDI producer
+try {
+McpJsonMapper mapper = resolveMapper();
+McpServerTransportProvider provider = new StdioServerTransportProvider(mapper);
+
+McpSyncServer server = McpServer.sync(provider)
+.build();
+
+log.info("mcp.server.built: {}", server);
+return server;
+} catch (Throwable e) {
+log.warn("mcp.server.build.fallback: {}", e.getMessage());
 return null;
+}
+}
+
+private McpJsonMapper resolveMapper() {
+return java.util.ServiceLoader.load(McpJsonMapperSupplier.class)
+.findFirst()
+.map(McpJsonMapperSupplier::get)
+.orElseThrow(() -> new IllegalStateException("No McpJsonMapperSupplier available"));
 }
 }

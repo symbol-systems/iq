@@ -1,17 +1,17 @@
 package systems.symbol.secrets;
 
+import junit.framework.TestCase;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
-import org.junit.jupiter.api.Test;
 import systems.symbol.platform.IQ_NS;
 
 import java.io.File;
 import java.io.IOException;
 
-class SecretsFileVaultTest {
+public class SecretsFileVaultTest extends TestCase {
 IRI self = Values.iri(IQ_NS.TEST);
-@Test
-void testVault() throws IOException, SecretsException {
+
+public void testVault() throws IOException, SecretsException {
 File testHome = new File("tmp/secrets");
 I_SecretsStore vault = new PlainPasswordVault(testHome);
 SimpleSecrets secrets = new SimpleSecrets();
@@ -23,8 +23,7 @@ assert secrets.getSecret("hello").equals("world");
 
 }
 
-@Test
-void testSaveSecrets() throws IOException, SecretsException {
+public void testSaveSecrets() throws IOException, SecretsException {
 File testHome = new File("tmp/secrets");
 I_SecretsStore vault = new PlainPasswordVault(testHome);
 vault.setSecrets(self, new SimpleSecrets());

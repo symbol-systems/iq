@@ -1,16 +1,18 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import dev.langchain4j.model.output.Response;
+import systems.symbol.onnx.data.embedding.Embedding;
+import systems.symbol.onnx.data.segment.TextSegment;
+import systems.symbol.onnx.model.embedding.EmbeddingModel;
+import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.fsm.StateException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -30,7 +32,8 @@ private final Map<Integer, float[]> vectorsById = new HashMap<>();
 private final Map<Integer, IRI> thingById = new HashMap<>();
 private final Map<IRI, Integer> idByThing = new HashMap<>();
 private final Map<IRI, Set<Integer>> indexByThing = new HashMap<>();
-private final Map<IRI, Integer> contentHashByThing = new HashMap<>();
+private final Map<IRI, String> contentDigestByThing = new HashMap<>();
+private final Map<IRI, Set<IRI>> conceptsByThing = new HashMap<>();
 
 /**
  * Default constructor initializes with AllMiniLmL6V2EmbeddingModel.
@@ -49,7 +52,7 @@ this.model = model;
 }
 
 public boolean indexed(IRI iri) {
-return contentHashByThing.containsKey(iri);
+return contentDigestByThing.containsKey(iri);
 }
 
 /**
@@ -83,20 +86,34 @@ reindex((IRI) fact.getSubject(), fact.getObject().stringValue(), concept);
 public void reindex(IRI iri, String content, IRI concept) {
 if (content == null || content.isEmpty() || content.trim().isEmpty())
 return;
-int contentHash = content.hashCode();
-boolean contentUnchanged = contentHashByThing.containsKey(iri) && contentHashByThing.get(iri) == contentHash;
-if (contentUnchanged)
-return;
 
+String digest = sha256(content);
+Integer id = idByThing.computeIfAbsent(iri, k -> vectorsById.size());
+
+String existingDigest = contentDigestByThing.get(iri);
+if (digest.equals(existingDigest)) {
+// content unchanged: maintain/or add concept association and do nothing else
+if (concept != null) {
+indexByThing.computeIfAbsent(concept, k -> new HashSet<>()).add(id);
+conceptsByThing.computeIfAbsent(iri, k -> new HashSet<>()).add(concept);
+}
+thingById.put(id, iri);
+return;
+}
+
+// content changed (or new entry): compute new embedding and update index
 Response<Embedding> embed = embed(content);
 float[] vector = embed.content().vector();
-contentHashByThing.put(iri, contentHash);
 
-Integer id = idByThing.computeIfAbsent(iri, k -> vectorsById.size());
+contentDigestByThing.put(iri, digest);
 thingById.put(id, iri);
 vectorsById.put(id, vector);
 
+if (concept != null) {
 indexByThing.computeIfAbsent(concept, k -> new HashSet<>()).add(id);
+conceptsByThing.computeIfAbsent(iri, k -> new HashSet<>()).add(concept);
+}
+
 log.debug("matrix.indexed: {} -> {} ==> {}", id, iri, content.length());
 }
 
@@ -192,6 +209,23 @@ return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 private Response<Embedding> embed(String text) {
 TextSegment segment = TextSegment.from(text);
 return model.embed(segment);
+}
+
+private String sha256(String text) {
+try {
+MessageDigest digest = MessageDigest.getInstance("SHA-256");
+byte[] hash = digest.digest(text.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+StringBuilder hexString = new StringBuilder(2 * hash.length);
+for (byte b : hash) {
+String hex = Integer.toHexString(0xff & b);
+if (hex.length() == 1)
+hexString.append('0');
+hexString.append(hex);
+}
+return hexString.toString();
+} catch (NoSuchAlgorithmException e) {
+throw new IllegalStateException("SHA-256 algorithm not available", e);
+}
 }
 
 /**

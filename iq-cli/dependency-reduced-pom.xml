@@ -32,7 +32,240 @@
 <url>https://symbol.systems/</url>
   </organization>
   <build>
-<finalName>${project.artifactId}</finalName>
+<sourceDirectory>/developer/iq/iq-cli/src/main/java</sourceDirectory>
+<scriptSourceDirectory>/developer/iq/iq-cli/src/main/scripts</scriptSourceDirectory>
+<testSourceDirectory>/developer/iq/iq-cli/src/test/java</testSourceDirectory>
+<outputDirectory>/developer/iq/iq-cli/target/classes</outputDirectory>
+<testOutputDirectory>/developer/iq/iq-cli/target/test-classes</testOutputDirectory>
+<extensions>
+  <extension>
+<groupId>org.apache.maven.wagon</groupId>
+<artifactId>wagon-scm</artifactId>
+<version>2.6</version>
+  </extension>
+  <extension>
+<groupId>org.apache.maven.scm</groupId>
+<artifactId>maven-scm-manager-plexus</artifactId>
+<version>1.9</version>
+  </extension>
+</extensions>
+<resources>
+  <resource>
+<directory>/developer/iq/iq-cli/src/main/resources</directory>
+  </resource>
+</resources>
+<testResources>
+  <testResource>
+<directory>/developer/iq/iq-cli/src/test/resources</directory>
+  </testResource>
+</testResources>
+<directory>/developer/iq/iq-cli/target</directory>
+<finalName>iq-cli</finalName>
+<pluginManagement>
+  <plugins>
+<plugin>
+  <artifactId>maven-antrun-plugin</artifactId>
+  <version>3.1.0</version>
+</plugin>
+<plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <version>3.6.0</version>
+</plugin>
+<plugin>
+  <artifactId>maven-resources-plugin</artifactId>
+  <version>2.6</version>
+  <executions>
+<execution>
+  <phase>test</phase>
+  <goals>
+<goal>resources</goal>
+<goal>testResources</goal>
+  </goals>
+</execution>
+  </executions>
+</plugin>
+<plugin>
+  <artifactId>maven-project-info-reports-plugin</artifactId>
+  <version>2.7</version>
+</plugin>
+<plugin>
+  <artifactId>maven-site-plugin</artifactId>
+  <version>3.3</version>
+  <dependencies>
+<dependency>
+  <groupId>org.apache.maven.doxia</groupId>
+  <artifactId>doxia-module-markdown</artifactId>
+  <version>1.3</version>
+</dependency>
+  </dependencies>
+  <configuration>
+<port>9000</port>
+<locales>en</locales>
+  </configuration>
+</plugin>
+<plugin>
+  <artifactId>maven-source-plugin</artifactId>
+  <version>3.4.0</version>
+  <executions>
+<execution>
+  <id>attach-sources</id>
+  <goals>
+<goal>jar</goal>
+  </goals>
+</execution>
+  </executions>
+</plugin>
+<plugin>
+  <artifactId>maven-javadoc-plugin</artifactId>
+  <version>3.12.0</version>
+  <executions>
+<execution>
+  <id>attach-javadocs</id>
+  <goals>
+<goal>jar</goal>
+  </goals>
+</execution>
+  </executions>
+</plugin>
+<plugin>
+  <artifactId>maven-dependency-plugin</artifactId>
+  <version>2.1</version>
+  <executions>
+<execution>
+  <id>copy-dependencies</id>
+  <phase>package</phase>
+  <goals>
+<goal>copy-dependencies</goal>
+  </goals>
+  <configuration>
+<outputDirectory>/developer/iq/iq-cli/target</outputDirectory>
+  </configuration>
+</execution>
+  </executions>
+</plugin>
+<plugin>
+  <artifactId>maven-release-plugin</artifactId>
+  <version>2.5</version>
+  <configuration />
+</plugin>
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>buildnumber-maven-plugin</artifactId>
+  <version>1.4</version>
+  <executions>
+<execution>
+  <phase>validate</phase>
+  <goals>
+<goal>create</goal>
+  </goals>
+  <configuration>
+<doCheck>true</doCheck>
+<doUpdate>true</doUpdate>
+<buildNumberPropertiesFileLocation>/developer/iq/iq-cli/build.version.properties</buildNumberPropertiesFileLocation>
+<revisionOnScmFailure>localBuild</revisionOnScmFailure>
+<shortRevisionLength>5</shortRevisionLength>
+  </configuration>
+</execution>
+  </executions>
+  <configuration>
+<doCheck>true</doCheck>
+<doUpdate>true</doUpdate>
+<buildNumberPropertiesFileLocation>/developer/iq/iq-cli/build.version.properties</buildNumberPropertiesFileLocation>
+<revisionOnScmFailure>localBuild</revisionOnScmFailure>
+<shortRevisionLength>5</shortRevisionLength>
+  </configuration>
+</plugin>
+<plugin>
+  <artifactId>maven-jar-plugin</artifactId>
+  <version>3.4.2</version>
+  <executions>
+<execution>
+  <id>default-jar</id>
+  <phase>package</phase>
+  <goals>
+<goal>jar</goal>
+  </goals>
+  <configuration>
+<excludes>
+  <exclude>**/logback-test.xml</exclude>
+</excludes>
+<archive>
+  <manifest>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+<addClasspath>true</addClasspath>
+<useUniqueVersions>true</useUniqueVersions>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  </manifest>
+  <manifestEntries>
+<Implementation-Build>${buildNumber}</Implementation-Build>
+<Implementation-Version>0.91.5</Implementation-Version>
+<Main-Class>systems.symbol.CLI</Main-Class>
+  </manifestEntries>
+</archive>
+  </configuration>
+</execution>
+<execution>
+  <id>test-jar</id>
+  <phase>test-compile</phase>
+  <goals>
+<goal>test-jar</goal>
+  </goals>
+  <configuration>
+<excludes>
+  <exclude>**/logback-test.xml</exclude>
+</excludes>
+<archive>
+  <manifest>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+<addClasspath>true</addClasspath>
+<useUniqueVersions>true</useUniqueVersions>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  </manifest>
+  <manifestEntries>
+<Implementation-Build>${buildNumber}</Implementation-Build>
+<Implementation-Version>0.91.5</Implementation-Version>
+<Main-Class>systems.symbol.CLI</Main-Class>
+  </manifestEntries>
+</archive>
+  </configuration>
+</execution>
+  </executions>
+  <configuration>
+<excludes>
+  <exclude>**/logback-test.xml</exclude>
+</excludes>
+<archive>
+  <manifest>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+<addClasspath>true</addClasspath>
+<useUniqueVersions>true</useUniqueVersions>
+<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  </manifest>
+  <manifestEntries>
+<Implementation-Build>${buildNumber}</Implementation-Build>
+<Implementation-Version>0.91.5</Implementation-Version>
+<Main-Class>systems.symbol.CLI</Main-Class>
+  </manifestEntries>
+</archive>
+  </configuration>
+</plugin>
+<plugin>
+  <groupId>io.quarkus</groupId>
+  <artifactId>quarkus-maven-plugin</artifactId>
+  <version>3.17.5</version>
+  <extensions>true</extensions>
+  <executions>
+<execution>
+  <goals>
+<goal>build</goal>
+<goal>generate-code</goal>
+<goal>generate-code-tests</goal>
+  </goals>
+</execution>
+  </executions>
+</plugin>
+  </plugins>
+</pluginManagement>
 <plugins>
   <plugin>
 <groupId>org.codehaus.mojo</groupId>
@@ -54,7 +287,7 @@
   </plugin>
   <plugin>
 <artifactId>maven-shade-plugin</artifactId>
-<version>3.2.4</version>
+<version>3.6.0</version>
 <executions>
   <execution>
 <phase>package</phase>
@@ -65,13 +298,39 @@
   <transformers>
 <transformer />
 <transformer>
-  <mainClass>${main.class}</mainClass>
+  <mainClass>systems.symbol.CLI</mainClass>
 </transformer>
   </transformers>
+  <minimizeJar>true</minimizeJar>
+  <filters>
+<filter>
+  <artifact>*:*</artifact>
+  <excludes>
+<exclude>META-INF/*.SF</exclude>
+<exclude>META-INF/*.DSA</exclude>
+<exclude>META-INF/*.RSA</exclude>
+  </excludes>
+</filter>
+  </filters>
 </configuration>
   </execution>
 </executions>
+<dependencies>
+  <dependency>
+<groupId>org.ow2.asm</groupId>
+<artifactId>asm</artifactId>
+<version>9.7.1</version>
+<scope>compile</scope>
+  </dependency>
+  <dependency>
+<groupId>org.ow2.asm</groupId>
+<artifactId>asm-commons</artifactId>
+<version>9.7.1</version>
+<scope>compile</scope>
+  </dependency>
+</dependencies>
 <configuration>
+  <minimizeJar>true</minimizeJar>
   <filters>
 <filter>
   <artifact>*:*</artifact>
@@ -87,7 +346,7 @@
   <plugin>
 <groupId>org.jetbrains.kotlin</groupId>
 <artifactId>kotlin-maven-plugin</artifactId>
-<version>${kotlin.version}</version>
+<version>1.9.23</version>
 <executions>
   <execution>
 <id>compile</id>
@@ -100,6 +359,7 @@
 <source>src/main/java</source>
 <source>target/generated-sources/annotations</source>
   </sourceDirs>
+  <jvmTarget>1.8</jvmTarget>
 </configuration>
   </execution>
   <execution>
@@ -108,6 +368,9 @@
 <goals>
   <goal>test-compile</goal>
 </goals>
+<configuration>
+  <jvmTarget>1.8</jvmTarget>
+</configuration>
   </execution>
 </executions>
 <configuration>
@@ -116,15 +379,21 @@
   </plugin>
   <plugin>
 <artifactId>maven-compiler-plugin</artifactId>
-<version>${maven.compiler.plugin.version}</version>
+<version>3.12.1</version>
 <executions>
   <execution>
 <id>default-compile</id>
 <phase>none</phase>
+<goals>
+  <goal>compile</goal>
+</goals>
   </execution>
   <execution>
 <id>default-testCompile</id>
 <phase>none</phase>
+<goals>
+  <goal>testCompile</goal>
+</goals>
   </execution>
   <execution>
 <id>compile</id>
@@ -141,6 +410,220 @@
 </goals>
   </execution>
 </executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-clean-plugin</artifactId>
+<version>3.2.0</version>
+<executions>
+  <execution>
+<id>default-clean</id>
+<phase>clean</phase>
+<goals>
+  <goal>clean</goal>
+</goals>
+  </execution>
+</executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-resources-plugin</artifactId>
+<version>2.6</version>
+<executions>
+  <execution>
+<id>default-testResources</id>
+<phase>process-test-resources</phase>
+<goals>
+  <goal>testResources</goal>
+</goals>
+  </execution>
+  <execution>
+<id>default-resources</id>
+<phase>process-resources</phase>
+<goals>
+  <goal>resources</goal>
+</goals>
+  </execution>
+  <execution>
+<phase>test</phase>
+<goals>
+  <goal>resources</goal>
+  <goal>testResources</goal>
+</goals>
+  </execution>
+</executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-jar-plugin</artifactId>
+<version>3.4.2</version>
+<executions>
+  <execution>
+<id>default-jar</id>
+<phase>package</phase>
+<goals>
+  <goal>jar</goal>
+</goals>
+<configuration>
+  <excludes>
+<exclude>**/logback-test.xml</exclude>
+  </excludes>
+  <archive>
+<manifest>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  <addClasspath>true</addClasspath>
+  <useUniqueVersions>true</useUniqueVersions>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+</manifest>
+<manifestEntries>
+  <Implementation-Build>${buildNumber}</Implementation-Build>
+  <Implementation-Version>0.91.5</Implementation-Version>
+  <Main-Class>systems.symbol.CLI</Main-Class>
+</manifestEntries>
+  </archive>
+</configuration>
+  </execution>
+  <execution>
+<id>test-jar</id>
+<phase>test-compile</phase>
+<goals>
+  <goal>test-jar</goal>
+</goals>
+<configuration>
+  <excludes>
+<exclude>**/logback-test.xml</exclude>
+  </excludes>
+  <archive>
+<manifest>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  <addClasspath>true</addClasspath>
+  <useUniqueVersions>true</useUniqueVersions>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+</manifest>
+<manifestEntries>
+  <Implementation-Build>${buildNumber}</Implementation-Build>
+  <Implementation-Version>0.91.5</Implementation-Version>
+  <Main-Class>systems.symbol.CLI</Main-Class>
+</manifestEntries>
+  </archive>
+</configuration>
+  </execution>
+</executions>
+<configuration>
+  <excludes>
+<exclude>**/logback-test.xml</exclude>
+  </excludes>
+  <archive>
+<manifest>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+  <addClasspath>true</addClasspath>
+  <useUniqueVersions>true</useUniqueVersions>
+  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+</manifest>
+<manifestEntries>
+  <Implementation-Build>${buildNumber}</Implementation-Build>
+  <Implementation-Version>0.91.5</Implementation-Version>
+  <Main-Class>systems.symbol.CLI</Main-Class>
+</manifestEntries>
+  </archive>
+</configuration>
+  </plugin>
+  <plugin>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>3.1.2</version>
+<executions>
+  <execution>
+<id>default-test</id>
+<phase>test</phase>
+<goals>
+  <goal>test</goal>
+</goals>
+  </execution>
+</executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-install-plugin</artifactId>
+<version>3.1.1</version>
+<executions>
+  <execution>
+<id>default-install</id>
+<phase>install</phase>
+<goals>
+  <goal>install</goal>
+</goals>
+  </execution>
+</executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-deploy-plugin</artifactId>
+<version>3.1.1</version>
+<executions>
+  <execution>
+<id>default-deploy</id>
+<phase>deploy</phase>
+<goals>
+  <goal>deploy</goal>
+</goals>
+  </execution>
+</executions>
+  </plugin>
+  <plugin>
+<artifactId>maven-site-plugin</artifactId>
+<version>3.3</version>
+<executions>
+  <execution>
+<id>default-site</id>
+<phase>site</phase>
+<goals>
+  <goal>site</goal>
+</goals>
+<configuration>
+  <port>9000</port>
+  <locales>en</locales>
+  <outputDirectory>/developer/iq/iq-cli/target/site</outputDirectory>
+  <reportPlugins>
+<reportPlugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-project-info-reports-plugin</artifactId>
+</reportPlugin>
+  </reportPlugins>
+</configuration>
+  </execution>
+  <execution>
+<id>default-deploy</id>
+<phase>site-deploy</phase>
+<goals>
+  <goal>deploy</goal>
+</goals>
+<configuration>
+  <port>9000</port>
+  <locales>en</locales>
+  <outputDirectory>/developer/iq/iq-cli/target/site</outputDirectory>
+  <reportPlugins>
+<reportPlugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-project-info-reports-plugin</artifactId>
+</reportPlugin>
+  </reportPlugins>
+</configuration>
+  </execution>
+</executions>
+<dependencies>
+  <dependency>
+<groupId>org.apache.maven.doxia</groupId>
+<artifactId>doxia-module-markdown</artifactId>
+<version>1.3</version>
+<scope>compile</scope>
+  </dependency>
+</dependencies>
+<configuration>
+  <port>9000</port>
+  <locales>en</locales>
+  <outputDirectory>/developer/iq/iq-cli/target/site</outputDirectory>
+  <reportPlugins>
+<reportPlugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-project-info-reports-plugin</artifactId>
+</reportPlugin>
+  </reportPlugins>
+</configuration>
   </plugin>
 </plugins>
   </build>

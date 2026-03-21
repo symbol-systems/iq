@@ -30,12 +30,11 @@ CommandLine commands = cli.getCommandLine(context);
 commands.addSubcommand(new AboutCommand(context));
 
 if (context.isInitialized()) {
-// commands.addSubcommand(new ModelsCommand(context, commands));
-// commands.addSubcommand(new RunCommand(context, commands));
-// commands.addSubcommand(new TriggerCommand(context));
+commands.addSubcommand(new ModelsCommand(context, commands));
+commands.addSubcommand(new RunCommand(context, commands));
+commands.addSubcommand(new TriggerCommand(context));
 commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
 commands.addSubcommand(new TrustCommand(context));
-commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
 commands.addSubcommand(new BootCommand(context));
 }
 
@@ -62,5 +61,31 @@ try { kernel.stop(); } catch (Exception ignored) {}
 public Number call() throws Exception {
 // System.out.println("help");
 return 0;
+}
+
+@Override
+public CommandLine getCommandLine(CLIContext context) throws IOException, CLIException {
+CommandLine commands = super.getCommandLine(context);
+if (context.isInitialized()) {
+if (!commands.getSubcommands().containsKey("models")) {
+commands.addSubcommand(new ModelsCommand(context, commands));
+}
+if (!commands.getSubcommands().containsKey("run")) {
+commands.addSubcommand(new RunCommand(context, commands));
+}
+if (!commands.getSubcommands().containsKey("trigger")) {
+commands.addSubcommand(new TriggerCommand(context));
+}
+if (!commands.getSubcommands().containsKey("server")) {
+commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
+}
+if (!commands.getSubcommands().containsKey("trust")) {
+commands.addSubcommand(new TrustCommand(context));
+}
+if (!commands.getSubcommands().containsKey("boot")) {
+commands.addSubcommand(new BootCommand(context));
+}
+}
+return commands;
 }
 }

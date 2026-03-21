@@ -45,6 +45,11 @@ return 0;
 private void doRender(IQConnection iq, IRI commandsIRI) throws CLIException, IOException {
 SPARQLMapper sparql = new SPARQLMapper(iq);
 List<Map<String, Object>> models = sparql.models(commandsIRI);
+if (models == null || models.isEmpty()) {
+log.info("iq.render.models: 0 (no models)");
+display("No models found for render command.");
+return;
+}
 log.info("iq.render.models: {}", models.size());
 
 File outputFolder = this.toFolder != null ? this.toFolder : context.getPublicHome();

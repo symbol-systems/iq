@@ -7,6 +7,7 @@ import org.apache.camel.Processor;
 import org.apache.camel.support.ExchangeHelper;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -14,6 +15,9 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.query.resultio.QueryResultFormat;
+import org.eclipse.rdf4j.query.resultio.QueryResultIO;
+import org.eclipse.rdf4j.query.resultio.QueryResultWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +26,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
-import org.eclipse.rdf4j.query.resultio.QueryResultIO;
-import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
-import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 
 /**
  * systems.symbol (c) 2014-2023
@@ -91,6 +93,20 @@ public class RDF4JProcessor implements Processor {
 			}
 		}
 	}
+
+	private void processConstruct(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+		GraphQuery query = connection.prepareGraphQuery(QueryLanguage.SPARQL, sparql);
+		query.setIncludeInferred(isInferred());
+		if (maxQueryTime>0) query.setMaxExecutionTime(maxQueryTime);
+		Model model = QueryResults.asModel(query.evaluate());
+
+		RDFFormat writerFormat = Rio.getWriterFormatForMIMEType(contentType).orElse(RDFFormat.JSONLD);
+		StringWriter stringWriter = new StringWriter();
+		Rio.write(model, stringWriter, writerFormat);
+		out.setHeader("Content-Type", writerFormat.getDefaultMIMEType());
+		out.setBody(stringWriter.toString());
+	}
+
 	
 	boolean isMissing(String sparql) {
 		return sparql==null||sparql.isEmpty();
@@ -119,21 +135,19 @@ public class RDF4JProcessor implements Processor {
 	}
 
 	private void processSelect(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RepositoryException, QueryResultHandlerException, MalformedQueryException, QueryEvaluationException, IOException {
-		TupleQueryResultFormat parserFormatForMIMEType = QueryResultIO.getParserFormatForMIMEType(contentType, null);
-		if (parserFormatForMIMEType!=null) {
-			headers.put("Content-Type", parserFormatForMIMEType.getDefaultMIMEType()+";"+parserFormatForMIMEType.getCharset());
+		QueryResultFormat parserFormatForMIMEType = QueryResultIO.getParserFormatForMIMEType(contentType).orElse(null);
+		if (parserFormatForMIMEType != null) {
+			headers.put("Content-Type", parserFormatForMIMEType.getDefaultMIMEType() + ";" + parserFormatForMIMEType.getCharset());
 			StringWriter stringWriter = handle(connection, sparql, parserFormatForMIMEType);
 			log.trace("TUPLES: " + stringWriter.toString());
 			out.setBody(stringWriter.toString());
 		} else {
 			// unknown-type, internal
-			java.util.Collection<java.util.Map> results = systems.symbol.rdf4j.util.SesameHelper.toMapCollection(connection, sparql);
-			log.debug("COLLECTION: " + results);
-			out.setBody(results);
+				java.util.Collection<java.util.Map<String,Object>> results = systems.symbol.rdf4j.util.SesameHelper.toMapCollection(connection, sparql);
 		}
 	}
 
-	public StringWriter handle(RepositoryConnection connection, String sparql, TupleQueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException {
+	public StringWriter handle(RepositoryConnection connection, String sparql, QueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException {
 		StringWriter stringWriter = new StringWriter();
 		OutputStream out = new org.apache.commons.io.output.WriterOutputStream(stringWriter);
 		handle(connection, sparql, out, parserFormatForMIMEType);
@@ -141,16 +155,19 @@ public class RDF4JProcessor implements Processor {
 		return stringWriter;
 	}
 
-	public void handle(RepositoryConnection connection, String sparql, OutputStream out, TupleQueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException {
+	public void handle(RepositoryConnection connection, String sparql, OutputStream out, QueryResultFormat parserFormatForMIMEType) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException {
 		// handle query and result set
 		TupleQuery tupleQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, sparql);
 		tupleQuery.setIncludeInferred(isInferred());
 		if (maxQueryTime>0) tupleQuery.setMaxQueryTime(getMaxQueryTime());
 
-		TupleQueryResultWriter resultWriter = QueryResultIO.createWriter(parserFormatForMIMEType, out);
-		resultWriter.startQueryResult(new ArrayList());
-		tupleQuery.evaluate(resultWriter);
-		resultWriter.endQueryResult();
+		try (TupleQueryResult result = tupleQuery.evaluate()) {
+			if (parserFormatForMIMEType != null) {
+				QueryResultIO.writeTuple(result, parserFormatForMIMEType, out);
+			} else {
+				out.write(QueryResults.asList(result).toString().getBytes(StandardCharsets.UTF_8));
+			}
+		}
 	}
 
 	public GraphQueryResult executeGraphQuery(RepositoryConnection connection, String sparql) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException, RDFHandlerException {

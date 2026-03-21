@@ -1,9 +1,9 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.output.Response;
+import systems.symbol.onnx.data.embedding.Embedding;
+import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import systems.symbol.onnx.model.embedding.EmbeddingModel;
+import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;

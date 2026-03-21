@@ -58,5 +58,7 @@ throw new systems.symbol.kernel.KernelCommandException("cli.command.failed", e.g
 }
 }
 
-protected abstract Object doCall() throws Exception;
+protected Object doCall() throws Exception {
+return null;
+}
 }
