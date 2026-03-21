@@ -27,10 +27,10 @@
 ### Configuration Files
 
 1. **pom.xml** — Maven module descriptor
-   - Parent: iq-parent 0.91.5
+   - Parent: iq-parent 0.91.6
    - Artifact: iq-mcp
    - Key Dependency: io.modelcontextprotocol.sdk:mcp:0.17.2
-   - Build Output: /target/iq-mcp-0.91.5.jar
+   - Build Output: /target/iq-mcp-0.91.6.jar
 
 ### Documentation
 
@@ -100,16 +100,16 @@
 ## Build Verification
 
 ```
-[INFO] Building IQ MCP 0.91.5
-[INFO] Building jar: /media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.5.jar
+[INFO] Building IQ MCP 0.91.6
+[INFO] Building jar: /media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.6.jar
 [INFO] -------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] Total time: 4.641 s
 ```
 
 ### Artifact Outputs
-- ✅ Main JAR: `/media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.5.jar`
-- ✅ Test JAR: `/media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.5-tests.jar`
+- ✅ Main JAR: `/media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.6.jar`
+- ✅ Test JAR: `/media/me/SD/iq/iq-mcp/target/iq-mcp-0.91.6-tests.jar`
 
 ### Module Registration
 - ✅ Root pom.xml updated with `<module>iq-mcp</module>`
