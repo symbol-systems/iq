@@ -81,7 +81,7 @@ public class GQL {
                                 // try to load a per-type policy template from the repository
                                 PolicyEngine engine = loadPolicyEngineForType(repository, GQL.toIRI(schemaDefType));
                                 if (engine==null) engine = new AskPolicyEngine(repository, null);
-                                AuthorizationDataFetcher dataFetcher = new AuthorizationDataFetcher(GQL.toIRI(schemaDefType), engine, innerFetcher);
+								AuthorizationDataFetcher dataFetcher = new AuthorizationDataFetcher(repository, GQL.toIRI(schemaDefType), engine, innerFetcher);
 				log.info("GQL.queryDef.f: "+iri+" -> "+field.getName()+" @ "+schemaDefType);
 				codeRegistry.dataFetcher( FieldCoordinates.coordinates(rootType, field.getName()), dataFetcher);
 			}
