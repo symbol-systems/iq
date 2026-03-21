@@ -103,7 +103,7 @@ public class ProfileAPI extends GuardedAPI {
             SimpleBindings json = gson.fromJson(value.stringValue(), SimpleBindings.class);
             return new SimpleResponse(json).build();
         } catch (Exception e) {
-            log.error("ux.profile.failed: {} ==> {}", jwt.getSubject(), e.getMessage());
+            log.error("ux.profile.failed: {} -> {}", jwt.getSubject(), uriInfo.getPath(), e);
             return new OopsResponse("ux.profile.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -153,7 +153,7 @@ public class ProfileAPI extends GuardedAPI {
             connection.commit();
             return new SimpleResponse(json).build();
         } catch (Exception e) {
-            log.error("ux.profile.failed: {} ==> {}", jwt.getSubject(), e.getMessage());
+            log.error("ux.profile.post.failed: {} -> {}", jwt.getSubject(), uriInfo.getPath(), e);
             return new OopsResponse("ux.profile.failed", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

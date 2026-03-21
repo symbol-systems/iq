@@ -26,6 +26,18 @@ import systems.symbol.sigint.GeoLocate;
  */
 @Path("geo")
 public class GeoAPI extends RealmAPI {
+    private static final String LOCALHOST_IPV4 = "127.0.0.1";
+
+    /**
+     * Check if the given IP address is a loopback/localhost address.
+     * @param ipv4 The IP address to check
+     * @return true if the IP is localhost or loopback
+     */
+    private boolean isLocalhost(String ipv4) {
+        if (ipv4 == null) return false;
+        return LOCALHOST_IPV4.equals(ipv4) || ipv4.startsWith("127.") || "::1".equals(ipv4);
+    }
+
     // @Context
     // RoutingContext routing;
 
@@ -46,7 +58,8 @@ public class GeoAPI extends RealmAPI {
             reply.putIfAbsent("ipv4", ipv4);
             try {
                 GeoLocate geo = new GeoLocate();
-                if (!ipv4.equals("127.0.0.1")) {
+                if (!isLocalhost(ipv4)) {
+                    // Only geolocate non-localhost addresses (avoids unnecessary queries for local development)
                     reply.putIfAbsent("client", geo.location(ipv4));
                 } else {
                     reply.putIfAbsent("client", geo.location());

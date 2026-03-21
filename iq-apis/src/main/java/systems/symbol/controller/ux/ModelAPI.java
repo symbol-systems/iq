@@ -94,7 +94,7 @@ public class ModelAPI extends GuardedAPI {
 
             IQScriptCatalog scripts = new IQScriptCatalog(realm.getSelf(), connection);
             String sparql = scripts.getSPARQL(query, my);
-            System.out.printf("ux.mind.sparql: %s", sparql);
+            log.debug("ux.mind.sparql: {}", sparql);
             if (Validate.isMissing(sparql)) {
                 return new OopsResponse("ux.model.query-missing", Response.Status.NOT_FOUND).build();
             }

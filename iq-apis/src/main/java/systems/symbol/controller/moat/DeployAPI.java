@@ -100,7 +100,8 @@ public class DeployAPI extends RealmAPI {
             connection.commit();
             return response.build();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("Unexpected error during lake deployment for realm: {}", _realm, e);
+            throw new IOException("Lake deployment failed: " + e.getMessage(), e);
         }
     }
 
