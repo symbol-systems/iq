@@ -21,13 +21,13 @@ static final String TYPE = "http://example.org/TypeX";
 static final String ACTOR = "http://example.org/actor1";
 
 @BeforeAll
-static void setup() throws Exception {
+public static void setup() throws Exception {
 repo = new SailRepository(new MemoryStore());
 repo.init();
 }
 
 @AfterAll
-static void teardown() throws Exception {
+public static void teardown() throws Exception {
 if (repo!=null) repo.shutDown();
 }
 
