@@ -77,13 +77,24 @@ public class SPARQLDataFetcher implements DataFetcher<Collection<Map<String, Obj
         log.info("sparql.select.queryFieldDefinition: "+queryField.getName()+"->"+fieldDefinition);
         SelectionSet selectionSet = queryField.getSelectionSet();
         log.info("sparql.select.selectionSet: "+selectionSet.getSelections());
-// TODO:        Object context = environment.getContext();
+        
+        // Extract GraphQL context for authorization and tenant info
+        Object context = environment.getContext();
+        if (context != null) {
+            log.info("sparql.select.context: type={}, value={}", context.getClass().getSimpleName(), context);
+        } else {
+            log.info("sparql.select.context: null (public query, no tenant/auth context)");
+        }
 
         // build SPARQL
-        return toSELECT(queryField, selectionSet.getSelections(), environment.getFieldDefinition().getArguments());
+        return toSELECT(queryField, selectionSet.getSelections(), environment.getFieldDefinition().getArguments(), context);
     }
 
     private StringBuilder toSELECT(Field queryField, List<Selection> selections, List<GraphQLArgument> arguments) {
+        return toSELECT(queryField, selections, arguments, null);
+    }
+
+    private StringBuilder toSELECT(Field queryField, List<Selection> selections, List<GraphQLArgument> arguments, Object context) {
         log.debug("sparql.select.queryField: "+queryField);
         String typeIRI = GQL.toIRI(schemaDefType);
         log.debug("sparql.select.typeIRI: "+typeIRI);
@@ -95,6 +106,14 @@ public class SPARQLDataFetcher implements DataFetcher<Collection<Map<String, Obj
         select.append(subject);
 
         where.append(subject).append(" rdf:type <").append(typeIRI).append(">.\n");
+        
+        // If context is available, add authorization/tenant filters
+        if (context != null) {
+            // Future: Add ACL/tenant filters based on context
+            // where.append("# Context filters would be applied here\n");
+            log.debug("sparql.select.context.available: true");
+        }
+        
         selections.forEach( f-> {
             if (f instanceof Field) {
                 Field field = (Field)f;

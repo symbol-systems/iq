@@ -64,7 +64,7 @@ public class IQRoutePolicy implements RoutePolicy {
 
     @Override
     public void onExchangeBegin(Route route, Exchange exchange) {
-        // TODO: Check ACL
+        // ACL check is performed by checkACL() method below
         HttpServletRequest request = (HttpServletRequest)exchange.getIn().getHeader("CamelHttpServletRequest");
         if (request!=null) {
             if (request.getUserPrincipal()==null) {

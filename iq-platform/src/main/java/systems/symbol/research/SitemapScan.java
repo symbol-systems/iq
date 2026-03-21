@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -58,22 +59,57 @@ public class SitemapScan extends IQIntent {
 
         URL robotsURL = robotsFile.getURL();
         log.info("sitemap.robots: {}", robotsURL.toExternalForm());
-        // TODO: fix the hangs
-        try (InputStream in = robotsURL.openStream()) {
-            log.info("sitemap.read: {}", robotsFile.getURI());
-            String content = IOCopier.toString(in);
+        
+        // Fixed: Add connection and read timeouts to prevent indefinite hangs
+        // Retry up to 3 times with exponential backoff for transient failures
+        int maxRetries = 3;
+        IOException lastException = null;
+        
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                URLConnection connection = robotsURL.openConnection();
+                // Set connection timeout to 5 seconds and read timeout to 10 seconds
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(10000);
+                
+                try (InputStream in = connection.getInputStream()) {
+                    log.info("sitemap.read: {}", robotsFile.getURI());
+                    String content = IOCopier.toString(in);
 
-            Matcher matcher = sitemapPattern.matcher(content);
-            if (matcher.matches()) {
-                String sitemapURL = matcher.group(1).trim();
-                FileObject found = vfs.resolveFile(sitemapURL);
-                log.info("sitemap.robot.url: {} -> {}", found.getURI(), sitemaps.size());
-                sitemaps.add(found);
+                    Matcher matcher = sitemapPattern.matcher(content);
+                    if (matcher.matches()) {
+                        String sitemapURL = matcher.group(1).trim();
+                        FileObject found = vfs.resolveFile(sitemapURL);
+                        log.info("sitemap.robot.url: {} -> {}", found.getURI(), sitemaps.size());
+                        sitemaps.add(found);
+                    }
+
+                    log.info("sitemap.robots.done: {} -> {}", robotsFile.getURI(), sitemaps.size());
+                    return sitemaps;
+                }
+            } catch (IOException e) {
+                lastException = e;
+                if (attempt < maxRetries) {
+                    long backoffMs = (long) (1000 * Math.pow(2, attempt - 1));
+                    log.warn("sitemap.robots.retry: attempt {} of {} failed, retrying in {}ms: {}", 
+                             attempt, maxRetries, backoffMs, e.getMessage());
+                    try {
+                        Thread.sleep(backoffMs);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new IOException("Interrupted while retrying robots.txt fetch", ie);
+                    }
+                } else {
+                    log.error("sitemap.robots.failed: {} after {} attempts: {}", 
+                              robotsFile.getURI(), maxRetries, e.getMessage());
+                }
             }
-
-            log.info("sitemap.robots.done: {} -> {}", robotsFile.getURI(), sitemaps.size());
-            return sitemaps;
         }
+        
+        if (lastException != null) {
+            throw lastException;
+        }
+        return sitemaps;
     }
 
     public IRI parseSitemap(FileObject page) throws ParserConfigurationException, IOException, SAXException {
