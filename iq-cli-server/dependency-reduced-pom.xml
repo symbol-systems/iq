@@ -3,7 +3,7 @@
   <parent>
 <artifactId>iq-parent</artifactId>
 <groupId>systems.symbol</groupId>
-<version>0.91.5</version>
+<version>0.91.6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli-server</artifactId>
@@ -38,7 +38,7 @@
   </testResource>
 </testResources>
 <directory>/developer/iq/iq-cli-server/target</directory>
-<finalName>iq-cli-server-0.91.5</finalName>
+<finalName>iq-cli-server-0.91.6</finalName>
 <pluginManagement>
   <plugins>
 <plugin>
@@ -176,7 +176,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.ServerCLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -201,7 +201,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.ServerCLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -221,7 +221,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.ServerCLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -386,7 +386,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.ServerCLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -411,7 +411,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.ServerCLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -431,7 +431,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.ServerCLI</Main-Class>
 </manifestEntries>
   </archive>

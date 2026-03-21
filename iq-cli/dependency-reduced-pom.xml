@@ -3,7 +3,7 @@
   <parent>
 <artifactId>iq-parent</artifactId>
 <groupId>systems.symbol</groupId>
-<version>0.91.5</version>
+<version>0.91.6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
@@ -198,7 +198,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -223,7 +223,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -243,7 +243,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.91.5</Implementation-Version>
+<Implementation-Version>0.91.6</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -474,7 +474,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -499,7 +499,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -519,7 +519,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.91.5</Implementation-Version>
+  <Implementation-Version>0.91.6</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>

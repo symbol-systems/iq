@@ -73,13 +73,16 @@ ASK {
 }
 """;
 
+/**
+ * Constructor for Repository.
+ */
 public RDFACLPolicy(Repository repository) {
 this.repository = repository;
 }
 
 /**
- * Constructor that accepts a RealmPlatform or Repository.
- * If RealmPlatform is passed, creates an in-memory repository for ACL rules.
+ * Constructor that accepts a RealmPlatform.
+ * Creates an in-memory repository for ACL rules.
  */
 public RDFACLPolicy(Object platformOrRepository) {
 if (platformOrRepository instanceof Repository) {
