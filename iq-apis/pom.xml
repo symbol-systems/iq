@@ -121,6 +121,12 @@
 <!--            <scope>test</scope>-->
         </dependency>
         <dependency>
+            <groupId>systems.symbol</groupId>
+            <artifactId>iq-aspects</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jsonp</artifactId>
         </dependency>
