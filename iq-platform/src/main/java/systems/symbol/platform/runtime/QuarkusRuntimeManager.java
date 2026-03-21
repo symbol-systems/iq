@@ -137,7 +137,16 @@ if (!status.isHealthy()) {
 return new ServerDump(runtimeType, outputPath, false, "Runtime not healthy: " + status.getDetails());
 }
 
-String dumpUrl = System.getProperty("iq.runtime.dump.url", "http://localhost:8080/q/dev/heap-dump");
+// Allow override via system property or environment variable
+String dumpUrl = System.getProperty("iq.runtime.dump.url");
+if (dumpUrl == null || dumpUrl.isBlank()) {
+dumpUrl = System.getenv("IQ_RUNTIME_DUMP_URL");
+}
+if (dumpUrl == null || dumpUrl.isBlank()) {
+// Default to localhost for development; should be overridden in production
+dumpUrl = "http://localhost:8080/q/dev/heap-dump";
+log.debug("Using default dump URL (configure via IQ_RUNTIME_DUMP_URL or iq.runtime.dump.url): {}", dumpUrl);
+}
 
 try {
 HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();

@@ -4,6 +4,8 @@ import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.response.LogicalResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.eclipse.rdf4j.model.IRI;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.I_SecretsStore;
@@ -17,16 +19,25 @@ import java.util.Map;
 import java.util.Optional;
 
 public class HashicorpVaultSecretsProvider implements I_SecretsStore {
+private static final Logger log = LoggerFactory.getLogger(HashicorpVaultSecretsProvider.class);
+private static final String DEFAULT_VAULT_ADDR = "http://localhost:8200";
+
 private final Vault vault;
 private final String basePath;
 
 public HashicorpVaultSecretsProvider() {
 try {
-String address = Optional.ofNullable(System.getenv("VAULT_ADDR")).orElse("http://127.0.0.1:8200");
-String token = Optional.ofNullable(System.getenv("VAULT_TOKEN")).orElseThrow(() -> new IllegalStateException("VAULT_TOKEN is required for HashiCorp provider"));
+String address = System.getenv("VAULT_ADDR");
+if (address == null || address.isBlank()) {
+log.warn("VAULT_ADDR not set; using default: {}", DEFAULT_VAULT_ADDR);
+address = DEFAULT_VAULT_ADDR;
+}
+String token = Optional.ofNullable(System.getenv("VAULT_TOKEN"))
+.orElseThrow(() -> new IllegalStateException("VAULT_TOKEN environment variable is required for HashiCorp Vault initialization"));
 String secretEngine = Optional.ofNullable(System.getenv("VAULT_SECRET_ENGINE")).orElse("secret");
 this.basePath = secretEngine.endsWith("/") ? secretEngine : secretEngine + "/";
 
+log.info("Initializing HashiCorp Vault client at: {}", address);
 VaultConfig config = new VaultConfig().address(address).token(token).build();
 this.vault = new Vault(config);
 } catch (VaultException e) {

@@ -113,7 +113,7 @@ identity = bindings.get("identity");
 log.info("trust.token.identity: {} == {}", identity, agent.getStateMachine().getState());
 agent.stop();
 } catch (Exception e) {
-log.error("trust.token.agent: {} == {}", agent.getSelf(), e.getMessage());
+log.error("trust.token.agent.failed: {} = {}", agent.getSelf(), e.getMessage(), e);
 return new OopsResponse("trust.token.failed", Response.Status.UNAUTHORIZED).build();
 }
 
@@ -189,7 +189,7 @@ try {
 log.info("trust.ipv4: {} -> {}", ipv4, geo.location());
 geo.locate(self, ipv4, thoughts);
 } catch (Exception e) {
-log.warn("trust.oops.geo: {} -> {}", e.getMessage(), e);
+log.warn("trust.oops.geo: {} -> {}", ipv4, e.getMessage(), e);
 }
 // RDFDump.dump(thoughts);
 ground.add(issuer, TRUSTS, self);
@@ -260,7 +260,7 @@ if (jwt.getAudience() != null && jwt.getAudience().contains(agent.stringValue())
 return true;
 }
 } catch (Exception e) {
-log.warn("trust.token.entitled: unable to resolve audience claim: {}", e.getMessage());
+log.warn("trust.token.entitled: unable to resolve audience claim for agent {}: {}", agent.stringValue(), e.getMessage(), e);
 }
 
 try {
@@ -275,7 +275,7 @@ return true;
 }
 }
 } catch (Exception e) {
-log.warn("trust.token.entitled: unable to resolve roles claim: {}", e.getMessage());
+log.warn("trust.token.entitled: unable to resolve roles claim: {}", e.getMessage(), e);
 }
 
 return false;

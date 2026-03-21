@@ -96,7 +96,7 @@ log.info("trust.qr.seal: {}", signed);
 SimpleResponse response = new SimpleResponse("@trust", signed);
 return response.build();
 } catch (Exception e) {
-log.error(e.getMessage(), e);
+log.error("trust.qr.seal.failed: {} -> {}", repoName, e.getMessage(), e);
 return new OopsResponse("ux.trust.issuer.oops", Response.Status.FORBIDDEN).build();
 }
 }
@@ -144,7 +144,7 @@ log.info("learn.qr.size: {}", model.size());
 connection.add(model);
 return new SimpleResponse().build();
 } catch (Exception e) {
-log.error("learn.qr.oops: {}", e.getMessage());
+log.error("learn.qr.failed: {} -> {}", repoName, e.getMessage(), e);
 return new OopsResponse("ux.trust.qr.oops", Response.Status.FORBIDDEN).build();
 }
 }
