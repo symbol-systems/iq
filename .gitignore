@@ -30,4 +30,5 @@ tmp
 todo
 .env
 .run
+*.onnx
 
