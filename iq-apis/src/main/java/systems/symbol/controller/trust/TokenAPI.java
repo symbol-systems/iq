@@ -101,9 +101,6 @@ public class TokenAPI extends RealmAPI {
             builder.realm(realm);
 
             builder.getGround();
-            // TODO: authenticate (subject is a user, subject known to issuer)
-            // TODO: authorize (subject known to audience)
-            // find(model, Resource self, Set<IRI> found, boolean recurse, IRI follow)
 
             I_Agent agent = builder.agent();
 
@@ -137,6 +134,14 @@ public class TokenAPI extends RealmAPI {
 
             boolean trusted = Realms.trusts(builder.getGround(), issuer, self);
             log.info("trust.token.trusted: {}", trusted);
+            if (!trusted) {
+                return new OopsResponse("trust.token.unauthenticated", Response.Status.UNAUTHORIZED).build();
+            }
+
+            Iterable<IRI> audienceCheck = Realms.trusts(builder.getGround(), self, new IRIs(), true);
+            if (!audienceCheck.iterator().hasNext()) {
+                return new OopsResponse("trust.token.unauthorized", Response.Status.FORBIDDEN).build();
+            }
 
             try (RepositoryConnection myConnection = myRealm.getRepository().getConnection()) {
                 myConnection.begin();

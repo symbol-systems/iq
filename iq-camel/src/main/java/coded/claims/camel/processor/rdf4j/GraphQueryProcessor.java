@@ -2,6 +2,7 @@ package systems.symbol.camel.processor.rdf4j;
 
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
 import systems.symbol.rdf4j.iq.KBMS;
+import systems.symbol.rdf4j.store.IQStore;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.eclipse.rdf4j.model.IRI;
@@ -50,7 +51,7 @@ public class GraphQueryProcessor extends AbstractCamelRDFProcessor {
         GraphQueryResult queryResult = SPARQLMapper.graph(sparql, model);
 
         Model results = QueryResults.asModel(queryResult);
-        exchange.getIn().setHeader("Content-Type", TupleQueryResultFormat.BINARY);
+        exchange.getIn().setHeader("Content-Type", "application/ld+json");
         exchange.getIn().setBody(results);
     }
 }

@@ -52,7 +52,6 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
             Process process = pb.start();
             runtime.setProcess(process);
             runtime.setRunning(true);
-            runtime.setDebug(false);
             runtime.setDetails("Started runtime " + runtimeType + " (pid=" + process.pid() + ")");
             writePidFile(runtimeType, process.pid());
             log.info("Started runtime {} with pid {}", runtimeType, process.pid());
@@ -87,7 +86,6 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
         }
 
         runtime.setRunning(false);
-        runtime.setDebug(false);
         runtime.setDetails("Stopped runtime " + runtimeType);
         runtimes.remove(runtimeType);
         deletePidFile(runtimeType);
@@ -125,7 +123,6 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
     @Override
     public boolean debug(String runtimeType, boolean enable) {
         ManagedRuntime runtime = runtimes.computeIfAbsent(runtimeType, rt -> new ManagedRuntime(rt));
-        runtime.setDebug(enable);
         runtime.setDetails("Debug mode " + (enable ? "enabled" : "disabled"));
         log.info("Set debug {} on runtime {}", enable, runtimeType);
         return true;
@@ -200,15 +197,17 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
     }
 
     private static class ManagedRuntime {
-        private final String name;
         private volatile boolean running;
         private volatile boolean debug;
         private volatile String details;
         private volatile Process process;
 
-        ManagedRuntime(String name) {
-            this.name = name;
+        ManagedRuntime() {
             this.details = "Initialized";
+        }
+
+        ManagedRuntime(String runtimeType) {
+            this.details = "Initialized runtime " + runtimeType;
         }
 
         boolean isRunning() {
@@ -223,9 +222,9 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
             return debug;
         }
 
-        void setDebug(boolean debug) {
-            this.debug = debug;
-        }
+        // void setDebug(boolean debug) {
+        //     this.debug = debug;
+        // }
 
         String getDetails() {
             return details;

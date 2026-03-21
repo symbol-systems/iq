@@ -1,6 +1,6 @@
 package systems.symbol.lake.ingest;
 
-import dev.langchain4j.data.embedding.Embedding;
+import systems.symbol.onnx.data.embedding.Embedding;
 import systems.symbol.finder.I_Finder;
 import systems.symbol.lake.ContentEntity;
 

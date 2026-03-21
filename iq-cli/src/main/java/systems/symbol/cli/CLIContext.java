@@ -145,4 +145,14 @@ public class CLIContext implements I_Self {
         return workspace.getCurrentRepository();
     }
 
+    public void recover() throws IOException {
+        if (!isInitialized()) {
+            throw new IllegalStateException("IQ workspace is not initialized");
+        }
+        if (backups == null || !backups.exists()) {
+            throw new IOException("No backups directory found at " + (backups == null ? "null" : backups.getAbsolutePath()));
+        }
+        systems.symbol.io.ImportExport.restore(this);
+    }
+
 }

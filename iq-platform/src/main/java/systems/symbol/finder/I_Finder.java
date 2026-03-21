@@ -1,8 +1,8 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.EmbeddingMatch;
+import systems.symbol.onnx.data.embedding.Embedding;
+import systems.symbol.onnx.data.segment.TextSegment;
+import systems.symbol.onnx.store.embedding.EmbeddingMatch;
 
 import java.util.List;
 

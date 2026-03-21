@@ -44,4 +44,28 @@ public class CLICommandTest {
             kernel.stop();
         }
     }
+
+    @Test
+    public void recoverCommandShouldWorkAfterBackup() throws Exception {
+        File home = Files.createTempDirectory("iq-cli-recover-test").toFile();
+        home.deleteOnExit();
+
+        I_Kernel kernel = KernelBuilder.create().withHome(home).build();
+        kernel.start();
+
+        try {
+            CLIContext context = new CLIContext(kernel);
+            assertTrue(context.isInitialized());
+
+            new BackupCommand(context).call();
+            Object result = new RecoverCommand(context).call();
+
+            assertEquals("recovered", result);
+            context.close();
+
+        } finally {
+            kernel.stop();
+        }
+    }
 }
+

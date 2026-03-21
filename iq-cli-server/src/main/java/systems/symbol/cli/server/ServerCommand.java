@@ -5,7 +5,8 @@ import systems.symbol.cli.CLIContext;
 
 @CommandLine.Command(name = "server", description = "Manage IQ runtime server components", subcommands = {
         ApiCommand.class,
-        McpCommand.class
+        McpCommand.class,
+        ClusterCommand.class
 })
 public class ServerCommand implements Runnable {
     private final CLIContext context;

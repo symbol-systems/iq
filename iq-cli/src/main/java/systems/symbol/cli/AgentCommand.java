@@ -107,7 +107,8 @@ public class AgentCommand extends AbstractCLICommand {
             }
 
             Resource before = service.getAgent().getStateMachine().getState();
-            Resource after = service.next(intent);
+            Resource intentResource = SimpleValueFactory.getInstance().createIRI(intent);
+            Resource after = service.next(intentResource);
 
             display("Agent transition executed: actor=" + actor + " intent=" + intent);
             display("before=" + before + " after=" + after);

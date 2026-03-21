@@ -1,7 +1,7 @@
 package systems.symbol.finder;
 
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
+import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import systems.symbol.onnx.model.embedding.EmbeddingModel;
 import systems.symbol.lake.Lakes;
 import systems.symbol.platform.IQ_NS;
 

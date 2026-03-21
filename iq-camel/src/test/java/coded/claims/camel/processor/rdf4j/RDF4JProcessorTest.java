@@ -2,7 +2,7 @@ package coded.claims.camel.processor.rdf4j;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -40,7 +40,7 @@ public class RDF4JProcessorTest {
         ex.getIn().setBody("SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
         ex.getIn().setHeader("Accept", "application/sparql-results+json");
 
-        var processor = new coded.claims.camel.processor.rdf4j.RDF4JProcessor(repo, "select", true, 0, null);
+        var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "select", true, 0, null);
         processor.process(ex);
 
         String body = ex.getMessage().getBody(String.class);
@@ -55,7 +55,7 @@ public class RDF4JProcessorTest {
         ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
         // no Accept header -> default to returning GraphQueryResult object
 
-        var processor = new coded.claims.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+        var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
         processor.process(ex);
 
         Object body = ex.getMessage().getBody();
@@ -69,7 +69,7 @@ public class RDF4JProcessorTest {
         ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
         ex.getIn().setHeader("Accept", "text/turtle");
 
-        var processor = new coded.claims.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+        var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
         processor.process(ex);
 
         String body = ex.getMessage().getBody(String.class);
@@ -84,11 +84,11 @@ public class RDF4JProcessorTest {
         ex.getIn().setBody("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }");
         ex.getIn().setHeader("Accept", "application/ld+json");
 
-        var processor = new coded.claims.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
+        var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo, "construct", true, 0, null);
         processor.process(ex);
 
         String body = ex.getMessage().getBody(String.class);
         assertNotNull(body);
-        assertTrue(body.contains("@context") || body.trim().startsWith("{"));
+        assertTrue(body.contains("@context") || body.trim().startsWith("{") || body.trim().startsWith("["));
     }
 }

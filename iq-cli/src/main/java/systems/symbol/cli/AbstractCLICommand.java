@@ -58,5 +58,7 @@ public abstract class AbstractCLICommand extends systems.symbol.kernel.command.A
         }
     }
 
-    protected abstract Object doCall() throws Exception;
+    protected Object doCall() throws Exception {
+        return null;
+    }
 }

@@ -2,7 +2,7 @@ package systems.symbol.camel.component;
 
 import systems.symbol.camel.processor.rdf4j.GraphQueryProcessor;
 import systems.symbol.camel.processor.rdf4j.ImportModelProcessor;
-import systems.symbol.rdf4j.store.Workspace;
+import systems.symbol.kernel.workspace.Workspace;
 import systems.symbol.util.Steps;
 import org.apache.camel.*;
 import org.apache.camel.support.DefaultComponent;

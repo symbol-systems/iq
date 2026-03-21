@@ -1,7 +1,9 @@
 package systems.symbol.cli;
 
 import picocli.CommandLine;
+import org.eclipse.rdf4j.model.IRI;
 import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.store.IQStore;
 
 import java.io.IOException;
 
@@ -23,14 +25,45 @@ public class TrustCommand extends AbstractCLICommand{
             } else {
                 trustRemote(identity);
             }
+            return "trusted:" + identity;
         }
-        return null;
+        return "uninitialised";
     }
 
     private void trustRemote(String identity) {
+        IQStore iq = null;
+        try {
+            iq = context.newIQBase();
+            IRI self = context.getSelf();
+            IRI target = IQStore.vf.createIRI(identity);
+            IRI predicate = IQStore.vf.createIRI("http://systems.symbol/trusts");
+            iq.getConnection().add(self, predicate, target);
+            iq.getConnection().commit();
+            log.info("iq.trust.rmi: {} trusts {}", self, target);
+        } catch (Exception e) {
+            log.error("iq.trust.failed: {}", e.getMessage(), e);
+        } finally {
+            if (iq != null) {
+                try { iq.close(); } catch (Exception ignored) {}
+            }
+        }
     }
 
     private void trustSelf() {
-
+        IQStore iq = null;
+        try {
+            iq = context.newIQBase();
+            IRI self = context.getSelf();
+            IRI predicate = IQStore.vf.createIRI("http://systems.symbol/trusts");
+            iq.getConnection().add(self, predicate, self);
+            iq.getConnection().commit();
+            log.info("iq.trust.self: {} trusts itself", self);
+        } catch (Exception e) {
+            log.error("iq.trust.self.failed: {}", e.getMessage(), e);
+        } finally {
+            if (iq != null) {
+                try { iq.close(); } catch (Exception ignored) {}
+            }
+        }
     }
 }

@@ -41,17 +41,22 @@
     <module>iq-platform</module>
     <module>iq-secrets</module>
     <module>iq-lake</module>
-    <module>iq-finder</module>
+    <module>iq-onnx</module>
     <module>iq-agentic</module>
     <module>iq-apis</module>
     <!-- <module>iq-persona</module> -->
     <module>iq-rdf4j-graphs</module>
     <module>iq-test-servers</module>
     <module>iq-cli</module>
+    <module>iq-cli-pro</module>
     <module>iq-cli-server</module>
+    <module>iq-trusted</module>
     <module>iq-camel</module>
     <module>iq-rdf4j-graphql</module>
     <module>iq-connect/iq-connect-core</module>
+    <module>iq-connect/iq-connect-template</module>
+    <module>iq-connect/iq-connect-github</module>
+    <module>iq-connect/iq-connect-aws</module>
     <module>iq-mcp</module>
   </modules>
   <scm>
@@ -90,10 +95,8 @@
     <rdf4j.version>5.0.2</rdf4j.version>
 
     <handlebars.version>4.3.1</handlebars.version>
-    <langchain4j.version>0.35.0</langchain4j.version>
-    <theokanning.version>0.18.2</theokanning.version>
-
     <jackson.version>2.17.1</jackson.version>
+    <junit.jupiter.version>5.9.3</junit.jupiter.version>
 
     <skipITs>true</skipITs>
     <surefire.plugin.version>3.2.5</surefire.plugin.version>
@@ -203,6 +206,16 @@
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>2.1</version>
       </dependency>
 
       <!-- Bouncycastle Crypto-->
@@ -354,41 +367,13 @@
         <version>3.6.1</version>
       </dependency>
 
-      <!-- Langchain -->
+      <!-- Langchain dependency versions -->
+      <!-- Langchain and OpenAI service connectors removed in favor of local ONNX + existing GPTWrapper implementation -->
+      <!-- added onnxruntime directly as the native embedding backend -->
       <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j</artifactId>
-        <version>${langchain4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-open-ai</artifactId>
-        <version>${langchain4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-milvus</artifactId>
-        <version>${langchain4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-embeddings</artifactId>
-        <version>${langchain4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
-        <version>${langchain4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.theokanning.openai-gpt3-java</groupId>
-        <artifactId>service</artifactId>
-        <version>${theokanning.version}</version>
+        <groupId>com.microsoft.onnxruntime</groupId>
+        <artifactId>onnxruntime</artifactId>
+        <version>1.17.1</version>
       </dependency>
 
       <dependency>

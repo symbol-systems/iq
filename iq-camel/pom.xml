@@ -4,7 +4,7 @@
     <parent>
         <groupId>systems.symbol</groupId>
         <artifactId>iq-parent</artifactId>
-        <version>0.76.0</version>
+        <version>0.91.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -212,10 +212,20 @@
             <type>pom</type>
         </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+        </dependency>
+
         <!-- IQ Dependencies -->
         <dependency>
             <groupId>systems.symbol</groupId>
-            <artifactId>iq-actions</artifactId>
+            <artifactId>iq-rdf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -225,14 +235,40 @@
         </dependency>
         <dependency>
             <groupId>systems.symbol</groupId>
-            <artifactId>iq-rdf4j-nlp</artifactId>
+            <artifactId>iq-rdf4j-graphs</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>systems.symbol</groupId>
-            <artifactId>iq-graphs</artifactId>
+            <artifactId>iq-trusted</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-support</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-spring</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

@@ -4,6 +4,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
 import systems.symbol.platform.I_Self;
 
 /**
@@ -97,6 +98,13 @@ public class Workspace implements I_Self {
         } catch (Exception e) {
             return "Workspace[" + self + " @ <unknown>]";
         }
+    }
+
+    /**
+     * Placeholder: repository lookup integration is handled by RealmManager.
+     */
+    public Repository getRepository(String id) {
+        return null;
     }
 
     /* ── private helpers ──────────────────────────────────────────────────── */
