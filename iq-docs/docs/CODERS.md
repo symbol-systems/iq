@@ -16,8 +16,6 @@ Our project incorporates the amazing work of so many, including but not limited 
 
 - **Apache Camel**: A semantic data management for storing and querying RDF-based knowledge.
 
-- **LangChain4J**: Library to manage embeddings and vector search for multiple vendors.
-
 - **Quarkus**: Efficient and resource optimized runtime.
 
 ## Behavior and functionality of agents.

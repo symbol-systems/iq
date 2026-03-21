@@ -8,7 +8,7 @@
 <version>0.91.5</version>
 </parent>
 <artifactId>iq-agentic</artifactId>
-<name>Agentic IQ</name>
+<name>IQ Agentic</name>
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 

@@ -12,7 +12,7 @@
 <artifactId>iq-cli</artifactId>
 <packaging>jar</packaging>
 
-<name>Open IQ</name>
+<name>IQ CLI</name>
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
@@ -31,7 +31,7 @@
 <role>architect</role>
 <role>developer</role>
 </roles>
-<timezone>+11</timezone>
+<timezone>+0</timezone>
 </developer>
 </developers>
 

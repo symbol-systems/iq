@@ -245,7 +245,40 @@ return jwtGen.sign(generator, keys.keys());
 
 @Override
 public boolean entitled(DecodedJWT jwt, IRI agent) {
-throw new UnsupportedOperationException("oops.entitled");
+if (jwt == null || agent == null || agent.stringValue() == null || agent.stringValue().isBlank()) {
+log.warn("trust.token.entitled: missing jwt or agent");
+return false;
+}
+
+String subject = jwt.getSubject();
+if (subject != null && subject.equals(agent.stringValue())) {
+return true;
+}
+
+try {
+if (jwt.getAudience() != null && jwt.getAudience().contains(agent.stringValue())) {
+return true;
+}
+} catch (Exception e) {
+log.warn("trust.token.entitled: unable to resolve audience claim: {}", e.getMessage());
+}
+
+try {
+if (jwt.getClaim("roles") != null && !jwt.getClaim("roles").isMissing()) {
+String[] roles = jwt.getClaim("roles").asArray(String.class);
+if (roles != null) {
+for (String role : roles) {
+if (role != null && role.toLowerCase().contains("admin")) {
+return true;
+}
+}
+}
+}
+} catch (Exception e) {
+log.warn("trust.token.entitled: unable to resolve roles claim: {}", e.getMessage());
+}
+
+return false;
 }
 
 }

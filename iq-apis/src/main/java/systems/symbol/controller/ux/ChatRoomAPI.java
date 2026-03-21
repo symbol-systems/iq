@@ -54,6 +54,6 @@ rooms.remove(room);
 
 @OnError
 public void onError(Session session, Throwable throwable) {
-throwable.printStackTrace();
+log.error("WebSocket error in chat room", throwable);
 }
 }

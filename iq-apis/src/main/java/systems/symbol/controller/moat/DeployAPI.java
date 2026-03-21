@@ -51,10 +51,10 @@ return redeploy(_realm, auth, clean != null && clean);
 } catch (OopsException e) {
 return new OopsResponse(e.getMessage(), e.getStatus()).build();
 } catch (URISyntaxException e) {
-e.printStackTrace();
+log.error("Invalid URI in deploy request for realm: {}", _realm, e);
 return new OopsResponse(e.getMessage(), Response.Status.BAD_REQUEST).build();
 } catch (SecretsException e) {
-e.printStackTrace();
+log.error("Secrets error during deploy for realm: {}", _realm, e);
 return new OopsResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR).build();
 }
 }

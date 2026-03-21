@@ -86,11 +86,10 @@ return url.openConnection();
 URI uri = new URI(value);
 URL url = uri.toURL();
 return url.openStream();
-// TODO: replace with GSON
-// } else if (JSONObject.class.isInstance(type)) {
-// return JSONObject.fromObject(value);
-// } else if (JSONArray.class.isInstance(type)) {
-// return JSONArray.fromObject(value);
+// JSON support (JSONObject/JSONArray) was deprecated in favor of direct JSON libraries
+// If JSON conversion is needed, consider using GSON (com.google.gson) instead:
+// JsonElement elem = JsonParser.parseString(value);
+// return elem.getAsJsonObject() or elem.getAsJsonArray();
 }
 return DatatypeConverter.parseAnySimpleType(value);
 }

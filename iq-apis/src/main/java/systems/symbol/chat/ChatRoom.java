@@ -44,7 +44,8 @@ if (session.isOpen()) {
 session.getBasicRemote().sendText(jsonMessage);
 }
 } catch (IOException e) {
-e.printStackTrace();
+org.slf4j.LoggerFactory.getLogger(ChatRoom.class)
+.error("Failed to broadcast message from {}", from, e);
 }
 });
 }
@@ -56,7 +57,8 @@ String historyJson = jsonb.toJson(Map.of("messages", chat.messages()));
 session.getBasicRemote().sendText(historyJson);
 }
 } catch (IOException e) {
-e.printStackTrace();
+org.slf4j.LoggerFactory.getLogger(ChatRoom.class)
+.error("Failed to send chat history", e);
 }
 }
 
