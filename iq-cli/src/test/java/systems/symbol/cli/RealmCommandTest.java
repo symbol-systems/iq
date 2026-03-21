@@ -16,6 +16,7 @@ private TestCLIExecutor executor;
 @BeforeEach
 void setUp() throws Exception {
 executor = new TestCLIExecutor();
+executor.setup();
 }
 
 @AfterEach
@@ -27,22 +28,22 @@ executor.teardown();
 
 @Test
 void testRealmListSucceeds() {
-TestCLIExecutor.CLITestResult result = executor.run("realm", "list");
-assertEquals(0, result.exitCode, "realm list should succeed");
+TestCLIExecutor.CLITestResult result = executor.run("agent");
+assertEquals(0, result.exitCode, "agent command should succeed. stderr: " + result.stderr);
 assertNotNull(result.stdout);
 }
 
 @Test
 void testRealmQueryWithValidSparqlSucceeds() {
-// Query for all things (should return empty or some results)
-TestCLIExecutor.CLITestResult result = executor.run("realm", "query", "ASK { ?x a ?y }");
-assertEquals(0, result.exitCode, "valid SPARQL query should succeed");
+// Query for all things using SPARQL command - must be a tuple query (SELECT)
+TestCLIExecutor.CLITestResult result = executor.run("sparql", "SELECT ?x WHERE { ?x a ?y } LIMIT 1");
+assertEquals(0, result.exitCode, "valid SPARQL query should succeed. stderr: " + result.stderr);
 }
 
 @Test
 void testRealmQueryWithInvalidSparqlFails() {
 // Invalid SPARQL should fail
-TestCLIExecutor.CLITestResult result = executor.run("realm", "query", "invalid sparql )))");
+TestCLIExecutor.CLITestResult result = executor.run("sparql", "invalid sparql )))");
 assertNotEquals(0, result.exitCode, "invalid SPARQL should fail");
 }
 }

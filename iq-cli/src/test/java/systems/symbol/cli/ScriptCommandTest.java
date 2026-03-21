@@ -16,6 +16,7 @@ private TestCLIExecutor executor;
 @BeforeEach
 void setUp() throws Exception {
 executor = new TestCLIExecutor();
+executor.setup();
 }
 
 @AfterEach
@@ -27,8 +28,9 @@ executor.teardown();
 
 @Test
 void testScriptListSucceeds() {
-TestCLIExecutor.CLITestResult result = executor.run("script", "list");
-assertEquals(0, result.exitCode, "script list should succeed");
+// Test script --list instead of script list
+TestCLIExecutor.CLITestResult result = executor.run("script", "--list");
+assertEquals(0, result.exitCode, "script --list should succeed. stderr: " + result.stderr);
 assertNotNull(result.stdout);
 }
 
