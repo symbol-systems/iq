@@ -2,8 +2,16 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw -pl iq-cli-server -am package -DskipTests
-JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
+
+JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar 2>/dev/null | grep -v '^iq-cli-server/target/original-' | head -n1 || true)"
+if [[ -z "${JAR_PATH:-}" ]]; then
+  echo "[INFO] No existing iq-cli-server jar found. Building..."
+  ./mvnw -pl iq-cli-server -am package -DskipTests
+  JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
+else
+  echo "[INFO] Reusing existing jar: $JAR_PATH"
+fi
+
 if [[ $# -eq 0 ]]; then
 	set -- server mcp start
 fi
