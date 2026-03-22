@@ -1,93 +1,39 @@
-# IQ CLI (Community)
+# iq-cli — Community Command-Line Interface
 
-IQ CLI is the command-line interface for the IQ platform. It's a lightweight Java-based client to manage IQ knowledge graph, connectors, and automated playbooks.
+`iq-cli` is the community edition CLI for the IQ platform. It gives you terminal access to IQ's knowledge graph, connector ecosystem, and agent workflows — without needing to write a single line of Java.
 
-## Key Features
+It is designed to be approachable: start it, explore what's connected, run queries, and inspect your knowledge state — all from one command.
 
-- Discover and list connector types (`aws`, `github`, `sparql`, etc.)
-- Execute scan and refresh operations from the terminal
-- Inspect and serialize RDF models in Turtle/JSON-LD formats
-- Work with local and remote repositories (vault + RDF4J endpoints)
+## What you can do with it
 
-## Prerequisites
+- Explore connected data sources and available connectors
+- Run SPARQL queries and named scripts against your local knowledge graph
+- Import and export realm knowledge to and from the local lake
+- Inspect and trace agent state and transitions
+- Work with local and remote RDF repositories
+
+## Starting the CLI
+
+```bash
+./bin/iq-cli
+```
+
+This compiles and launches the community CLI in interactive mode.
+
+## Requirements
 
 - Java 21
-- Maven 3.8+
-- Git clone of the repository
+- Maven (the wrapper in the repository handles everything else)
+- The repository cloned locally
 
-## Build
+## Configuration
 
-From repository root:
+The CLI reads from environment variables and the `.iq/` directory in your working folder. Common settings:
 
-```bash
-./mvnw clean install -pl iq-cli -am
-```
+- `IQ_HOME` — override the default state directory
+- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` — for AWS connector access
+- `GITHUB_TOKEN` — for GitHub connector access
 
-This produces `iq-cli/target/iq-cli-*.jar`.
+## Part of the IQ family
 
-## Run
-
-Basic command syntax:
-
-```bash
-java -jar iq-cli/target/iq-cli-<version>.jar <command> [options]
-```
-
-Example: show help
-
-```bash
-java -jar iq-cli/target/iq-cli-<version>.jar help
-```
-
-## Common Workflows
-
-- Start a local state repository:
-  - Configure `.iq/config` / `iq-cli` settings
-- Run a connector:
-  - `java -jar ... connector run --id urn:connect:aws --provider aws --region us-east-1`
-- Export model to Turtle:
-  - `java -jar ... model export --format turtle --out out.ttl`
-
-## New/Improved commands (2026 update)
-
-- `iq import --from /path/to/assets --realm iq://myrealm` (load lake by realm context)
-- `iq export --to /path/to/export --realm iq://myrealm` (dump only given realm graph)
-- `iq sparql <query-name|file|"SELECT ...">` (run local SPARQL or inline query)
-- `iq script --list` (list scripts under `assets/scripts`)
-- `iq script <script>.sparql` (run script directly)
-- `iq agent --list [--actor foo] [--intent bar]` (list discovered agent transition steps)
-- `iq agent --trigger --actor foo --intent bar` (stubbed trigger path; integration points to IntentAPI TODO)
-
-## Scripts and agent transition workflows
-
-- Store agent transition definitions in `assets/scripts`.
-- Run via `iq script` to inspect and execute.
-- Manage runtime transitions with `iq agent` for orchestration tracing.
-
-## Config
-
-CLI settings are read from ENV and `.iq` config files. Preferred environment variables:
-
-- `IQ_HOME`
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `GITHUB_TOKEN`
-
-## Testing
-
-Run unit tests:
-
-```bash
-./mvnw -pl iq-cli test
-```
-
-## Troubleshooting
-
-- If your JAR does not start: ensure Java 21 is active.
-- If connectors are not discovered: run `java -jar ... connector list` and check configured connectors in `iq-connect` modules.
-
-## GitHub
-
-Project: `https://github.com/symbol-systems/iq`
-
-Contributions welcome via issues/PRs.
+`iq-cli` is the open edition. For advanced orchestration, additional connectors, and enterprise workflow support, see `iq-cli-pro`.

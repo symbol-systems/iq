@@ -1,71 +1,26 @@
-## IQ: An operating environment for symbolic cognition
+# iq-platform — Core Agent Engine
 
-IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+`iq-platform` is the heart of IQ. It provides the agent runtime, realm lifecycle management, LLM provider wiring, state machine execution, and the RDF repository layer that everything else builds on.
 
-It transforms an RDF graph into an executable playbook.
+This is where intents become actions. A realm loads, its knowledge graph is read, agents are instantiated, and the finite state machine that governs each agent begins running. LLM decisions, SPARQL queries, and script executions all flow through this layer.
 
-This repository defines the IQ operation model as a suite of Java interfaces.
+## What it provides
 
-## Runtime environment
+- **RealmManager** — creates, caches, and manages isolated knowledge realms, each with its own repository and secrets
+- **Agent lifecycle** — boots agents from realm data, wires LLM decision-making, and registers them with the thread manager
+- **ModelStateMachine** — an RDF-backed finite state machine that tracks where each agent is in its workflow
+- **LLMFactory** — resolves and initialises LLM providers (OpenAI, Groq, custom endpoints) from realm configuration
+- **IQScriptCatalog / ModelScriptCatalog** — loads and executes named SPARQL scripts that drive domain behaviour
+- **RDF repository configuration** — manages native, memory, and inferencing stores using the RDF4J config vocabulary
+- **JWT token generation** — mints realm-scoped bearer tokens for secure API access
 
-This project uses Quarkus, the `Supersonic Subatomic Java Framework`.
+## Role in the system
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+`iq-platform` is a library module — it does not run standalone. `iq-apis` depends on it to boot the full server. `iq-agentic` builds on it to construct agents and avatars.
 
-Quarkus provides an efficient, robust and performant runtime for your IQ.
+When adding new platform-level behaviour — a new kind of realm, a new state machine rule, a new repository type — this is where it lives.
 
-## Running the application in dev mode
+## Requirements
 
-You can run your IQ in dev mode to enables live coding and debugging:
-
-```shell script
-./mvnw compile quarkus:dev
-```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/iq-apis-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Related Guides
-
-- RESTEasy Reactive ([guide](https://quarkus.io/guides/rest)): A JAX-RS implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+- Java 21
+- Part of the IQ mono-repo; build with `./mvnw -pl iq-platform -am compile`

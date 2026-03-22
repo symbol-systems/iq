@@ -1,44 +1,19 @@
+# iq-onto — Ontology Management
 
-For example:
-------------
+`iq-onto` provides vocabulary and ontology management tooling for the IQ platform. It handles the definition, loading, and maintenance of the shared conceptual schemas that give IQ's knowledge graphs their meaning and structure.
 
-$ npm install && npm start
-$ curl -v http://localhost:7001/types
+## What it provides
 
-This /types/ API is mapped to the rdfs_types.sparql file in the ./sparql/ folder.
+- Ontology loading and resolution from local and remote sources
+- Vocabulary management for IQ's own namespace and domain-specific extensions
+- Support for maintaining consistency between ontology versions and live knowledge graphs
+- Tooling for validating knowledge graph content against defined schemas
 
-Governance Graph
-----------------
+## Role in the system
 
-The systems.symbol.ttl file contains a ss:Service graph describing the OpenAPI and its runtime components.
+`iq-onto` underpins the semantic layer of IQ. When a knowledge graph references concepts from a shared vocabulary, `iq-onto` ensures those definitions are available and coherent. It is used by `iq-platform` and domain-specific realm configurations.
 
-Connector ontology
-------------------
+## Requirements
 
-The `rdf/connector.ttl` file defines a small RDF vocabulary for connectors (`conn:Connector`, `conn:syncStatus`, etc.) used by IQ connector implementations.
-
-
-:api-service-sparql
-a   ss:Service;
-a   k8s:DockerImage;
-a   k8s:HelmChart;
-
-dc:title"Micro APIs: Core Insights";
-k8s:name"api-service-sparql";
-
-ss:feature <https://api.symbol.systems/v1/gg/sparql/:query>;
-ss:feature <https://api.symbol.systems/v1/gg/healthz/sparql>;
-ss:feature <https://api.symbol.systems/v1/gg/openapi/sparql>;
-.
-
-Docker Demo
------------
-
-
-docker run --rm -p 8080:8080 yyz1989/rdf4j
-
-
-
-curl -H "Content-Type: application/json" -X POST --data '{"this":"https://api.symbol.systems/v1/gg/openapi/sparql/"}' http://localhost:7001/gg/this
-  
-  
+- Java 21
+- Part of the IQ mono-repo; build with `./mvnw -pl iq-onto -am compile`
