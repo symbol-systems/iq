@@ -6,6 +6,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -169,11 +170,16 @@ public class RealmPlatform implements I_Realms {
     }
 
     protected I_Agent agent(I_Realm realm) throws Exception, APIException {
+        Model model = realm.getModel();
+        if (!model.contains(realm.getSelf(), IQ_NS.hasInitialState, null)) {
+            log.debug("realm.agent.skip: {} (no iq:initial defined)", realm.getSelf());
+            return null;
+        }
         Bindings bindings = new SimpleBindings();
         RepositoryConnection connection = realm.getRepository().getConnection();
         Conversation chat = new Conversation();
         AgentBuilder builder = new AgentBuilder(realm.getSelf(), connection, bindings, realm.getSecrets());
-        builder.setThoughts(realm.getModel());
+        builder.setThoughts(model);
         I_Agent agent = builder.avatar(chat);
         builder.scripting(agent).remodel().sparql(connection).realm(realm).self(chat);
         Resource state = agent.getStateMachine().getState();

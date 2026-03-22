@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.MY_IQ_AI -DskipTests
