@@ -2,4 +2,19 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=systems.symbol.CLI -DskipTests
+
+JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
+if [[ -z "${JAR_PATH}" ]]; then
+  JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
+fi
+if [[ -z "${JAR_PATH}" ]]; then
+  echo "[INFO] No existing iq-cli jar found. Building..."
+  ./mvnw -pl iq-cli -am package -DskipTests
+  JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
+  if [[ -z "${JAR_PATH}" ]]; then
+JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar | head -n1)"
+  fi
+else
+  echo "[INFO] Reusing existing jar: $JAR_PATH"
+fi
+java -jar "$JAR_PATH" "$@"
