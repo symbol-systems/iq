@@ -5,6 +5,7 @@ cd "$ROOT"
 ./mvnw -pl iq-cli-server -am package -DskipTests
 JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
 if [[ $# -eq 0 ]]; then
-	set -- server api start
+	set -- server mcp start
 fi
-java -jar "$JAR_PATH" "$@"
+JAVA_OPTS="${JAVA_OPTS:-} -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+java $JAVA_OPTS -jar "$JAR_PATH" "$@"
