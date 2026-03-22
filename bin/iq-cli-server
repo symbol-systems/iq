@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+./mvnw -pl iq-cli-server -am package -DskipTests
+JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
+java -jar "$JAR_PATH" "$@"

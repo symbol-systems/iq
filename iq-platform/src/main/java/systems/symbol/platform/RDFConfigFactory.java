@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class RDFConfigFactory {
 private static final Logger log = LoggerFactory.getLogger(RDFConfigFactory.class);
-static final String TYPEOF_REPOSITORY = "http://www.openrdf.org/config/repository#Repository";
+static final String TYPEOF_REPOSITORY = "tag:rdf4j.org,2023:config/Repository";
 
 /**
  * Create a new repository based on a template
