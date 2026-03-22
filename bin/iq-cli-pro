@@ -2,6 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+EXPECTED_MAIN="systems.symbol.PowerCLI"
 
 JAR_PATH="$(ls -1 iq-cli-pro/target/iq-cli-pro-*-shaded.jar 2>/dev/null | head -n1 || true)"
 if [[ -z "${JAR_PATH}" ]]; then
@@ -12,9 +13,30 @@ if [[ -z "${JAR_PATH}" ]]; then
   ./mvnw -pl iq-cli-pro -am package -DskipTests
   JAR_PATH="$(ls -1 iq-cli-pro/target/iq-cli-pro-*-shaded.jar 2>/dev/null | head -n1 || true)"
   if [[ -z "${JAR_PATH}" ]]; then
-    JAR_PATH="$(ls -1 iq-cli-pro/target/iq-cli-pro.jar | head -n1)"
+    JAR_PATH="$(ls -1 iq-cli-pro/target/iq-cli-pro.jar 2>/dev/null | head -n1 || true)"
   fi
 else
   echo "[INFO] Reusing existing jar: $JAR_PATH"
 fi
-java -jar "$JAR_PATH" "$@"
+
+MAIN_CLASS="$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep -i '^Main-Class:' | awk '{print $2}' | tr -d '\r')"
+if [[ "$MAIN_CLASS" == "$EXPECTED_MAIN" ]]; then
+  java -jar "$JAR_PATH" "$@" || {
+    echo "[WARN] Running jar failed (falling back to maven exec)."
+    ./mvnw compile exec:java -pl iq-cli-pro -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+  }
+else
+  echo "[WARN] Jar does not have expected Main-Class ($EXPECTED_MAIN). Found: $MAIN_CLASS. Falling back to maven exec."
+  ./mvnw compile exec:java -pl iq-cli-pro -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+fi
+
+MAIN_CLASS="$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep -i '^Main-Class:' | awk '{print $2}' | tr -d '\r')"
+if [[ "$MAIN_CLASS" == "$EXPECTED_MAIN" ]]; then
+  java -jar "$JAR_PATH" "$@" || {
+    echo "[WARN] Running jar failed (falling back to maven exec)."
+    ./mvnw compile exec:java -pl iq-cli-pro -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+  }
+else
+  echo "[WARN] Jar does not have expected Main-Class ($EXPECTED_MAIN). Found: $MAIN_CLASS. Falling back to maven exec."
+  ./mvnw compile exec:java -pl iq-cli-pro -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+fi
