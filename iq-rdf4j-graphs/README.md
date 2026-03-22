@@ -1,12 +1,20 @@
-## IQ: An operating environment for symbolic cognition
+# iq-rdf4j-graphs — Graph Transforms and JGraphT Bridge
 
-IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+`iq-rdf4j-graphs` bridges RDF4J knowledge graphs with JGraphT, the Java graph theory library. It enables graph-theoretic analysis — shortest paths, connectivity, centrality, and topology — over the same data that IQ uses for knowledge representation and agent reasoning.
 
-It transforms an RDF graph into an executable playbook.
+## What it provides
 
-This repository defines the IQ analytical components as a suite of Java classes.
+- **ModelGraph** — wraps an RDF4J `Model` as a JGraphT `Graph`, mapping RDF statements to directed edges and resources to vertices
+- **Graphs utility** — helper methods for constructing, traversing, and transforming graph instances built from RDF content
+- Graph algorithm access via JGraphT — shortest path, spanning tree, topological sort, and cycle detection over knowledge graph subsets
 
-This module integrates various adapters to support formal reasoning using DAGs and matrices.
+## Role in the system
 
-### JGraphT - Graph Algorithms for Java
-### DL4J - Deep Learning Algorithms for Java
+`iq-rdf4j-graphs` is used when agent logic or data pipelines need structural graph analysis beyond what SPARQL provides. It is an optional dependency — include it when your use case involves graph topology or structural reasoning over the knowledge graph.
+
+## Requirements
+
+- Java 21
+- JGraphT
+- RDF4J 5+
+- Part of the IQ mono-repo; build with `./mvnw -pl iq-rdf4j-graphs -am compile`

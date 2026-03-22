@@ -1,30 +1,91 @@
-# IQ (symbol-systems)
+# IQ — Knowledge Execution for Cognitive AI
 
-Welcome to IQ — an knowledge execution platform designed to help people use structured knowledge and AI with simple workflows. 
+IQ is a runtime platform that turns structured knowledge and AI into executable, stateful workflows. It connects your data, your tools, and your reasoning in one coherent system — without rewriting integration logic every time something changes.
 
-IQ is built to bridge real-world systems, data sources, and decision processes using human-friendly playbooks.
+Built for teams that want AI to actually *do things*, not just respond to prompts.
 
-## For end users (no technical setup needed)
+## What IQ does
 
-- Imagine a system that can read instructions, gather relevant data, and help take action automatically.
-- IQ supports connectors for common services and data sources (like cloud providers, databases, docs, and analytics) so you can focus on outcomes instead of plumbing.
-- You write goals, and IQ handles state tracking and execution logic in the background.
+IQ reads your domain knowledge, applies declarative rules and LLM reasoning, and executes intent-driven workflows across connected systems. It maintains state, tracks transitions, and calls out to external services at exactly the right moment — so you don't have to orchestrate all of that by hand.
 
-## What IQ helps you do
+- Stateful AI agents that remember where they are in a process
+- Pluggable connectors for cloud platforms, databases, APIs, and messaging systems
+- LLM decision-making backed by real structured data, not just context windows
+- JWT-secured multi-realm architecture — isolate tenants, roles, or projects cleanly
 
-- Connect and sync data from multiple systems.
-- Apply rules and logic over knowledge graphs and workflows.
-- Run automated reasoning and actions from a single user intent.
-- Build, test, and repeat processes without manual integration work.
+## Modules at a glance
 
-## Friendly features
+| Module | What it does |
+|---|---|
+| `iq-apis` | The Quarkus REST server — your AI API endpoint |
+| `iq-platform` | Core agent engine, realm management, LLM wiring |
+| `iq-agentic` | Agent builder, avatar, and decision-making toolkit |
+| `iq-cli` | Community command-line interface |
+| `iq-cli-pro` | Extended CLI with advanced orchestration |
+| `iq-mcp` | Model Context Protocol server for LLM tool integration |
+| `iq-connect/*` | 20+ connectors: AWS, GitHub, Slack, JDBC, Kafka, and more |
+| `iq-lake` | Document and data lake ingestion pipeline |
+| `iq-onnx` | Local ONNX model inference, embeddings, and reranking |
+| `iq-trusted` | Auth, JWT, secrets, and trust primitives |
+| `iq-finder` | Semantic search and corpus indexing |
+| `iq-intents` | Intent definitions and RDF repository configuration |
+| `iq-camel` | Apache Camel routing and RDF stream processing |
+| `iq-rdf4j-graphql` | GraphQL access layer over your knowledge graph |
+| `iq-rdf4j-graphs` | Graph transforms and JGraphT bridge |
+| `iq-tokenomic` | Token cost tracking and budget enforcement |
+| `iq-aspects` | Shared utilities — identity, dates, environment helpers |
+| `iq-abstract` | Core interfaces and contracts used across all modules |
+| `iq-lab` | Experimental features, persona engine, Discord integration |
+| `iq-onto` | Ontology management and vocabulary tooling |
+| `iq-tropes` | Narrative pattern library for agent personas |
+| `iq-skeleton` | Starter template for new connectors |
 
-- Low-code style semantics: no need to rewrite your business logic each time.
-- Plugin architecture: add new connectors and capabilities as your needs grow.
-- Cloud and on-premises ready: run locally, in containers, or in managed setups.
+## Getting started
 
-## Core principles
+Requires Java 21 and Maven. Clone the repository and run:
 
-- Knowledge-first: IQ represents domain data as graphs (RDF) and operates using declarative patterns.
-- Connector-driven: each integration is a connector module (iq-connect/*), with uniform lifecycle and status semantics.
-- Policy and content as code: behavior is authored using scripts and RDF templates, not hardcoded by business logic.
+```bash
+./bin/iq
+```
+
+This starts the full IQ API server in development mode with live reloading. The dev UI is available at `http://localhost:8080/q/dev/`.
+
+### Send your first chat request
+
+```bash
+./bin/curl_chat
+```
+
+### Run the agent endpoint
+
+```bash
+./bin/curl_agent
+```
+
+### Start the CLI
+
+```bash
+./bin/iq-cli
+```
+
+### Build a container image
+
+```bash
+./bin/build-image
+```
+
+### Cut a release
+
+```bash
+./bin/release "v1.0.0"
+```
+
+## Architecture
+
+IQ is knowledge-first. Domain behaviour is expressed as declarative policies and queries — not hardcoded business logic. Each realm (tenant, project, or agent group) has its own isolated knowledge graph, secrets store, and state machine. Connectors plug into this cleanly and uniformly.
+
+The platform runs on Quarkus for fast startup, low memory footprint, and container-native deployment.
+
+## Repository
+
+[github.com/symbol-systems/iq](https://github.com/symbol-systems/iq) — contributions and issues welcome.

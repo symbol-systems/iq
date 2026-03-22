@@ -1,34 +1,48 @@
-# iq-connect
+# iq-connect — Connector Library
 
-A collection of **connectors** that integrate IQ with external systems and cloud APIs.
+`iq-connect` is the family of integration adapters that connect IQ to the outside world. Each connector is a self-contained module that brings data from an external system into IQ's knowledge graph — or pushes IQ's knowledge out to that system.
 
-Each connector is a small, self-contained adapter that:
+Connectors follow a uniform pattern: they have a lifecycle, a local graph representing their current state, and a set of operations (read, write, or both). This consistency means you can reason over data from completely different sources using the same query language.
 
-- Maintains its own **kernel** and **quad store** (graph) representing the connector state
-- Supports **read-only**, **write-only**, or **read-write** modes
-- Can be used in **federated** RDF/SPARQL queries and workflows
-- Is designed to be **minimal**, **reactive**, and **DRY** (shared core abstractions + small per-connector surface)
+## Available connectors
 
-## Project structure
+| Connector | What it connects |
+|---|---|
+| `iq-connect-aws` | Amazon Web Services — S3, EC2, IAM, and more |
+| `iq-connect-azure` | Microsoft Azure resources and services |
+| `iq-connect-gcp` | Google Cloud Platform |
+| `iq-connect-digitalocean` | DigitalOcean infrastructure |
+| `iq-connect-github` | GitHub repositories, issues, and pull requests |
+| `iq-connect-gitlab` | GitLab projects and pipelines |
+| `iq-connect-jira` | Jira projects, tickets, and workflows |
+| `iq-connect-confluence` | Confluence spaces and pages |
+| `iq-connect-slack` | Slack workspaces and channels |
+| `iq-connect-office-365` | Microsoft 365 — mail, calendar, and files |
+| `iq-connect-google-apps` | Google Workspace |
+| `iq-connect-jdbc` | Any SQL database via JDBC |
+| `iq-connect-snowflake` | Snowflake data warehouse |
+| `iq-connect-databricks` | Databricks lakehouse |
+| `iq-connect-parquet` | Parquet files and columnar data |
+| `iq-connect-redis` | Redis key-value store |
+| `iq-connect-kafka` | Kafka topics and event streams |
+| `iq-connect-k8s` | Kubernetes clusters and workloads |
+| `iq-connect-docker` | Docker images and container state |
+| `iq-connect-datadog` | Datadog metrics and monitors |
+| `iq-connect-salesforce` | Salesforce CRM objects and flows |
+| `iq-connect-stripe` | Stripe payments and subscriptions |
+| `iq-connect-graphql` | Any GraphQL endpoint |
+| `iq-connect-openapi` | Any OpenAPI-described REST service |
+| `iq-connect-sparql` | Remote SPARQL endpoints |
+| `iq-connect-scan-cve` | CVE vulnerability scanning |
+| `iq-connect-core` | Shared base for all connectors |
+| `iq-connect-template` | Starting point for building a new connector |
 
-- `iq-connect-core/` – Core abstractions, interfaces, utilities, and the shared kernel model.
-- `iq-connect-*/` – Individual connectors for specific systems (AWS, Azure, Jira, GitHub, etc.).
+## Adding a new connector
 
-## Goals
+Start from `iq-connect-template`, which provides the scaffolding and interfaces every connector implements. Each connector is an independent Maven module and can be built, tested, and deployed separately.
 
-1. Provide a consistent, clean abstraction surface for building connectors.
-2. Keep each connector small and focused; most logic should live in `iq-connect-core`.
-3. Enable connectors to participate in IQ's RDF ecosystem via a **quad store + graph IRI** for sync state.
-4. Support **federation** and **query-time composition** (e.g. SPARQL `SERVICE`) across connectors.
+## Requirements
 
-## Next steps / design notes
-
-See the working notes in `./todo/` for ongoing design work and architectural ideas.
-
----
-
-**Quick start**
-
-1. Explore `iq-connect-core/` for the shared kernel and connector abstractions.
-2. Pick an existing connector (e.g., `iq-connect-github`) and study how it implements the core interfaces.
-3. Add a new connector by implementing the core abstractions and registering it in the IQ registration process.
+- Java 21
+- Maven (wrapper included at repository root)
+- Credentials for the target system, provided via environment variables or `.iq/vault`

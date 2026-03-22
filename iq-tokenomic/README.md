@@ -1,46 +1,21 @@
-## IQ: An operating environment for symbolic cognition
+# iq-tokenomic — Token Cost Tracking and Budget Enforcement
 
-IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+`iq-tokenomic` manages the economics of LLM usage within IQ. It tracks how many tokens agent runs consume, enforces spending budgets, and provides the accounting layer that keeps AI costs observable and controllable.
 
-It transforms an RDF graph into an executable playbook.
+## What it provides
 
-This repository defines the IQ operation model for Tokenomics as a suite of Solidity smart contracts.
+- **Budget** — defines a spending limit for a given agent run or realm, expressed in token units
+- **Treasury** — manages multiple budgets and allocates token allowances across concurrent agent operations
+- **Funded / I_Fund** — marks agent components and intent executions as budget-aware, so costs are tracked through the full execution chain
+- **BudgetException** — raised when an operation would exceed its allocated budget, cleanly halting execution before overspending
 
-### Utility of Tokens
+## Role in the system
 
-Tokenomics refers to the study of the economics and mechanics behind the issuance, distribution, and utility of tokens within a blockchain or cryptocurrency ecosystem.
+`iq-tokenomic` is wired into `iq-agentic`. When an agent is constructed with a budget, every LLM call deducts from that budget. Exceeding the limit raises a `BudgetException` that the agent lifecycle handles gracefully.
 
-Tokens in IQ serve multiple functions:
+This is particularly useful in multi-tenant or production deployments where you need to ensure no single agent run consumes unbounded LLM resources.
 
-1. **Identity and Access Control:** Tokens act as access passes to utilize various features and tools within the IQ platform. 
+## Requirements
 
-2. **Value Exchange:** Tokens facilitate value exchange by providing a common unit of account, medium of exchange, and store of value.
-
-3. **Incentive Mechanisms:** Tokens are used to incentivize contributions, such high-quality curated knowledge, developing code or helpful intelligent agents.
-
-4. **Governance:** Token holders have the opportunity to participate in governance decisions concerning the future development and direction of the IQ ecosystem. This may include voting on protocol upgrades, feature implementations, and resource allocation.
-
-5. **Tools and Turks:** Can include almost anything by querying knowledge bases, using APIs and the Internet of Things.
-
-### Distribution Model
-
-So, IQ can help with the creation, distribution and governance of tokens.
-
-If you're looking to ensure widespread participation, incentivize contributions, and maintain network integrity then your distribution model likely would include:
-
-1. **Initial Token Offering (ITO):** Tokens may be initially distributed through a token sale event, allowing interested parties to acquire tokens in exchange for other cryptocurrencies or fiat currency.
-
-2. **Incentive Programs:** Various incentive programs may be implemented to encourage participation and contribution to the ecosystem. This could include token rewards for developers, validators, content creators, and community members who actively contribute to the growth of IQ.
-
-3. **Reserved Tokens:** A portion of tokens may be reserved for future development, community grants, strategic partnerships, and other ecosystem initiatives. These reserved tokens ensure ongoing support and growth of the IQ ecosystem.
-
-4. **Airdrops and Rewards:** Periodic airdrops and token rewards may be distributed to existing token holders as a token of appreciation for their continued support and participation in the ecosystem.
-
-### Governance and Decentralization
-
-Governance IQ aims to achieve decentralization and community-driven decision-making. 
-
-Token holders have the opportunity to participate in governance proposals, discussions, and voting processes to shape the future. 
-
-Decisions may include protocol upgrades, ecosystem enhancements, and resource allocations, ensuring a transparent and inclusive governance model.
-
+- Java 21
+- Part of the IQ mono-repo; build with `./mvnw -pl iq-tokenomic -am compile`

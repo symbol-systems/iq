@@ -1,4 +1,0 @@
-SELECT DISTINCT ?this ?script
-WHERE {
-  ?this <http://www.w3.org/2011/content#chars> ?script.
-}

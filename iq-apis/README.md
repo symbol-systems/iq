@@ -1,58 +1,64 @@
-## IQ: An operating environment for symbolic cognition
+# iq-apis — IQ API Server
 
-IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+`iq-apis` is the runtime entry point for IQ. It exposes the LLM, chat, agent, and avatar endpoints as a secure REST API, backed by a knowledge graph and a fleet of stateful AI agents.
 
-It transforms an RDF graph into an executable playbook.
+When you start `iq-apis`, IQ boots all configured realms, initialises their agents, and begins listening for requests. Each realm is independently secured with JWT tokens and maintains its own knowledge state.
 
-This repository defines the IQ operation model as a suite of Java interfaces.
+## What it provides
 
-## Runtime environment
+- **Chat API** — send messages to a realm's AI avatar and receive grounded, context-aware replies
+- **Agent API** — trigger intent-driven agent transitions backed by real domain knowledge
+- **OpenAI-compatible endpoint** — drop-in replacement for OpenAI chat completions, pointed at your own LLMs
+- **Realm management** — multi-tenant knowledge graph isolation with per-realm secrets and state machines
+- **Live dev UI** — inspect routes, test endpoints, and view CDI beans at `http://localhost:8080/q/dev/`
 
-This project uses Quarkus, the `Supersonic Subatomic Java Framework`.
+## Starting the server
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-Quarkus provides an efficient, robust and performant runtime for your IQ APIs.
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
+```bash
+./bin/iq
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+The server starts in development mode with live reloading. Save a file and IQ recompiles and restarts on the fly — no manual restarts needed.
 
-## Packaging and running the application
+## Sending a chat message
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
+```bash
+./bin/curl_chat
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## Calling the agent endpoint
 
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
+```bash
+./bin/curl_agent
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
+## Using the OpenAI-compatible endpoint
+
+```bash
+./bin/curl_api
 ```
 
-You can then execute your native executable with: `./target/iq-apis-1.0.0-SNAPSHOT-runner`
+## Building for production
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+```bash
+./bin/build-image
+```
+
+This builds a container image using the Docker builder. The resulting image runs the full IQ API server and is ready for deployment anywhere containers run.
+
+## Compiling without starting
+
+```bash
+./bin/compile-apis
+```
+
+Useful for verifying the build before a deploy without launching the server.
+
+## Configuration
+
+IQ reads realm configuration from `.iq/` in the working directory. LLM provider mappings, prompt templates, and connector settings all live there. Set `MY_IQ` to identify the running instance.
+
+## Requirements
+
+- Java 21
+- Maven (wrapper included — no separate install needed)

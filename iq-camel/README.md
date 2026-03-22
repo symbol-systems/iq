@@ -1,36 +1,22 @@
-## IQ: An operating environment for symbolic cognition
+# iq-camel — Apache Camel Integration
 
-IQ is an operating environment for your fleets of neuro-symbolic cognitive AI.
+`iq-camel` integrates IQ with Apache Camel, enabling event-driven and stream-based data flows into and out of the IQ knowledge graph. It provides Camel processors, routes, and components that treat RDF graphs as first-class Camel exchange payloads.
 
-It transforms an RDF graph into an executable playbook.
+## What it provides
 
-This repository augments the IQ operation model with Apache Camel for executable integration patterns.
+- **RDF4J Camel component** — a native Camel component that reads and writes RDF repositories as part of a route
+- **Graph query processor** — executes SPARQL CONSTRUCT queries as a Camel processing step, transforming messages into graph results
+- **Import model processor** — ingests RDF data from upstream Camel sources directly into the knowledge graph
+- **NLP processor** — applies natural language processing as a pipeline stage, enriching graph data with extracted entities and relations
+- **IQ route policy** — Camel route policy aware of IQ's knowledge lifecycle, enabling routes that react to graph state changes
+- **KBMS integration** — connects Camel routes to IQ's knowledge base management system for persistent graph operations
 
-### Getting Started
+## Role in the system
 
-The following instructions will help you to set up your project locally. 
+`iq-camel` is an optional integration layer for teams that already use Apache Camel or want event-driven data ingestion. It is not required for the core IQ runtime.
 
-### Prerequisites
+## Requirements
 
-```
-    mvn clean install
-```
-
-### Contributing
-
-Contributions are what make any project successful. Any contributions you make are greatly appreciated.
-
-### Fork the Project
-
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-Commit your Changes (git commit -m 'Add some AmazingFeature')
-Push to the Branch (git push origin feature/AmazingFeature)
-Open a Pull Request
-
-### License
-
-Distributed under the AGPL License. See LICENSE for more information.
-
-### Contact
-
-- My:IQ - @myiq - cto@myiq.cloud
+- Java 21
+- Apache Camel 4+
+- Part of the IQ mono-repo; build with `./mvnw -pl iq-camel -am compile`
