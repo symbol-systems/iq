@@ -52,7 +52,7 @@
         <project.build.directory>deploy</project.build.directory>
         <project.webapp.directory>src/main/resources/www/</project.webapp.directory>
         <main.class>systems.symbol.CLI</main.class>
-        <groovy.version>5.0.0-alpha-8</groovy.version>
+        <groovy.version>4.0.17</groovy.version>
         <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
 

@@ -12,11 +12,15 @@ import org.slf4j.LoggerFactory;
 
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.HealthCheck;
+import systems.symbol.platform.I_Self;
+import systems.symbol.platform.RealmPlatform;
 import systems.symbol.platform.WebURLs;
 import systems.symbol.platform.runtime.RuntimeStatus;
 import systems.symbol.platform.runtime.ServerDump;
 import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
 import systems.symbol.string.Validate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("runtime")
 public class RuntimeAPI extends GuardedAPI {
@@ -78,6 +82,25 @@ public class RuntimeAPI extends GuardedAPI {
         } catch (Exception e) {
             log.error("Error dumping runtime {}", target, e);
             return new OopsResponse("ux.runtime.dump.error", Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response status(@Context UriInfo info, @Context HttpHeaders headers) {
+        try {
+            Map<String, Object> status = new HashMap<>();
+            status.put("runtime", "iq-apis");
+            status.put("version", I_Self.version());
+            status.put("java", System.getProperty("java.version"));
+            status.put("realms", RealmPlatform.getRealmCount());
+            status.put("uptime", System.getenv("START_TIME"));
+            status.put("now", new java.util.Date().toString());
+            return Response.ok(status).build();
+        } catch (Exception e) {
+            log.error("status() failed", e);
+            return new OopsResponse("ux.runtime.status.error", Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 

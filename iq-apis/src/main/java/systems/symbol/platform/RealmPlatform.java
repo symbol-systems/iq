@@ -58,6 +58,31 @@ public class RealmPlatform implements I_Realms {
         }
     }
 
+    public static int getRealmCount() {
+        return realms == null ? 0 : realms.getRealms().size();
+    }
+
+    public static Set<IRI> getActiveRealms() {
+        return realms == null ? Collections.emptySet() : realms.getRealms();
+    }
+
+    private static void printStartupBanner() {
+        String version = "unknown";
+        try {
+            version = I_Self.version();
+        } catch (Exception e) {
+            version = "unknown";
+        }
+        String banner = "\n" +
+                "╔═════════════════════════════════════════════╗\n" +
+                "║ IQ API Server (symbol.systems)               ║\n" +
+                "║ version: " + version + "                          \n" +
+                "║ java: " + System.getProperty("java.version") + "\n" +
+                "║ realm-count: " + getRealmCount() + "\n" +
+                "╚═════════════════════════════════════════════╝\n";
+        System.out.print(banner);
+    }
+
     protected RealmPlatform() {
     }
 
@@ -70,6 +95,7 @@ public class RealmPlatform implements I_Realms {
     }
 
     protected void onStart(@Observes StartupEvent ev) {
+        printStartupBanner();
         try {
             Stopwatch stopwatch = new Stopwatch();
             I_Realm seed = realms.newRealm(I_Self.self().getSelf());

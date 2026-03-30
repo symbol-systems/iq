@@ -22,7 +22,7 @@
 
 <!--        <quarkus.version>3.11.1</quarkus.version>-->
         <graalvm.version>24.0.1</graalvm.version>
-        <groovy.version>5.0.0-alpha-8</groovy.version>
+        <groovy.version>4.0.17</groovy.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

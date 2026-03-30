@@ -72,11 +72,11 @@
       <plugins>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.3</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-5</version>
+          <version>3.7.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
@@ -420,7 +420,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>default-clean</id>
@@ -534,7 +534,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12.4</version>
+        <version>3.2.5</version>
         <executions>
           <execution>
             <id>default-test</id>
@@ -547,7 +547,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
-        <version>2.4</version>
+        <version>3.1.2</version>
         <executions>
           <execution>
             <id>default-install</id>
@@ -560,7 +560,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.7</version>
+        <version>3.1.2</version>
         <executions>
           <execution>
             <id>default-deploy</id>
@@ -645,21 +645,12 @@
   <properties>
     <project.build.directory>deploy</project.build.directory>
     <kotlin.version>1.9.23</kotlin.version>
-    <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
-    <site.host.stable>${project.url}</site.host.stable>
-    <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
     <site.host>${site.host.dev}</site.host>
-    <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-    <maven.compiler.plugin.release>21</maven.compiler.plugin.release>
-    <slf4j.version>1.7.32</slf4j.version>
-    <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <slf4j.version>2.0.13</slf4j.version>
     <site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
-    <groovy.version>5.0.0-alpha-8</groovy.version>
+    <groovy.version>4.0.17</groovy.version>
     <logback.version>1.5.3</logback.version>
-    <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
-    <handlebars.version>4.3.1</handlebars.version>
-    <site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
+    <handlebars.version>4.5.0</handlebars.version>
     <main.class>systems.symbol.PowerCLI</main.class>
     <spring.version>6.1.5</spring.version>
     <springboot.version>3.1.3</springboot.version>
@@ -667,6 +658,15 @@
     <site.host.other>${site.host.stable}</site.host.other>
     <site.host.dev>http://localhost:9000/</site.host.dev>
     <project.webapp.directory>src/main/resources/www/</project.webapp.directory>
-    <camel.version>4.0.0-M1</camel.version>
+    <camel.version>4.8.4</camel.version>
+    <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
+    <site.host.stable>${project.url}</site.host.stable>
+    <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
+    <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+    <maven.compiler.plugin.release>21</maven.compiler.plugin.release>
+    <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
+    <site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
   </properties>
 </project>

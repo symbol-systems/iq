@@ -48,6 +48,20 @@ public final class MCPServerMain {
             }
         }, "iq-mcp-shutdown"));
 
+        String version = "unknown";
+        try {
+            version = systems.symbol.platform.I_Self.version();
+        } catch (Exception e) {
+            // ignore
+        }
+        String mcpBanner = "\n" +
+                "╔═════════════════════════════════════════════╗\n" +
+                "║ IQ MCP Server (symbol.systems)              ║\n" +
+                "║ version: " + version + "\n" +
+                "║ repo: " + repoName + "\n" +
+                "║ java: " + System.getProperty("java.version") + "\n" +
+                "╚═════════════════════════════════════════════╝\n";
+        System.out.print(mcpBanner);
         log.info("iq.mcp.started: repo={}", repoName);
         new java.util.concurrent.CountDownLatch(1).await();
     }
