@@ -7,7 +7,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.91.6</version>
+<version>0.92.0</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -17,7 +17,7 @@
 No framework annotations (no Quarkus, Picocli, MCP SDK, Camel).
 All surfaces (REST, MCP, CLI, event hub) depend on this module.</description>
 <url>https://symbol.systems</url>
-<version>0.91.6</version>
+<version>0.92.0</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>
