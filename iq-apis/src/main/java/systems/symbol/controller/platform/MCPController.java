@@ -5,9 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.sse.OutboundSseEvent;
-import jakarta.ws.rs.sse.Sse;
-import jakarta.ws.rs.sse.SseEventSink;
+import jakarta.ws.rs.core.StreamingOutput;
 import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,11 +118,11 @@ String responseBody;
 if (registry == null) {
 responseBody = "{\"status\": \"partial\", \"message\": \"MCP initializing...\", " +
 "\"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"health\": \"/mcp/health\", " +
-"\"sse\": \"GET (Accept: text/event-stream)\"}}";
+"\"stream\": \"GET /mcp/stream (Application/JSON streaming)\"}}";
 } else {
 responseBody = "{\"status\": \"ready\", \"message\": \"MCP Server operational\", " +
 "\"version\": \"1.0\", \"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", " +
-"\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"sse\": \"GET (Accept: text/event-stream)\"}}";
+"\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"stream\": \"GET /mcp/stream (Application/JSON streaming)\"}}";
 }
 return addCorsHeaders(Response.ok(responseBody)).build();
 } catch (Exception e) {
@@ -135,58 +133,58 @@ return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 }
 
 /**
- * Handle MCP SSE (Server-Sent Events) connection.
+ * Handle MCP streaming HTTP connection.
  *
- * <p>Opens a persistent SSE connection for streaming MCP protocol messages.
+ * <p>Opens a persistent HTTP streaming connection for streaming MCP protocol messages.
  * Server sends initial capability handshake and streams tool/resource updates.
+ * Replaces deprecated SSE with standard HTTP streaming.
  *
- * @param sseEventSink the SSE event sink for sending events
- * @param sse the SSE context
- * @return Response with SSE media type (connection stays open)
- * @throws IOException if SSE communication fails
+ * @return Response with streaming output (connection stays open)
  */
 @GET
-@Produces("text/event-stream")
-public void handleMcpSseConnection(@Context SseEventSink sseEventSink, @Context Sse sse) throws IOException {
+@Path("/stream")
+@Produces(MediaType.APPLICATION_JSON)
+public Response handleMcpStreamingConnection() {
 try {
-log.info("MCP SSE connection established");
+log.info("MCP streaming connection established");
 
+StreamingOutput stream = output -> {
+try {
 // Send initial capability handshake
-String initData = "{\"jsonrpc\":\"2.0\",\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"iq-mcp-server\",\"version\":\"1.0\"}}}";
-OutboundSseEvent initEvent = sse.newEventBuilder()
-.name("initialization")
-.data(initData)
-.id(String.valueOf(System.currentTimeMillis()))
-.build();
-sseEventSink.send(initEvent);
+String initData = "{\"jsonrpc\":\"2.0\",\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"iq-mcp-server\",\"version\":\"1.0\"}}}\n";
+output.write(initData.getBytes());
+output.flush();
 
 // Send ready event
-String readyData = "{\"status\":\"ready\",\"message\":\"MCP Server operational\"}";
-OutboundSseEvent readyEvent = sse.newEventBuilder()
-.name("ready")
-.data(readyData)
-.id(String.valueOf(System.currentTimeMillis() + 1))
-.build();
-sseEventSink.send(readyEvent);
+String readyData = "{\"status\":\"ready\",\"message\":\"MCP Server operational\"}\n";
+output.write(readyData.getBytes());
+output.flush();
 
-log.debug("MCP SSE initialization complete, keeping connection open");
+log.debug("MCP streaming initialization complete, keeping connection open");
 
-// Keep connection open for incoming messages
+// Keep connection open for streaming updates
 // Clients send messages via POST /mcp
-// Server sends updates via this SSE stream
-// Connection stays open until client disconnects or 30+ seconds timeout
+// Server sends updates via this streaming connection
+// Connection stays open until client disconnects
+
+} catch (IOException e) {
+log.error("Error writing to streaming output", e);
+throw e;
+}
+};
+
+return addCorsHeaders(Response.ok(stream)
+.header("X-Content-Type-Options", "nosniff")
+.header("Cache-Control", "no-cache, no-store, must-revalidate")
+.header("Pragma", "no-cache")
+.header("Expires", "0"))
+.build();
 
 } catch (Exception e) {
-log.error("Error in MCP SSE handler", e);
-try {
-sseEventSink.close();
-} catch (Exception closeEx) {
-log.warn("Error closing SSE sink", closeEx);
-}
-// Re-throw IOException if needed for proper HTTP error handling
-if (e instanceof IOException) {
-throw (IOException) e;
-}
+log.error("Error in MCP streaming handler", e);
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}" ))
+.build();
 }
 }
 
