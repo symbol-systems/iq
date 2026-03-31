@@ -1,10 +1,5 @@
 package systems.symbol.finder;
 
-import systems.symbol.onnx.data.embedding.Embedding;
-import systems.symbol.onnx.data.segment.TextSegment;
-import systems.symbol.onnx.model.embedding.EmbeddingModel;
-import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
@@ -25,7 +20,7 @@ import java.util.*;
 public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
     private static final Logger log = LoggerFactory.getLogger(SearchMatrix.class);
 
-    private final EmbeddingModel model;
+    private final FinderEmbeddingModel model;
 
     // Indices of embeddings and metadata for semantic augmentation
     private final Map<Integer, float[]> vectorsById = new HashMap<>();
@@ -36,18 +31,18 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
     private final Map<IRI, Set<IRI>> conceptsByThing = new HashMap<>();
 
     /**
-     * Default constructor initializes with AllMiniLmL6V2EmbeddingModel.
+     * Default constructor initializes with default finder embedding model.
      */
     public SearchMatrix() {
-        this.model = new AllMiniLmL6V2EmbeddingModel();
+        this.model = FinderEmbeddingModelFactory.defaultModel();
     }
 
     /**
-     * Constructor to initialize with a specified EmbeddingModel.
+     * Constructor to initialize with a specified FinderEmbeddingModel.
      *
-     * @param model the EmbeddingModel to use for embedding text.
+     * @param model the FinderEmbeddingModel to use for embedding text.
      */
-    public SearchMatrix(EmbeddingModel model) {
+    public SearchMatrix(FinderEmbeddingModel model) {
         this.model = model;
     }
 
@@ -102,8 +97,7 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
         }
 
         // content changed (or new entry): compute new embedding and update index
-        Response<Embedding> embed = embed(content);
-        float[] vector = embed.content().vector();
+        float[] vector = embed(content);
 
         contentDigestByThing.put(iri, digest);
         thingById.put(id, iri);
@@ -144,8 +138,7 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
     private Collection<I_Found<IRI>> performSearch(String text, int maxResults, double minScore, IRI concept) {
         if (text == null || text.trim().isEmpty())
             return new ArrayList<>();
-        Response<Embedding> queryEmbed = embed(text);
-        float[] queryVector = queryEmbed.content().vector();
+        float[] queryVector = embed(text);
 
         List<ScoredIRI> scoredResults = new ArrayList<>();
         Set<Integer> idsToSearch = (concept == null) ? vectorsById.keySet()
@@ -204,11 +197,10 @@ public class SearchMatrix implements I_Indexer, I_Corpus<IRI> {
      * Embeds the given text into an embedding vector using the model.
      *
      * @param text the text to be embedded.
-     * @return the embedding of the text.
+     * @return the embedding vector of the text.
      */
-    private Response<Embedding> embed(String text) {
-        TextSegment segment = TextSegment.from(text);
-        return model.embed(segment);
+    private float[] embed(String text) {
+        return model.embed(text);
     }
 
     private String sha256(String text) {

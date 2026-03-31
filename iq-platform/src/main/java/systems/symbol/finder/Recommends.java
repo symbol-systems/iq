@@ -1,9 +1,5 @@
 package systems.symbol.finder;
 
-import systems.symbol.onnx.data.embedding.Embedding;
-import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import systems.symbol.onnx.model.embedding.EmbeddingModel;
-import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModel;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
@@ -16,20 +12,19 @@ import java.util.*;
 
 public class Recommends {
     private final static Logger log = LoggerFactory.getLogger(Recommends.class);
-    static AllMiniLmL6V2EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
+    private static final FinderEmbeddingModel embeddingModel = FinderEmbeddingModelFactory.defaultModel();
 
-    // public static Map<Resource, float[]> index(Model model, IRI predicate) {
-    // return index(model, predicate, new AllMiniLmL6V2EmbeddingModel());
-    // }
+    public static Map<Resource, float[]> index(Model model, IRI predicate) {
+        return index(model, predicate, embeddingModel);
+    }
 
-    public static Map<Resource, float[]> index(Model model, IRI predicate, EmbeddingModel embeddingModel) {
+    public static Map<Resource, float[]> index(Model model, IRI predicate, FinderEmbeddingModel embeddingModel) {
         Map<Resource, float[]> found = new HashMap<>();
         Iterable<Statement> statements = model.getStatements(null, predicate, null);
         for (Statement s : statements) {
             Value object = s.getObject();
             if (object != null && !object.stringValue().isEmpty() && !found.containsKey(s.getSubject())) {
-                Response<Embedding> embed = embeddingModel.embed(object.stringValue());
-                float[] vector = embed.content().vector();
+                float[] vector = embeddingModel.embed(object.stringValue());
                 found.put(s.getSubject(), vector);
             }
         }
@@ -38,16 +33,16 @@ public class Recommends {
     }
 
     public static Map<Resource, Double> similarity(Model model, IRI predicate, String prompt, double threshold) {
-        Response<Embedding> match = embeddingModel.embed(prompt);
+        float[] match = embeddingModel.embed(prompt);
         return similarity(match, index(model, predicate, embeddingModel), threshold);
     }
 
-    private static Map<Resource, Double> similarity(Response<Embedding> match, Map<Resource, float[]> index,
+    private static Map<Resource, Double> similarity(float[] match, Map<Resource, float[]> index,
             double threshold) {
         Map<Resource, Double> documentScores = new HashMap<>();
         for (Resource document : index.keySet()) {
             float[] embeds = index.get(document);
-            double similarity = cosineSimilarity(match.content().vector(), embeds);
+            double similarity = cosineSimilarity(match, embeds);
             if (similarity > threshold) {
                 documentScores.put(document, similarity);
             }
