@@ -1,0 +1,43 @@
+#!/bin/bash
+# Start the IQ MCP server (for LLM integration)
+
+set -e
+
+echo "Starting IQ MCP server..."
+
+cd "$(dirname "$0")/../.."
+
+# Build if needed
+if [ ! -d "iq-mcp/target" ]; then
+  echo "Building iq-mcp (first run)..."
+  ./mvnw -pl iq-mcp -am clean install -DskipTests > /dev/null 2>&1
+fi
+
+# Get the JAR
+JAR=$(find iq-mcp/target -name "iq-mcp-*.jar" -not -name "*sources*" | head -1)
+
+if [ -z "$JAR" ]; then
+  echo "Error: Could not find iq-mcp JAR"
+  exit 1
+fi
+
+# Run the MCP server
+# Supports both stdio (local) and TCP (remote)
+TRANSPORT=${TRANSPORT:-stdio}
+
+case $TRANSPORT in
+  stdio)
+    echo "MCP server listening on stdio (for Claude Desktop)"
+    java -jar "$JAR" --transport stdio "$@"
+    ;;
+  tcp)
+    PORT=${MCP_PORT:-5555}
+    echo "MCP server listening on tcp://localhost:$PORT"
+    java -jar "$JAR" --transport tcp --port $PORT "$@"
+    ;;
+  *)
+    echo "Unknown transport: $TRANSPORT"
+    echo "Use: TRANSPORT=stdio or TRANSPORT=tcp"
+    exit 1
+    ;;
+esac

@@ -1,0 +1,13 @@
+# Find all customers
+# Requires that customers are defined in the knowledge graph
+
+PREFIX schema: <https://schema.org/>
+PREFIX iq: <http://iq.systems/>
+
+SELECT ?customer ?name ?revenue
+WHERE {
+  ?customer a schema:Customer ;
+            schema:name ?name ;
+            schema:revenue ?revenue .
+}
+ORDER BY DESC(?revenue)

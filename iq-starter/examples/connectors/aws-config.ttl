@@ -1,0 +1,38 @@
+# AWS Connector Example Configuration
+
+@prefix aws: <http://iq.systems/connectors/aws/> .
+@prefix iq: <http://iq.systems/> .
+
+aws:aws-connector
+  a iq:Connector ;
+  iq:name "aws-connector" ;
+  iq:connectorType "aws" ;
+  iq:enabled true ;
+  
+  # AWS services to monitor
+  iq:services (
+    "ec2"        # Virtual machines
+    "s3"         # Object storage
+    "rds"        # Databases
+    "cloudwatch" # Monitoring
+    "iam"        # Identity and access
+  ) ;
+  
+  # Regions
+  iq:regions (
+    "us-east-1"
+    "us-west-2"
+    "eu-west-1"
+  ) ;
+  
+  # Sync frequency
+  iq:syncFrequency "PT12H" ;  # Every 12 hours
+  
+  # Read AWS resource state into knowledge graph
+  iq:modeRead true ;
+  
+  # Write capacity (create instances, scale, manage)
+  iq:modeWrite true ;
+  
+  # Credentials from environment
+  iq:credentialSource "env:AWS_ACCESS_KEY_ID:AWS_SECRET_ACCESS_KEY" .

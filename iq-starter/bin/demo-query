@@ -1,0 +1,36 @@
+#!/bin/bash
+# Demo: Run a SPARQL query
+# Usage: ./bin/demo-query examples/queries/hello.sparql
+
+if [ $# -eq 0 ]; then
+  echo "Usage: ./bin/demo-query <query-file.sparql>"
+  echo ""
+  echo "Examples:"
+  echo "  ./bin/demo-query examples/queries/00-hello.sparql"
+  exit 1
+fi
+
+QUERY_FILE="$1"
+
+if [ ! -f "$QUERY_FILE" ]; then
+  echo "Error: File not found: $QUERY_FILE"
+  exit 1
+fi
+
+# Check if server is running
+if ! curl -s http://localhost:8080/health > /dev/null 2>&1; then
+  echo "Error: API server not running"
+  echo "Start it with: ./bin/start-api"
+  exit 1
+fi
+
+echo "Running: $QUERY_FILE"
+echo ""
+
+QUERY=$(cat "$QUERY_FILE")
+
+curl -s -X POST http://localhost:8080/sparql \
+  -H "Content-Type: application/sparql-query" \
+  -d "$QUERY" | jq .
+
+echo ""

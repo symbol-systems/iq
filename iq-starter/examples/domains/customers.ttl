@@ -1,0 +1,38 @@
+# Sample RDF domain: Customer relationships
+# This file defines customer entities that knowledge can be added to
+
+@prefix : <http://example.com/customers/> .
+@prefix schema: <https://schema.org/> .
+@prefix iq: <http://iq.systems/> .
+
+# Customer Alice
+:alice
+  a schema:Customer ;
+  schema:name "Alice Corp" ;
+  schema:email "contact@alice.com" ;
+  schema:revenue 1500000 ;
+  schema:status "active" ;
+  iq:tier "gold" ;
+  iq:createdDate "2023-01-15" .
+
+# Customer Bob
+:bob
+  a schema:Customer ;
+  schema:name "Bob Industries" ;
+  schema:email "contact@bob.com" ;
+  schema:revenue 850000 ;
+  schema:status "active" ;
+  iq:tier "silver" ;
+  iq:createdDate "2023-03-20" .
+
+# Customer Charlie (churned)
+:charlie
+  a schema:Customer ;
+  schema:name "Charlie LLC" ;
+  schema:email "contact@charlie.com" ;
+  schema:revenue 0 ;
+  schema:status "inactive" ;
+  iq:tier "none" ;
+  iq:createdDate "2022-06-10" ;
+  iq:churnedDate "2024-02-28" ;
+  iq:churnReason "price_sensitivity" .

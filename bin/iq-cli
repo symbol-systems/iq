@@ -2,31 +2,40 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+
+# Source shared configuration
+source "${ROOT}/bin/lib/java-config.sh"
+source "${ROOT}/bin/lib/jar-resolver.sh"
+
+# Initialize Java environment
+init_java_config
+
 EXPECTED_MAIN="systems.symbol.CLI"
 
+# Try shaded JAR first, then standard JAR
 JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
 if [[ -z "${JAR_PATH}" ]]; then
   JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
 fi
+
+# If no JAR found, build it
 if [[ -z "${JAR_PATH}" ]]; then
-  echo "[INFO] No existing iq-cli jar found. Building..."
-  ./mvnw -pl iq-cli -am package -DskipTests
-  JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
-  if [[ -z "${JAR_PATH}" ]]; then
-    JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
-  fi
-else
-  echo "[INFO] Reusing existing jar: $JAR_PATH"
+  echo "[INFO] No existing jar found. Resolving via resolve_jar..."
+  JAR_PATH=$(resolve_jar "iq-cli" "iq-cli-*-shaded.jar")
 fi
+
+echo "[INFO] Using jar: $JAR_PATH"
 
 # Validate jar main class before running
 MAIN_CLASS="$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep -i '^Main-Class:' | awk '{print $2}' | tr -d '\r')"
 if [[ "$MAIN_CLASS" == "$EXPECTED_MAIN" ]]; then
-  java -jar "$JAR_PATH" "$@" || {
+  java $JAVA_OPTS -jar "$JAR_PATH" "$@" || {
     echo "[WARN] Running jar failed (falling back to maven exec)."
-    ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+    MVN_CMD=$(resolve_maven_cmd)
+    $MVN_CMD compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
   }
 else
   echo "[WARN] Jar does not have expected Main-Class ($EXPECTED_MAIN). Found: $MAIN_CLASS. Falling back to maven exec."
-  ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+  MVN_CMD=$(resolve_maven_cmd)
+  $MVN_CMD compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
 fi

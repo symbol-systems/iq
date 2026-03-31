@@ -1,0 +1,107 @@
+# iq-search Configuration Reference
+# Place in .iq/config.yaml or configure programmatically
+
+search:
+  # Index type: vector | bm25 | hybrid | graph
+  # Default: hybrid
+  index-type: hybrid
+
+  # Vector Search Configuration
+  vector:
+    # Embedding model (from SentenceTransformers)
+    model: all-MiniLM-L6-v2
+    dimension: 384
+    
+    # Enable serialization to disk for faster startup
+    persistence-enabled: true
+    persistence-path: .iq/indexes/vectors
+    
+    # Cache embeddings to avoid re-computing identical queries
+    cache-embeddings: true
+
+  # BM25 Full-Text Search Configuration
+  bm25:
+    # Analyzer type: standard | simple | whitespace
+    analyzer: standard
+    
+    # BM25 tuning parameters (Okapi BM25)
+    # k1: controls term frequency saturation (typically 1.2)
+    k1: 1.2
+    
+    # b: length normalization (0.75 is standard, 0 disables)
+    b: 0.75
+    
+    persistence-enabled: true
+    persistence-path: .iq/indexes/bm25
+
+  # Hybrid (Vector + BM25) Configuration
+  hybrid:
+    # Interpolation mode: linear-interpolation | max-score | cascading
+    mode: linear-interpolation
+    
+    # Weights should sum to 1.0
+    # Higher vector-weight favors semantic relevance
+    # Higher bm25-weight favors exact keyword matching
+    vector-weight: 0.6
+    bm25-weight: 0.4
+
+  # Graph-Semantic Integration
+  graph:
+    # Enable graph-aware reranking?
+    enabled: true
+    
+    # Boost factor for graph proximity (0-1)
+    # 0.3 = 30% of final score influenced by graph proximity
+    boost: 0.3
+    
+    # Maximum paths to compute for link analysis
+    max-paths: 50
+
+  # Per-field Weighting (for future use)
+  field-boosts:
+    # Boost matches in these RDF predicates
+    "http://www.w3.org/2000/01/rdf-schema#label": 3.0
+    "http://www.w3.org/2000/01/rdf-schema#comment": 1.5
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": 1.0
+
+  # Performance Configuration
+  performance:
+    # Query timeout (milliseconds)
+    query-timeout-ms: 5000
+    
+    # Maximum results per index before merging
+    max-results-per-index: 1000
+    
+    # Query embedding cache size (MB)
+    cache-size-mb: 256
+    
+    # Enable metrics collection?
+    metrics-enabled: true
+
+# Usage examples in different scenarios:
+
+# Scenario 1: Semantic Search (Default)
+# search:
+#   index-type: vector
+# Use for: conceptual matching, clustering, anomaly detection
+
+# Scenario 2: Exact Keyword Search
+# search:
+#   index-type: bm25
+# Use for: FAQ lookups, code search, structured queries
+
+# Scenario 3: Balanced (Recommended)
+# search:
+#   index-type: hybrid
+#   hybrid:
+#     vector-weight: 0.6
+#     bm25-weight: 0.4
+# Use for: general-purpose retrieval, entity lookup
+
+# Scenario 4: Context-Aware Graph Search
+# search:
+#   index-type: graph
+#   graph:
+#     enabled: true
+#     boost: 0.3
+# Use for: provenance tracking, source ranking, relationship discovery

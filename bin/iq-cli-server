@@ -3,17 +3,26 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+# Source shared configuration
+source "${ROOT}/bin/lib/java-config.sh"
+source "${ROOT}/bin/lib/jar-resolver.sh"
+
+# Initialize Java environment
+init_java_config
+
+# Default command: start MCP server via iq-apis (HTTP)
+if [[ $# -eq 0 ]]; then
+    set -- server mcp start
+fi
+
+# Resolve jar: iq-cli-server for server runtime (not iq-mcp module)
 JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar 2>/dev/null | grep -v '^iq-cli-server/target/original-' | head -n1 || true)"
 if [[ -z "${JAR_PATH:-}" ]]; then
-  echo "[INFO] No existing iq-cli-server jar found. Building..."
-  ./mvnw -pl iq-cli-server -am package -DskipTests
-  JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
+  echo "[INFO] No existing iq-cli-server jar found. Resolving via resolve_jar..."
+  JAR_PATH=$(resolve_jar "iq-cli-server" "iq-cli-server-*.jar")
 else
   echo "[INFO] Reusing existing jar: $JAR_PATH"
 fi
 
-if [[ $# -eq 0 ]]; then
-	set -- server mcp start
-fi
-JAVA_OPTS="${JAVA_OPTS:-} -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+echo "[INFO] Using jar: $JAR_PATH"
 java $JAVA_OPTS -jar "$JAR_PATH" "$@"

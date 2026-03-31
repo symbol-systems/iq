@@ -46,6 +46,7 @@
     <module>iq-apis</module>
     <!-- <module>iq-persona</module> -->
     <module>iq-rdf4j-graphs</module>
+    <module>iq-search</module>
     <module>iq-test-servers</module>
     <module>iq-cli</module>
     <module>iq-cli-pro</module>
@@ -57,6 +58,21 @@
     <module>iq-connect/iq-connect-template</module>
     <module>iq-connect/iq-connect-github</module>
     <module>iq-connect/iq-connect-aws</module>
+    <module>iq-connect/iq-connect-azure</module>
+    <module>iq-connect/iq-connect-confluence</module>
+    <module>iq-connect/iq-connect-databricks</module>
+    <module>iq-connect/iq-connect-datadog</module>
+    <module>iq-connect/iq-connect-digitalocean</module>
+    <module>iq-connect/iq-connect-docker</module>
+    <module>iq-connect/iq-connect-gcp</module>
+    <module>iq-connect/iq-connect-google-apps</module>
+    <module>iq-connect/iq-connect-k8s</module>
+    <module>iq-connect/iq-connect-office-365</module>
+    <module>iq-connect/iq-connect-parquet</module>
+    <module>iq-connect/iq-connect-salesforce</module>
+    <module>iq-connect/iq-connect-slack</module>
+    <module>iq-connect/iq-connect-snowflake</module>
+    <module>iq-connect/iq-connect-stripe</module>
     <module>iq-mcp</module>
   </modules>
   <scm>

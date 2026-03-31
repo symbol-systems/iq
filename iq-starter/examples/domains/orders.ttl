@@ -1,0 +1,28 @@
+# Sample RDF domain: Orders and fulfillment
+
+@prefix : <http://example.com/orders/> .
+@prefix schema: <https://schema.org/> .
+@prefix iq: <http://iq.systems/> .
+
+# Order 1
+:order-2024-001
+  a schema:Order ;
+  schema:orderNumber "PO-2024-001" ;
+  schema:customer <http://example.com/customers/alice> ;
+  schema:orderDate "2024-03-15" ;
+  schema:amount 45000 ;
+  schema:currency "USD" ;
+  schema:status "delivered" ;
+  schema:deliveryDate "2024-03-28" ;
+  iq:fulfillmentTime "PT13D" .
+
+# Order 2 (pending)
+:order-2024-002
+  a schema:Order ;
+  schema:orderNumber "PO-2024-002" ;
+  schema:customer <http://example.com/customers/bob> ;
+  schema:orderDate "2024-03-20" ;
+  schema:amount 25000 ;
+  schema:currency "USD" ;
+  schema:status "processing" ;
+  iq:estimatedDelivery "2024-04-10" .

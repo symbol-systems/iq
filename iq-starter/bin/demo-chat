@@ -1,0 +1,34 @@
+#!/bin/bash
+# Demo: Chat API
+# Usage: ./bin/demo-chat "Your question here"
+
+if [ $# -eq 0 ]; then
+  echo "Usage: ./bin/demo-chat \"Your question\""
+  echo ""
+  echo "Examples:"
+  echo "  ./bin/demo-chat \"What is IQ?\""
+  echo "  ./bin/demo-chat \"Tell me about our customers\""
+  exit 1
+fi
+
+REALM=${REALM:-default}
+MESSAGE="$*"
+
+# Check if server is running
+if ! curl -s http://localhost:8080/health > /dev/null 2>&1; then
+  echo "Error: API server not running"
+  echo "Start it with: ./bin/start-api"
+  exit 1
+fi
+
+echo "Sending: \"$MESSAGE\""
+echo ""
+
+curl -s -X POST http://localhost:8080/chat \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"realm\": \"$REALM\",
+    \"message\": \"$MESSAGE\"
+  }" | jq .
+
+echo ""

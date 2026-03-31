@@ -86,6 +86,36 @@ public class ActorTriggerAdapter implements I_MCPTool {
     }
 
     @Override
+    public Map<String, Object> getOutputSchema() {
+        return Map.of(
+            "type", "object",
+            "description", "Intent dispatch result",
+            "properties", Map.of(
+                "status", Map.of("type", "string", "enum", List.of("triggered", "executed", "error"), "description", "Dispatch status"),
+                "intent", Map.of("type", "string", "description", "The intent URI that was triggered"),
+                "message", Map.of("type", "string", "description", "Optional message or error details"),
+                "result", Map.of("type", "object", "description", "Intent result (varies by intent)")
+            )
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getExamples() {
+        return List.of(
+            Map.of(
+                "description", "Trigger a sync data intent",
+                "input", Map.of("intentUri", "iq:SyncData", "actor", "iq:System", "params", Map.of("source", "external-api")),
+                "output", Map.of("status", "triggered", "intent", "iq:SyncData")
+            ),
+            Map.of(
+                "description", "Trigger a notification intent",
+                "input", Map.of("intentUri", "iq:SendAlert", "params", Map.of("severity", "high", "message", "System alert")),
+                "output", Map.of("status", "triggered", "intent", "iq:SendAlert")
+            )
+        );
+    }
+
+    @Override
     public I_MCPResult execute(MCPCallContext ctx, Map<String, Object> input) throws MCPException {
         String intentUri = (String) input.get("intentUri");
         if (intentUri == null || intentUri.isBlank()) throw MCPException.badRequest("'intentUri' is required");

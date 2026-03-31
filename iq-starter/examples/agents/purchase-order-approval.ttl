@@ -1,0 +1,141 @@
+# Example: Purchase Order Approval Workflow
+# State machine for authorizing purchase requests
+
+@prefix po: <http://example.com/procurement/> .
+@prefix iq: <http://iq.systems/> .
+
+# =============================================
+# State Machine Definition
+# =============================================
+
+po:PurchaseOrderWorkflow
+  a iq:StateMachine ;
+  iq:name "Purchase Order Approval" ;
+  iq:description "Automated approval workflow for purchase orders" ;
+  
+  iq:initialState po:pending ;
+  
+  iq:states (
+    po:pending      # Waiting for approval
+    po:approved     # Approved, ready to order
+    po:rejected     # Denied
+    po:escalated    # Needs manual review
+    po:ordered      # Order placed with vendor
+    po:delivered    # Order received
+  ) ;
+  
+  iq:transitions (
+    [ iq:from po:pending ; iq:to po:approved ; iq:label "approve" ]
+    [ iq:from po:pending ; iq:to po:rejected ; iq:label "reject" ]
+    [ iq:from po:pending ; iq:to po:escalated ; iq:label "escalate" ]
+    [ iq:from po:approved ; iq:to po:ordered ; iq:label "order" ]
+    [ iq:from po:ordered ; iq:to po:delivered ; iq:label "deliver" ]
+  ) .
+
+# =============================================
+# Decision Rules
+# =============================================
+
+po:rule-auto-approve-small
+  a iq:Rule ;
+  iq:priority 10 ;
+  
+  iq:condition """
+    SELECT ?po WHERE {
+      ?po po:amount ?amount .
+      ?po po:requester ?req .
+      ?req po:role ?role .
+      FILTER (?amount < 5000 && ?role = 'manager')
+    }
+  """ ;
+  
+  iq:action po:approve-action .
+
+po:rule-escalate-large
+  a iq:Rule ;
+  iq:priority 5 ;
+  
+  iq:condition """
+    SELECT ?po WHERE {
+      ?po po:amount ?amount .
+      FILTER (?amount > 100000)
+    }
+  """ ;
+  
+  iq:action po:escalate-action .
+
+po:rule-reject-unknown-vendor
+  a iq:Rule ;
+  iq:priority 8 ;
+  
+  iq:condition """
+    SELECT ?po WHERE {
+      ?po po:vendor ?vendor .
+      FILTER NOT EXISTS { ?vendor po:approved true }
+    }
+  """ ;
+  
+  iq:action po:reject-action .
+
+# =============================================
+# Side Effects / Actions
+# =============================================
+
+po:approve-action
+  a iq:Action ;
+  iq:onState po:approved ;
+  iq:triggers (
+    po:send-approval-email
+    po:charge-budget
+    po:create-jira-ticket
+  ) .
+
+po:send-approval-email
+  a iq:Action ;
+  iq:type "email" ;
+  iq:recipients [ iq:template "to-requester" ] ;
+  iq:subject "Purchase Order Approved" ;
+  iq:bodyTemplate "templates/po-approved.html" .
+
+po:charge-budget
+  a iq:Action ;
+  iq:type "accounting" ;
+  iq:account [ iq:template "requester-budget" ] ;
+  iq:amount [ iq:template "po-amount" ] .
+
+po:create-jira-ticket
+  a iq:Action ;
+  iq:type "jira" ;
+  iq:project "ACME" ;
+  iq:ticketType "Task" ;
+  iq:summary "Procure: ${po.description}" ;
+  iq:assignee "procurement@acme.com" .
+
+po:escalate-action
+  a iq:Action ;
+  iq:onState po:escalated ;
+  iq:triggers (
+    po:notify-finance-lead
+    po:create-escalation-ticket
+  ) .
+
+po:notify-finance-lead
+  a iq:Action ;
+  iq:type "slack" ;
+  iq:channel "#escalations" ;
+  iq:mentions "@finance-lead" ;
+  iq:message "PO ${po.id} needs manual approval (amount: ${po.amount})" .
+
+po:reject-action
+  a iq:Action ;
+  iq:onState po:rejected ;
+  iq:triggers (
+    po:send-rejection-email
+  ) .
+
+po:send-rejection-email
+  a iq:Action ;
+  iq:type "email" ;
+  iq:recipients [ iq:template "to-requester" ] ;
+  iq:subject "Purchase Order Rejected" ;
+  iq:bodyTemplate "templates/po-rejected.html" .

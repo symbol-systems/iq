@@ -41,6 +41,29 @@ public interface I_MCPTool {
     Map<String, Object> getInputSchema();
 
     /**
+     * JSON Schema describing the tool's output/result structure.
+     * Default: generic object schema (no constraint).
+     * Override to provide detailed output documentation.
+     */
+    default Map<String, Object> getOutputSchema() {
+        return Map.of("type", "object", "description", "Tool result");
+    }
+
+    /**
+     * Example invocations for documentation and testing.
+     * Each example is a Map containing:
+     * <ul>
+     *   <li>"input" — example input parameters</li>
+     *   <li>"output" — example result or explanation</li>
+     *   <li>"description" — narrative description of the example</li>
+     * </ul>
+     * Default: empty list.
+     */
+    default java.util.List<Map<String, Object>> getExamples() {
+        return java.util.List.of();
+    }
+
+    /**
      * Execute the tool.
      *
      * @param ctx    the fully-populated call context (principal, realm, metadata)

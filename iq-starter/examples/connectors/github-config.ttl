@@ -1,0 +1,37 @@
+# GitHub Connector Example Configuration
+
+@prefix gh: <http://iq.systems/connectors/github/> .
+@prefix iq: <http://iq.systems/> .
+
+gh:github-connector
+  a iq:Connector ;
+  iq:name "github-connector" ;
+  iq:connectorType "github" ;
+  iq:enabled true ;
+  
+  # Repositories to monitor
+  iq:repositories (
+    "symbol-systems/iq"
+    "symbol-systems/docs"
+  ) ;
+  
+  # Data to capture
+  iq:dataCapture (
+    "issues"
+    "pull-requests"
+    "commits"
+    "releases"
+    "discussions"
+  ) ;
+  
+  # Sync frequency
+  iq:syncFrequency "PT6H" ;  # Every 6 hours
+  
+  # Read from GitHub
+  iq:modeRead true ;
+  
+  # Write to GitHub (create issues, add comments)
+  iq:modeWrite true ;
+  
+  # Credential (from GITHUB_TOKEN environment variable)
+  iq:credentialSource "env:GITHUB_TOKEN" .

@@ -155,6 +155,11 @@
             <artifactId>groovy-all</artifactId>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>systems.symbol</groupId>
+            <artifactId>iq-mcp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

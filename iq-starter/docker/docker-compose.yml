@@ -1,0 +1,70 @@
+# Docker Compose: Run the full IQ stack
+# Usage:
+#   1. cp .env.example .env && edit .env
+#   2. docker-compose up -d
+#   3. Open http://localhost:8080
+
+version: '3.8'
+
+services:
+  # IQ API Server
+  iq-api:
+    image: iq-api:latest
+    build:
+      context: ../../
+      dockerfile: iq-apis/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # LLM Provider
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      IQ_LLM_PROVIDER: ${IQ_LLM_PROVIDER:-openai}
+      IQ_LLM_MODEL: ${IQ_LLM_MODEL:-gpt-3.5-turbo}
+      
+      # Database (optional, uses in-memory by default)
+      DATABASE_URL: ${DATABASE_URL}
+      
+      # Connectors
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      
+      # IQ Config
+      IQ_REALM_DEFAULT: ${IQ_REALM_DEFAULT:-default}
+      IQ_AUTH_JWT_SECRET: ${IQ_AUTH_JWT_SECRET:-change-me-in-production}
+      IQ_HOME: /opt/iq/.iq
+      
+    volumes:
+      # Persistent knowledge graph
+      - iq-data:/opt/iq/.iq
+      
+    depends_on:
+      - postgres
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # PostgreSQL Database (optional, for persistent storage)
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: iq_prod
+      POSTGRES_USER: iq
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  iq-data:
+  postgres-data:
+
+networks:
+  default:
+    name: iq-network

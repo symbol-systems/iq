@@ -2,4 +2,39 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw -f iq-mcp/pom.xml compile exec:java -Dexec.mainClass=systems.symbol.MCPServerMain -Dexec.classpathScope=compile -DskipTests
+
+# Source shared configuration
+source "${ROOT}/bin/lib/java-config.sh"
+source "${ROOT}/bin/lib/jar-resolver.sh"
+
+# Initialize Java environment
+init_java_config
+
+# iq-mcp is now HTTP(S) only via iq-apis Quarkus server.
+# Run iq-apis HTTP endpoints on port 8080. MCP tools are exposed via:
+#   GET  /mcp/tools          (list available tools)
+#   POST /mcp/tools/{name}/execute  (execute tool with context)
+#   GET  /mcp/status         (server status check)
+# Legacy stdio MCP support (Claude desktop) is deprecated; use HTTP client instead.
+# For debugging: export IQ_QUARKUS_COMMAND="mvn -pl iq-apis -Dquarkus.http.port=8080 quarkus:dev"
+
+export IQ_RUNTIME_MANAGER="${IQ_RUNTIME_MANAGER:-quarkus}"
+if [[ -z "${IQ_QUARKUS_COMMAND:-}" ]]; then
+  MVN_CMD=$(resolve_maven_cmd)
+  export IQ_QUARKUS_COMMAND="$MVN_CMD -pl iq-apis -Dquarkus.http.port=8080 quarkus:dev"
+fi
+
+# Resolve jar: iq-cli-server for server runtime (routes to iq-apis HTTP)
+JAR_PATH=$(resolve_jar "iq-cli-server" "iq-cli-server-*.jar")
+
+# Default to server mcp start if no explicit arguments are passed
+if [[ $# -eq 0 ]]; then
+  set -- server mcp start
+fi
+
+echo "[INFO] Using jar: $JAR_PATH"
+echo "[INFO] IQ_RUNTIME_MANAGER=$IQ_RUNTIME_MANAGER"
+echo "[INFO] IQ_QUARKUS_COMMAND=$IQ_QUARKUS_COMMAND"
+
+java $JAVA_OPTS -jar "$JAR_PATH" "$@"
+

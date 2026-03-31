@@ -60,6 +60,26 @@ public class RdfDescribeAdapter implements I_MCPTool {
     }
 
     @Override
+    public Map<String, Object> getOutputSchema() {
+        return Map.of(
+            "type", "string",
+            "description", "RDF Turtle representation of the entity",
+            "format", "text/turtle"
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getExamples() {
+        return List.of(
+            Map.of(
+                "description", "Describe a person entity",
+                "input", Map.of("uri", "https://example.org/person/john-doe"),
+                "output", "@prefix ex: <https://example.org/> . ex:person/john-doe a foaf:Person ; foaf:name \"John Doe\" ; foaf:email \"john@example.org\" ."
+            )
+        );
+    }
+
+    @Override
     public I_MCPResult execute(MCPCallContext ctx, Map<String, Object> input) throws MCPException {
         String uri = (String) input.get("uri");
         if (uri == null || uri.isBlank()) throw MCPException.badRequest("'uri' is required");

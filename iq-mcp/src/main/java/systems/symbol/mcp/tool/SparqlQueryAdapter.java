@@ -79,6 +79,39 @@ public class SparqlQueryAdapter implements I_MCPTool {
     }
 
     @Override
+    public Map<String, Object> getOutputSchema() {
+        return Map.of(
+            "type", "object",
+            "description", "SELECT/ASK result as JSON, or graph result as Turtle",
+            "properties", Map.of(
+                "vars", Map.of("type", "array", "description", "List of result variable names (SELECT/ASK only)"),
+                "results", Map.of("type", "array", "description", "Array of binding sets or graph triples (SELECT/ASK only)")
+            )
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getExamples() {
+        return List.of(
+            Map.of(
+                "description", "Count entities of a specific type",
+                "input", Map.of("query", "SELECT (COUNT(?s) AS ?count) WHERE { ?s a :MyType }"),
+                "output", Map.of("vars", List.of("count"), "results", List.of(Map.of("count", "42")))
+            ),
+            Map.of(
+                "description", "Describe a specific entity",
+                "input", Map.of("query", "DESCRIBE <https://example.org/entity/123>"),
+                "output", "RDF Turtle format with entity properties"
+            ),
+            Map.of(
+                "description", "Query schema/classes",
+                "input", Map.of("query", "SELECT ?class ?label WHERE { ?class a owl:Class . OPTIONAL { ?class rdfs:label ?label } } LIMIT 10"),
+                "output", Map.of("vars", List.of("class", "label"), "results", List.of(Map.of("class", "http://example.org/MyClass", "label", "My Class")))
+            )
+        );
+    }
+
+    @Override
     public I_MCPResult execute(MCPCallContext ctx, Map<String, Object> input) throws MCPException {
         // Prefer the safety-rewritten query if available
         String query = ctx.has("mcp.sparql.query")

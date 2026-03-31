@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ServerRuntimeManagerFactoryTest {
 
     @Test
-    void testDefaultManagerIsProcess() {
+    void testDefaultManagerIsMemory() {
         System.clearProperty("iq.runtime.manager");
         ServerRuntimeManager manager = ServerRuntimeManagerFactory.getInstance();
         assertNotNull(manager);
-        assertTrue(manager instanceof ProcessServerRuntimeManager);
+        assertTrue(manager instanceof InMemoryServerRuntimeManager);
     }
 
     @Test

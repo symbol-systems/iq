@@ -1,0 +1,19 @@
+#!/bin/bash
+# Start the IQ CLI (interactive shell)
+
+set -e
+
+PORT=${PORT:-8080}
+
+echo "Starting IQ CLI..."
+
+cd "$(dirname "$0")/../.."
+
+# Build if needed
+if [ ! -d "iq-cli/target" ]; then
+  echo "Building iq-cli (first run)..."
+  ./mvnw -pl iq-cli -am clean install -DskipTests > /dev/null 2>&1
+fi
+
+# Run the CLI
+java -jar iq-cli/target/iq-cli-*.jar "$@"

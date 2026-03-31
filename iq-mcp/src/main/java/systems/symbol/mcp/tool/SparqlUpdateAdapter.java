@@ -79,6 +79,40 @@ public class SparqlUpdateAdapter implements I_MCPTool {
     }
 
     @Override
+    public Map<String, Object> getOutputSchema() {
+        return Map.of(
+            "type", "object",
+            "description", "Result of SPARQL Update operation",
+            "properties", Map.of(
+                "status", Map.of("type", "string", "enum", List.of("ok", "error"), "description", "Operation status"),
+                "trace", Map.of("type", "string", "description", "Trace ID for audit logging"),
+                "message", Map.of("type", "string", "description", "Optional message or error details")
+            )
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getExamples() {
+        return List.of(
+            Map.of(
+                "description", "Insert a single triple",
+                "input", Map.of("update", "INSERT DATA { <https://example.org/subject> <https://example.org/predicate> \"value\" . }"),
+                "output", Map.of("status", "ok")
+            ),
+            Map.of(
+                "description", "Conditional delete and insert",
+                "input", Map.of("update", "DELETE { ?s <http://example.org/status> ?old } INSERT { ?s <http://example.org/status> \"active\" } WHERE { ?s <http://example.org/type> \"user\" . OPTIONAL { ?s <http://example.org/status> ?old } }"),
+                "output", Map.of("status", "ok")
+            ),
+            Map.of(
+                "description", "Drop a named graph (requires confirmation)",
+                "input", Map.of("update", "DROP GRAPH <http://example.org/temp>", "confirmDrop", true),
+                "output", Map.of("status", "ok")
+            )
+        );
+    }
+
+    @Override
     public I_MCPResult execute(MCPCallContext ctx, Map<String, Object> input) throws MCPException {
         String update = (String) input.get("update");
         if (update == null || update.isBlank()) throw MCPException.badRequest("'update' is required");

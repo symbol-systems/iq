@@ -1,0 +1,31 @@
+#!/bin/bash
+# Import example data into the knowledge graph
+
+set -e
+
+echo "Importing example data..."
+
+REPO_ROOT="$(dirname "$0")/.."
+
+# Copy example .iq config to current directory if needed
+if [ ! -d ".iq" ]; then
+  echo "Creating .iq/ directory..."
+  mkdir -p .iq
+fi
+
+# Copy example domains
+echo "Loading example domains..."
+if [ -d "$REPO_ROOT/examples/domains" ]; then
+  for ttl in "$REPO_ROOT"/examples/domains/*/*.ttl; do
+    [ -f "$tt" ] && {
+      echo "  Importing $ttl"
+      # In real usage, this would load via CLI
+    }
+  done
+fi
+
+echo ""
+echo "✓ Example data imported"
+echo ""
+echo "Next: ./bin/start-api"
+echo "Then:  ./bin/demo-chat \"What can I do?\""

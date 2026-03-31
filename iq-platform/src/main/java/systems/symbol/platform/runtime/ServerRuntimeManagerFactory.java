@@ -8,7 +8,7 @@ public class ServerRuntimeManagerFactory {
             manager = System.getenv("IQ_RUNTIME_MANAGER");
         }
         if (manager == null || manager.isBlank()) {
-            manager = "process";
+            manager = "memory";
         }
 
         switch (manager.toLowerCase()) {
@@ -16,12 +16,10 @@ public class ServerRuntimeManagerFactory {
                 return new QuarkusRuntimeManager();
             case "default":
                 return new DefaultServerRuntimeManager();
-            case "process":
+            case "memory":
+            case "process":  // Legacy alias
             default:
-                return new ProcessServerRuntimeManager();
+                return new InMemoryServerRuntimeManager();
         }
-    }
-
-    private ServerRuntimeManagerFactory() {
     }
 }

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Build all runtime JARs (skipping tests).
+# After this runs, bin/iq-* commands will find their jars and skip rebuilding.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+# Prefer local mvn over mvnw to avoid downloading Maven wrapper bootstrap binary.
+if command -v mvn >/dev/null 2>&1; then
+  MVN_CMD="mvn"
+elif [[ -x "./mvnw" ]]; then
+  MVN_CMD="./mvnw"
+else
+  echo "[ERROR] Maven is not installed and mvnw is not available." >&2
+  exit 1
+fi
+
+echo "[INFO] Using Maven command: $MVN_CMD"
+
+echo "[INFO] Building CLI and MCP runtime JARs..."
+$MVN_CMD -pl iq-cli,iq-cli-pro,iq-cli-server,iq-mcp -am package -DskipTests
+$MVN_CMD -pl iq-mcp dependency:build-classpath -Dmdep.outputFile=target/classpath.txt -q
+
+echo "[INFO] Building Quarkus runtime apps (iq-trusted, iq-apis)..."
+$MVN_CMD -pl iq-trusted,iq-apis -am package -DskipTests
+
+echo "[INFO] All runtime JARs built successfully."

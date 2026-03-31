@@ -9,6 +9,7 @@ import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
 import systems.symbol.platform.runtime.RuntimeStatus;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerMgmtTool implements I_MCPTool {
@@ -26,11 +27,51 @@ public class ServerMgmtTool implements I_MCPTool {
     @Override
     public Map<String, Object> getInputSchema() {
         Map<String, Object> schema = new HashMap<>();
-        schema.put("runtime", Map.of("type", "string", "enum", new String[]{"api", "mcp"}));
-        schema.put("action", Map.of("type", "string", "enum", new String[]{"start", "stop", "reboot", "health", "debug", "dump"}));
-        schema.put("debug", Map.of("type", "boolean", "default", false));
-        schema.put("path", Map.of("type", "string", "default", "/tmp/iq-server-dump.tar.gz"));
+        schema.put("type", "object");
+        schema.put("properties", Map.of(
+            "runtime", Map.of("type", "string", "enum", List.of("api", "mcp"), "description", "Runtime to control: 'api' or 'mcp'"),
+            "action", Map.of("type", "string", "enum", List.of("start", "stop", "reboot", "health", "debug", "dump"), "description", "Action to perform"),
+            "debug", Map.of("type", "boolean", "default", false, "description", "Enable/disable debug for debug action"),
+            "path", Map.of("type", "string", "default", "/tmp/iq-server-dump.tar.gz", "description", "Path for dump file")
+        ));
+        schema.put("required", List.of("runtime", "action"));
         return schema;
+    }
+
+    @Override
+    public Map<String, Object> getOutputSchema() {
+        return Map.of(
+            "type", "object",
+            "description", "Runtime control result",
+            "properties", Map.of(
+                "status", Map.of("type", "string", "enum", List.of("ok", "error"), "description", "Operation status"),
+                "message", Map.of("type", "string", "description", "Response message"),
+                "healthy", Map.of("type", "boolean", "description", "Health status (for health action)"),
+                "details", Map.of("type", "string", "description", "Additional details"),
+                "path", Map.of("type", "string", "description", "Dump file path (for dump action)")
+            )
+        );
+    }
+
+    @Override
+    public List<Map<String, Object>> getExamples() {
+        return List.of(
+            Map.of(
+                "description", "Check API runtime health",
+                "input", Map.of("runtime", "api", "action", "health"),
+                "output", Map.of("healthy", true, "details", "All systems operational")
+            ),
+            Map.of(
+                "description", "Start MCP runtime",
+                "input", Map.of("runtime", "mcp", "action", "start"),
+                "output", Map.of("status", "ok", "message", "started")
+            ),
+            Map.of(
+                "description", "Dump server state for debugging",
+                "input", Map.of("runtime", "api", "action", "dump", "path", "/tmp/iq-dump.tar.gz"),
+                "output", Map.of("status", "ok", "path", "/tmp/iq-dump.tar.gz")
+            )
+        );
     }
 
     @Override

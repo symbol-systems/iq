@@ -3,6 +3,7 @@ package systems.symbol;
 import systems.symbol.cli.*;
 import systems.symbol.kernel.I_Kernel;
 import systems.symbol.kernel.KernelBuilder;
+import systems.symbol.platform.RuntimeBanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -73,6 +74,7 @@ public class CLI implements Callable<Number> {
     }
 
     public static void main(String[] args) {
+        RuntimeBanner.print();
         CLI cli = new CLI();
         I_Kernel kernel = null;
         CLIContext context = null;

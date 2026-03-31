@@ -20,6 +20,7 @@ public class ServerCLI implements Runnable {
     File home = null;
 
     public static void main(String[] args) {
+        RuntimeBanner.print();
         ServerCLI cli = new ServerCLI();
         I_Kernel kernel = null;
         CLIContext context = null;

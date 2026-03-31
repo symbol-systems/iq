@@ -1,0 +1,47 @@
+# Slack Connector Example Configuration
+
+# To use:
+# 1. Create a Slack app at https://api.slack.com/apps
+# 2. Get the Bot Token (xoxb-...)
+# 3. Set: export SLACK_BOT_TOKEN=xoxb-...
+# 4. Uncomment the connector in iq-apis/pom.xml
+# 5. Set channels below
+# 6. Start: ./bin/start-api
+# 7. Sync: iq> connector sync slack-connector
+
+@prefix slack: <http://iq.systems/connectors/slack/> .
+@prefix iq: <http://iq.systems/> .
+
+slack:slack-connector
+  a iq:Connector ;
+  iq:name "slack-connector" ;
+  iq:connectorType "slack" ;
+  iq:enabled true ;
+  
+  # Channels to monitor
+  iq:channels (
+    "#engineering"
+    "#incidents"
+    "#general"
+    "#sales"
+  ) ;
+  
+  # Sync frequency
+  iq:syncFrequency "PT4H" ;  # Every 4 hours
+  
+  # Data to capture
+  iq:dataCapture (
+    "messages"
+    "reactions"
+    "threads"
+    "user-profiles"
+  ) ;
+  
+  # Enable reading (fetch messages into knowledge graph)
+  iq:modeRead true ;
+  
+  # Enable writing (post messages from workflows)
+  iq:modeWrite true ;
+  
+  # Credential (from SLACK_BOT_TOKEN environment variable)
+  iq:credentialSource "env:SLACK_BOT_TOKEN" .

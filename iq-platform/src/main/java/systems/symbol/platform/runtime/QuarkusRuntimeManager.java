@@ -188,13 +188,34 @@ public class QuarkusRuntimeManager implements ServerRuntimeManager {
             return envCommand;
         }
 
+        // Prefer local mvn if available, otherwise fall back to wrapper
+        String mvnCmd = isCommandAvailable("mvn") ? "mvn" : "./mvnw";
+
         String lower = runtimeType == null ? "" : runtimeType.toLowerCase();
         if ("api".equals(lower)) {
-            return "./mvnw -pl iq-apis quarkus:dev";
+            return mvnCmd + " -pl iq-apis quarkus:dev";
         } else if ("mcp".equals(lower)) {
-            return "./mvnw -pl iq-mcp quarkus:dev";
+            return mvnCmd + " -pl iq-mcp quarkus:dev";
         } else {
-            return "./mvnw -pl iq-apis quarkus:dev";
+            return mvnCmd + " -pl iq-apis quarkus:dev";
+        }
+    }
+
+    /**
+     * Check if a command is available in PATH.
+     */
+    private boolean isCommandAvailable(String command) {
+        try {
+            Process process;
+            if (System.getProperty("os.name", "").toLowerCase().contains("win")) {
+                process = new ProcessBuilder("cmd", "/c", "where " + command).start();
+            } else {
+                process = new ProcessBuilder("sh", "-c", "command -v " + command).start();
+            }
+            return process.waitFor() == 0;
+        } catch (Exception e) {
+            log.debug("Command '{}' not found in PATH", command);
+            return false;
         }
     }
 

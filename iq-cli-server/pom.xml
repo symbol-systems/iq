@@ -68,7 +68,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <minimizeJar>true</minimizeJar>
+                    <minimizeJar>false</minimizeJar>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
