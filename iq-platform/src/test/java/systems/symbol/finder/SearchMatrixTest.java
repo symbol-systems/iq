@@ -1,11 +1,7 @@
 package systems.symbol.finder;
 
-import systems.symbol.onnx.data.embedding.Embedding;
-import systems.symbol.onnx.model.embedding.EmbeddingModel;
-import systems.symbol.onnx.model.output.Response;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.util.Values;
-
 import systems.symbol.fsm.StateException;
 import systems.symbol.platform.IQ_NS;
 
@@ -18,7 +14,6 @@ import java.util.Collection;
 
 public class SearchMatrixTest {
 
-public EmbeddingModel model;
 public static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
 @Test
@@ -87,12 +82,6 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Different query"; // Query does not match the indexed content
 
-// Manually create embeddings
-float[] mockVector = new float[] { 0.1f, 0.2f, 0.3f };
-Embedding embedding = new Embedding(mockVector);
-Response<Embedding> queryResponse = new Response<>(embedding);
-
-assert queryResponse.content().vector().length == embedding.vector().length;
 SearchMatrix searchMatrix = new SearchMatrix();
 searchMatrix.reindex(entity, content, concept);
 

@@ -1,7 +1,7 @@
 package systems.symbol.finder;
 
-import systems.symbol.onnx.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
-import systems.symbol.onnx.model.embedding.EmbeddingModel;
+import systems.symbol.finder.FinderEmbeddingModel;
+import systems.symbol.finder.FinderEmbeddingModelFactory;
 import systems.symbol.lake.Lakes;
 import systems.symbol.platform.IQ_NS;
 
@@ -15,13 +15,13 @@ import org.junit.jupiter.api.Test;
 public class GraphMatrixTest {
 
 private SearchMatrix searchMatrix;
-private EmbeddingModel model;
+private FinderEmbeddingModel model;
 private Repository repo;
 private File assets = new File("assets/triples");
 
 @BeforeEach
 public void setUp() throws IOException {
-model = new AllMiniLmL6V2EmbeddingModel();
+model = FinderEmbeddingModelFactory.defaultModel();
 searchMatrix = new SearchMatrix(model);
 repo = Lakes.load(assets, IQ_NS.TEST);
 }
