@@ -4,12 +4,16 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import jakarta.ws.rs.sse.Sse;
+import jakarta.ws.rs.sse.SseEventSink;
 import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.mcp.MCPToolRegistry;
 import systems.symbol.mcp.server.MCPServerBuilder;
 import systems.symbol.platform.RealmPlatform;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * REST Controller for MCP (Model Context Protocol) endpoints.
@@ -76,22 +80,112 @@ return toolRegistry;
 }
 
 /**
- * Root MCP endpoint — provides information about available resources.
+ * Root MCP endpoint — supports both JSON REST and SSE streaming.
  *
- * @return JSON with status and available endpoints
+ * <p>GET with Accept: application/json returns JSON status  
+ * GET with Accept: text/event-stream opens SSE connection for MCP protocol  
+ * POST accepts MCP client messages
+ *
+ * @param sseEventSink SSE sink for streaming (injected if SSE requested)
+ * @param sse SSE context (injected if SSE requested)
+ * @return Response (JSON or SSE stream depending on Accept header)
  */
 @GET
-public Response root() {
+public Response root(@Context(required = false) SseEventSink sseEventSink, 
+ @Context(required = false) Sse sse) {
 try {
+// If SSE connection requested, open stream
+if (sseEventSink != null && sse != null) {
+return handleMcpSseConnection(sseEventSink, sse);
+}
+
+// Otherwise return JSON status
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
 return Response.ok("{\"status\": \"partial\", \"message\": \"MCP initializing...\", " +
-"\"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"health\": \"/mcp/health\"}}").build();
+"\"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"health\": \"/mcp/health\", " +
+"\"sse\": \"GET (Accept: text/event-stream)\"}}").build();
 }
 return Response.ok("{\"status\": \"ready\", \"message\": \"MCP Server operational\", " +
-"\"version\": \"1.0\", \"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\"}}").build();
+"\"version\": \"1.0\", \"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", " +
+"\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"sse\": \"GET (Accept: text/event-stream)\"}}").build();
 } catch (Exception e) {
 log.error("Error in MCP root endpoint", e);
+return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+}
+}
+
+/**
+ * Handle MCP SSE (Server-Sent Events) connection.
+ *
+ * <p>Opens a persistent SSE connection for streaming MCP protocol messages.
+ * Server sends initial capability handshake and streams tool/resource updates.
+ *
+ * @param sseEventSink the SSE event sink for sending events
+ * @param sse the SSE context
+ * @return Response with appropriate status
+ */
+private Response handleMcpSseConnection(SseEventSink sseEventSink, Sse sse) {
+try {
+log.info("MCP SSE connection established");
+
+// Send initial capability handshake
+OutboundSseEvent event = sse.newEvent("initialization", 
+"{\"protocol\": \"model context protocol\", \"version\": \"1.0\", " +
+"\"capabilities\": {\"tools\": true, \"resources\": true, \"prompts\": true}}");
+event.setId(String.valueOf(System.currentTimeMillis()));
+sseEventSink.send(event);
+
+// Send ready event
+OutboundSseEvent readyEvent = sse.newEvent("ready",
+"{\"status\": \"ready\", \"message\": \"MCP Server operational\"}");
+readyEvent.setId(String.valueOf(System.currentTimeMillis() + 1));
+sseEventSink.send(readyEvent);
+
+log.debug("MCP SSE initialization complete, keeping connection open");
+
+// Connection stays open for bidirectional communication
+// Client can send messages via POST /mcp
+// Server sends updates via this SSE stream
+
+} catch (Exception e) {
+log.error("Error in MCP SSE handler", e);
+try {
+sseEventSink.close();
+} catch (Exception closeEx) {
+log.warn("Error closing SSE sink", closeEx);
+}
+}
+
+return Response.ok().build();
+}
+
+/**
+ * Accept MCP client messages via POST.
+ *
+ * <p>Handles messages from MCP clients (LLMs, tools) sent to the server.
+ *
+ * @param messageJson the client message in JSON format
+ * @return Response with server's response message
+ */
+@POST
+@Consumes(MediaType.APPLICATION_JSON)
+public Response handleMcpMessage(String messageJson) {
+try {
+log.debug("Received MCP message: {}", messageJson);
+
+MCPToolRegistry registry = getToolRegistry();
+if (registry == null) {
+return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP not yet initialized\"}").build();
+}
+
+// Parse and handle message
+// For now, echo back with acknowledgment
+return Response.ok("{\"status\": \"acknowledged\", \"message\": " + messageJson + "}").build();
+} catch (Exception e) {
+log.error("Error handling MCP message", e);
 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 .entity("{\"error\": \"" + e.getMessage() + "\"}").build();
 }

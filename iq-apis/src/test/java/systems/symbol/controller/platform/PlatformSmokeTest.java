@@ -109,6 +109,34 @@ given()
 .body("$", notNullValue());
 }
 
+@Test
+@DisplayName("MCP: POST /mcp — Handle MCP client messages")
+void testMcpMessageHandling() {
+String message = "{\"method\": \"initialize\", \"params\": {\"protocol\": \"model context protocol\", \"version\": \"1.0\"}}";
+
+given()
+.contentType(ContentType.JSON)
+.body(message)
+.when()
+.post("/mcp")
+.then()
+.statusCode(anyOf(equalTo(200), equalTo(503)))
+.contentType(ContentType.JSON)
+.body("$", notNullValue());
+}
+
+@Test
+@DisplayName("MCP: GET /mcp with Accept: text/event-stream — SSE connection should open")
+void testMcpSseConnection() {
+given()
+.header("Accept", "text/event-stream")
+.when()
+.get("/mcp")
+.then()
+.statusCode(200)
+.contentType(containsString("event-stream"));
+}
+
 // ─────────────────────────────────────────────────────────────────────────
 // Health & Readiness Checks
 // ─────────────────────────────────────────────────────────────────────────
