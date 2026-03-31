@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# IQ Starter: Run a SPARQL query
+# Usage: ./bin/demo-query <query-file> [--port PORT]
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <query-file> [--port PORT]"
+    echo ""
+    echo "Examples:"
+    echo "  $0 examples/queries/customers.sparql"
+    echo "  $0 examples/queries/customers.sparql --port 8081"
+    exit 1
+fi
+
+QUERY_FILE="$1"
+PORT="${3:-8080}"  # Default to 8080, or use custom port
+
+if [ ! -f "$QUERY_FILE" ]; then
+    echo "❌ Query file not found: $QUERY_FILE"
+    exit 1
+fi
+
+# Read SPARQL query
+QUERY=$(cat "$QUERY_FILE")
+
+echo "📊 Running SPARQL query from: $QUERY_FILE"
+echo ""
+echo "Query:"
+echo "------"
+echo "$QUERY"
+echo "------"
+echo ""
+echo "Results:"
+echo "--------"
+
+# Execute query via REST API
+curl -s -X POST "http://localhost:$PORT/api/query" \
+  -H "Content-Type: application/json" \
+  -d "{\"sparql\": $(printf '%s\n' "$QUERY" | jq -Rs .)}" | jq . || echo "❌ Failed to execute query. Is the server running on port $PORT?"

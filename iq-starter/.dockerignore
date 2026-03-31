@@ -1,0 +1,15 @@
+.git
+.gitignore
+.github
+.idea
+*.iml
+target/
+node_modules/
+.DS_Store
+docker-compose.override.yml
+logs/
+tmp/
+*.log
+.mvn/wrapper/maven-wrapper.jar
+.iq/vault/master.key
+.iq/vault/*.secret

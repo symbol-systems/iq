@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# IQ Starter: Load example knowledge graph data
+# Usage: ./bin/import-example [--port PORT]
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PORT="${1:-8080}"
+
+if [ "$1" = "--port" ] && [ -n "${2:-}" ]; then
+    PORT="$2"
+fi
+
+echo "📥 Importing example knowledge graph..."
+echo "   Server: http://localhost:$PORT"
+echo ""
+
+# Check if server is running
+if ! curl -s "http://localhost:$PORT/health" > /dev/null 2>&1; then
+    echo "❌ Server not found on http://localhost:$PORT"
+    echo "   Start it first: ./bin/start-api"
+    exit 1
+fi
+
+# Import example RDF files if they exist
+EXAMPLES_DIR="$ROOT/examples/data"
+if [ -d "$EXAMPLES_DIR" ]; then
+    for ttl_file in "$EXAMPLES_DIR"/*.ttl; do
+        if [ -f "$ttl_file" ]; then
+            echo "📄 Importing $(basename "$ttl_file")..."
+            curl -s -X POST "http://localhost:$PORT/api/import" \
+              -H "Content-Type: application/x-turtle" \
+              --data-binary "@$ttl_file" || echo "   ⚠️  Failed to import $ttl_file"
+        fi
+    done
+    echo ""
+    echo "✅ Example data imported successfully!"
+else
+    echo "ℹ️  No example data found at $EXAMPLES_DIR"
+    echo "   Create .ttl files in examples/data/ and run again."
+fi
+
+echo ""
+echo "📊 Query your data:"
+echo "   ./bin/demo-query examples/queries/customers.sparql"

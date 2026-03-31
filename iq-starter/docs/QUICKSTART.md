@@ -5,14 +5,13 @@ IQ is **MCP-first**: it runs as an HTTP server exposing MCP tools, perfect for a
 ## Prerequisites
 
 - Java 21+ (Maven will download if needed)
-- curl (to test APIs)
 - 4GB free RAM
 
 ## Step 1: Start the MCP server (2 minutes)
 
 ```bash
-cd /path/to/iq/iq-starter
-./bin/start-api
+cd ./iq-starter
+./bin/start
 ```
 
 You'll see startup logs ending with:

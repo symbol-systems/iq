@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # IQ MCP Server + REST API
+  iq-apis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iq-starter-apis
+    ports:
+      - "8080:8080"
+    environment:
+      # JVM performance tuning
+      JAVA_OPTS: |
+        -Dquarkus.http.host=0.0.0.0
+        -Xmx1g
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
+      
+      # IQ configuration
+      IQ_KNOWLEDGE_GRAPH_TYPE: in-memory  # or sparql-endpoint
+      IQ_MCP_ENABLED: "true"
+      IQ_REST_API_ENABLED: "true"
+      IQ_WEB_UI_ENABLED: "true"
+    
+    volumes:
+      # Mount knowledge graph data (optional)
+      - ./examples/data:/app/data:ro
+      - ./config:/app/config:ro
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+  
+  # Optional: Web UI for exploring the knowledge graph
+  # Uncomment if you want to add a separate web UI service
+  # iq-ui:
+  #   image: node:18-slim
+  #   container_name: iq-starter-ui
+  #   working_dir: /app
+  #   command: npm start
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     iq-apis:
+  #       condition: service_healthy
+  #   environment:
+  #     REACT_APP_API_URL: http://iq-apis:8080
+  #   volumes:
+  #     - ./ui:/app:ro
+  #   restart: unless-stopped
+
+  # Optional: RDF4J Console for SPARQL debugging
+  # Uncomment if you want direct SPARQL query console
+  # rdf4j-console:
+  #   image: eclipse/rdf4j:latest
+  #   container_name: iq-starter-rdf4j
+  #   ports:
+  #     - "8081:8080"
+  #   depends_on:
+  #     - iq-apis
+  #   environment:
+  #     RDF4J_WORKBENCH_CONTEXT_PATH: /rdf4j-server
+  #   restart: unless-stopped
+
+networks:
+  default:
+    name: iq-starter-network
+    driver: bridge
+
+volumes:
+  iq-data:
+    driver: local
+
+# Usage:
+#   docker-compose up -d              # Start all services
+#   docker-compose logs -f iq-apis    # View logs
+#   docker-compose down               # Stop and remove containers
+#   docker-compose ps                 # Check status
