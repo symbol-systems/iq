@@ -96,6 +96,9 @@ throw new RuntimeException(e);
 protected void load(IRI agent) throws IOException {
 try (ObjectInputStream objectInputStream = new ObjectInputStream(
 Files.newInputStream(locate(agent).toPath()))) {
+// Restrict deserialization to known safe types
+objectInputStream.setObjectInputFilter(
+ObjectInputFilter.Config.createFilter("systems.symbol.secrets.*;java.util.*;java.lang.*;!*"));
 I_Secrets secrets = (I_Secrets) objectInputStream.readObject();
 this.store.put(agent, secrets);
 } catch (ClassNotFoundException | URISyntaxException e) {
