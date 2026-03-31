@@ -48,10 +48,10 @@ public class MCPController {
     private Repository getDefaultRepository() {
         try {
             if (platform != null && platform.getInstance() != null) {
-                var realms = platform.getInstance().getRealms();
+                java.util.Set<String> realms = platform.getInstance().getRealms();
                 if (realms != null && !realms.isEmpty()) {
                     // Get first realm's repository as default
-                    var realm = platform.getInstance().getRealm(realms.iterator().next());
+                    systems.symbol.realm.Realm realm = platform.getInstance().getRealm(realms.iterator().next());
                     if (realm != null) {
                         return realm.getRepository();
                     }
