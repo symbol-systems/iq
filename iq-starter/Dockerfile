@@ -24,8 +24,8 @@ WORKDIR /app
 COPY --from=builder /workspace/iq-apis/target/*-runner.jar ./app.jar
 
 # Metadata
-LABEL org.opencontainers.image.title="IQ Starter Kit"
-LABEL org.opencontainers.image.description="MCP server with enterprise knowledge graph and workflow support"
+LABEL org.opencontainers.image.title="IQ Runtime"
+LABEL org.opencontainers.image.description="IQ server with enterprise knowledge graph and workflow support"
 LABEL org.opencontainers.image.version="1.0"
 
 # Health check endpoint

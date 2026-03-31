@@ -87,6 +87,79 @@ curl http://localhost:8080/health/ready | jq .
 curl http://localhost:8080/health/live | jq .
 ```
 
+## Testing SSE (Server-Sent Events)
+
+The `/mcp` endpoint supports Server-Sent Events for persistent streaming connections.
+
+### 1. Open SSE Stream
+
+```bash
+# Terminal 1: Open SSE stream (uses -N to disable buffering)
+curl -N http://localhost:8080/mcp \
+  -H "Accept: text/event-stream" \
+  -v
+```
+
+Expected output:
+```
+< HTTP/1.1 200 OK
+< Content-Type: text/event-stream
+< Connection: keep-alive
+
+data: {"protocol": "model context protocol", "version": "1.0", "capabilities": {"tools": true, "resources": true, "prompts": true}}
+id: 1711886825000
+
+data: {"status": "ready", "message": "MCP Server operational"}
+id: 1711886825001
+
+(connection stays open)
+```
+
+### 2. Send Message to SSE-Connected Server
+
+```bash
+# Terminal 2: Send a message to the MCP server
+curl -X POST http://localhost:8080/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"method": "initialize", "params": {"protocol": "model context protocol", "version": "1.0"}}' \
+  | jq .
+```
+
+Expected response:
+```json
+{
+  "status": "acknowledged",
+  "message": {
+    "method": "initialize",
+    "params": { ... }
+  }
+}
+```
+
+### 3. Verify SSE Stream Still Active
+
+The SSE stream in Terminal 1 should remain open until:
+- Client closes connection
+- Server shuts down
+- Network timeout (typically 30+ seconds of inactivity)
+
+### 4. Test Multiple Concurrent SSE Clients
+
+```bash
+# Terminal 1: First client
+curl -N http://localhost:8080/mcp -H "Accept: text/event-stream"
+
+# Terminal 2: Second client  
+curl -N http://localhost:8080/mcp -H "Accept: text/event-stream"
+
+# Terminal 3: Send message
+curl -X POST http://localhost:8080/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"test": "message"}'
+```
+
+Both SSE streams should remain open independently.
+
 ## Testing in Docker
 
 ```bash
