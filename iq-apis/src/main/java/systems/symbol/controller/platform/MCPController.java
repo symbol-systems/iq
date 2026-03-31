@@ -2,6 +2,7 @@ package systems.symbol.controller.platform;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.sse.OutboundSseEvent;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.mcp.MCPToolRegistry;
 import systems.symbol.mcp.server.MCPServerBuilder;
 import systems.symbol.platform.RealmPlatform;
-import java.util.concurrent.atomic.AtomicLong;
+import java.io.IOException;
 
 /**
  * REST Controller for MCP (Model Context Protocol) endpoints.
@@ -41,6 +42,19 @@ RealmPlatform platform;
 private MCPToolRegistry toolRegistry;
 
 /**
+ * Add CORS headers to a response.
+ *
+ * @param response the response builder
+ * @return the response builder with CORS headers
+ */
+private Response.ResponseBuilder addCorsHeaders(Response.ResponseBuilder response) {
+return response
+.header("Access-Control-Allow-Origin", "*")
+.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+.header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+}
+
+/**
  * Get the default repository from the platform.
  *
  * @return The default repository, or null if not available
@@ -48,12 +62,23 @@ private MCPToolRegistry toolRegistry;
 private Repository getDefaultRepository() {
 try {
 if (platform != null && platform.getInstance() != null) {
-java.util.Set<String> realms = platform.getInstance().getRealms();
+java.util.Set<org.eclipse.rdf4j.model.IRI> realms = platform.getInstance().getRealms();
 if (realms != null && !realms.isEmpty()) {
 // Get first realm's repository as default
-systems.symbol.realm.Realm realm = platform.getInstance().getRealm(realms.iterator().next());
-if (realm != null) {
-return realm.getRepository();
+org.eclipse.rdf4j.model.IRI realmIri = realms.iterator().next();
+Object realmObj = platform.getInstance().getRealm(realmIri);
+if (realmObj instanceof Repository) {
+return (Repository) realmObj;
+}
+// Try to get repository from realm interface
+try {
+java.lang.reflect.Method getRepoMethod = realmObj.getClass().getMethod("getRepository");
+Object repo = getRepoMethod.invoke(realmObj);
+if (repo instanceof Repository) {
+return (Repository) repo;
+}
+} catch (Exception e2) {
+log.debug("Could not get repository from realm", e2);
 }
 }
 }
@@ -80,39 +105,32 @@ return toolRegistry;
 }
 
 /**
- * Root MCP endpoint — supports both JSON REST and SSE streaming.
+ * Root MCP endpoint — returns JSON status and available resources.
  *
- * <p>GET with Accept: application/json returns JSON status  
- * GET with Accept: text/event-stream opens SSE connection for MCP protocol  
- * POST accepts MCP client messages
+ * <p>Use Accept: application/json header to get this response
  *
- * @param sseEventSink SSE sink for streaming (injected if SSE requested)
- * @param sse SSE context (injected if SSE requested)
- * @return Response (JSON or SSE stream depending on Accept header)
+ * @return JSON response with status and available endpoints
  */
 @GET
-public Response root(@Context(required = false) SseEventSink sseEventSink, 
- @Context(required = false) Sse sse) {
+@Produces(MediaType.APPLICATION_JSON)
+public Response root() {
 try {
-// If SSE connection requested, open stream
-if (sseEventSink != null && sse != null) {
-return handleMcpSseConnection(sseEventSink, sse);
-}
-
-// Otherwise return JSON status
 MCPToolRegistry registry = getToolRegistry();
+String responseBody;
 if (registry == null) {
-return Response.ok("{\"status\": \"partial\", \"message\": \"MCP initializing...\", " +
+responseBody = "{\"status\": \"partial\", \"message\": \"MCP initializing...\", " +
 "\"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"health\": \"/mcp/health\", " +
-"\"sse\": \"GET (Accept: text/event-stream)\"}}").build();
-}
-return Response.ok("{\"status\": \"ready\", \"message\": \"MCP Server operational\", " +
+"\"sse\": \"GET (Accept: text/event-stream)\"}}";
+} else {
+responseBody = "{\"status\": \"ready\", \"message\": \"MCP Server operational\", " +
 "\"version\": \"1.0\", \"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", " +
-"\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"sse\": \"GET (Accept: text/event-stream)\"}}").build();
+"\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"sse\": \"GET (Accept: text/event-stream)\"}}";
+}
+return addCorsHeaders(Response.ok(responseBody)).build();
 } catch (Exception e) {
 log.error("Error in MCP root endpoint", e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}")).build();
 }
 }
 
@@ -124,30 +142,39 @@ return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
  *
  * @param sseEventSink the SSE event sink for sending events
  * @param sse the SSE context
- * @return Response with appropriate status
+ * @return Response with SSE media type (connection stays open)
+ * @throws IOException if SSE communication fails
  */
-private Response handleMcpSseConnection(SseEventSink sseEventSink, Sse sse) {
+@GET
+@Produces("text/event-stream")
+public void handleMcpSseConnection(@Context SseEventSink sseEventSink, @Context Sse sse) throws IOException {
 try {
 log.info("MCP SSE connection established");
 
 // Send initial capability handshake
-OutboundSseEvent event = sse.newEvent("initialization", 
-"{\"protocol\": \"model context protocol\", \"version\": \"1.0\", " +
-"\"capabilities\": {\"tools\": true, \"resources\": true, \"prompts\": true}}");
-event.setId(String.valueOf(System.currentTimeMillis()));
-sseEventSink.send(event);
+String initData = "{\"jsonrpc\":\"2.0\",\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"iq-mcp-server\",\"version\":\"1.0\"}}}";
+OutboundSseEvent initEvent = sse.newEventBuilder()
+.name("initialization")
+.data(initData)
+.id(String.valueOf(System.currentTimeMillis()))
+.build();
+sseEventSink.send(initEvent);
 
 // Send ready event
-OutboundSseEvent readyEvent = sse.newEvent("ready",
-"{\"status\": \"ready\", \"message\": \"MCP Server operational\"}");
-readyEvent.setId(String.valueOf(System.currentTimeMillis() + 1));
+String readyData = "{\"status\":\"ready\",\"message\":\"MCP Server operational\"}";
+OutboundSseEvent readyEvent = sse.newEventBuilder()
+.name("ready")
+.data(readyData)
+.id(String.valueOf(System.currentTimeMillis() + 1))
+.build();
 sseEventSink.send(readyEvent);
 
 log.debug("MCP SSE initialization complete, keeping connection open");
 
-// Connection stays open for bidirectional communication
-// Client can send messages via POST /mcp
+// Keep connection open for incoming messages
+// Clients send messages via POST /mcp
 // Server sends updates via this SSE stream
+// Connection stays open until client disconnects or 30+ seconds timeout
 
 } catch (Exception e) {
 log.error("Error in MCP SSE handler", e);
@@ -156,9 +183,11 @@ sseEventSink.close();
 } catch (Exception closeEx) {
 log.warn("Error closing SSE sink", closeEx);
 }
+// Re-throw IOException if needed for proper HTTP error handling
+if (e instanceof IOException) {
+throw (IOException) e;
 }
-
-return Response.ok().build();
+}
 }
 
 /**
@@ -177,18 +206,33 @@ log.debug("Received MCP message: {}", messageJson);
 
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"error\": \"MCP not yet initialized\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP not yet initialized\"}"))
+.build();
 }
 
 // Parse and handle message
 // For now, echo back with acknowledgment
-return Response.ok("{\"status\": \"acknowledged\", \"message\": " + messageJson + "}").build();
+return addCorsHeaders(Response.ok("{\"status\": \"acknowledged\", \"message\": " + messageJson + "}"))
+.build();
 } catch (Exception e) {
 log.error("Error handling MCP message", e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}"))
+.build();
 }
+}
+
+/**
+ * Handle CORS preflight requests (OPTIONS).
+ *
+ * @return Empty response with CORS headers
+ */
+@OPTIONS
+public Response handleCorsPreFlight() {
+return addCorsHeaders(Response.ok())
+.header("Access-Control-Max-Age", "86400")
+.build();
 }
 
 /**
@@ -202,18 +246,21 @@ public Response listTools() {
 try {
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"error\": \"MCP tools not yet initialized\", \"status\": \"initializing\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP tools not yet initialized\", \"status\": \"initializing\"}"))
+.build();
 }
 MCPServerBuilder builder = registry.buildServerBuilder();
 
 // For now, return a placeholder response with tool count
 // In the full implementation, extract tools from builder
-return Response.ok("{\"tools\": [], \"count\": 0, \"status\": \"ready\", \"message\": \"MCP tools available\"}").build();
+return addCorsHeaders(Response.ok("{\"tools\": [], \"count\": 0, \"status\": \"ready\", \"message\": \"MCP tools available\"}"))
+.build();
 } catch (Exception e) {
 log.error("Error listing MCP tools", e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}"))
+.build();
 }
 }
 
@@ -228,14 +275,17 @@ public Response listResources() {
 try {
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"error\": \"MCP resources not yet initialized\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP resources not yet initialized\"}"))
+.build();
 }
-return Response.ok("{\"resources\": [], \"count\": 0, \"status\": \"ready\"}").build();
+return addCorsHeaders(Response.ok("{\"resources\": [], \"count\": 0, \"status\": \"ready\"}"))
+.build();
 } catch (Exception e) {
 log.error("Error listing MCP resources", e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}"))
+.build();
 }
 }
 
@@ -250,14 +300,17 @@ public Response listPrompts() {
 try {
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"error\": \"MCP prompts not yet initialized\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP prompts not yet initialized\"}"))
+.build();
 }
-return Response.ok("{\"prompts\": [], \"count\": 0, \"status\": \"ready\"}").build();
+return addCorsHeaders(Response.ok("{\"prompts\": [], \"count\": 0, \"status\": \"ready\"}"))
+.build();
 } catch (Exception e) {
 log.error("Error listing MCP prompts", e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}"))
+.build();
 }
 }
 
@@ -275,18 +328,21 @@ public Response executeTool(@PathParam("name") String toolName, String params) {
 try {
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"error\": \"MCP tools not yet initialized\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"error\": \"MCP tools not yet initialized\"}"))
+.build();
 }
 MCPServerBuilder builder = registry.buildServerBuilder();
 
 // For now, return a placeholder response
 // In the full implementation, invoke tool through builder
-return Response.ok("{\"result\": {}, \"tool\": \"" + toolName + "\", \"status\": \"executed\"}").build();
+return addCorsHeaders(Response.ok("{\"result\": {}, \"tool\": \"" + toolName + "\", \"status\": \"executed\"}"))
+.build();
 } catch (Exception e) {
 log.error("Error executing MCP tool: {}", toolName, e);
-return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-.entity("{\"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+.entity("{\"error\": \"" + e.getMessage() + "\"}"))
+.build();
 }
 }
 
@@ -301,19 +357,23 @@ public Response health() {
 try {
 Repository repo = getDefaultRepository();
 if (repo == null) {
-return Response.ok("{\"status\": \"initializing\", \"mcp\": false, \"message\": \"Platform initializing\"}").build();
+return addCorsHeaders(Response.ok("{\"status\": \"initializing\", \"mcp\": false, \"message\": \"Platform initializing\"}"))
+.build();
 }
 
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
-return Response.ok("{\"status\": \"partial\", \"mcp\": true, \"message\": \"MCP initializing\"}").build();
+return addCorsHeaders(Response.ok("{\"status\": \"partial\", \"mcp\": true, \"message\": \"MCP initializing\"}"))
+.build();
 }
 
-return Response.ok("{\"status\": \"healthy\", \"mcp\": true, \"message\": \"MCP Server operational\"}").build();
+return addCorsHeaders(Response.ok("{\"status\": \"healthy\", \"mcp\": true, \"message\": \"MCP Server operational\"}"))
+.build();
 } catch (Exception e) {
 log.error("Health check failed", e);
-return Response.status(Response.Status.SERVICE_UNAVAILABLE)
-.entity("{\"status\": \"degraded\", \"mcp\": false, \"error\": \"" + e.getMessage() + "\"}").build();
+return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
+.entity("{\"status\": \"unhealthy\", \"mcp\": false, \"message\": \"" + e.getMessage() + "\"}"))
+.build();
 }
 }
 }
