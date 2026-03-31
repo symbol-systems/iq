@@ -1,18 +1,86 @@
 # RUNTIMES — How to use IQ (three entry points)
 
-IQ is **MCP-first**, but can also be used as a REST API or CLI depending on your needs. Pick the one that fits your use case.
+IQ is **MCP-first**: built to integrate with Claude, ChatGPT, and other LLMs as a native tool. But you can also use it as a REST API or CLI depending on your needs.
 
 ## Overview
 
 | Runtime | Best for | Start with |
 |---|---|---|
-| **MCP** | Giving Claude/ChatGPT access to enterprise data (primary) | `./bin/start-api` (MCP over HTTP) |
-| **REST API** | Building apps, web UIs, mobile integration | `./bin/start-api` (REST endpoints) |
+| **MCP** | Claude/ChatGPT access to enterprise data (PRIMARY) | `./bin/start-api` |
+| **REST API** | Web apps, mobile, direct API calls | `./bin/start-api` |
 | **CLI** | Data exploration, analytics, operations | `./bin/start-cli` |
+
+All three start from the same `./bin/start-api` server; they're just different interfaces to the same knowledge graph.
 
 ---
 
-## 1. Model Context Protocol (MCP) — PRIMARY
+## 1. Model Context Protocol (MCP) — PRIMARY USE CASE
+
+### What it is
+
+A protocol that lets Claude, ChatGPT, Llama, and other LLMs call IQ as a tool. The LLM can ask "What's our revenue?" and IQ answers with actual data from your knowledge graph, without hallucinating.
+
+MCP endpoints are HTTP-based, exposed by the same `iq-api` server that powers REST and CLI. No separate process needed.
+
+### When to use
+
+- Giving Claude direct access to your enterprise data (PRIMARY use case)
+- Building AI assistants that need ground truth
+- Reducing hallucinations in LLM responses
+- Integrating IQ with existing AI workflows
+
+### Quick start
+
+```bash
+./bin/start-api
+# MCP endpoints now listening on http://localhost:8080/mcp/*
+```
+
+Then test MCP:
+```bash
+curl http://localhost:8080/mcp/tools | jq .
+```
+
+Connect Claude Desktop (edit `~/.config/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "iq-knowledge": {
+      "command": "curl",
+      "args": ["--json", "-X", "POST", "http://localhost:8080/mcp/tools/query_knowledge_graph/execute"]
+    }
+  }
+}
+```
+
+### What Claude can do
+
+User: "Show me the top 5 customers by revenue"
+
+Claude → calls MCP tool query_knowledge_graph
+IQ: Executes SPARQL, returns actual data from knowledge graph
+Claude: "Your top 5 customers are... [with real numbers]"
+
+No hallucinations. Real data. Every time.
+
+### Available MCP tools (HTTP endpoints)
+
+All available at `http://localhost:8080/mcp/tools`:
+
+- **query_knowledge_graph** — Run SPARQL queries against your knowledge graph
+- **execute_workflow** — Trigger state machines and workflows
+- **list_connectors** — Get status of all configured connectors (AWS, Slack, GitHub, etc.)
+- **read_connector** — Fetch fresh data from an external system
+- **get_entity** — Fetch details about a specific customer, order, etc.
+- **search_knowledge** — Full-text search across your facts
+
+### Learn more
+
+Full MCP guide: [MCP.md](MCP.md)
+
+---
+
+## 2. REST API (For web apps, mobile, direct integration)
 
 ### What it is
 
@@ -20,10 +88,11 @@ A Quarkus-based HTTP server that exposes IQ's capabilities as REST endpoints. Us
 
 ### When to use
 
-- Building a web UI
+- Building a web UI or dashboard
 - Integrating with an existing SaaS or mobile app
-- Creating a chatbot
+- Creating a chatbot without LLM integration
 - Exposing AI capabilities to external partners
+- When you don't want to use an LLM client
 
 ### Quick start
 
@@ -40,87 +109,29 @@ Send a message, get a grounded answer.
 ```bash
 curl -X POST http://localhost:8080/chat \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "realm": "acme-corp",
     "message": "What is the status of order #12345?"
   }'
-
-Response:
-{
-  "response": "Order #12345 is in shipped status. Left warehouse on Mar 28.",
-  "model": "gpt-3.5-turbo",
-  "tokens_used": 87,
-  "grounded_facts": [
-    "orders/12345",
-    "shipping/fedex-12345"
-  ]
-}
 ```
+
+Response: Grounded answer based on your knowledge graph.
 
 #### Agent API
 Trigger a workflow (multi-step decision-making).
 
 ```bash
 curl -X POST http://localhost:8080/agent/trigger \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
   -d '{
     "realm": "acme-corp",
     "intent": "approve-purchase-order",
     "object_id": "po-98765",
     "requester": "alice@acme.com"
   }'
-
-Response:
-{
-  "status": "approved",
-  "state_transition": "pending → approved",
-  "actions_triggered": [
-    "send_email_to_procurement",
-    "bill_account_12345",
-    "create_jira_ticket_ACME-5432"
-  ],
-  "decision_trace": [
-    "✓ Requester Alice has purchase authority (role: manager)",
-    "✓ Budget available: $45,000/month, spent: $12,500",
-    "✓ Vendor in approved list",
-    "→ DECISION: approve"
-  ]
-}
 ```
 
-#### OpenAI-Compatible Endpoint
-Drop-in replacement for OpenAI's chat completions API (but grounded in your knowledge).
-
-```bash
-curl -X POST http://localhost:8080/v1/chat/completions \
-  -H "Authorization: Bearer sk-YOUR_TOKEN" \
-  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-      {"role": "user", "content": "What is our customer retention rate?"}
-    ]
-  }'
-
-Response:
-{
-  "id": "chatcmpl-123abc",
-  "object": "chat.completion",
-  "created": 1711875296,
-  "model": "gpt-3.5-turbo",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Our customer retention rate for 2024 is 94.2% 
-        (from analytics data), up from 91.8% in 2023."
-      }
-    }
-  ],
-  "usage": {"prompt_tokens": 15, "completion_tokens": 28, "total_tokens": 43}
-}
-```
+Response: Decision trace showing all steps taken.
 
 #### SPARQL Query Endpoint
 Direct access to the knowledge graph (for power users).
@@ -132,8 +143,7 @@ curl -X POST http://localhost:8080/sparql \
         ?customer a :Customer ;
                   :revenue ?revenue .
         FILTER (?revenue > 1000000)
-      }
-      LIMIT 10'
+      }'
 ```
 
 ### Configuration
@@ -151,21 +161,12 @@ iq.auth.jwt.secret=your-secret-key
 
 ```bash
 ./bin/start-api --mode=production
-# Disables dev UI, enables security headers, etc.
-```
-
-Or build and run a container:
-```bash
-docker build -t iq-api:latest .
-docker run -p 8080:8080 \
-  -e OPENAI_API_KEY=sk-... \
-  -e IQ_AUTH_SECRET=... \
-  iq-api:latest
+docker run -p 8080:8080 -e OPENAI_API_KEY=sk-... iq-api:latest
 ```
 
 ---
 
-## 2. Command-Line Interface (CLI)
+## 3. Command-Line Interface (CLI)
 
 ### What it is
 
@@ -200,184 +201,82 @@ iq> use-realm my-project
 # Explore knowledge
 iq> list-facts --limit 10
 iq> describe :Order/12345
-iq> get-type :Customer
 
 # Run SPARQL
 iq> query examples/queries/top-customers.sparql
 iq> query --file my-analysis.sparql --output csv
 
-# Agents & workflows
+# Agents
 iq> agent list
-iq> agent trace :approve-purchase-order po-98765
 iq> agent run approve-purchase-order po-98765 requester=alice@acme.com
 
 # Import/export
 iq> import-file customers.ttl
-iq> export-realm my-project customers.ttl
-iq> export-query results.sparql results.csv
-
-# Connectors
-iq> connector list
-iq> connector read aws s3://my-bucket --into-realm my-project
-iq> connector write slack-message "#general" "Order approved!"
+iq> export-realm my-project result.ttl
 ```
 
-### Batch mode (programmatic)
-
-Instead of interactive, run a script:
+### Batch mode
 
 ```bash
 iq-cli < commands.txt
 ```
 
-File contents:
-```
-use-realm acme-corp
-query analytics.sparql --output results.csv
-agent run daily-sync
-export-realm result.ttl
-```
-
 ### Configuration
 
-Environment variables:
 ```bash
 export IQ_HOME=/path/to/.iq
 export IQ_REALM=acme-corp
 ./bin/start-cli
 ```
 
-Or in `.iq/cli-config.properties`:
-```properties
-default.realm=acme-corp
-default.output.format=table
-output.directory=./results/
-```
-
----
-
-## 3. Model Context Protocol (MCP)
-
-### What it is
-
-A protocol that lets Claude, ChatGPT, Llama, and other LLMs call IQ as a tool. The LLM can ask "What's our revenue?" and IQ answers with actual data.
-
-### When to use
-
-- Giving Claude direct access to your enterprise data
-- Building AI assistants that need ground truth
-- Reducing hallucinations in LLM responses
-- Integrating IQ with existing AI workflows
-
-### Quick start
-
-```bash
-./bin/start-mcp
-# Starts the MCP server on stdio (for local Claude Desktop) 
-# or TCP (for remote connections)
-```
-
-### Configuration
-
-In your Claude Desktop config (`~/.config/Claude/claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "iq": {
-      "command": "/path/to/iq-starter/bin/start-mcp",
-      "env": {
-        "IQ_REALM": "acme-corp",
-        "OPENAI_API_KEY": "sk-..."
-      }
-    }
-  }
-}
-```
-
-### What Claude can do
-
-```
-User: Tell me about our biggest customer
-
-Claude: [calls IQ tool] "get_customer_by_revenue"
-IQ: Acme Corp, $2.3M revenue, 87 active users, 3 support tickets open
-
-Claude: "Your biggest customer is Acme Corp with $2.3M in annual 
-revenue. They have 87 active users and currently 3 open support 
-tickets, including one critical issue with single sign-on."
-```
-
-### Available MCP tools (from IQ)
-
-- `search_knowledge` — Full-text search across your facts
-- `query_sparql` — Run a SPARQL query
-- `get_entity` — Fetch details about a specific customer/order/etc
-- `trigger_agent` — Run a workflow
-- `list_connectors` — See what's connected
-- `read_connector` — Fetch fresh data from an external system
-
 ---
 
 ## Comparison table
 
-| Feature | REST API | CLI | MCP |
+| Feature | MCP | REST API | CLI |
 |---|---|---|---|
-| **Best for** | Web apps, integrations | Data analysis, ops | LLM integration |
-| **Startup time** | 5-10 seconds | 5-10 seconds | 2-3 seconds |
-| **Scalability** | High (stateless servers) | Medium (single process) | High (stateless) |
-| **Development** | Postman, curl, SDK | Bash, Python scripts | Any LLM client |
-| **Team** | Developers | Data engineers, ops | AI engineers |
-| **Cost** | Cloud compute | Local CPU | Cloud compute |
+| **Best for** | LLM integration | Web apps, mobile | Data analysis |
+| **Startup time** | 5-10 sec | 5-10 sec | 5-10 sec |
+| **Scalability** | High | High | Medium |
+| **No LLM needed** | Yes (standalone) | ✓ Yes | ✓ Yes |
+| **User type** | AI engineers | Developers | Data engineers |
 
 ---
 
 ## Advanced: Running all three together
 
-For a production setup, you might run:
-- REST API on port 8080 (for your apps)
-- CLI workers in cron jobs (for scheduled tasks)
-- MCP on a TCP port (for your AI assistants)
-
-All three share the same knowledge graph under `.iq/repositories/`.
+All three are available simultaneously from one `./bin/start-api` process:
 
 ```bash
-# Terminal 1: REST API
 ./bin/start-api
-
-# Terminal 2: MCP server
-./bin/start-mcp --port 5555
-
-# Terminal 3: Scheduled CLI tasks
-while true; do
-  ./bin/start-cli < cron-tasks.txt
-  sleep 3600
-done
+# Provides:
+# - MCP endpoints at POST http://localhost:8080/mcp/tools/{name}/execute
+# - REST API at POST http://localhost:8080/chat, /agent/trigger, /sparql
+# - CLI accessible via ./bin/start-cli
 ```
+
+All three share the same knowledge graph.
 
 ---
 
 ## Troubleshooting
 
-**REST API won't start**
-- Check port 8080 isn't used: `lsof -i :8080`
-- Check `OPENAI_API_KEY` is set if using LLM features
+**Port 8080 already in use**
+- `./bin/start-api --port 8081`
 
-**CLI hangs**
-- Try `Ctrl+C` and restart
-- Check `.iq/repositories/default/` exists
+**MCP endpoints not reachable**
+- `curl http://localhost:8080/mcp/status`
 
-**MCP not connecting to Claude**
-- Verify config in `~/.config/Claude/claude_desktop_config.json`
-- Check IQ server is running
-- Restart Claude app
+**Claude can't connect to MCP**
+- Check `~/.config/Claude/claude_desktop_config.json`
+- Restart Claude
 
 ---
 
 ## Next steps
 
-- [USECASES.md](USECASES.md) — See real examples using these runtimes
-- [AGENTS.md](AGENTS.md) — Learn to build multi-step workflows
-- [DOCKER.md](DOCKER.md) — Deploy to cloud
-- [FAQ.md](FAQ.md) — Troubleshooting
-
+- **Try MCP:** [QUICKSTART.md](QUICKSTART.md) — 5 minutes to first MCP tool
+- **Learn MCP:** [MCP.md](MCP.md) — Full guide with patterns
+- **See use cases:** [USECASES.md](USECASES.md) — Real examples
+- **Build workflows:** [AGENTS.md](AGENTS.md) — State machines and decisions
+- **Deploy:** [DEPLOYMENT.md](DEPLOYMENT.md) — Docker & cloud
