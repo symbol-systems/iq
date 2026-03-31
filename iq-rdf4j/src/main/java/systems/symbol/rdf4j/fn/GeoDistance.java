@@ -57,7 +57,7 @@ public class GeoDistance extends CustomFunction {
         double dLon = Math.toRadians(lon2 - lon1);
         double sindLat = Math.sin(dLat / 2);
         double sindLon = Math.sin(dLon / 2);
-        double a = Math.pow(sindLat, 2) + Math.pow(sindLon, 2) * Math.cos(lat1) * Math.cos(lat2);
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLon, 2) * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return (earthRadius * c);
     }

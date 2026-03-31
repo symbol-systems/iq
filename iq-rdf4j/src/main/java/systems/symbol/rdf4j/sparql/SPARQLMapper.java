@@ -231,7 +231,7 @@ public class SPARQLMapper {
 
     public GraphQueryResult graph(String sparql, Map<String, Object> args) {
         String uc_query = sparql.toUpperCase(Locale.ROOT);
-        if (!uc_query.contains("DESCRIBE") || !uc_query.contains("CONSTRUCT"))
+        if (!uc_query.contains("DESCRIBE") && !uc_query.contains("CONSTRUCT"))
             return null;
         sparql = prefixed(sparql);
 
@@ -244,7 +244,7 @@ public class SPARQLMapper {
     }
 
     protected String prefixed(String sparql) {
-        if (!sparql.contains("PREFIX ") || !sparql.contains("prefix "))
+        if (!sparql.contains("PREFIX ") && !sparql.contains("prefix "))
             return RDFPrefixer.getSPARQLPrefix(iq.getConnection()) + sparql;
         return sparql;
     }

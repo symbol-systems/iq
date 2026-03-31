@@ -49,7 +49,7 @@ public class ExecutiveAgent extends IntentAgent implements I_Delegate<Resource> 
         if (to.isIRI() && IQ_NS.TO.equals(to)) {
             Resource transitioned = getStateMachine().transition(getSelf());
             log.info("agent.self: {} -> {}", getSelf(), transitioned);
-            return transitioned != null & Objects.equals(transitioned, getSelf());
+            return transitioned != null && Objects.equals(transitioned, getSelf());
         }
         // try {
         log.info("agent.execute: {} @ {}", self, getStateMachine().getState());

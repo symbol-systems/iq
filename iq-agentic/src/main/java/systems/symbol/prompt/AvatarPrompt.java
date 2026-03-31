@@ -46,10 +46,11 @@ public class AvatarPrompt extends AbstractPrompt<String> {
         if (llm$.isEmpty()) {
             llm$ = "{{my.prompt}}";
         }
-        String system$ = value(agent.getSelf()).trim();
-        if (system$.isEmpty()) {
+        String system$ = value(agent.getSelf());
+        if (system$ == null || system$.trim().isEmpty()) {
             log.warn("prompt.avatar.system: {} @ {}", actor, llm);
         } else {
+            system$ = system$.trim();
             my.put("prompt", system$);
             ai.system(interpolate(llm$));
         }
@@ -65,7 +66,12 @@ public class AvatarPrompt extends AbstractPrompt<String> {
     }
 
     public void assistant(Resource state) throws IOException {
-        String assistant$ = interpolate(value(state).trim());
+        String raw = value(state);
+        if (raw == null || raw.trim().isEmpty()) {
+            log.info("prompt.avatar.assistant: {} -> (empty)", state);
+            return;
+        }
+        String assistant$ = interpolate(raw.trim());
         if (!assistant$.isEmpty())
             ai.assistant(assistant$);
         log.info("prompt.avatar.assistant: {} -> {}", state, assistant$);

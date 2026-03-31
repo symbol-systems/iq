@@ -22,7 +22,7 @@ public abstract class Authority implements I_Authority, I_TrustKeys, I_Claimed {
         this(claim, new TrusteeKeys(key) {
             @Override
             public void majeur() {
-                this.majeur();
+                // Sovereign key is added during TrusteeKeys construction
             }
         });
         this.self(); // zero-trust
@@ -101,6 +101,9 @@ public abstract class Authority implements I_Authority, I_TrustKeys, I_Claimed {
     public I_Sovereign trusts(I_Claim fair) throws BrokenTrust {
         // zero-trust: so double check
         X509Certificate certify = this.certify(fair);
+        if (certify == null) {
+            throw new BrokenTrust("x509/uncertified", this.getClaim(), fair);
+        }
         I_Claim verify = this.verify(certify);
 
         // don't trust the cert
