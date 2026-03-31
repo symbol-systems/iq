@@ -114,6 +114,12 @@ return sitemaps;
 
 public IRI parseSitemap(FileObject page) throws ParserConfigurationException, IOException, SAXException {
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+// Harden against XXE attacks
+factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+factory.setXIncludeAware(false);
+factory.setExpandEntityReferences(false);
 DocumentBuilder builder = factory.newDocumentBuilder();
 log.info("sitemap.parse: {}", page.getURI());
 FileContent content = page.getContent();

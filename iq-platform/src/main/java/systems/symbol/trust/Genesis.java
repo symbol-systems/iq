@@ -1,10 +1,12 @@
 package systems.symbol.trust;
 
-import java.io.FileInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 
 /**
  * Bootstrap a Trust Chain
@@ -21,28 +23,23 @@ import java.security.cert.CertificateException;
  */
 
 public class Genesis {
+private static final Logger log = LoggerFactory.getLogger(Genesis.class);
 
-public static void main(String[] args) {
-String certFile = "cacert.pem";
-String keyFile = "cakey.p8c";
-String message = "This is my secret message.";
-
-try {
-InputStream certStream = new FileInputStream(certFile);
-InputStream keyStream = new FileInputStream(keyFile);
-Locksmith.encrypt(certStream, keyStream, message);
-certStream.close();
-keyStream.close();
-
-} catch (IOException e) {
-System.out.println("IOException:" + e);
-} catch (CertificateException e) {
-System.out.println("CertificateException:" + e);
-} catch (NoSuchAlgorithmException e) {
-System.out.println("NoSuchAlgorithmException:" + e);
-} catch (Exception e) {
-System.out.println("Exception:" + e);
+/**
+ * Bootstrap a new trust chain from certificate and key streams.
+ *
+ * @param certStream X509 certificate input stream
+ * @param keyStream  PKCS8 private key input stream
+ * @param password   keystore password
+ * @return the initialized KeyStore
+ * @throws IOException  if I/O fails
+ * @throws GeneralSecurityException if crypto operation fails
+ */
+public static KeyStore bootstrap(InputStream certStream, InputStream keyStream, char[] password)
+throws IOException, GeneralSecurityException {
+log.info("genesis.bootstrap: initializing trust chain");
+KeyStore keyStore = Locksmith.createKeyStore(certStream, keyStream, password);
+log.info("genesis.bootstrap: trust chain created, {} entries", keyStore.size());
+return keyStore;
 }
-}
-
 }

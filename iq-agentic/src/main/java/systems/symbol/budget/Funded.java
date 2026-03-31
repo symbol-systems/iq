@@ -24,7 +24,7 @@ return expense;
 }
 
 public void done() {
-budget.amount.add(balance);
+budget.amount = budget.amount.add(balance);
 balance = BigDecimal.valueOf(0.0);
 }
 

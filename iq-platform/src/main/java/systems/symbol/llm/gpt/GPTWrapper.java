@@ -96,7 +96,11 @@ return processError(chats, attempt - 1, completion, response);
 }
 } else
 return processAttempt(chats, attempt - 1);
-} catch (Exception e) {
+} catch (StateException e) {
+// Wrap state exceptions as API errors and retry
+log.warn("oops.llm.gpt.state # {}: {}", attempt, e.getMessage());
+return processAttempt(chats, attempt - 1);
+} catch (IOException e) {
 log.info("oops.llm.gpt.fatal # {}: {}", attempt, e.getMessage());
 return processAttempt(chats, attempt - 1);
 }
@@ -104,9 +108,11 @@ return processAttempt(chats, attempt - 1);
 
 private I_Assist<String> processError(I_Assist<String> chats, int attempt, GPTResponse completion,
 Response response) throws IOException, APIException {
-if (completion.error.failed_generation == null) {
-log.warn("oops.llm.gpt.error: {} -> {} => {}", completion.error.code, completion.error.message,
-completion.error.type);
+if (completion.error == null || completion.error.failed_generation == null) {
+String code = completion.error != null ? completion.error.code : "unknown";
+String msg = completion.error != null ? completion.error.message : "unknown";
+String type = completion.error != null ? completion.error.type : "unknown";
+log.warn("oops.llm.gpt.error: {} -> {} => {}", code, msg, type);
 return processAttempt(chats, attempt);
 }
 if (response.code() == 429) {
@@ -117,6 +123,7 @@ log.info("llm.gpt.backoff: {}ms -> {}", backoff, completion.error);
 Thread.sleep(backoff);
 return processAttempt(chats, attempt);
 } catch (InterruptedException e) {
+Thread.currentThread().interrupt();
 log.info("llm.gpt.interrupted: {}", e.getMessage());
 }
 }
@@ -155,6 +162,10 @@ private void processMessage(I_Assist<String> chat, GPTResponse.Choice choice)
 throws JsonProcessingException, StateException {
 GPTResponse.Message message = choice.message;
 I_LLMessage.RoleType role = I_LLMessage.RoleType.assistant;
+if (message.content == null) {
+log.debug("llm.gpt.message.null-content: choice={}", choice.finish_reason);
+return;
+}
 String content = message.content.trim();
 log.info("llm.gpt.message: {}", content);
 

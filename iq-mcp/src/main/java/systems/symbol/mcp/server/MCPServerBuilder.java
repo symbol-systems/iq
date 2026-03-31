@@ -100,18 +100,6 @@ public List<I_MCPResource> getResources() { return resources; }
 public List<I_MCPPrompt> getPrompts() { return prompts; }
 public Map<String, Object> getServerMetadata() { return serverMetadata; }
 
-/**
- * Placeholder for SDK 1.1.0 integration.
- * 
- * <p>Actual server construction is deferred to Quarkus bootstrap where
- * transports (stdio, SSE, or HTTP) are configured based on deployment context.
- * 
- * <p>Future: Return a configured {@code McpSyncServer} once Quarkus
- * CDI producer wiring is in place.
- * 
- * @return null (transports configured at runtime)
- * @see <a href="https://github.com/modelcontextprotocol/sdk-java">MCP SDK Java</a>
- */
 private static final Logger log = LoggerFactory.getLogger(MCPServerBuilder.class);
 
 public McpSyncServer build() {
@@ -119,10 +107,26 @@ try {
 McpJsonMapper mapper = resolveMapper();
 McpServerTransportProvider provider = new StdioServerTransportProvider(mapper);
 
-McpSyncServer server = McpServer.sync(provider)
-.build();
+var builder = McpServer.sync(provider);
+if (serverName != null && serverVersion != null) {
+builder.serverInfo(serverName, serverVersion);
+}
 
-log.info("mcp.server.built: {}", server);
+// Log the server configuration
+log.info("mcp.server.configuring: name={} version={} tools={} resources={} prompts={}",
+serverName, serverVersion, tools.size(), resources.size(), prompts.size());
+
+// NOTE: The actual tool/resource/prompt handler registration is version-dependent
+// and requires knowledge of the specific MCP SDK internal API. The builder collects
+// these items; registration happens either here (if SDK supports it) or via custom
+// middleware that introspects getTools/getResources/getPrompts at runtime.
+//
+// For now, the server is built with basic configuration. Full handler wiring
+// (converting I_MCPTool → CallToolResult, etc.) is deferred to a future refactor
+// once we have a stable integration test that validates the MCP SDK API contract.
+
+McpSyncServer server = builder.build();
+log.info("mcp.server.built: name={} version={}", serverName, serverVersion);
 return server;
 } catch (Throwable e) {
 log.warn("mcp.server.build.fallback: {}", e.getMessage());

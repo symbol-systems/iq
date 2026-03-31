@@ -3,6 +3,6 @@ package systems.symbol.budget;
 public class BudgetException extends Exception {
 
 public BudgetException(String msg, Exception e) {
-super(e.getMessage());
+super(msg, e);
 }
 }

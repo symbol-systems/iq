@@ -16,10 +16,33 @@ public class SearchMatrixTest {
 
 public static final IRI BASE_IRI = Values.iri(IQ_NS.TEST);
 
+private static class MockFinderEmbeddingModel implements FinderEmbeddingModel {
+@Override
+public float[] embed(String text) {
+if (text == null) {
+return new float[] {0f, 0f};
+}
+String normalized = text.trim().toLowerCase();
+switch (normalized) {
+case "sample content":
+return new float[] {1f, 0f};
+case "sample":
+return new float[] {0.99f, 0f};
+case "different query":
+return new float[] {0f, 1f};
+case "simple test":
+case "test":
+return new float[] {0f, 1f};
+default:
+return new float[] {0f, 0f};
+}
+}
+}
+
 @Test
 public void testReindex() {
 System.out.println("search.matrix.index.before");
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 System.out.printf("search.matrix.index.after: %s\n", searchMatrix);
 IRI concept = Values.iri(BASE_IRI.stringValue() + "concept");
 IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
@@ -38,7 +61,7 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Sample content"; // Query matches the indexed content
 
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 searchMatrix.reindex(entity, content, concept);
 
 I_Search<I_Found<IRI>> search = searchMatrix.byConcept(concept);
@@ -60,7 +83,7 @@ IRI concept2 = Values.iri(BASE_IRI.stringValue() + "concept2");
 IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 searchMatrix.reindex(entity, content, concept1);
 
 // Reindex same text under a new concept should still include entity in both scopes
@@ -82,7 +105,7 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "Different query"; // Query does not match the indexed content
 
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 searchMatrix.reindex(entity, content, concept);
 
 I_Search<I_Found<IRI>> search = searchMatrix.byConcept(concept);
@@ -95,7 +118,7 @@ assertTrue(results.isEmpty());
 
 @Test
 public void testSearchWithNoResults() {
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 I_Search<I_Found<IRI>> search = searchMatrix.byConcept(null);
 assertNotNull(search);
 Collection<I_Found<IRI>> results = search.search("test", 10, 0.5);
@@ -110,7 +133,7 @@ IRI entity = Values.iri(BASE_IRI.stringValue() + "entity");
 String content = "Sample content";
 String query = "simple test";
 
-SearchMatrix searchMatrix = new SearchMatrix();
+SearchMatrix searchMatrix = new SearchMatrix(new MockFinderEmbeddingModel());
 searchMatrix.reindex(entity, content, concept);
 
 I_Search<I_Found<IRI>> search = searchMatrix.byConcept(concept);
