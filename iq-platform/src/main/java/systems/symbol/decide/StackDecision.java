@@ -13,6 +13,7 @@ this.plan = plan;
 
 @Override
 public T intent() throws StateException {
+if (plan.isEmpty()) return null;
 return plan.pop();
 }
 }

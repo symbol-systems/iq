@@ -101,7 +101,7 @@ if (this.secrets == null)
 throw new SecretsException("missing.basic.secrets");
 String credentials = this.secrets.getSecret(getURL());
 String encoded = Base64.encodeAsString(credentials.getBytes(StandardCharsets.UTF_8));
-log.info("ux.basic.auth: {} -> {}", credentials, encoded);
+log.debug("ux.basic.auth: configured for {}", getURL());
 header("Authorization", "Basic " + encoded);
 return this;
 }
@@ -110,7 +110,7 @@ public RestAPI header(String name) throws SecretsException {
 if (this.secrets == null)
 throw new SecretsException("missing.header.secrets");
 String credentials = this.secrets.getSecret(getURL());
-log.info("ux.header.auth: {} -> {}", name, credentials);
+log.debug("ux.header.auth: {} configured", name);
 return header(name, credentials);
 }
 

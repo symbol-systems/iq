@@ -3,6 +3,7 @@ package systems.symbol.fsm;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +39,7 @@ return getTransitions(getState()).contains(targetState);
 
 @Override
 protected Collection<T> getTransitions(T state) {
-return states.get(state);
+Collection<T> transitions = states.get(state);
+return transitions != null ? transitions : List.of();
 }
 }

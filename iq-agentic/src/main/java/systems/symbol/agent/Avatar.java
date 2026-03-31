@@ -81,7 +81,7 @@ this.secrets = secrets;
 public Set<IRI> execute(IRI state, Resource llm, Bindings bindings) throws StateException {
 try {
 return llm(state, llm, bindings);
-} catch (APIException | Exception e) {
+} catch (Exception e) {
 throw new RuntimeException(e);
 }
 }
@@ -91,7 +91,7 @@ throw new RuntimeException(e);
 public Set<IRI> execute(Bindings bindings) {
 try {
 return llm(getSelf(), getStateMachine().getState(), bindings);
-} catch (APIException | Exception e) {
+} catch (Exception e) {
 throw new RuntimeException(e);
 }
 }
