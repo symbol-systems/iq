@@ -13,6 +13,7 @@ public class StackDecision<T> implements I_Delegate<T> {
 
     @Override
     public T intent() throws StateException {
+        if (plan.isEmpty()) return null;
         return plan.pop();
     }
 }

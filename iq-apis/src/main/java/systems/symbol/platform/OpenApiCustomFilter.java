@@ -30,6 +30,7 @@ public class OpenApiCustomFilter implements OASFilter {
     }
 
     private void processOperation(Operation operation) {
+        if (operation == null) return;
         if (operation.getSummary() != null && operation.getSummary().startsWith("api.")) {
             operation.setSummary(resolvePlaceholder(operation.getSummary()));
         }

@@ -12,6 +12,7 @@ import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -27,8 +28,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class IOStreamCrypto {
     byte[] bytePassword = null;
-    final byte[] ivBytes = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
-            0x0d, 0x0e, 0x0f }; // example
+    private static final int IV_LENGTH = 16;
     String cipherTransformation = "AES/CFB8/NoPadding";
     String cipherSpec = "AES";
 
@@ -41,8 +41,12 @@ public class IOStreamCrypto {
     }
 
     public CipherOutputStream encrypt(OutputStream out) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException {
+            InvalidAlgorithmParameterException, InvalidKeyException, IOException {
         final SecretKey key = new SecretKeySpec(bytePassword, cipherSpec);
+        byte[] ivBytes = new byte[IV_LENGTH];
+        new java.security.SecureRandom().nextBytes(ivBytes);
+        // Prepend IV to output so decrypt can read it
+        out.write(ivBytes);
         final IvParameterSpec IV = new IvParameterSpec(ivBytes);
         final Cipher cipher = Cipher.getInstance(cipherTransformation);
         cipher.init(Cipher.ENCRYPT_MODE, key, IV);
@@ -50,8 +54,16 @@ public class IOStreamCrypto {
     }
 
     public CipherInputStream decrypt(InputStream in) throws NoSuchPaddingException, NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException, InvalidKeyException {
+            InvalidAlgorithmParameterException, InvalidKeyException, IOException {
         final SecretKey key = new SecretKeySpec(bytePassword, cipherSpec);
+        // Read IV from input
+        byte[] ivBytes = new byte[IV_LENGTH];
+        int bytesRead = 0;
+        while (bytesRead < IV_LENGTH) {
+            int read = in.read(ivBytes, bytesRead, IV_LENGTH - bytesRead);
+            if (read < 0) throw new IOException("Unexpected end of stream reading IV");
+            bytesRead += read;
+        }
         final IvParameterSpec IV = new IvParameterSpec(ivBytes);
         final Cipher cipher = Cipher.getInstance(cipherTransformation);
         cipher.init(Cipher.DECRYPT_MODE, key, IV);

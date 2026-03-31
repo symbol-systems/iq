@@ -11,18 +11,17 @@ public abstract class TrusteeKeys implements I_TrustKeys {
     }
 
     public TrusteeKeys(PrivateKey sovereign) {
-        if (sovereign != null)
+        if (sovereign != null) {
+            this.guardians.add(sovereign);
             this.majeur();
+        }
     }
 
     private List<PrivateKey> getKeys(int s, int l) {
-        List<PrivateKey> keys = new ArrayList<>();
-        if (l < 0 || l > keys.size())
-            l = keys.size();
-        for (int i = s; i < l; i++) {
-            keys.add(this.guardians.get(i));
-        }
-        return keys;
+        if (this.guardians.isEmpty()) return List.of();
+        int end = Math.min(l, this.guardians.size());
+        int start = Math.min(s, end);
+        return new ArrayList<>(this.guardians.subList(start, end));
     }
 
     public List<PrivateKey> getGuardians() {
@@ -35,11 +34,13 @@ public abstract class TrusteeKeys implements I_TrustKeys {
 
     @Override
     public PrivateKey getGovernanceKey() {
+        if (this.guardians.size() <= 4) return null;
         return this.guardians.get(4);
     }
 
     @Override
     public PrivateKey getContinuityKey() {
+        if (this.guardians.size() <= 3) return null;
         return this.guardians.get(3);
     }
 

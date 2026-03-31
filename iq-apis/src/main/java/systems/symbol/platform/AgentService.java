@@ -28,13 +28,15 @@ public class AgentService {
         this.self = self;
         this.model = new LiveModel(connection);
         this.scripts = new IQScriptCatalog(this.self, connection);
+        this.state = state;
+        this.agent = new ExecutiveAgent(this.self, this.model,
+                new ExecutiveIntent(self, model, model, new JSR233(null, model, model, secrets, scripts)), state);
+        // Re-initialize intent with agent reference now that agent exists
         this.intent = new ExecutiveIntent(self, model, model, new JSR233(agent, model, model, secrets, scripts));
         this.intent.add(new Select(self, connection));
         this.intent.add(new Update(self, connection));
         this.intent.add(new Remodel(self, this.model, scripts));
         this.intent.add(new Construct(self, connection));
-        this.state = state;
-        this.agent = new ExecutiveAgent(this.self, this.model, intent, state);
     }
 
     public Resource next(Resource state) throws StateException {
