@@ -50,6 +50,11 @@
 <scope>compile</scope>
 </dependency>
 <dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-mcp</artifactId>
+<version>${project.version}</version>
+</dependency>
+<dependency>
 <groupId>jakarta.ws.rs</groupId>
 <artifactId>all</artifactId>
 <version>3.1.0</version>

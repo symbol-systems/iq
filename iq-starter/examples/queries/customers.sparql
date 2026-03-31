@@ -1,0 +1,17 @@
+# Example: List all customers in the knowledge graph
+# Returns: customer names and email addresses
+
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?name ?email ?revenue
+WHERE {
+  ?customer rdf:type foaf:Organization ;
+foaf:name ?name ;
+foaf:mbox ?email .
+  
+  OPTIONAL {
+?customer <http://example.org/revenue> ?revenue .
+  }
+}
+ORDER BY DESC(?revenue)

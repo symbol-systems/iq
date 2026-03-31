@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# IQ Starter: Run smoke tests for critical endpoints
+# Usage: ./bin/test-api [--port PORT]
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PORT="${1:-8080}"
+
+if [ "${1:-}" = "--port" ] && [ -n "${2:-}" ]; then
+PORT="$2"
+fi
+
+echo "🧪 Running IQ Platform Smoke Tests..."
+echo "   Server: http://localhost:$PORT"
+echo ""
+
+# Check if server is running
+if ! curl -s "http://localhost:$PORT/health" > /dev/null 2>&1; then
+echo "❌ Server not found on http://localhost:$PORT"
+echo "   Start it first: ./bin/start"
+exit 1
+fi
+
+PROJECT_ROOT="$(cd "$ROOT/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+echo "Running Maven tests for PlatformSmokeTest..."
+echo ""
+
+./mvnw test \
+  -pl iq-apis \
+  -am \
+  -Dtest=PlatformSmokeTest \
+  -Dquarkus.http.port="$PORT" \
+  -DskipITs
+
+TEST_RESULT=$?
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+if [ $TEST_RESULT -eq 0 ]; then
+echo "✅ All smoke tests passed!"
+echo ""
+echo "Critical endpoints verified:"
+echo "  ✓ GET  /mcp"
+echo "  ✓ GET  /mcp/health"
+echo "  ✓ GET  /mcp/tools"
+echo "  ✓ GET  /mcp/resources"
+echo "  ✓ GET  /mcp/prompts"
+echo "  ✓ POST /mcp/tools/{name}/execute"
+echo "  ✓ GET  /health"
+echo "  ✓ GET  /health/ready"
+echo "  ✓ GET  /health/live"
+else
+echo "❌ Some smoke tests failed (exit code: $TEST_RESULT)"
+echo ""
+echo "Check the test output above for details."
+fi
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+exit $TEST_RESULT

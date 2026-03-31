@@ -27,6 +27,7 @@ This starter kit comes pre-configured with:
 | Set up connectors | [Connectors Guide](docs/CONNECTORS.md) |
 | Configure agents & workflows | [Agent Setup](docs/AGENTS.md) |
 | Deploy with Docker | [Docker & Cloud](docs/DEPLOYMENT.md) |
+| Test critical endpoints | [Testing Guide](docs/TESTING.md) |
 | Troubleshoot issues | [FAQ & Troubleshooting](docs/FAQ.md) |
 
 ## System requirements

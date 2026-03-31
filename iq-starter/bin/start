@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# IQ Starter: Start MCP + REST API server
+# Usage: ./bin/start-api [--port PORT]
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PORT="${1:-8080}"
+
+# Extract port number if passed as --port 8080
+if [ "${1:-}" = "--port" ] && [ -n "${2:-}" ]; then
+PORT="$2"
+fi
+
+cd "$ROOT"
+
+echo "🚀 Starting IQ MCP + REST API server..."
+echo "   Port: $PORT"
+echo ""
+echo "Startup stages:"
+echo "  1️⃣  Downloading dependencies (first run only)"
+echo "  2️⃣  Compiling Java code"
+echo "  3️⃣  Instantiating Quarkus framework"
+echo "  4️⃣  Initializing knowledge graph"
+echo "  5️⃣  Loading MCP tools"
+echo "  6️⃣  Server ready ✅"
+echo ""
+echo "⏱️  First startup: ~30-60 seconds"
+echo "   Subsequent: ~5-10 seconds"
+echo ""
+echo "Press Ctrl+C to stop."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+PROJECT_ROOT="$(cd "$ROOT/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+# Capture output to detect server start
+LOG_FILE=$(mktemp)
+trap "rm -f $LOG_FILE" EXIT
+
+# Run Maven Quarkus dev mode and capture output
+./mvnw compile quarkus:dev \
+  -pl iq-apis \
+  -am \
+  -Dquarkus.http.port="$PORT" \
+  -Dorg.eclipse.rdf4j.repository.debug="false" \
+  -DskipTests 2>&1 | tee "$LOG_FILE" | while IFS= read -r line; do
+  # Color-code output by severity
+  if echo "$line" | grep -q "ERROR"; then
+echo "❌ $line" 
+  elif echo "$line" | grep -q "WARN"; then
+echo "⚠️  $line"
+  elif echo "$line" | grep -q "listening on"; then
+echo "✅ $line"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ Server is ready!"
+echo ""
+echo "📍 API URL: http://localhost:$PORT"
+echo "📊 MCP Tools: curl http://localhost:$PORT/mcp/tools | jq ."
+echo "💚 Health Check: curl http://localhost:$PORT/health | jq ."
+echo ""
+echo "In another terminal, try:"
+echo "  ./bin/demo-query examples/queries/customers.sparql"
+echo "  ./bin/import-example"
+echo ""
+echo "Press Ctrl+C to stop the server."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  else
+echo "$line"
+  fi
+done
