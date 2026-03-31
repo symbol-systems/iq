@@ -15,6 +15,7 @@ import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
 
 import java.io.File;
+import java.io.IOException;
 
 @Path("/ux/ipfs")
 @Tag(name = "api.ux.files.name", description = "api.ux.files.description")
@@ -25,7 +26,7 @@ public class FilesAPI extends GuardedAPI {
     @Path("{realm}/{ipfs:.*}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response download(@PathParam("realm") String _realm, @PathParam("ipfs") String ipfs,
-            @HeaderParam("Authorization") String auth) throws SecretsException {
+            @HeaderParam("Authorization") String auth) throws SecretsException, IOException {
         if (Validate.isMissing(ipfs)) {
             return new OopsResponse("ux.ipfs#missing", Response.Status.BAD_REQUEST).build();
         }
@@ -42,6 +43,14 @@ public class FilesAPI extends GuardedAPI {
 
         File home = new File(platform.getInstance().getHome().getPath().toString(), "vfs");
         File file = new File(home, ipfs);
+        // Prevent path traversal: verify canonical path is under home
+        if (!file.getCanonicalPath().startsWith(home.getCanonicalPath() + File.separator)
+                && !file.getCanonicalPath().equals(home.getCanonicalPath())) {
+            log.warn("ipfs.path.traversal: {} -> {}", ipfs, file.getCanonicalPath());
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(new SimpleResponse("error", "Access denied").build())
+                    .build();
+        }
         log.info("ipfs.download: {} @ {} == {}", ipfs, file, file.exists());
         if (!file.exists()) {
             return Response.status(Response.Status.NOT_FOUND)

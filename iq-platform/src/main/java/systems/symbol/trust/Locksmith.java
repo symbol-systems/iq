@@ -1,5 +1,8 @@
 package systems.symbol.trust;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -20,6 +23,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
  * A static helper with lots of useful tools
  */
 public class Locksmith {
+    private static final Logger log = LoggerFactory.getLogger(Locksmith.class);
     static String hexStr = "0123456789ABCDEF";
     static SecureRandom secureSeed = new SecureRandom();
 
@@ -29,7 +33,7 @@ public class Locksmith {
      */
     // Obtain a RSA Cipher Object
     public static Cipher cipher() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
-        return Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
+        return Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding", "BC");
     }
 
     public static X509Certificate toCertificate(InputStream certStream) throws CertificateException {
@@ -67,15 +71,14 @@ public class Locksmith {
             throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException, CertificateException,
             IOException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         PrivateKey priv = Locksmith.loadPrivateKey(keyStream);
-        System.out.println("Loaded " + priv.getAlgorithm() + " " + priv.getFormat() + " private key.");
+        log.debug("locksmith.loaded: {} {}", priv.getAlgorithm(), priv.getFormat());
         // Set plain message
         byte[] messageBytes = message.getBytes();
-        System.out.println("Plain message:\n" + message + "\n");
+        log.debug("locksmith.encrypt.plain: {} bytes", messageBytes.length);
 
         // Encrypt the message
         byte[] ciphertextBytes = cipher.doFinal(messageBytes);
-        System.out
-                .println("Message encrypted with certificate file public key:\n" + new String(ciphertextBytes) + "\n");
+        log.debug("locksmith.encrypt.done: {} bytes", ciphertextBytes.length);
         return ciphertextBytes;
     }
 
@@ -86,12 +89,10 @@ public class Locksmith {
         keyStream.read(encKey);
 
         // Read the private key from file
-        System.out.println("RSA PrivateKeyInfo: " + encKey.length + " bytes\n");
+        log.debug("locksmith.privkey: {} bytes", encKey.length);
         PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        System.out.println("KeyFactory Object Info:");
-        System.out.println("Algorithm = " + keyFactory.getAlgorithm());
-        System.out.println("Provider = " + keyFactory.getProvider());
+        log.debug("locksmith.keyfactory: alg={} provider={}", keyFactory.getAlgorithm(), keyFactory.getProvider());
         PrivateKey priv = (RSAPrivateKey) keyFactory.generatePrivate(privKeySpec);
         return priv;
 
@@ -107,7 +108,7 @@ public class Locksmith {
 
         // Decrypt the message
         byte[] textBytes = cipher.doFinal(ciphertextBytes);
-        System.out.println("Message decrypted with file private key:\n" + new String(textBytes) + "\n");
+        log.debug("locksmith.decrypt.done: {} bytes", textBytes.length);
         return textBytes;
     }
 
@@ -115,9 +116,9 @@ public class Locksmith {
             throws NoSuchPaddingException, IllegalBlockSizeException, CertificateException, NoSuchAlgorithmException,
             IOException, InvalidKeySpecException, BadPaddingException, NoSuchProviderException, InvalidKeyException {
         byte[] encrypted = Locksmith.encrypt(certStream, keyStream, message);
-        System.out.println("check.encrypted:" + new String(encrypted) + "\n");
+        log.debug("locksmith.check.encrypted: {} bytes", encrypted.length);
         byte[] decrypted = Locksmith.decrypt(certStream, encrypted);
-        System.out.println("check.decrypted:" + new String(decrypted) + "\n");
+        log.debug("locksmith.check.decrypted: {} bytes", decrypted.length);
     }
 
     public static KeyStore createEmptyKeyStore() throws IOException, GeneralSecurityException {
@@ -163,7 +164,7 @@ public class Locksmith {
     // return privateKey;
     // }
 
-    public static KeyStore createKeyStore(InputStream publicCertIn, InputStream privateKeyIn)
+    public static KeyStore createKeyStore(InputStream publicCertIn, InputStream privateKeyIn, char[] password)
             throws IOException, GeneralSecurityException {
 
         KeyStore keyStore = createEmptyKeyStore();
@@ -174,24 +175,16 @@ public class Locksmith {
 
         keyStore.setCertificateEntry("aliasForCertHere", publicCert);
 
-        keyStore.setKeyEntry("aliasForPrivateKeyHere", privateKey, "PasswordForPrivateKeyHere".toCharArray(),
+        keyStore.setKeyEntry("aliasForPrivateKeyHere", privateKey, password,
                 new X509Certificate[] { publicCert });
 
         return keyStore;
     }
 
-    public static byte[] convertKeyStoreToBytes(KeyStore keyStore) throws IOException, GeneralSecurityException {
+    public static byte[] convertKeyStoreToBytes(KeyStore keyStore, char[] password) throws IOException, GeneralSecurityException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        keyStore.store(out, "PasswordForPrivateKeyHere".toCharArray());
+        keyStore.store(out, password);
         byte[] bytes = out.toByteArray();
         return bytes;
-    }
-
-    public static void loadKeys() {
-
-    }
-
-    public static void saveKeys() {
-
     }
 }

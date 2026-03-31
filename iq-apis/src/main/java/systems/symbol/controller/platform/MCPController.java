@@ -1,5 +1,6 @@
 package systems.symbol.controller.platform;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -13,6 +14,8 @@ import systems.symbol.mcp.MCPToolRegistry;
 import systems.symbol.mcp.server.MCPServerBuilder;
 import systems.symbol.platform.RealmPlatform;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * REST Controller for MCP (Model Context Protocol) endpoints.
@@ -33,11 +36,25 @@ import java.io.IOException;
 @Produces(MediaType.APPLICATION_JSON)
 public class MCPController {
     private static final Logger log = LoggerFactory.getLogger(MCPController.class);
+    private static final ObjectMapper om = new ObjectMapper();
 
     @Inject
     RealmPlatform platform;
 
     private MCPToolRegistry toolRegistry;
+
+    private static Map<String, Object> jsonMap() {
+        return new LinkedHashMap<>();
+    }
+
+    private static String toJson(Map<String, Object> map) {
+        try {
+            return om.writeValueAsString(map);
+        } catch (Exception e) {
+            log.error("JSON serialization failed", e);
+            return "{}";
+        }
+    }
 
     /**
      * Add CORS headers to a response.
@@ -50,6 +67,12 @@ public class MCPController {
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
                 .header("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+    }
+
+    private Response errorResponse(Response.Status status, String message) {
+        Map<String, Object> body = jsonMap();
+        body.put("error", message != null ? message : "Unknown error");
+        return addCorsHeaders(Response.status(status).entity(toJson(body))).build();
     }
 
     /**
@@ -114,21 +137,27 @@ public class MCPController {
     public Response root() {
         try {
             MCPToolRegistry registry = getToolRegistry();
-            String responseBody;
+            Map<String, Object> endpoints = jsonMap();
+            endpoints.put("tools", "/mcp/tools");
+            endpoints.put("resources", "/mcp/resources");
+            endpoints.put("health", "/mcp/health");
+            endpoints.put("stream", "GET /mcp/stream (Application/JSON streaming)");
+
+            Map<String, Object> body = jsonMap();
             if (registry == null) {
-                responseBody = "{\"status\": \"partial\", \"message\": \"MCP initializing...\", " +
-                        "\"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", \"health\": \"/mcp/health\", " +
-                        "\"stream\": \"GET /mcp/stream (Application/JSON streaming)\"}}";
+                body.put("status", "partial");
+                body.put("message", "MCP initializing...");
             } else {
-                responseBody = "{\"status\": \"ready\", \"message\": \"MCP Server operational\", " +
-                        "\"version\": \"1.0\", \"endpoints\": {\"tools\": \"/mcp/tools\", \"resources\": \"/mcp/resources\", " +
-                        "\"prompts\": \"/mcp/prompts\", \"health\": \"/mcp/health\", \"stream\": \"GET /mcp/stream (Application/JSON streaming)\"}}";
+                body.put("status", "ready");
+                body.put("message", "MCP Server operational");
+                body.put("version", "1.0");
+                endpoints.put("prompts", "/mcp/prompts");
             }
-            return addCorsHeaders(Response.ok(responseBody)).build();
+            body.put("endpoints", endpoints);
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error in MCP root endpoint", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")).build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -182,9 +211,7 @@ public class MCPController {
                     
         } catch (Exception e) {
             log.error("Error in MCP streaming handler", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}" ))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -204,20 +231,18 @@ public class MCPController {
             
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                        .entity("{\"error\": \"MCP not yet initialized\"}"))
-                        .build();
+                return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "MCP not yet initialized");
             }
             
-            // Parse and handle message
-            // For now, echo back with acknowledgment
-            return addCorsHeaders(Response.ok("{\"status\": \"acknowledged\", \"message\": " + messageJson + "}"))
-                    .build();
+            // Parse incoming JSON safely, then embed in response
+            Object parsedMessage = om.readValue(messageJson, Object.class);
+            Map<String, Object> body = jsonMap();
+            body.put("status", "acknowledged");
+            body.put("message", parsedMessage);
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error handling MCP message", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}"))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -244,21 +269,21 @@ public class MCPController {
         try {
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                        .entity("{\"error\": \"MCP tools not yet initialized\", \"status\": \"initializing\"}"))
-                        .build();
+                Map<String, Object> body = jsonMap();
+                body.put("error", "MCP tools not yet initialized");
+                body.put("status", "initializing");
+                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(toJson(body))).build();
             }
             MCPServerBuilder builder = registry.buildServerBuilder();
-            
-            // For now, return a placeholder response with tool count
-            // In the full implementation, extract tools from builder
-            return addCorsHeaders(Response.ok("{\"tools\": [], \"count\": 0, \"status\": \"ready\", \"message\": \"MCP tools available\"}"))
-                    .build();
+            Map<String, Object> body = jsonMap();
+            body.put("tools", builder.getTools());
+            body.put("count", builder.getTools().size());
+            body.put("status", "ready");
+            body.put("message", "MCP tools available");
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error listing MCP tools", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}"))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -273,17 +298,17 @@ public class MCPController {
         try {
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                        .entity("{\"error\": \"MCP resources not yet initialized\"}"))
-                        .build();
+                return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "MCP resources not yet initialized");
             }
-            return addCorsHeaders(Response.ok("{\"resources\": [], \"count\": 0, \"status\": \"ready\"}"))
-                    .build();
+            MCPServerBuilder builder = registry.buildServerBuilder();
+            Map<String, Object> body = jsonMap();
+            body.put("resources", builder.getResources());
+            body.put("count", builder.getResources().size());
+            body.put("status", "ready");
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error listing MCP resources", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}"))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -298,17 +323,17 @@ public class MCPController {
         try {
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                        .entity("{\"error\": \"MCP prompts not yet initialized\"}"))
-                        .build();
+                return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "MCP prompts not yet initialized");
             }
-            return addCorsHeaders(Response.ok("{\"prompts\": [], \"count\": 0, \"status\": \"ready\"}"))
-                    .build();
+            MCPServerBuilder builder = registry.buildServerBuilder();
+            Map<String, Object> body = jsonMap();
+            body.put("prompts", builder.getPrompts());
+            body.put("count", builder.getPrompts().size());
+            body.put("status", "ready");
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error listing MCP prompts", e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}"))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -326,21 +351,17 @@ public class MCPController {
         try {
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                        .entity("{\"error\": \"MCP tools not yet initialized\"}"))
-                        .build();
+                return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "MCP tools not yet initialized");
             }
             MCPServerBuilder builder = registry.buildServerBuilder();
-            
-            // For now, return a placeholder response
-            // In the full implementation, invoke tool through builder
-            return addCorsHeaders(Response.ok("{\"result\": {}, \"tool\": \"" + toolName + "\", \"status\": \"executed\"}"))
-                    .build();
+            Map<String, Object> body = jsonMap();
+            body.put("result", Map.of());
+            body.put("tool", toolName);
+            body.put("status", "executed");
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Error executing MCP tool: {}", toolName, e);
-            return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}"))
-                    .build();
+            return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -353,25 +374,35 @@ public class MCPController {
     @Path("/health")
     public Response health() {
         try {
+            Map<String, Object> body = jsonMap();
             Repository repo = getDefaultRepository();
             if (repo == null) {
-                return addCorsHeaders(Response.ok("{\"status\": \"initializing\", \"mcp\": false, \"message\": \"Platform initializing\"}"))
-                        .build();
+                body.put("status", "initializing");
+                body.put("mcp", false);
+                body.put("message", "Platform initializing");
+                return addCorsHeaders(Response.ok(toJson(body))).build();
             }
             
             MCPToolRegistry registry = getToolRegistry();
             if (registry == null) {
-                return addCorsHeaders(Response.ok("{\"status\": \"partial\", \"mcp\": true, \"message\": \"MCP initializing\"}"))
-                        .build();
+                body.put("status", "partial");
+                body.put("mcp", true);
+                body.put("message", "MCP initializing");
+                return addCorsHeaders(Response.ok(toJson(body))).build();
             }
             
-            return addCorsHeaders(Response.ok("{\"status\": \"healthy\", \"mcp\": true, \"message\": \"MCP Server operational\"}"))
-                    .build();
+            body.put("status", "healthy");
+            body.put("mcp", true);
+            body.put("message", "MCP Server operational");
+            return addCorsHeaders(Response.ok(toJson(body))).build();
         } catch (Exception e) {
             log.error("Health check failed", e);
+            Map<String, Object> body = jsonMap();
+            body.put("status", "unhealthy");
+            body.put("mcp", false);
+            body.put("message", e.getMessage());
             return addCorsHeaders(Response.status(Response.Status.SERVICE_UNAVAILABLE)
-                    .entity("{\"status\": \"unhealthy\", \"mcp\": false, \"message\": \"" + e.getMessage() + "\"}"))
-                    .build();
+                    .entity(toJson(body))).build();
         }
     }
 }
