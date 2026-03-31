@@ -1,12 +1,14 @@
 # IQ Starter Kit 🚀
 
-A comprehensive, batteries-included package designed for business users, product teams, and architects to explore IQ's enterprise capabilities. **No coding required—just configuration and examples.**
+A comprehensive, batteries-included package designed for business users, product teams, and architects to explore IQ's enterprise capabilities. **IQ is MCP-first**—use it directly in Claude, ChatGPT, or any LLM.
 
 ## What's in the box?
 
 This starter kit comes pre-configured with:
 
-- **Three runtime entry points** — REST API, command-line interface, and LLM integration
+- **MCP-first architecture** — Expose any knowledge graph and workflow as MCP tools for Claude and ChatGPT
+- **REST API fallback** — HTTP endpoints for direct queries, agents, and chat (no LLM required)
+- **CLI tool** — Interactive command-line for exploration and batch operations
 - **Five real-world enterprise use cases** — fully documented with examples
 - **20+ connector reference setups** — AWS, Slack, GitHub, databases, and more
 - **Ready-to-run agent workflows** — state machines, playbooks, and decision logic
@@ -17,13 +19,14 @@ This starter kit comes pre-configured with:
 
 | I want to... | Read this |
 |---|---|
-| Get running in 5 minutes | [QUICKSTART.md](docs/QUICKSTART.md) |
+| Get running in 5 minutes with MCP | [QUICKSTART.md](docs/QUICKSTART.md) |
+| Connect Claude to IQ | [MCP Guide](docs/MCP.md) |
 | Understand what IQ does | [What is IQ?](docs/WHAT_IS_IQ.md) |
 | Learn the three runtimes | [Runtimes](docs/RUNTIMES.md) |
 | See real use cases | [Use Cases](docs/USECASES.md) |
 | Set up connectors | [Connectors Guide](docs/CONNECTORS.md) |
 | Configure agents & workflows | [Agent Setup](docs/AGENTS.md) |
-| Deploy with Docker | [Docker & Cloud](docs/DOCKER.md) |
+| Deploy with Docker | [Docker & Cloud](docs/DEPLOYMENT.md) |
 | Troubleshoot issues | [FAQ & Troubleshooting](docs/FAQ.md) |
 
 ## System requirements
@@ -33,43 +36,50 @@ This starter kit comes pre-configured with:
 - **curl** or Postman (for testing APIs)
 - 4GB RAM minimum, 8GB recommended
 
-## Installation
+## Installation & Your First MCP Tool
 
 ```bash
 # 1. Clone or navigate to the IQ repository
 cd /path/to/iq
 
-# 2. Start the default runtime (embedded in the starter kit)
+# 2. Start the MCP server (HTTP-based, not stdio)
 cd iq-starter
 ./bin/start-api
 
-# 3. Open your browser to http://localhost:8080/q/dev/
+# 3. List available MCP tools
+curl http://localhost:8080/mcp/tools | jq .
+
+# 4. Call an MCP tool (example: query knowledge graph)
+curl -X POST http://localhost:8080/mcp/tools/query_knowledge_graph/execute \
+  -H "Content-Type: application/json" \
+  -d '{"sparql": "SELECT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}'
 ```
 
-That's it. You're running IQ.
+That's it. Your enterprise knowledge is now accessible as MCP tools.
 
 ## The three ways to use IQ
 
-### 1. **REST API** (for web apps, mobile, integrations)
+### 1. **MCP (Primary)** — Integrate with Claude, ChatGPT, local LLMs
 ```bash
 ./bin/start-api
-# Then call http://localhost:8080/
+# MCP endpoints available at http://localhost:8080/mcp/*
+# Connect via Claude Desktop or any LLM with HTTP support
 ```
-Best for: integrating AI into existing systems, building web UIs, mobile apps.
+Best for: giving Claude direct access to your knowledge graphs and workflows, building AI agents with grounded knowledge.
 
-### 2. **Command-Line Interface** (for data teams, analysts, DevOps)
+### 2. **REST API** — For web apps, mobile, existing integrations
+```bash
+./bin/start-api
+# REST endpoints at http://localhost:8080/chat, /sparql, /agents
+```
+Best for: integrating AI into web UIs, mobile apps, or when you don't want to use an LLM client.
+
+### 3. **Command-Line Interface** — For data teams, analysts, DevOps
 ```bash
 ./bin/start-cli
 # Interactive mode: explore data, run queries, manage agents
 ```
-Best for: exploring knowledge graphs, ad-hoc queries, batch operations.
-
-### 3. **Model Context Protocol** (for LLM tool integration)
-```bash
-./bin/start-mcp
-# Use with Claude, ChatGPT, or local LLMs
-```
-Best for: giving AI systems direct access to your enterprise data and tools.
+Best for: exploring knowledge graphs, ad-hoc queries, batch operations, automation scripts.
 
 ## Use cases by role
 

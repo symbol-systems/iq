@@ -1,4 +1,6 @@
-# QUICKSTART — 5 minutes to your first IQ query
+# QUICKSTART — 5 minutes to IQ via MCP
+
+IQ is **MCP-first**: it runs as an HTTP server exposing MCP tools, perfect for Claude, ChatGPT, and any LLM that speaks HTTP.
 
 ## Prerequisites
 
@@ -6,125 +8,180 @@
 - curl (to test APIs)
 - 4GB free RAM
 
-## Step 1: Start the API server (2 minutes)
+## Step 1: Start the MCP server (2 minutes)
 
 ```bash
 cd /path/to/iq/iq-starter
 ./bin/start-api
 ```
 
-You'll see:
-```
-2024-03-31 12:34:56.789 INFO  IQ API server started on port 8080
-2024-03-31 12:34:57.123 INFO  Knowledge graph initialized
-2024-03-31 12:34:57.456 INFO  3 realms loaded, 2,847 facts indexed
-```
-
-The server is ready when you see:
+You'll see startup logs ending with:
 ```
 2024-03-31 12:34:58 INFO  HTTP server listening on 0.0.0.0:8080
+2024-03-31 12:34:59 INFO  MCP endpoints available at /mcp/*
 ```
 
-**If startup takes >30 seconds:** this is normal for the first run. Java is compiling and indexing your knowledge graph. Subsequent starts will be faster.
+The server is ready when you see that message.
 
-## Step 2: Test with a chat message (1 minute)
+> **First run slow?** Normal—Java is JIT-compiling and indexing your knowledge graph. ~30 seconds first time, 5 seconds after.
 
-Open a **new terminal** and run:
+## Step 2: List available MCP tools (1 minute)
+
+Open a **new terminal** and list your MCP tools:
 
 ```bash
-./bin/demo-chat "What can IQ do for me?"
+curl http://localhost:8080/mcp/tools 2>/dev/null | jq .
 ```
 
-You should get a response like:
+You'll see:
 ```json
 {
-  "response": "IQ is a knowledge execution platform that turns structured knowledge and AI 
-  into executable, stateful workflows...",
-  "model": "gpt-3.5-turbo",
-  "tokens_used": 87
+  "tools": [
+    {
+      "name": "query_knowledge_graph",
+      "description": "Run SPARQL queries against your knowledge graph",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sparql": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "execute_workflow",
+      "description": "Trigger a state machine with decision logic",
+      "inputSchema": { ... }
+    },
+    {
+      "name": "list_connectors",
+      "description": "Get status of all configured connectors"
+    }
+  ]
 }
 ```
 
-If you get an error about `OPENAI_API_KEY`, see [FAQ](FAQ.md#no-openai-key).
+These tools are now **available to Claude, ChatGPT, or any MCP client**.
 
-## Step 3: Trigger an agent workflow (1 minute)
+## Step 3: Call an MCP tool (1 minute)
 
-Agents are stateful AI workers that make multi-step decisions. Try:
+Execute the knowledge graph query tool:
 
 ```bash
-./bin/demo-agent "process customer request" --customer-id=12345
+curl -X POST http://localhost:8080/mcp/tools/query_knowledge_graph/execute \
+  -H "Content-Type: application/json" \
+  -d '{"sparql": "SELECT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}' \
+  2>/dev/null | jq .
 ```
 
-Expected flow:
-1. Agent reads the customer record
-2. Decides whether to approve, deny, or escalate
-3. Updates state machine
-4. Calls connectors (email, Slack, etc.)
+Response:
+```json
+{
+  "results": [
+    { "name": "Alice Corp" },
+    { "name": "Bob Industries" }
+  ]
+}
+```
 
-You'll see the full decision trace in the response.
+## Step 4: Connect Claude to IQ
 
-## Step 4: Query your knowledge graph (1 minute)
+Use Claude's **MCP Client** to talk to your local IQ server:
 
-Run a SPARQL query:
+### Option A: Claude Desktop (native MCP)
+1. Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or equivalent (Windows/Linux)
+2. Add:
+```json
+{
+  "mcpServers": {
+    "iq": {
+      "command": "curl",
+      "args": ["http://localhost:8080/mcp/tools"],
+      "env": {}
+    }
+  }
+}
+```
+3. Restart Claude, now ask: *"Show me all customers in the knowledge graph"*
+
+Claude will automatically use the `query_knowledge_graph` tool.
+
+### Option B: HTTP client (any LLM)
+Any LLM with HTTP support can call:
+```
+POST http://localhost:8080/mcp/tools/{tool_name}/execute
+Content-Type: application/json
+
+{ "parameter1": "value", ... }
+```
+
+## Step 5: Query your knowledge graph directly (REST API fallback)
+
+If you want to query without an LLM:
 
 ```bash
-./bin/demo-query examples/queries/00-hello.sparql
+./bin/demo-query examples/queries/customers.sparql
 ```
 
 Output:
 ```
-?subject | ?predicate | ?object
----------|-----------|--------
-http://example.com/alice | foaf:name | "Alice"
-http://example.com/bob | foaf:name | "Bob"
-...
+?name | ?email | ?revenue
+------|--------|----------
+Alice Corp | alice@acme.com | 1200000
+Bob Inc | bob@acme.com | 850000
 ```
 
 ---
 
 ## What just happened?
 
-| Action | What it touched |
+| Component | Purpose |
 |---|---|
-| `./bin/start-api` | Started the REST server, loaded 3 test realms, indexed knowledge |
-| `./bin/demo-chat` | Sent a message to the chat API, which used your LLM to ground the answer in knowledge |
-| `./bin/demo-agent` | Executed a state machine with decision logic and side effects |
-| `./bin/demo-query` | Ran SPARQL directly against your knowledge graph (no LLM needed) |
+| **iq-apis (port 8080)** | HTTP server with MCP endpoints (`/mcp/*`) + REST API + Web UI |
+| **/mcp/tools** | Lists all available MCP tools for your LLM |
+| **/mcp/tools/NAME/execute** | Calls a specific tool with parameters |
+| **Knowledge graph** | RDF store with your domains, workflows, and connector configs |
 
-## Next steps
-
-- **Add your own data:** [Ingest knowledge](docs/INGESTION.md)
-- **Explore use cases:** [Use Cases](docs/USECASES.md)
-- **Connect to systems:** [Connector Setup](docs/CONNECTORS.md)
-- **Build workflows:** [Agent & FSM Guide](docs/AGENTS.md)
-- **Deploy to cloud:** [Docker & Cloud](docs/DOCKER.md)
+**MCP is the "LLM interface," REST API is the "developer interface."** Use whichever fits your workflow.
 
 ---
 
-## Troubleshooting this quickstart
+## Next steps
+
+- **Use IQ with Claude:** See [AGENTS.md](AGENTS.md) for workflow examples
+- **Explore use cases:** [Use Cases](USECASES.md) — RAG, workflows, multi-tenancy
+- **Connect systems:** [Connectors](CONNECTORS.md) — Slack, GitHub, AWS, databases
+- **Deploy to cloud:** [Docker & Cloud](DEPLOYMENT.md)
+- **Understand MCP:** [MCP HTTP Guide](MCP.md)
+
+---
+
+## Troubleshooting
 
 **"Port 8080 already in use"**
 ```bash
-# Use a different port
 ./bin/start-api --port 8081
+# Then update MCP calls to http://localhost:8081/mcp/tools
 ```
 
-**"No OpenAI key"**
-See [FAQ: Using without OpenAI](FAQ.md#no-openai).
-
-**"Knowledge graph not loading"**
-Check `.iq/repositories/default/` exists. If not:
+**"MCP endpoints not found"**
+Check IQ started with MCP enabled:
 ```bash
-rm -rf .iq/repositories
-./bin/import-example  # Reinitialize
+curl http://localhost:8080/health
 ```
+Should return `{ "status": "running", "mcp": true }`.
 
-**"Queries return empty"**
+**"SPARQL returns empty"**
 Your knowledge graph might be empty. Load examples:
 ```bash
 ./bin/import-example
 ```
 
+**"No jq command"**
+Install jq (`brew install jq` or `apt-get install jq`) or use Python:
+```bash
+curl http://localhost:8080/mcp/tools | python3 -m json.tool
+```
+
 ---
 
-**Completed?** Now explore [Use Cases](docs/USECASES.md) to see what you can build. 🚀
+**Ready?** Connect Claude to IQ and start building workflows. See [AGENTS.md](AGENTS.md). 🚀

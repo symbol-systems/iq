@@ -1,18 +1,18 @@
 # RUNTIMES — How to use IQ (three entry points)
 
-IQ can be used in three different ways depending on your needs. Pick the one that fits your use case.
+IQ is **MCP-first**, but can also be used as a REST API or CLI depending on your needs. Pick the one that fits your use case.
 
 ## Overview
 
 | Runtime | Best for | Start with |
 |---|---|---|
-| **REST API** | Building apps, web UIs, mobile integration | `./bin/start-api` |
+| **MCP** | Giving Claude/ChatGPT access to enterprise data (primary) | `./bin/start-api` (MCP over HTTP) |
+| **REST API** | Building apps, web UIs, mobile integration | `./bin/start-api` (REST endpoints) |
 | **CLI** | Data exploration, analytics, operations | `./bin/start-cli` |
-| **MCP** | Giving LLMs access to enterprise data | `./bin/start-mcp` |
 
 ---
 
-## 1. REST API
+## 1. Model Context Protocol (MCP) — PRIMARY
 
 ### What it is
 

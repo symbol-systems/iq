@@ -1,13 +1,18 @@
-# Docker Compose: Run the full IQ stack
+# Docker Compose: Run the full IQ stack (MCP + REST API + Knowledge Graph)
+# MCP is exposed via HTTP endpoints on the iq-api service:
+#   GET  /mcp/tools               - List available MCP tools
+#   POST /mcp/tools/{name}/execute - Execute an MCP tool
+#   GET  /mcp/status              - Server health check
 # Usage:
 #   1. cp .env.example .env && edit .env
 #   2. docker-compose up -d
-#   3. Open http://localhost:8080
+#   3. Test MCP: curl http://localhost:8080/mcp/tools
+#   4. Web UI: http://localhost:8080
 
 version: '3.8'
 
 services:
-  # IQ API Server
+  # IQ API + MCP Server (HTTP-based MCP, not stdio)
   iq-api:
     image: iq-api:latest
     build:
@@ -16,10 +21,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # LLM Provider
+      # MCP Configuration (HTTP endpoints)
+      IQ_MCP_ENABLED: "true"
+      IQ_MCP_HOST: "0.0.0.0"
+      IQ_MCP_PORT: "8080"
+      
+      # LLM Provider (for IQ reasoning, not required for MCP)
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       IQ_LLM_PROVIDER: ${IQ_LLM_PROVIDER:-openai}
-      IQ_LLM_MODEL: ${IQ_LLM_MODEL:-gpt-3.5-turbo}
+      IQ_LLM_MODEL: ${IQ_LLM_MODEL:-GPT-5.1}
       
       # Database (optional, uses in-memory by default)
       DATABASE_URL: ${DATABASE_URL}
