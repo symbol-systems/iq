@@ -29,7 +29,7 @@ public class ServerMgmtTool implements I_MCPTool {
         schema.put("runtime", Map.of("type", "string", "enum", new String[]{"api", "mcp"}));
         schema.put("action", Map.of("type", "string", "enum", new String[]{"start", "stop", "reboot", "health", "debug", "dump"}));
         schema.put("debug", Map.of("type", "boolean", "default", false));
-        schema.put("path", Map.of("type", "string", "default", "/tmp/iq-server-dump.tar.gz"));
+        schema.put("path", Map.of("type", "string", "default", "./tmp/iq-server-dump.tar.gz"));
         return schema;
     }
 
@@ -56,7 +56,7 @@ public class ServerMgmtTool implements I_MCPTool {
                 boolean enable = (Boolean) input.getOrDefault("debug", Boolean.TRUE);
                 return success(ServerRuntimeManagerFactory.getInstance().debug(runtime, enable), "debug " + (enable ? "enabled" : "disabled"));
             case "dump":
-                String path = (String) input.getOrDefault("path", "/tmp/iq-server-dump.tar.gz");
+                String path = (String) input.getOrDefault("path", "./tmp/iq-server-dump.tar.gz");
                 var dump = ServerRuntimeManagerFactory.getInstance().dump(runtime, path);
                 return MCPResult.okJson("{\"success\":" + dump.isSuccess() + ",\"path\":\"" + dump.getPath() + "\"}");
             default:

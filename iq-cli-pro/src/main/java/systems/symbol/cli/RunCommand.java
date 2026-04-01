@@ -1,5 +1,7 @@
 package systems.symbol.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -11,6 +13,7 @@ import java.nio.file.Paths;
 
 @CommandLine.Command(name = "run", description = "Execute an IQ script")
 public class RunCommand extends CompositeCommand {
+    private static final Logger log = LoggerFactory.getLogger(RunCommand.class);
     
     @CommandLine.Parameters(index = "0", description = "The path of the script / query to run.")
     String path = "";
@@ -31,12 +34,12 @@ public class RunCommand extends CompositeCommand {
     @Override
     public Object call() throws Exception {
         if (!context.isInitialized()) {
-            System.out.println("iq.run.failed");
+            log.error("iq.run.failed");
             return null;
         }
         
         if (path == null || path.isEmpty()) {
-            System.out.println("iq.run.error: path is required");
+            log.error("iq.run.error: path is required");
             return null;
         }
         
@@ -54,7 +57,7 @@ public class RunCommand extends CompositeCommand {
             }
         }
         
-        System.out.println("iq.run: " + path + " [" + lang + "]");
+        log.info("iq.run: {} [{}]", path, lang);
         
         IQStore iq = context.newIQBase();
         try {
@@ -63,20 +66,19 @@ public class RunCommand extends CompositeCommand {
             if ("sparql".equalsIgnoreCase(lang)) {
                 executeSPARQL(iq, code);
             } else if ("groovy".equalsIgnoreCase(lang)) {
-                System.out.println("iq.run.error: Groovy scripts are not supported in iq-cli-pro. Use iq-mcp for Groovy execution.");
+                log.warn("iq.run.error: Groovy scripts are not supported in iq-cli-pro. Use iq-mcp for Groovy execution.");
                 return null;
             } else if ("js".equalsIgnoreCase(lang)) {
-                System.out.println("iq.run.error: JavaScript scripts are not supported in iq-cli-pro yet.");
+                log.warn("iq.run.error: JavaScript scripts are not supported in iq-cli-pro yet.");
                 return null;
             } else {
-                System.out.println("iq.run.error: unsupported language: " + lang);
+                log.warn("iq.run.error: unsupported language: {}", lang);
                 return null;
             }
             
             return "run:" + path + ":" + lang;
         } catch (Exception e) {
             log.error("iq.run.error: {} - {}", path, e.getMessage(), e);
-            System.out.println("iq.run.error: " + e.getMessage());
             return null;
         } finally {
             iq.close();
@@ -94,29 +96,31 @@ public class RunCommand extends CompositeCommand {
             try (TupleQueryResult result = tupleQuery.evaluate()) {
                 // Print header
                 var bindingNames = result.getBindingNames();
-                System.out.println("Results:");
+                log.info("Results:");
+                StringBuilder header = new StringBuilder();
                 for (String name : bindingNames) {
-                    System.out.print(name + "\t");
+                    header.append(name).append("\t");
                 }
-                System.out.println();
+                log.info(header.toString());
                 
                 // Print rows
                 int count = 0;
                 while (result.hasNext()) {
                     var binding = result.next();
+                    StringBuilder row = new StringBuilder();
                     for (String name : bindingNames) {
                         var val = binding.getBinding(name);
-                        System.out.print((val != null ? val.getValue() : "null") + "\t");
+                        row.append(val != null ? val.getValue() : "null").append("\t");
                     }
-                    System.out.println();
+                    log.info(row.toString());
                     count++;
                 }
-                System.out.println("\" + count + \" row(s)");
+                log.info("{} row(s)", count);
             }
         } else {
             // ASK or UPDATE queries
             boolean result = conn.prepareBooleanQuery(sparql).evaluate();
-            System.out.println("Result: " + result);
+            log.info("Result: {}", result);
         }
     }
 }

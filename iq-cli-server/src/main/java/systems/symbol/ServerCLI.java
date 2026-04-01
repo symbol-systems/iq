@@ -59,6 +59,6 @@ public class ServerCLI implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Use `iq-server server --help` for commands.");
+        log.info("Use `iq-server server --help` for commands.");
     }
 }

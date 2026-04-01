@@ -48,23 +48,20 @@ public class SPARQLDataFetcher implements DataFetcher<Collection<Map<String, Obj
     public Collection<Map<String, Object>> get(DataFetchingEnvironment environment) throws Exception {
         StringBuilder sparql = toSELECT(environment);
 
-        RepositoryConnection connection = repository.getConnection();
+        try (RepositoryConnection connection = repository.getConnection()) {
+            // prepare SPARQL
+            String prefixClauses = SPARQLQueries.getPrefixClauses(connection.getNamespaces());
+            log.info("sparql.select.query: " + prefixClauses + sparql);
+            TupleQuery tupleQuery = connection.prepareTupleQuery(prefixClauses + sparql);
+            QueryHelper.setBindings(connection.getValueFactory(), tupleQuery, environment.getArguments());
 
-        // prepare SPARQL
-        String prefixClauses = SPARQLQueries.getPrefixClauses(connection.getNamespaces());
-        log.info("sparql.select.query: " + prefixClauses + sparql);
-        TupleQuery tupleQuery = connection.prepareTupleQuery(prefixClauses + sparql);
-        QueryHelper.setBindings(connection.getValueFactory(), tupleQuery, environment.getArguments());
-
-        // evaluate SPARQL
-        TupleQueryResult queryResult = tupleQuery.evaluate();
-        Collection<Map<String, Object>> models = QueryHelper.models(queryResult);
-        connection.close();
-        return models;
+            // evaluate SPARQL
+            TupleQueryResult queryResult = tupleQuery.evaluate();
+            return QueryHelper.models(queryResult);
+        }
     }
 
     private StringBuilder toSELECT(DataFetchingEnvironment environment) {
-        log.info("sparql.select.getGraphQLSchema: "+environment.getGraphQLSchema());
         log.info("sparql.select.getGraphQLSchema: "+environment.getGraphQLSchema());
         log.info("sparql.select.getArguments: "+environment.getArguments().keySet());
         log.info("sparql.select.getFieldType: "+environment.getFieldType());
@@ -80,11 +77,7 @@ public class SPARQLDataFetcher implements DataFetcher<Collection<Map<String, Obj
         
         // Extract GraphQL context for authorization and tenant info
         Object context = environment.getContext();
-        if (context != null) {
-            log.info("sparql.select.context: type={}, value={}", context.getClass().getSimpleName(), context);
-        } else {
-            log.info("sparql.select.context: null (public query, no tenant/auth context)");
-        }
+        log.debug("sparql.select.context: {}", context != null ? context.getClass().getSimpleName() : "null");
 
         // build SPARQL
         return toSELECT(queryField, selectionSet.getSelections(), environment.getFieldDefinition().getArguments(), context);
@@ -107,11 +100,19 @@ public class SPARQLDataFetcher implements DataFetcher<Collection<Map<String, Obj
 
         where.append(subject).append(" rdf:type <").append(typeIRI).append(">.\n");
         
-        // If context is available, add authorization/tenant filters
-        if (context != null) {
-            // Future: Add ACL/tenant filters based on context
-            // where.append("# Context filters would be applied here\n");
-            log.debug("sparql.select.context.available: true");
+        // Apply tenant/realm ACL filters from GraphQL context
+        if (context instanceof Map<?,?> ctxMap) {
+            Object realm = ctxMap.get("realm");
+            Object principal = ctxMap.get("principal");
+            if (realm != null && !realm.toString().isBlank()) {
+                where.append(subject).append(" <urn:iq:belongsToRealm> <").append(realm).append(">.\n");
+                log.debug("sparql.select.filter.realm: {}", realm);
+            }
+            if (principal != null) {
+                log.debug("sparql.select.filter.principal: {} (available for downstream policy)", principal);
+            }
+        } else if (context != null) {
+            log.debug("sparql.select.context: type={} (non-map context, no tenant filter applied)", context.getClass().getSimpleName());
         }
         
         selections.forEach( f-> {

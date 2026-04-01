@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+# Run IQ Trusted/AI module in development mode
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile quarkus:dev -pl iq-trusted -am
+exec ./mvnw compile quarkus:dev -pl iq-trusted -am "$@"
 
 

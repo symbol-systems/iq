@@ -1,5 +1,7 @@
 package systems.symbol.cli.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "mcp", description = "Manage MCP runtime", subcommands = {
@@ -12,10 +14,11 @@ import picocli.CommandLine;
         ServerDumpCommand.class
 })
 public class McpCommand implements ServerRuntimeScope, Runnable {
+    private static final Logger log = LoggerFactory.getLogger(McpCommand.class);
 
     @Override
     public void run() {
-        System.out.println("Use --help for mcp commands");
+        log.info("Use --help for mcp commands");
     }
 
     @Override

@@ -63,7 +63,7 @@ public class CLIContext implements I_Self {
     }
 
     public void display(String text) {
-        System.out.println(text);
+        log.info(text);
     }
 
     public boolean isInitialized() {

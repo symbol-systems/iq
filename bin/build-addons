@@ -1,0 +1,15 @@
+#!/bin/bash
+# Build IQ Addons (Experimental/Optional Modules)
+# Includes OSS core + 3 experimental modules
+# Usage: ./build-addons [maven-args]
+# Example: ./build-addons -DskipTests clean compile
+
+set -euo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+echo "[IQ Build] ADDONS Profile - Experimental Modules"
+echo "         17 modules (OSS core + iq-lab, iq-skeleton, iq-tokenomic)"
+echo "         Approx time: 120-180 seconds"
+echo ""
+
+exec ./mvnw -Paddons "$@"

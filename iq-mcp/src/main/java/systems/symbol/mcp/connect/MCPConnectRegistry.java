@@ -110,11 +110,17 @@ public class MCPConnectRegistry {
     /**
      * Canonical default pipeline — all built-in middleware in declared order.
      * Used when no {@code mcp:pipeline} graph is configured.
+     *
+     * <p>Uses {@link systems.symbol.mcp.connect.impl.DevAuthGuardMiddleware} for
+     * development convenience. In production, configure an RDF pipeline graph with
+     * proper JWT verification via {@link systems.symbol.mcp.connect.impl.AuthGuardMiddleware}.
      */
     public static List<I_MCPPipeline> defaultPipeline() {
+        log.warn("[MCPConnect] Using default pipeline with DEV auth (no JWT verification). "
+                + "Configure mcp:pipeline RDF graph for production use.");
         return List.of(
             new systems.symbol.mcp.connect.impl.WorkspaceInitMiddleware(),
-            new systems.symbol.mcp.connect.impl.AuthGuardMiddleware(),
+            new systems.symbol.mcp.connect.impl.DevAuthGuardMiddleware(),
             new systems.symbol.mcp.connect.impl.ACLFilterMiddleware(),
             new systems.symbol.mcp.connect.impl.QuotaGuardMiddleware(),
             new systems.symbol.mcp.connect.impl.SparqlSafetyMiddleware(),

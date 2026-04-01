@@ -38,11 +38,11 @@ public class MY_IQ_AI {
 
         // Q = AI + IQ
         ai.boot();  // Boot up AI
-        // Guardians of CODE - will be checked again during `start`
-        ai.X();     // Guard X
-        ai.XX();    // Guard XX
-        ai.XXX();   // Guard XXX
-        ai.XXXX();  // Guard XXXX
+        // Trust gates — verified again during `start`
+        ai.verifyIdentity();     // Verify platform identity
+        ai.verifyCrypto();       // Verify cryptographic material
+        ai.verifyEnvironment();  // Verify runtime environment
+        ai.verifyTrustChain();   // Verify external trust chain
         // Oracle of TRUTH - Establish trust with Oracle
         ai.trusts();
         return ai;

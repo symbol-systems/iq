@@ -2,6 +2,8 @@ package systems.symbol.cli;
 
 import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.freva.asciitable.HorizontalAlign;
 import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -16,6 +18,7 @@ import static systems.symbol.cli.CLIContext.CODENAME;
 
 @CommandLine.Command(name = "about", description = "About this "+ I_Self.CODENAME)
 public class AboutCommand extends AbstractCLICommand {
+    private static final Logger log = LoggerFactory.getLogger(AboutCommand.class);
 
     public AboutCommand(CLIContext context) throws IOException {
         super(context);
@@ -27,7 +30,7 @@ public class AboutCommand extends AbstractCLICommand {
             displayNamespaces(context);
             displaySelf(context);
         } else {
-            System.out.println("IQ not initialized");
+            log.warn("IQ not initialized");
         }
         return null;
     }
@@ -44,8 +47,7 @@ public class AboutCommand extends AbstractCLICommand {
                     String[] row = { ns.getPrefix(), ns.getName()};
                     rows.add(row);
             });
-            System.out.println(AsciiTable.getTable(columns, rows.toArray(String[][]::new)));
-            System.out.println();
+            log.info(AsciiTable.getTable(columns, rows.toArray(String[][]::new)));
         }
     }
 
@@ -53,10 +55,9 @@ public class AboutCommand extends AbstractCLICommand {
         try (RepositoryConnection conn = context.getRepository().getConnection()) {
             String[] columns = { "workspace", "identity", "size" };
             Object[] row = { context.workspace.getCurrentRepositoryName(), context.getSelf(), conn.size() };
-            System.out.println(AsciiTable.getTable(columns, new Object[][] { row }));
-            System.out.println();
+            LoggerFactory.getLogger(AboutCommand.class).info(AsciiTable.getTable(columns, new Object[][] { row }));
         }
-        System.out.printf("%s folder: %s\n", CODENAME, context.home.getAbsolutePath());
+        LoggerFactory.getLogger(AboutCommand.class).info("{} folder: {}", CODENAME, context.home.getAbsolutePath());
         ;
 
     }

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+# Compile iq-apis module with dependencies (fast compile-only build)
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile -pl iq-apis -am -Dorg.eclipse.rdf4j.repository.debug="false"
+exec ./mvnw compile -pl iq-apis -am -Dorg.eclipse.rdf4j.repository.debug="false" "$@"
 
 

@@ -1,5 +1,7 @@
 package systems.symbol.cli.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import systems.symbol.cli.CLIContext;
 
@@ -9,6 +11,7 @@ import systems.symbol.cli.CLIContext;
         ClusterCommand.class
 })
 public class ServerCommand implements Runnable {
+    private static final Logger log = LoggerFactory.getLogger(ServerCommand.class);
     private final CLIContext context;
 
     public ServerCommand(CLIContext context) {
@@ -17,7 +20,7 @@ public class ServerCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Use --help for server subcommands: api,mcp");
+        log.info("Use --help for server subcommands: api,mcp");
     }
 
     public CLIContext getContext() {

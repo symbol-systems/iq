@@ -32,7 +32,7 @@ public abstract class AbstractCLICommand extends systems.symbol.kernel.command.A
     }
 
     public void display(String msg) {
-        System.out.println(msg);
+        log.info(msg);
     }
 
     @Override

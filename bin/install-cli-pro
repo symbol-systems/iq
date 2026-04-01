@@ -1,21 +1,31 @@
 #!/usr/bin/env bash
+# Install iq-cli-pro to $HOME/bin/ for system-wide access
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw clean package install -Dmaven.test.skip=true -amd -pl iq-cli-pro
-JAR=$(ls "$ROOT/iq-cli-pro/target/iq-cli-pro-"*.jar 2>/dev/null | head -n1)
-if [ -z "$JAR" ]; then
-  echo "ERROR: iq-cli-pro jar not found in target directory" >&2
+
+echo "[INFO] Building iq-cli-pro..."
+./mvnw clean package -Dmaven.test.skip=true -pl iq-cli-pro -am
+
+# Find the built JAR
+JAR=$(find "$ROOT/iq-cli-pro/target" -name "iq-cli-pro-*.jar" -not -name "*original*" | head -n1)
+if [[ -z "$JAR" ]]; then
+  echo "ERROR: iq-cli-pro jar not found in $ROOT/iq-cli-pro/target/" >&2
   exit 1
 fi
+
+# Install to $HOME/bin
 mkdir -p "$HOME/bin"
-cp "$JAR" "$HOME/bin/"
-EXE="$HOME/bin/iq"
-cat > "$EXE" <<'EOF'
+echo "[INFO] Installing to $HOME/bin/"
+cp "$JAR" "$HOME/bin/iq-cli-pro"
+
+# Create wrapper script
+cat > "$HOME/bin/iq-pro" <<'WRAPPER'
 #!/usr/bin/env bash
-exec java -jar "$HOME/bin/$(basename "$JAR")" "$@"
-EOF
-chmod +x "$EXE"
-echo "Installed CLI wrapper at $EXE"
+exec java -jar "$HOME/bin/iq-cli-pro" "$@"
+WRAPPER
+
+chmod +x "$HOME/bin/iq-pro"
+echo "✓ Installed: $HOME/bin/iq-pro"
 
 

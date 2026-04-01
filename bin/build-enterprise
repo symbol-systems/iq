@@ -1,0 +1,16 @@
+#!/bin/bash
+# Build IQ Enterprise Edition
+# Reserved for future HA, multi-tenancy, governance features
+# Usage: ./build-enterprise [maven-args]
+# Example: ./build-enterprise clean install
+
+set -euo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+echo "[IQ Build] ENTERPRISE Profile - Full Platform"
+echo "         24 modules (reserved structure for future expansion)"
+echo "         Approx time: 100-150 seconds"
+echo "         Note: Currently equivalent to PRO profile"
+echo ""
+
+exec ./mvnw -Penterprise "$@"

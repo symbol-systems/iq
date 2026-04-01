@@ -25,13 +25,14 @@ class AuthGuardMiddlewareTest {
     private static final String TEST_ISSUER = "https://example.com";
     private static final String TEST_AUDIENCE = "test-api";
 
+    /** Dev middleware extracts sub from unsigned JWT without signature verification. */
     @Test
-    void testAuthGuardExtractsSubFromUnsignedJwt() throws MCPException {
+    void testDevAuthExtractsSubFromUnsignedJwt() throws MCPException {
         String header = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"alg\":\"none\"}".getBytes());
         String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"sub\":\"alice\"}".getBytes());
         String token = header + "." + payload + ".";
 
-        AuthGuardMiddleware auth = new AuthGuardMiddleware();
+        DevAuthGuardMiddleware auth = new DevAuthGuardMiddleware();
         MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
         ctx.set(MCPCallContext.KEY_JWT, "Bearer " + token);
 
@@ -42,9 +43,25 @@ class AuthGuardMiddlewareTest {
         assertEquals("alice", ctx.principal());
     }
 
+    /** Secure-by-default: no-arg constructor rejects all tokens. */
     @Test
-    void testAuthGuardFallsBackToAnonymousOnInvalidJwt() throws MCPException {
+    void testSecureDefaultRejectsAllTokens() {
+        String header = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"alg\":\"none\"}".getBytes());
+        String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"sub\":\"alice\"}".getBytes());
+        String token = header + "." + payload + ".";
+
         AuthGuardMiddleware auth = new AuthGuardMiddleware();
+        MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
+        ctx.set(MCPCallContext.KEY_JWT, "Bearer " + token);
+
+        MCPChain chain = c -> MCPResult.okText("ok");
+        assertThrows(MCPException.class, () -> auth.process(ctx, chain));
+    }
+
+    /** Dev middleware falls back to anonymous on unparseable JWT. */
+    @Test
+    void testDevAuthFallsBackToAnonymousOnInvalidJwt() throws MCPException {
+        DevAuthGuardMiddleware auth = new DevAuthGuardMiddleware();
         MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
         ctx.set(MCPCallContext.KEY_JWT, "Bearer not-a-jwt");
 
@@ -166,11 +183,11 @@ class AuthGuardMiddlewareTest {
     }
 
     /**
-     * Test: Malformed JWT (not enough parts) falls back to anonymous.
+     * Test: Dev middleware — malformed JWT falls back to anonymous.
      */
     @Test
-    void testMalformedJwtFallsBackToAnonymous() throws MCPException {
-        AuthGuardMiddleware auth = new AuthGuardMiddleware();
+    void testDevAuthMalformedJwtFallsBackToAnonymous() throws MCPException {
+        DevAuthGuardMiddleware auth = new DevAuthGuardMiddleware();
         MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
         ctx.set(MCPCallContext.KEY_JWT, "Bearer onlyonepart");
 
@@ -182,11 +199,11 @@ class AuthGuardMiddlewareTest {
     }
 
     /**
-     * Test: Missing JWT sets principal to null; chain proceeds.
+     * Test: Dev middleware — missing JWT allows anonymous access (null principal).
      */
     @Test
-    void testMissingJwtAllowsAnonymousAccess() throws MCPException {
-        AuthGuardMiddleware auth = new AuthGuardMiddleware();
+    void testDevAuthMissingJwtAllowsAnonymousAccess() throws MCPException {
+        DevAuthGuardMiddleware auth = new DevAuthGuardMiddleware();
         MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
         // No JWT set
 
@@ -194,7 +211,41 @@ class AuthGuardMiddlewareTest {
         I_MCPResult result = auth.process(ctx, chain);
 
         assertFalse(result.isError());
-        // Principal should be null or not set
+        // Principal should be null when no token present
+        assertNull(ctx.principal());
+    }
+
+    /**
+     * Security fix: no-arg constructor rejects requests with no JWT token present.
+     * Previously this was a gap — missing JWT passed through even with rejectAll extractor.
+     */
+    @Test
+    void testSecureDefaultRejectsMissingJwt() {
+        AuthGuardMiddleware auth = new AuthGuardMiddleware();
+        MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
+        // No JWT set
+
+        MCPChain chain = c -> MCPResult.okText("ok");
+        assertThrows(MCPException.class, () -> auth.process(ctx, chain));
+    }
+
+    /** withOptionalAuth() allows missing JWT, setting null principal. */
+    @Test
+    void testOptionalAuthAllowsMissingJwt() throws MCPException {
+        // Build a real HMAC extractor with optional auth
+        AuthGuardMiddleware auth = new AuthGuardMiddleware(
+                java.util.Map.of(
+                        "jwtSecret", TEST_SECRET,
+                        "jwtIssuer", TEST_ISSUER,
+                        "jwtAudience", TEST_AUDIENCE
+                )).withOptionalAuth();
+
+        MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of());
+        // No JWT set
+
+        MCPChain chain = c -> MCPResult.okText("ok");
+        I_MCPResult result = auth.process(ctx, chain);
+        assertFalse(result.isError());
         assertNull(ctx.principal());
     }
 

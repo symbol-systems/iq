@@ -46,12 +46,20 @@ public final class ConnectorModels {
         return model.filter(self, null, null);
     }
 
+    /**
+     * @deprecated Use {@link Modeller#toDomainURN(String, String)} instead.
+     */
+    @Deprecated(since = "0.94.0", forRemoval = true)
     public static IRI toDomainURN(String domain, String localName) {
-        return Values.iri("urn:" + domain + ":" + localName);
+        return Modeller.toDomainURN(domain, localName);
     }
 
+    /**
+     * @deprecated Use {@link Modeller#toSPIFFE(String, String)} instead.
+     */
+    @Deprecated(since = "0.94.0", forRemoval = true)
     public static IRI toSPIFFE(String domain, String localName) {
-        return Values.iri("spiffe://" + domain + "/" + localName);
+        return Modeller.toSPIFFE(domain, localName);
     }
 
     public static IRI toIRI(String localName) {

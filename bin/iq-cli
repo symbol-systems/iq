@@ -1,32 +1,37 @@
 #!/usr/bin/env bash
+# Run IQ CLI (systems.symbol.CLI)
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-EXPECTED_MAIN="systems.symbol.CLI"
 
-JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
-if [[ -z "${JAR_PATH}" ]]; then
-  JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
-fi
-if [[ -z "${JAR_PATH}" ]]; then
-  echo "[INFO] No existing iq-cli jar found. Building..."
-  ./mvnw -pl iq-cli -am package -DskipTests
-  JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
-  if [[ -z "${JAR_PATH}" ]]; then
-    JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
-  fi
-else
-  echo "[INFO] Reusing existing jar: $JAR_PATH"
-fi
+JAR=$(find iq-cli/target -name "iq-cli-*-shaded.jar" -o -name "iq-cli.jar" | head -n1 || true)
 
-# Validate jar main class before running
-MAIN_CLASS="$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep -i '^Main-Class:' | awk '{print $2}' | tr -d '\r')"
-if [[ "$MAIN_CLASS" == "$EXPECTED_MAIN" ]]; then
-  java -jar "$JAR_PATH" "$@" || {
-    echo "[WARN] Running jar failed (falling back to maven exec)."
-    ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+if [[ -z "$JAR" ]]; then
+  echo "[INFO] Building iq-cli..." >&2
+  ./mvnw -pl iq-cli -am package -DskipTests >/dev/null 2>&1 || {
+    echo "[ERROR] Build failed" >&2
+    exit 1
   }
+  JAR=$(find iq-cli/target -name "iq-cli-*-shaded.jar" -o -name "iq-cli.jar" | head -n1 || true)
+fi
+
+if [[ -z "$JAR" ]]; then
+  echo "[ERROR] JAR not found, falling back to maven" >&2
+  exec ./mvnw compile exec:java -pl iq-cli -am \
+    -Dexec.mainClass=systems.symbol.CLI \
+    -DskipTests \
+    "$@"
+fi
+
+# Verify main class
+MAIN=$(unzip -p "$JAR" META-INF/MANIFEST.MF 2>/dev/null | grep -i '^Main-Class:' | awk '{print $2}' | tr -d '\r' || true)
+if [[ "$MAIN" == systems.symbol.CLI ]]; then
+  echo "[INFO] Running: $(basename "$JAR")" >&2
+  exec java -jar "$JAR" "$@"
 else
-  echo "[WARN] Jar does not have expected Main-Class ($EXPECTED_MAIN). Found: $MAIN_CLASS. Falling back to maven exec."
-  ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=${EXPECTED_MAIN} -DskipTests "$@"
+  echo "[WARN] Main-Class mismatch, falling back to maven" >&2
+  exec ./mvnw compile exec:java -pl iq-cli -am \
+    -Dexec.mainClass=systems.symbol.CLI \
+    -DskipTests \
+    "$@"
 fi

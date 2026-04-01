@@ -43,6 +43,6 @@
 - Document `.ttl/.sparql` behavior and update related script catalogs when adding model rules.
 - For LLM integration changes, mock provider behavior in `iq-platform` tests (avoid live API keys in unit tests).
 - Do not commit production secrets to `.iq/vault`; change is valid only with sanitized sample data.
-
+- Working/temporary files should be saved to `./tmp/` and not `/tmp/` to avoid permission issues and ensure cleanup.
 ## Feedback loop
 - After updating instructions, ask maintainers: “Is there a missing workflow (e.g., `iq-cli-pro` setup) or connector pattern I should capture?”

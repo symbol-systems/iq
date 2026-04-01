@@ -1,5 +1,7 @@
 package systems.symbol.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import systems.symbol.io.Display;
 import systems.symbol.io.StreamCopy;
 import systems.symbol.rdf4j.store.IQStore;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @CommandLine.Command(name = "sparql", description = "Run a local SPARQL query")
 public class SPARQLCommand extends AbstractCLICommand{
+    private static final Logger log = LoggerFactory.getLogger(SPARQLCommand.class);
     @CommandLine.Parameters(index = "0", arity = "0..1", description = "The name of the query file (local asset) or inline SPARQL text")
     String query = "";
 
@@ -33,13 +36,13 @@ public class SPARQLCommand extends AbstractCLICommand{
         File localQueryFile = new File(assets, query + ".sparql");
         if (qFile.exists()) {
             sparql = StreamCopy.toString(qFile);
-            System.out.println("executing query file: " + qFile.getAbsolutePath());
+            log.debug("executing query file: {}", qFile.getAbsolutePath());
         } else if (localQueryFile.exists()) {
             sparql = StreamCopy.toString(localQueryFile);
-            System.out.println("executing local asset query: " + localQueryFile.getAbsolutePath());
+            log.debug("executing local asset query: {}", localQueryFile.getAbsolutePath());
         } else if (looksLikeSparql(query)) {
             sparql = query;
-            System.out.println("executing inline query");
+            log.debug("executing inline query");
         } else {
             showQueries(assets);
             return 1;
@@ -56,7 +59,7 @@ public class SPARQLCommand extends AbstractCLICommand{
                 display("Unsupported SPARQL form. Use SELECT, ASK, CONSTRUCT.");
             } else {
                 while (graphResult.hasNext()) {
-                    System.out.println(graphResult.next());
+                    log.debug("{}", graphResult.next());
                 }
             }
         }
@@ -72,13 +75,13 @@ public class SPARQLCommand extends AbstractCLICommand{
     void showQueries(File queryHome) {
         File[] files = queryHome.listFiles();
         if (files != null && files.length>0) {
-            System.out.println("local sparql queries:");
+            log.info("local sparql queries:");
             for (File file : files) {
                 if (file.getName().contains(".sparql"))
-                    System.out.println(file.getName());
+                    log.info(file.getName());
             }
         } else {
-            System.out.println("no queries in "+queryHome.getAbsolutePath());
+            log.warn("no queries in {}", queryHome.getAbsolutePath());
         }
     }
 }

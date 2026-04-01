@@ -20,8 +20,8 @@ public class RuntimeAPIT {
 
     @Test
     public void testRuntimeStartAndDumpEndpoint() {
-        given().when().get("/runtime/api/start").then().statusCode(200);
-        given().when().get("/runtime/api/dump?path=/tmp/test-dump.tar.gz").then().statusCode(200);
-        given().when().get("/runtime/api/stop").then().statusCode(200);
+        given().when().post("/runtime/api/start").then().statusCode(200);
+        given().when().post("/runtime/api/dump?path=./tmp/test-dump.tar.gz").then().statusCode(200);
+        given().when().post("/runtime/api/stop").then().statusCode(200);
     }
 }

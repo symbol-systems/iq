@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+# Clean up IQ log files
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 find . -name "iq.log" -type f -delete
+echo "✓ Cleaned IQ logs"
 
 

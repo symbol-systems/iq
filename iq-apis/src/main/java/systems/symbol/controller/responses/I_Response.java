@@ -15,7 +15,13 @@ public interface I_Response {
     public Response build();
 
     default Response.ResponseBuilder addCORS(Response.ResponseBuilder builder) {
-        String origin = PrettyString.getenv("MY_CORS_ORIGIN", "*");
+        String origin = PrettyString.getenv("MY_CORS_ORIGIN", null);
+        if (origin == null || origin.isBlank()) {
+            origin = "http://localhost:8080";
+            log.warn("CORS: MY_CORS_ORIGIN not set — defaulting to {}. Set this env var in production!", origin);
+        } else if ("*".equals(origin)) {
+            log.warn("CORS: MY_CORS_ORIGIN=* (wildcard) with credentials — this is rejected by browsers. Set a specific origin.");
+        }
         String cors_header = PrettyString.getenv("MY_CORS_HEADERS", "origin, content-type, accept, authorization");
         log.debug("CORS: origin={}, headers={}", origin, cors_header);
         return builder.header("Access-Control-Allow-Origin", origin)

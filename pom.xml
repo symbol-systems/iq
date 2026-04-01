@@ -32,32 +32,12 @@
       <timezone>+0</timezone>
     </developer>
   </developers>
+  <!-- NOTE: Module organization moved to profiles for build segmentation.
+       Default profile is 'oss' (activeByDefault=true).
+       Use -Ppro, -Penterprise, -Paddons to build additional modules.
+       See MODULES.md for architecture and build strategy. -->
   <modules>
-    <module>iq-abstract</module>
-    <module>iq-kernel</module>
-    <module>iq-aspects</module>
-    <module>iq-rdf4j</module>
-    <module>iq-intents</module>
-    <module>iq-platform</module>
-    <module>iq-secrets</module>
-    <module>iq-lake</module>
-    <module>iq-onnx</module>
-    <module>iq-agentic</module>
-    <module>iq-apis</module>
-    <!-- <module>iq-persona</module> -->
-    <module>iq-rdf4j-graphs</module>
-    <module>iq-test-servers</module>
-    <module>iq-cli</module>
-    <module>iq-cli-pro</module>
-    <module>iq-cli-server</module>
-    <module>iq-trusted</module>
-    <module>iq-camel</module>
-    <module>iq-rdf4j-graphql</module>
-    <module>iq-connect/iq-connect-core</module>
-    <module>iq-connect/iq-connect-template</module>
-    <module>iq-connect/iq-connect-github</module>
-    <module>iq-connect/iq-connect-aws</module>
-    <module>iq-mcp</module>
+    <!-- Placeholder: actual modules defined per-profile below -->
   </modules>
   <scm>
     <url>github.com/symbol-systems/iq.git</url>
@@ -86,7 +66,7 @@
     <springboot.version>3.1.2</springboot.version>
     <slf4j.version>2.0.13</slf4j.version>
     <logback.version>1.5.3</logback.version>
-    <camel.version>4.0.0-RC2</camel.version>
+    <camel.version>4.8.4</camel.version>
     <handlebars.version>4.3.1</handlebars.version>
     <groovy.version>5.0.0-alpha-8</groovy.version>
 
@@ -94,7 +74,6 @@
     <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
     <rdf4j.version>5.0.2</rdf4j.version>
 
-    <handlebars.version>4.3.1</handlebars.version>
     <jackson.version>2.17.1</jackson.version>
     <junit.jupiter.version>5.9.3</junit.jupiter.version>
 
@@ -616,6 +595,15 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${surefire.plugin.version}</version>
+          <configuration>
+            <systemPropertyVariables>
+              <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -673,6 +661,121 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <!-- ==================== BUILD PROFILES: OSS, Pro, Enterprise, Addons ==================== -->
+    <profile>
+      <id>oss</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <!-- OSS Core Framework (build order respects dependency graph) -->
+        <module>iq-abstract</module>
+        <module>iq-kernel</module>
+        <module>iq-aspects</module>
+        <module>iq-secrets</module>
+        <module>iq-rdf4j</module>
+        <module>iq-intents</module>
+        <module>iq-platform</module>
+        <module>iq-lake</module>
+        <module>iq-rdf4j-graphs</module>
+        <module>iq-rdf4j-graphql</module>
+        <!-- OSS Connectors -->
+        <module>iq-connect/iq-connect-core</module>
+        <module>iq-connect/iq-connect-template</module>
+        <module>iq-connect/iq-connect-github</module>
+        <module>iq-connect/iq-connect-aws</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>pro</id>
+      <modules>
+        <!-- OSS Core Framework (build order respects dependency graph)-->
+        <module>iq-abstract</module>
+        <module>iq-kernel</module>
+        <module>iq-aspects</module>
+        <module>iq-secrets</module>
+        <module>iq-rdf4j</module>
+        <module>iq-intents</module>
+        <module>iq-platform</module>
+        <module>iq-lake</module>
+        <module>iq-rdf4j-graphs</module>
+        <module>iq-rdf4j-graphql</module>
+        <!-- OSS Connectors -->
+        <module>iq-connect/iq-connect-core</module>
+        <module>iq-connect/iq-connect-template</module>
+        <module>iq-connect/iq-connect-github</module>
+        <module>iq-connect/iq-connect-aws</module>
+        <!-- Pro Modules -->
+        <module>iq-cli</module>
+        <module>iq-test-servers</module>
+        <module>iq-cli-pro</module>
+        <module>iq-cli-server</module>
+        <module>iq-agentic</module>
+        <module>iq-onnx</module>
+        <module>iq-trusted</module>
+        <module>iq-camel</module>
+        <module>iq-apis</module>
+        <module>iq-mcp</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>enterprise</id>
+      <modules>
+        <!-- OSS Core Framework (build order respects dependency graph) -->
+        <module>iq-abstract</module>
+        <module>iq-kernel</module>
+        <module>iq-aspects</module>
+        <module>iq-secrets</module>
+        <module>iq-rdf4j</module>
+        <module>iq-intents</module>
+        <module>iq-platform</module>
+        <module>iq-lake</module>
+        <module>iq-rdf4j-graphs</module>
+        <module>iq-rdf4j-graphql</module>
+        <!-- OSS Connectors -->
+        <module>iq-connect/iq-connect-core</module>
+        <module>iq-connect/iq-connect-template</module>
+        <module>iq-connect/iq-connect-github</module>
+        <module>iq-connect/iq-connect-aws</module>
+        <!-- Pro Modules -->
+        <module>iq-cli</module>
+        <module>iq-test-servers</module>
+        <module>iq-cli-pro</module>
+        <module>iq-cli-server</module>
+        <module>iq-agentic</module>
+        <module>iq-onnx</module>
+        <module>iq-trusted</module>
+        <module>iq-camel</module>
+        <module>iq-apis</module>
+        <module>iq-mcp</module>
+        <!-- Enterprise Modules (placeholder; extend here as needed) -->
+      </modules>
+    </profile>
+    <profile>
+      <id>addons</id>
+      <modules>
+        <!-- OSS Core Framework (dependencies for addons)  -->
+        <module>iq-abstract</module>
+        <module>iq-kernel</module>
+        <module>iq-aspects</module>
+        <module>iq-secrets</module>
+        <module>iq-rdf4j</module>
+        <module>iq-intents</module>
+        <module>iq-platform</module>
+        <module>iq-lake</module>
+        <module>iq-rdf4j-graphs</module>
+        <module>iq-rdf4j-graphql</module>
+        <!-- OSS Connectors (for addons) -->
+        <module>iq-connect/iq-connect-core</module>
+        <module>iq-connect/iq-connect-template</module>
+        <module>iq-connect/iq-connect-github</module>
+        <module>iq-connect/iq-connect-aws</module>
+        <!-- Optional/Experimental modules -->
+        <module>iq-lab</module>
+        <module>iq-skeleton</module>
+        <module>iq-tokenomic</module>
+      </modules>
     </profile>
   </profiles>
 </project>

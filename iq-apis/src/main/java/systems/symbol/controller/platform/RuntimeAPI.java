@@ -23,7 +23,7 @@ public class RuntimeAPI extends GuardedAPI {
 
     private static final Logger log = LoggerFactory.getLogger(RuntimeAPI.class);
 
-    @GET
+    @POST
     @Path("{target}/start")
     @Produces(MediaType.APPLICATION_JSON)
     public Response start(@PathParam("target") String target, @Context UriInfo info, @Context HttpHeaders headers) {
@@ -31,7 +31,7 @@ public class RuntimeAPI extends GuardedAPI {
         return Response.ok(new HealthCheck(success, WebURLs.getRequestURL(info, headers))).build();
     }
 
-    @GET
+    @POST
     @Path("{target}/stop")
     @Produces(MediaType.APPLICATION_JSON)
     public Response stop(@PathParam("target") String target, @Context UriInfo info, @Context HttpHeaders headers) {
@@ -39,7 +39,7 @@ public class RuntimeAPI extends GuardedAPI {
         return Response.ok(new HealthCheck(success, WebURLs.getRequestURL(info, headers))).build();
     }
 
-    @GET
+    @POST
     @Path("{target}/reboot")
     @Produces(MediaType.APPLICATION_JSON)
     public Response reboot(@PathParam("target") String target, @Context UriInfo info, @Context HttpHeaders headers) {
@@ -56,7 +56,7 @@ public class RuntimeAPI extends GuardedAPI {
         return Response.ok(new HealthCheck(healthy, WebURLs.getRequestURL(info, headers))).build();
     }
 
-    @GET
+    @POST
     @Path("{target}/dump")
     @Produces(MediaType.APPLICATION_JSON)
     public Response dump(@PathParam("target") String target, @QueryParam("path") String path, @Context UriInfo info, @Context HttpHeaders headers) {
@@ -65,7 +65,7 @@ public class RuntimeAPI extends GuardedAPI {
             return new OopsResponse("ux.runtime.target.required", Response.Status.BAD_REQUEST).build();
         }
         if (path == null || path.isBlank()) {
-            path = "/tmp/iq-runtime-dump.tar.gz";
+            path = "./tmp/iq-runtime-dump.tar.gz";
         }
         try {
             ServerDump dump = ServerRuntimeManagerFactory.getInstance().dump(target, path);
@@ -81,7 +81,7 @@ public class RuntimeAPI extends GuardedAPI {
         }
     }
 
-    @GET
+    @POST
     @Path("{target}/debug")
     @Produces(MediaType.APPLICATION_JSON)
     public Response debug(@PathParam("target") String target, @QueryParam("enable") @DefaultValue("true") boolean enable,

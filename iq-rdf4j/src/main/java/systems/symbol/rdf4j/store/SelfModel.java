@@ -33,10 +33,25 @@ public class SelfModel extends AbstractModel implements I_Self {
         return self;
     }
 
+    /**
+     * Removes statements matching the given criteria from the self-model repository.
+     * <p>
+     * This method is invoked when removing triples from the model's backing RDF repository.
+     * The iterator provides pre-computed Statement objects to remove for efficiency.
+     * A rollback is called after removal as a protective measure in case concurrent access
+     * or constraint violations occur — allowing the model state to remain consistent.
+     * <p>
+     * <strong>Note:</strong> Current implementation calls rollback immediately without consuming
+     * the iterator. This appears to be a safety stub; a production implementation should:
+     * 1. Iterate through statements and remove each from the connection
+     * 2. Commit the transaction on success
+     * 3. Rollback on exception to preserve consistency
+     */
     @Override
     public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj,
             Resource... contexts) {
-        // TODO what is this?
+        // TODO: Consume iterator and remove statements; only rollback on exception.
+        // Current behavior rolls back immediately, effectively doing nothing.
         this.connection.rollback();
     }
 

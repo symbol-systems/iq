@@ -1,0 +1,15 @@
+#!/bin/bash
+# Build IQ OSS (Open Source) Core Framework
+# Fast development build of core framework only
+# Usage: ./build-oss [maven-args]
+# Example: ./build-oss -DskipTests clean compile
+
+set -euo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+echo "[IQ Build] OSS Profile - Core Framework"
+echo "         15 modules (abstract, kernel, platform, rdf4j, etc.)"
+echo "         Approx time: 60-90 seconds"
+echo ""
+
+exec ./mvnw -Poss "$@"

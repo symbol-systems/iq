@@ -1,5 +1,7 @@
 package systems.symbol.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
 import systems.symbol.platform.I_Self;
@@ -12,6 +14,7 @@ import static systems.symbol.cli.CLIContext.CODENAME;
 
 @CommandLine.Command(name = "init", description = "Bootstrap your new "+I_Self.CODENAME)
 public class InitCommand extends AbstractCLICommand {
+    private static final Logger log = LoggerFactory.getLogger(InitCommand.class);
     @CommandLine.Option(names = "--from", required=false, description = "Import from file/folder")
     File from;
 
@@ -36,11 +39,11 @@ public class InitCommand extends AbstractCLICommand {
 
     private void doInitialize() throws IOException, URISyntaxException {
         if (!home.mkdirs()) {
-            System.out.printf("Home folder could not be created; %s\n", home.getAbsolutePath());
+            log.warn("Home folder could not be created; {}", home.getAbsolutePath());
             return;
         }
         if (from==null) {
-            System.out.println("missing --from <import-folder>");
+            log.warn("missing --from <import-folder>");
             return;
         }
         if (!from.exists()) {
@@ -48,7 +51,7 @@ public class InitCommand extends AbstractCLICommand {
             return;
         }
 
-        System.out.printf("Initialize %s from: %s\n", CODENAME, this.from.getAbsolutePath());
+        log.info("Initialize {} from: {}", CODENAME, this.from.getAbsolutePath());
         ImportExport.load(context, this.from, this.forceDelete);
         AboutCommand.displaySelf(context);
     }

@@ -137,22 +137,22 @@ public class TrustedPlatform extends Platform {
     }
 
     @Override
-    public void X() {
-        // trust gate X
+    public void verifyIdentity() {
+        log.debug("iq.trust.gate.identity: verifying platform identity for {}", name);
     }
 
     @Override
-    public void XX() {
-        // trust gate XX
+    public void verifyCrypto() {
+        log.debug("iq.trust.gate.crypto: verifying cryptographic material for {}", name);
     }
 
     @Override
-    public void XXX() {
-        // trust gate XXX
+    public void verifyEnvironment() {
+        log.debug("iq.trust.gate.environment: verifying runtime environment for {}", name);
     }
 
     @Override
-    public void XXXX() {
-        // trust gate XXXX
+    public void verifyTrustChain() {
+        log.debug("iq.trust.gate.trustchain: verifying external trust chain for {}", name);
     }
 }

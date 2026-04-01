@@ -1,5 +1,7 @@
 package systems.symbol.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import systems.symbol.io.Display;
 import systems.symbol.platform.I_Self;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 @CommandLine.Command(name = "models", description = "List of models from this " + I_Self.CODENAME)
 public class ModelsCommand extends CompositeCommand {
+    private static final Logger log = LoggerFactory.getLogger(ModelsCommand.class);
     
     @CommandLine.Option(names = {"--format"}, description = "Output format: list, json, table", defaultValue = "list")
     String format = "list";
@@ -27,7 +30,7 @@ public class ModelsCommand extends CompositeCommand {
     @Override
     public Object call() throws Exception {
         if (!context.isInitialized()) {
-            System.out.println("iq.models.error: IQ not initialized");
+            log.error("iq.models.error: IQ not initialized");
             return null;
         }
         
@@ -36,26 +39,25 @@ public class ModelsCommand extends CompositeCommand {
             List<Map<String, Object>> models = Display.models(iq, "index");
             
             if (models == null || models.isEmpty()) {
-                System.out.println("iq.models: no models found");
+                log.warn("iq.models: no models found");
                 log.info("iq.models.missing: no models in realm");
                 return null;
             }
             
-            System.out.println("iq.models: " + models.size() + " model(s) available");
-            System.out.println();
+            log.info("iq.models: {} model(s) available", models.size());
             
             if ("json".equalsIgnoreCase(format)) {
                 for (Map<String, Object> model : models) {
-                    System.out.println(model);
+                    log.info("{}", model);
                 }
             } else if ("table".equalsIgnoreCase(format)) {
-                System.out.println(String.format("%-30s | %-50s | %-20s", "Model", "ID", "Type"));
-                System.out.println("-".repeat(110));
+                log.info(String.format("%-30s | %-50s | %-20s", "Model", "ID", "Type"));
+                log.info("-".repeat(110));
                 for (Map<String, Object> model : models) {
                     Object label = model.get("label");
                     Object id = model.get(NS.KEY_AT_ID);
                     Object type = model.get("type");
-                    System.out.println(String.format("%-30s | %-50s | %-20s", 
+                    log.info(String.format("%-30s | %-50s | %-20s", 
                             label != null ? label : "(unnamed)", 
                             id != null ? id : "(unknown)",
                             type != null ? type : "(unknown)"));
@@ -67,28 +69,27 @@ public class ModelsCommand extends CompositeCommand {
                     Object id = model.get(NS.KEY_AT_ID);
                     
                     if (label != null) {
-                        System.out.println("  ✓ " + label + " @ " + id);
+                        log.info("  ✓ {} @ {}", label, id);
                     } else {
-                        System.out.println("  ✓ " + model);
+                        log.info("  ✓ {}", model);
                     }
                     
                     // Show additional metadata if available
                     Object version = model.get("version");
                     if (version != null) {
-                        System.out.println("    version: " + version);
+                        log.info("    version: {}", version);
                     }
                     Object provider = model.get("provider");
                     if (provider != null) {
-                        System.out.println("    provider: " + provider);
+                        log.info("    provider: {}", provider);
                     }
                 }
             }
             
-            log.info("iq.models.found: " + models.size());
+            log.info("iq.models.found: {}", models.size());
             return models;
         } catch (Exception e) {
             log.error("iq.models.error: {}", e.getMessage(), e);
-            System.out.println("iq.models.error: " + e.getMessage());
             return null;
         } finally {
             try {

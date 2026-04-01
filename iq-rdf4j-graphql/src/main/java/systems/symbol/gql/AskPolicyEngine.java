@@ -78,7 +78,7 @@ public class AskPolicyEngine implements PolicyEngine {
                 } catch (Exception e) {
                     log.info("AskPolicyEngine query attempt failed: {}", e.getMessage());
                 }
-                try { Thread.sleep(20); } catch (InterruptedException ignored) {}
+                try { Thread.sleep(20); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
             }
         } catch (Exception e) {
             log.warn("Policy evaluation failed (primary): {}", e.getMessage());

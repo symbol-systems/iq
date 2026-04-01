@@ -2,6 +2,10 @@ package systems.symbol.platform;
 
 import org.eclipse.rdf4j.repository.Repository;
 
+/**
+ * Base platform lifecycle. Subclasses implement concrete start/stop/boot behavior
+ * and trust gate hooks.
+ */
 public class Platform {
 
     public void start() {
@@ -20,20 +24,33 @@ public class Platform {
         // default no-op
     }
 
-    public void X() {
-        // default no-op
+    /**
+     * Trust gate: verify platform identity and configuration integrity.
+     * Called during startup before services are exposed.
+     */
+    public void verifyIdentity() {
+        // default no-op — override for real identity checks
     }
 
-    public void XX() {
-        // default no-op
+    /**
+     * Trust gate: verify cryptographic material (keys, certificates, vault access).
+     */
+    public void verifyCrypto() {
+        // default no-op — override for key/cert validation
     }
 
-    public void XXX() {
-        // default no-op
+    /**
+     * Trust gate: verify runtime environment expectations (JVM, OS, network).
+     */
+    public void verifyEnvironment() {
+        // default no-op — override for env safety checks
     }
 
-    public void XXXX() {
-        // default no-op
+    /**
+     * Trust gate: verify external trust chain (OIDC, SPIFFE, upstream attestation).
+     */
+    public void verifyTrustChain() {
+        // default no-op — override for external attestation
     }
 
     public Repository getRepository(String name) {

@@ -18,29 +18,59 @@ import java.util.regex.Pattern;
  * <p>This middleware extracts a bearer JWT from the incoming request (from
  * {@code mcp.jwt} in the context) and populates {@code mcp.principal}.
  *
- * <p>⚠️ WARNING: By default this implementation does **not** verify signatures.
- * It is intended as a development stub only.
+ * <p>Secure by default: the no-arg constructor rejects all requests unless a valid
+ * JWT verification config is provided. Use {@link DevAuthGuardMiddleware} explicitly
+ * for development/testing without signature verification.
  */
 public class AuthGuardMiddleware implements I_MCPPipeline {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthGuardMiddleware.class);
     private static final String BEARER_PREFIX = "Bearer ";
     private static final IRI SELF = SimpleValueFactory.getInstance()
             .createIRI("urn:mcp:middleware:auth");
 
     private final JwtPrincipalExtractor principalExtractor;
+    /**
+     * When true (the default for all production constructors), requests with no JWT token
+     * are rejected with 401 Unauthorized. Set to false only in dev/test via
+     * {@link #withOptionalAuth()} or by using {@link DevAuthGuardMiddleware}.
+     */
+    private final boolean requiresAuthentication;
 
     /**
-     * Default constructor uses a best-effort subject extractor.
+     * Default constructor — secure by default.
+     * Rejects all JWTs since no verification config is present, and also rejects
+     * requests with no JWT at all.
+     * Use the config-driven constructor or {@link DevAuthGuardMiddleware} instead.
      */
     public AuthGuardMiddleware() {
-        this(principalFromJwtPayload());
+        this(rejectAll(), true);
+        log.warn("[AuthGuard] No JWT verification configured — all tokens will be REJECTED. "
+                + "Provide jwtSecret/jwksUri/oidcDiscoveryUrl config, or use DevAuthGuardMiddleware for development.");
     }
 
     /**
      * Allows custom JWT principal extraction (e.g., using a real JWT library).
+     * Authentication is required by default.
      */
     public AuthGuardMiddleware(JwtPrincipalExtractor principalExtractor) {
+        this(principalExtractor, true);
+    }
+
+    /**
+     * Full constructor.
+     *
+     * @param principalExtractor JWT-to-principal mapping strategy
+     * @param requiresAuthentication when true, requests with no JWT token are rejected with 401
+     */
+    public AuthGuardMiddleware(JwtPrincipalExtractor principalExtractor, boolean requiresAuthentication) {
         this.principalExtractor = principalExtractor;
+        this.requiresAuthentication = requiresAuthentication;
+    }
+
+    /** Returns a copy of this middleware that allows unauthenticated (no-token) requests. */
+    public AuthGuardMiddleware withOptionalAuth() {
+        return new AuthGuardMiddleware(this.principalExtractor, false);
     }
 
     /**
@@ -55,12 +85,13 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
      * </ul>
      */
     public AuthGuardMiddleware(java.util.Map<String, ?> config) {
-        this(buildExtractorFromConfig(config));
+        this(buildExtractorFromConfig(config), true);
     }
 
     private static JwtPrincipalExtractor buildExtractorFromConfig(java.util.Map<String, ?> config) {
         if (config == null || config.isEmpty()) {
-            return principalFromJwtPayload();
+            log.warn("[AuthGuard] Empty config — using reject-all extractor (secure default)");
+            return rejectAll();
         }
 
         String oidcDiscoveryUrl = asString(config.get("oidcDiscoveryUrl"));
@@ -92,7 +123,8 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
         if (secret != null && !secret.isBlank()) {
             return JwtPrincipalExtractors.fromHmacSecret(secret, issuer, audience);
         }
-        return principalFromJwtPayload();
+        log.warn("[AuthGuard] JWT config present but no verification method resolved — using reject-all");
+        return rejectAll();
     }
 
     private static Long asLong(Object value) {
@@ -128,8 +160,12 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
             if (token != null) {
                 String principal = principalExtractor.extractPrincipal(token);
                 ctx.set(MCPCallContext.KEY_PRINCIPAL, principal);
+            } else if (requiresAuthentication) {
+                throw MCPException.unauthorized("Authentication required: no JWT bearer token present");
             }
             return chain.proceed(ctx);
+        } catch (MCPException e) {
+            throw e;
         } catch (Exception e) {
             throw MCPException.unauthorized("Invalid or missing JWT: " + e.getMessage());
         }
@@ -161,6 +197,23 @@ public class AuthGuardMiddleware implements I_MCPPipeline {
             }
             return "anonymous";
         };
+    }
+
+    /**
+     * Secure default: rejects all JWTs when no verification config is present.
+     */
+    private static JwtPrincipalExtractor rejectAll() {
+        return jwt -> {
+            throw new SecurityException("JWT verification not configured — token rejected. "
+                    + "Configure jwtSecret, jwksUri, or oidcDiscoveryUrl.");
+        };
+    }
+
+    /**
+     * Package-private: returns insecure payload-only extractor for use by {@link DevAuthGuardMiddleware}.
+     */
+    static JwtPrincipalExtractor insecurePayloadExtractor() {
+        return principalFromJwtPayload();
     }
 
     /**

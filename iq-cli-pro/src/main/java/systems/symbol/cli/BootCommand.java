@@ -40,6 +40,16 @@ public class BootCommand extends AbstractCLICommand {
         }
         """;
     
+    // SPARQL query to check actor state (ready/active)
+    private static final String QUERY_ACTOR_STATE = """
+        PREFIX iq: <urn:iq:>
+        SELECT ?actor ?state WHERE {
+            ?actor a iq:Actor .
+            ?actor iq:state ?state .
+            FILTER (?state = iq:READY || ?state = iq:ACTIVE)
+        }
+        """;
+    
     @CommandLine.Option(names = {"--wait"}, description = "Wait for actors to reach READY state")
     private boolean waitForReady = false;
     
@@ -66,8 +76,7 @@ public class BootCommand extends AbstractCLICommand {
     @Override
     public Object call() {
         if (!context.isInitialized()) {
-            log.error("Context not initialized; cannot boot realm");
-            System.err.println("Error: iq context not initialized. Run 'iq init' first.");
+            log.error("Context not initialized; cannot boot realm. Run 'iq init' first.");
             return null;
         }
         
@@ -76,28 +85,27 @@ public class BootCommand extends AbstractCLICommand {
             iq = context.newIQBase();
             IRI realmIRI = context.getSelf();
             log.info("Boot sequence starting for realm: {}", realmIRI);
-            System.out.println("Booting realm: " + realmIRI.getLocalName());
+            log.info("Booting realm: {}", realmIRI.getLocalName());
             
             int actorCount = initializeActors(iq);
             
             if (actorCount == 0) {
                 log.warn("No actors found in realm: {}", realmIRI);
-                System.out.println("  (no actors to initialize)");
+                log.info("  (no actors to initialize)");
                 return "boot:empty";
             }
             
-            System.out.println("  Initialized " + actorCount + " actor(s)");
+            log.info("  Initialized {} actor(s)", actorCount);
             log.info("Boot complete: {} actor(s) initialized", actorCount);
             
             if (waitForReady) {
-                System.out.println("  Waiting for actors to reach READY state...");
+                log.info("  Waiting for actors to reach READY state...");
                 boolean allReady = waitForActorsReady(iq, timeout);
                 if (allReady) {
-                    System.out.println("  ✓ All actors READY");
+                    log.info("  ✓ All actors READY");
                     return "boot:success:" + actorCount;
                 } else {
                     log.warn("Not all actors reached READY state within {} seconds", timeout);
-                    System.err.println("  ✗ Timeout: Not all actors READY after " + timeout + "s");
                     return "boot:timeout:" + actorCount;
                 }
             }
@@ -106,11 +114,9 @@ public class BootCommand extends AbstractCLICommand {
             
         } catch (RepositoryException e) {
             log.error("Repository error during boot sequence", e);
-            System.err.println("Error: RDF repository error: " + e.getMessage());
             return null;
         } catch (Exception e) {
             log.error("Unexpected error during boot sequence", e);
-            System.err.println("Error: " + e.getMessage());
             return null;
         } finally {
             if (iq != null) {
@@ -158,15 +164,17 @@ public class BootCommand extends AbstractCLICommand {
         String actorName = actor.getLocalName();
         log.debug("Initializing actor: {}", actorName);
         if (verbose) {
-            System.out.println("  • " + actorName);
+            log.info("  • {}", actorName);
         }
     }
 
     /**
-     * Waits for all actors to reach READY state.
+     * Waits for all actors to reach READY state via SPARQL polling.
      * 
-     * TODO: Implement actor state checking via SPARQL.
-     * For now, returns true immediately (placeholder).
+     * Polls every 100-200ms until either:
+     * - All actors reach READY/ACTIVE state (returns true)
+     * - Timeout expires (returns false)
+     * - Error occurs (returns false)
      * 
      * @param iq the IQ store
      * @param timeoutSeconds timeout in seconds
@@ -174,7 +182,78 @@ public class BootCommand extends AbstractCLICommand {
      */
     private boolean waitForActorsReady(IQStore iq, int timeoutSeconds) {
         log.info("Waiting for actors to reach READY state (timeout: {}s)", timeoutSeconds);
-        // TODO: Query actor state and poll until all are READY or timeout expires
-        return true;  // Placeholder: return success for now
+        
+        long startTime = System.currentTimeMillis();
+        long timeoutMs = timeoutSeconds * 1000L;
+        int totalActorCount = 0;
+        
+        try (RepositoryConnection conn = iq.getConnection()) {
+            // First, get total count of actors
+            var listQuery = conn.prepareTupleQuery(QUERY_LIST_ACTORS);
+            listQuery.setMaxExecutionTime(IQConstants.QUERY_TIMEOUT_MS);
+            
+            try (TupleQueryResult listResult = listQuery.evaluate()) {
+                while (listResult.hasNext()) {
+                    listResult.next();
+                    totalActorCount++;
+                }
+            }
+            
+            if (totalActorCount == 0) {
+                log.debug("waitForActorsReady: No actors found to wait for");
+                return true;
+            }
+            
+            // Poll until all actors are ready or timeout
+            int pollCount = 0;
+            while (System.currentTimeMillis() - startTime < timeoutMs) {
+                var stateQuery = conn.prepareTupleQuery(QUERY_ACTOR_STATE);
+                stateQuery.setMaxExecutionTime(IQConstants.QUERY_TIMEOUT_MS);
+                
+                int readyCount = 0;
+                try (TupleQueryResult stateResult = stateQuery.evaluate()) {
+                    while (stateResult.hasNext()) {
+                        stateResult.next();
+                        readyCount++;
+                    }
+                }
+                
+                pollCount++;
+                log.debug("waitForActorsReady: {} of {} actors ready (poll #{})", readyCount, totalActorCount, pollCount);
+                
+                if (readyCount >= totalActorCount) {
+                    log.info("waitForActorsReady: {} actors READY (timeout: {}s)", readyCount, timeoutSeconds);
+                    return true;
+                }
+                
+                // Wait before next poll
+                Thread.sleep(150);  // 150ms poll interval
+            }
+            
+            // Timeout expired
+            var finalStateQuery = conn.prepareTupleQuery(QUERY_ACTOR_STATE);
+            finalStateQuery.setMaxExecutionTime(IQConstants.QUERY_TIMEOUT_MS);
+            int finalReadyCount = 0;
+            try (TupleQueryResult finalResult = finalStateQuery.evaluate()) {
+                while (finalResult.hasNext()) {
+                    finalResult.next();
+                    finalReadyCount++;
+                }
+            }
+            
+            log.warn("waitForActorsReady: Timeout expired - only {} of {} actors READY", finalReadyCount, totalActorCount);
+            return false;
+            
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("waitForActorsReady: Interrupted", e);
+            return false;
+        } catch (RepositoryException e) {
+            log.error("waitForActorsReady: Repository error", e);
+            return false;
+        } catch (Exception e) {
+            log.error("waitForActorsReady: Unexpected error", e);
+            return false;
+        }
     }
 }

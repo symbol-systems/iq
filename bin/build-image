@@ -1,2 +1,16 @@
-./mvnw install -DskipTests -Dquarkus.container-image.build=true -Dquarkus.container-image.builder=docker -Dquarkus.container-image.group=dev
+#!/usr/bin/env bash
+# Build Docker image for IQ (requires Docker to be running)
+# Usage: ./bin/build-image [image-group]
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+GROUP="${1:-dev}"
+echo "[INFO] Building Docker image with group: $GROUP"
+
+exec ./mvnw install -DskipTests \
+  -Dquarkus.container-image.build=true \
+  -Dquarkus.container-image.builder=docker \
+  -Dquarkus.container-image.group="$GROUP" \
+  "$@"
 

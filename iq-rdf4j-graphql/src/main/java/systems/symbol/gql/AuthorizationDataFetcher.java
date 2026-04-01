@@ -40,7 +40,9 @@ public class AuthorizationDataFetcher implements DataFetcher<Collection<Map<Stri
         try {
             Object a = environment.getArgument("actor");
             if (a!=null) actor = a.toString();
-        } catch (Exception ignored) {}
+        } catch (graphql.GraphQLException e) {
+            log.debug("Could not read 'actor' argument from GraphQL environment: {}", e.getMessage());
+        }
 
         if (actor==null) {
             Object ctx = environment.getContext();
@@ -67,8 +69,8 @@ public class AuthorizationDataFetcher implements DataFetcher<Collection<Map<Stri
                     return delegate.get(environment);
                 }
             }
-        } catch (Exception e) {
-            log.debug("Explicit canQuery check failed for actor {} on type {}: {}", actor, typeIRI, e.getMessage());
+        } catch (org.eclipse.rdf4j.repository.RepositoryException e) {
+            log.warn("Explicit canQuery check failed for actor {} on type {}: {}", actor, typeIRI, e.getMessage());
         }
 
         boolean allowed = policyEngine.isAllowed(actor, typeIRI, environment);

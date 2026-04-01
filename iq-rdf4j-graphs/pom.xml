@@ -36,8 +36,8 @@
     </developers>
 
     <scm>
-        <url>github.com/symbol-systems/iq-todo.git</url>
-        <connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
+        <url>github.com/symbol-systems/iq.git</url>
+        <connection>scm:git:https://github.com/symbol-systems/iq.git</connection>
     </scm>
 
     <properties>
@@ -60,10 +60,8 @@
     <springboot.version>3.1.3</springboot.version>
         <slf4j.version>2.0.13</slf4j.version>
         <logback.version>1.5.3</logback.version>
-        <camel.version>4.0.0-M1</camel.version>
         <handlebars.version>4.3.1</handlebars.version>
         
-        <groovy.version>5.0.0-alpha-8</groovy.version>
         <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
         <jgrapht.version>1.5.2</jgrapht.version>

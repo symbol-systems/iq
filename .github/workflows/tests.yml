@@ -16,7 +16,5 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Install Maven
-        run: sudo apt-get install -y maven
       - name: Run unit tests (skip ITs)
-        run: mvn --batch-mode -DskipITs test
+        run: ./mvnw --batch-mode -DskipITs test

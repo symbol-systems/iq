@@ -1,0 +1,15 @@
+#!/bin/bash
+# Build IQ PRO (Professional Edition)
+# Full platform build with all OSS + commercial modules
+# Usage: ./build-pro [maven-args]
+# Example: ./build-pro clean test
+
+set -euo pipefail
+cd "$(dirname "$0")/.." || exit 1
+
+echo "[IQ Build] PRO Profile - Full Platform"
+echo "         24 modules (OSS + cli, apis, mcp, onnx, etc.)"
+echo "         Approx time: 100-150 seconds"
+echo ""
+
+exec ./mvnw -Ppro "$@"

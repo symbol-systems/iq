@@ -18,6 +18,12 @@ iq-apis/.iq
 tmp
 *.class
 
+# Generated Maven files
+dependency-reduced-pom.xml
+
+# IDE files
+*.iml
+
 # Log files
 *.log
 

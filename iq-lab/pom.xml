@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>iq-persona</artifactId>
+    <artifactId>iq-lab</artifactId>
     <packaging>jar</packaging>
 
-    <name>IQ Persona</name>
+    <name>IQ Lab</name>
     <url>https://symbol.systems</url>
 
     <organization>
@@ -67,10 +67,8 @@
         <slf4j.version>2.0.13</slf4j.version>
         <aws.sdk.version>2.25.32</aws.sdk.version>
         <logback.version>1.5.3</logback.version>
-        <camel.version>4.0.0-M1</camel.version>
         <handlebars.version>4.3.1</handlebars.version>
         
-        <groovy.version>5.0.0-alpha-8</groovy.version>
         <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
         <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
 

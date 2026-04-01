@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
+# Run IQ CLI Server (unified command framework)
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar 2>/dev/null | grep -v '^iq-cli-server/target/original-' | head -n1 || true)"
-if [[ -z "${JAR_PATH:-}" ]]; then
-  echo "[INFO] No existing iq-cli-server jar found. Building..."
-  ./mvnw -pl iq-cli-server -am package -DskipTests
-  JAR_PATH="$(ls -1 iq-cli-server/target/iq-cli-server-*.jar | grep -v '^iq-cli-server/target/original-' | head -n1)"
-else
-  echo "[INFO] Reusing existing jar: $JAR_PATH"
+JAR=$(find iq-cli-server/target -name "iq-cli-server-*.jar" -not -name "*original*" | head -n1 || true)
+
+if [[ -z "$JAR" ]]; then
+  echo "[INFO] Building iq-cli-server..." >&2
+  ./mvnw -pl iq-cli-server -am package -DskipTests >/dev/null 2>&1 || {
+    echo "[ERROR] Build failed" >&2
+    exit 1
+  }
+  JAR=$(find iq-cli-server/target -name "iq-cli-server-*.jar" -not -name "*original*" | head -n1)
 fi
 
-if [[ $# -eq 0 ]]; then
-	set -- server mcp start
+if [[ -z "$JAR" ]]; then
+  echo "[ERROR] JAR not found after build" >&2
+  exit 1
 fi
+
+echo "[INFO] Running: $(basename "$JAR")" >&2
 JAVA_OPTS="${JAVA_OPTS:-} -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-java $JAVA_OPTS -jar "$JAR_PATH" "$@"
+exec java ${JAVA_OPTS} -jar "$JAR" "${@:-server mcp start}"

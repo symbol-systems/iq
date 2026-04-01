@@ -2,6 +2,8 @@ package systems.symbol.persona;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -18,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
 public class DiscordBot extends ListenerAdapter {
+    private static final Logger log = LoggerFactory.getLogger(DiscordBot.class);
     private final Model model;
     private final Map<String, IRI> namespaces;
     private final Map<String, Resource> userSubjects;
@@ -35,7 +38,8 @@ public class DiscordBot extends ListenerAdapter {
 
     public static void main(String[] args) throws InterruptedException {
         String botToken = System.getenv("MY_DISCORD_BOT_TOKEN");
-        System.out.println("token: "+botToken);
+        Logger logger = LoggerFactory.getLogger(DiscordBot.class);
+        logger.info("token: {}", botToken);
         if (botToken==null) return;
 
         Model model = new LinkedHashModel();
@@ -68,23 +72,24 @@ public class DiscordBot extends ListenerAdapter {
                 Commands.slash(cmd, cmd)
                         .addOption(STRING, "command", qrx, true)
         );
-        System.out.println("listening: "+command);
+        Logger logger = LoggerFactory.getLogger(DiscordBot.class);
+        logger.info("listening: {}", command);
         commands.queue(
-                success -> System.out.println("ok"),
-                failure -> System.out.println("oops: " + failure.getMessage())
+                success -> logger.info("ok"),
+                failure -> logger.error("oops: {}", failure.getMessage())
         );
         CountDownLatch latch = new CountDownLatch(1);
         Runtime.getRuntime().addShutdownHook(new Thread(latch::countDown));
-        System.out.println("waiting ...");
+        logger.info("waiting ...");
         latch.await();
 
-        System.out.println("stopped");
+        logger.info("stopped");
     }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         String command = event.getName();
-        System.out.println("command: "+command);
+        log.info("command: {}", command);
         if (namespaces.containsKey(command)) {
             handleRdfCommand(event, command);
         } else if (event.getName().equals(defaultNamespace)) {

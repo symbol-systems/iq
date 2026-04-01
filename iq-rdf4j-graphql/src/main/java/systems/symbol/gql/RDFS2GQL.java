@@ -70,19 +70,19 @@ public class RDFS2GQL {
 	}
 
 	protected GraphQL newGraphQL(TypeDefinitionRegistry schemaDef, RuntimeWiring.Builder runtimeWiring, Repository repository) {
-		System.out.println("schemaDef.types: "+schemaDef.types());
+		log.debug("schemaDef.types: {}", schemaDef.types());
 		SchemaGenerator schemaGenerator = new SchemaGenerator();
 		GraphQLCodeRegistry.Builder codeRegistry = GraphQLCodeRegistry.newCodeRegistry();
 		String rootType = "Query";
 		Optional<TypeDefinition> queryDef = schemaDef.getType(rootType);
-		System.out.println("queryDef: "+queryDef);
+		log.debug("queryDef: {}", queryDef);
 		queryDef.get().getChildren().forEach( f -> {
 			FieldDefinition field = (FieldDefinition)f;
 			ObjectTypeDefinition schemaDefType = (ObjectTypeDefinition)schemaDef.getType(field.getType()).orElse(null);
 			if (schemaDefType!=null) {
 				String iri = GQL.toIRI(schemaDefType);
 				SPARQLDataFetcher dataFetcher = new SPARQLDataFetcher(schemaDefType, repository);
-				System.out.println("queryDef.f: "+iri+" -> "+field.getName()+" @ "+schemaDefType);
+				log.debug("queryDef.f: {}", iri+" -> "+field.getName()+" @ "+schemaDefType);
 				codeRegistry.dataFetcher( FieldCoordinates.coordinates(rootType, field.getName()), dataFetcher);
 			}
 		});
@@ -102,9 +102,9 @@ public class RDFS2GQL {
 	}
 
 	public DataFetcher fetch(String typeName, String fieldName) {
-		System.out.println("fetch: "+typeName+"->"+fieldName);
+		log.debug("fetch: {}", typeName+"->"+fieldName);
 		return (DataFetcher<Object>) dataFetchingEnvironment -> {
-			System.out.println("dataFetchingEnvironment: "+dataFetchingEnvironment);
+			log.debug("dataFetchingEnvironment: {}", dataFetchingEnvironment);
 			return new Date();
 		};
 	}
@@ -116,7 +116,7 @@ public class RDFS2GQL {
 
 		domain.classes.forEach((c_iri, rdfsClass) -> {
 			String class_name = c_iri.getLocalName();
-			System.out.println("class_name: "+class_name);
+			log.debug("class_name: {}", class_name);
 			GraphQLObjectType.Builder typeDef = newObject().name(class_name);
 			if (rdfsClass.description != null)
 				typeDef.description(rdfsClass.description);
@@ -128,7 +128,7 @@ public class RDFS2GQL {
 //			defineObjects(typeDef, objectMap, missing, rdfsClass);
 
 			GraphQLObjectType graphQLObjectType = typeDef.build();
-			System.out.println("objectType: "+graphQLObjectType);
+			log.debug("objectType: {}", graphQLObjectType);
 			objectMap.put(c_iri, graphQLObjectType);
 			registry.add(graphQLObjectType.getDefinition());
 		});
@@ -173,11 +173,11 @@ public class RDFS2GQL {
 
 	void dump(ExecutionResult executionResult) {
 		Map<String, Object> model = executionResult.toSpecification();
-		System.out.println("dump.model: "+model);
+		log.debug("dump.model: {}", model);
 		Object data = executionResult.getData();
-		System.out.println("dump.data: "+data);
+		log.debug("dump.data: {}", data);
 		List<GraphQLError> errors = executionResult.getErrors();
-		System.out.println("dump.errors: "+errors);
+		log.debug("dump.errors: {}", errors);
 	}
 
 	public DataLoader<IRI, Map> load(IRI root) {
@@ -185,16 +185,16 @@ public class RDFS2GQL {
 				.setBatchLoaderContextProvider(() -> {
 					return null;
 				});
-		System.out.println("load.root: "+root);
+		log.debug("load.root: {}", root);
 
 		BatchLoaderWithContext<IRI, Map> batchLoader = new BatchLoaderWithContext<>() {
 			@Override
 			public CompletionStage<List<Map>> load(List<IRI> predicates, BatchLoaderEnvironment env) {
-				System.out.println("load.predicates: "+predicates);
+				log.debug("load.predicates: {}", predicates);
 
 				return CompletableFuture.supplyAsync(() -> {
 					List<Map> items = new ArrayList<>();
-					System.out.println("load.items: "+items);
+					log.debug("load.items: {}", items);
 					return items;
 				});
 			}

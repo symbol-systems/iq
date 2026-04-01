@@ -1,18 +1,27 @@
 #!/usr/bin/env bash
+# Run IQ AI/Trusted Module
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-JAR_PATH="$(ls -1 iq-trusted/target/quarkus-app/quarkus-run.jar 2>/dev/null | head -n1 || true)"
-if [[ -z "${JAR_PATH}" ]]; then
-  echo "[INFO] No existing iq-trusted quarkus-run jar found. Building..."
-  ./mvnw -pl iq-trusted -am package -DskipTests
-  JAR_PATH="$(ls -1 iq-trusted/target/quarkus-app/quarkus-run.jar 2>/dev/null | head -n1 || true)"
+JAR=$(find iq-trusted/target/quarkus-app -name "quarkus-run.jar" | head -n1 || true)
+
+if [[ -z "$JAR" ]]; then
+  echo "[INFO] Building iq-trusted..." >&2
+  ./mvnw -pl iq-trusted -am package -DskipTests >/dev/null 2>&1 || {
+    echo "[ERROR] Build failed" >&2
+    exit 1
+  }
+  JAR=$(find iq-trusted/target/quarkus-app -name "quarkus-run.jar" | head -n1 || true)
 fi
-if [[ -z "${JAR_PATH}" ]]; then
-  echo "[INFO] quarkus-run jar still missing, falling back to maven exec..."
-  ./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.MY_IQ_AI -DskipTests "$@"
+
+if [[ -z "$JAR" ]]; then
+  echo "[ERROR] JAR not found, falling back to maven" >&2
+  exec ./mvnw compile exec:java -pl iq-trusted -am \
+    -Dexec.mainClass=systems.symbol.MY_IQ_AI \
+    -DskipTests \
+    "$@"
 else
-  echo "[INFO] Reusing existing jar: $JAR_PATH"
-  java -jar "$JAR_PATH" "$@"
+  echo "[INFO] Running: $(basename "$JAR")" >&2
+  exec java -jar "$JAR" "$@"
 fi

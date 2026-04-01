@@ -1,6 +1,8 @@
 package systems.symbol.cli;
 
 import com.github.freva.asciitable.AsciiTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import systems.symbol.io.ImportExport;
 import systems.symbol.platform.I_Self;
@@ -11,6 +13,7 @@ import java.io.IOException;
 
 @CommandLine.Command(name = "import", description = "Import new knowledge into "+ I_Self.CODENAME)
 public class ImportCommand extends AbstractCLICommand{
+    private static final Logger log = LoggerFactory.getLogger(ImportCommand.class);
     @CommandLine.Option(names = "--from", description = "Load assets from this folder")
     File from;
     @CommandLine.Option(names = "--realm", description = "Import into this realm graph (default workspace root)")
@@ -35,11 +38,11 @@ public class ImportCommand extends AbstractCLICommand{
     }
 
     private void doImport() throws IOException {
-        System.out.printf("importing from: %s into realm: %s\n", from.getAbsolutePath(), realm.isBlank() ? context.getSelf() : realm);
+        log.info("importing from: {} into realm: {}", from.getAbsolutePath(), realm.isBlank() ? context.getSelf() : realm);
         BootstrapLake load = ImportExport.load(context, from, forceDelete, realm);
 
         String[] columns = { "total", "assets", "rdf", "errors" };
         Object[] row = { load.total_files, load.total_asset_files, load.total_rdf_files, load.total_errors };
-        System.out.println(AsciiTable.getTable(columns, new Object[][] { row }));
+        log.info(AsciiTable.getTable(columns, new Object[][] { row }));
     }
 }

@@ -23,9 +23,9 @@ public class Display {
     public static void display(Map<String, Object> model) {
         Object label = model.get("label");
         if (label != null) {
-            System.out.println("> " + label + " @ " + model.get(NS.KEY_AT_ID));
+            log.info("> {} @ {}", label, model.get(NS.KEY_AT_ID));
         } else {
-            System.out.println("> " + model);
+            log.info("> {}", model);
         }
 
     }

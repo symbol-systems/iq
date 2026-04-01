@@ -22,12 +22,12 @@
 
 <!--        <quarkus.version>3.11.1</quarkus.version>-->
         <graalvm.version>24.0.1</graalvm.version>
-        <groovy.version>5.0.0-alpha-8</groovy.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <cloudevents.version>2.4.0</cloudevents.version>
 
+        <groovy.version>5.0.0-alpha-8</groovy.version>
         <skipITs>true</skipITs>
         <surefire.plugin.version>3.2.5</surefire.plugin.version>
         <kotlin.version>1.9.23</kotlin.version>
@@ -276,6 +276,9 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <release>21</release>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>testCompile</id>
@@ -283,6 +286,9 @@
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
+                        <configuration>
+                            <release>21</release>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
