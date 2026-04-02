@@ -4,7 +4,7 @@ import systems.symbol.runtime.ExecutionEnvironment;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.bean.BeanEndpoint;
 import org.apache.camel.component.bean.BeanProcessor;
-import org.apache.camel.component.bean.ClassComponent;
+import org.apache.camel.component.beanclass.ClassComponent;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultFormat;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sail.config.RepositoryResolver;
@@ -23,6 +23,7 @@ import java.util.Map;
  */
 public class SesameComponent extends ClassComponent {
 	static protected final Logger log = LoggerFactory.getLogger(SesameComponent.class);
+	protected ExecutionEnvironment engine;
 	String identity;
 	RepositoryResolver manager;
 	public static Map<String,String> outputType2contentType = new HashMap();
@@ -36,10 +37,11 @@ public class SesameComponent extends ClassComponent {
 	}
 
 	public SesameComponent() {
-		this(engine.getIdentity(), engine.getRepositoryManager());
+		this(null, null, null);
 	}
 
-	public SesameComponent(String identity, RepositoryResolver manager) {
+	public SesameComponent(ExecutionEnvironment engine, String identity, RepositoryResolver manager) {
+		this.engine = engine;
 		this.identity=identity;
 		this.manager=manager;
 	}

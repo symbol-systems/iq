@@ -21,7 +21,13 @@ import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.language.LanguageExpression;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -50,25 +56,25 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 	RepositoryConnection connection;
 	AssetRegister assetRegister = null;
 	String vocabURI = COMMONS.ACTIVE_FLO;
-	URI to = null;
-	private ;
+	IRI to = null;
+	protected ExecutionEnvironment engine;
 
-	public void setEngine() {
+	public void setEngine(ExecutionEnvironment engine) {
 		this.engine = engine;
 	}
 
 	boolean useInferencing = false;
 
-	public RDFCamelPlanner(CamelContext camelContext, ) throws Exception {
+	public RDFCamelPlanner(CamelContext camelContext, ExecutionEnvironment engine) throws Exception {
 		super(camelContext);
-		init(engine);
+		this.engine = engine;
+		init();
 	}
 
 	private void init() throws RepositoryException {
-		this.engine=engine;
 		this.connection = engine.getRepository().getConnection();
 		assetRegister = new SesameAssetRegister(connection);
-		to = connection.getValueFactory().createURI(getVocabURI() + "to");
+		to = connection.getValueFactory().createIRI(getVocabURI() + "to");
 	}
 
 	public void setVocabURI(String vocabURI) {
@@ -181,7 +187,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			// blank nodes are skipped ... recursively resolve
 			return fromRoute(routeBuilder, from, (BNode) _to, action);
 		}
-		if (_to instanceof URI) {
+		if (_to instanceof IRI) {
 			// if reference a bean ...
 			String to = _to.stringValue();
 			Object bean = context.getRegistry().lookupByName(to);
@@ -193,9 +199,9 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			log.debug("flo:"+action+"\t"+_to);
 			// is the route just an internal placeholder?
 			if (action!=null && action.equals("to") && (to.startsWith("urn:") || isSimpleIORoute(_to) ) )  {
-				return fromRoute(routeBuilder, from, (URI) _to, action);
+				return fromRoute(routeBuilder, from, (IRI) _to, action);
 			}
-			return fromRoute(routeBuilder, from.to(to), (URI) _to, action);
+			return fromRoute(routeBuilder, from.to(to), (IRI) _to, action);
 		}
 		if (_to instanceof Literal) {
 			log.debug("\tTO script: "+_to);
@@ -206,7 +212,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 
 	protected ProcessorDefinition tryAction(RouteBuilder routeBuilder, ProcessorDefinition from, Value _to, String action) throws RepositoryException, CamelException, ClassNotFoundException, IOException, URITemplateParseException, IQException {
 		String to = _to.stringValue();
-		if (_to instanceof URI && IRITemplate.isTemplated(to)) {
+		if (_to instanceof IRI && IRITemplate.isTemplated(to)) {
 			IRITemplate toTemplate = new IRITemplate(to, engine.getConfig());
 			to = toTemplate.toString();
 		}
@@ -223,11 +229,11 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			from = toRoute(routeBuilder, from, _to, action);
 		} else if (action.equals("bean") ) {
 			log.info("to-bean: "+to);
-			from = from.beanRef(to);
+			from = from.bean(to);
 		} else if (action.startsWith("setBody") || action.startsWith("body")) {
 			from = from.setBody(toExpression(connection, _to, action));
-		} else if (action.startsWith("setFaultBody") || action.startsWith("fault") ) {
-			from = from.setFaultBody(toExpression(connection, _to, action));
+		} else if (action.startsWith("setBody") || action.startsWith("fault") ) {
+			from = from.setBody(toExpression(connection, _to, action));
 		} else if (action.startsWith("aggregate")) {
 			from = from.aggregate(toExpression(connection, _to, action));
 		} else if (action.startsWith("validate")) {
@@ -263,7 +269,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		} else if (action.equals("transacted")) {
 			from = from.transacted().to(to);
 		} else if (action.equals("parallelProcessing")) {
-			from.multicast().parallelProcessing().aggregationStrategyRef(to);
+			from.multicast().parallelProcessing();
 		} else if (action.startsWith("resequence")) {
 			from = from.resequence(toExpression(connection, _to, action));
 		} else if (action.equals("convertBodyTo") && action.equals("as")) {
@@ -295,7 +301,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 	}
 
 	private Value normalizeTo(Value to) {
-		if (to instanceof URI) {
+		if (to instanceof IRI) {
 			// preserve concepts of linked data ... don't trigger Camel http: scheme
 			if (isSimpleIORoute(to)) {
 				ValueFactory vf = connection.getValueFactory();
@@ -346,23 +352,16 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			case "csv": from = unmarshal.csv(); break;
 			case "avro": from = unmarshal.avro(); break;
 			case "base64": from = unmarshal.base64(); break;
-			case "castor": from = unmarshal.castor(); break;
-			case "gzip": from = unmarshal.gzip(); break;
 			case "jaxb": from = unmarshal.jaxb(); break;
 			case "hl7": from = unmarshal.hl7(); break;
-			case "jibx": from = unmarshal.jibx(); break;
 			case "protobuf": from = unmarshal.protobuf(); break;
 			case "rss": from = unmarshal.rss(); break;
-			case "secureXML": from = unmarshal.secureXML(); break;
-			case "serialization": from = unmarshal.serialization(); break;
-			case "soapjaxb": from = unmarshal.soapjaxb(); break;
-			case "string": from = unmarshal.string(); break;
+			case "soapjaxb": from = unmarshal.custom(type); break;
+			case "string": from = unmarshal.custom(type); break;
 			case "syslog": from = unmarshal.syslog(); break;
 			case "tidyMarkup": from = unmarshal.tidyMarkup(); break;
-			case "xmlBeans": from = unmarshal.xmlBeans(); break;
-			case "xmljson": from = unmarshal.xmljson(); break;
-			case "zip": from = unmarshal.zip(); break;
 			case "zipFile": from = unmarshal.zipFile(); break;
+			default: from = unmarshal.custom(type); break;
 		}
 		return from;
 	}
@@ -375,23 +374,16 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			case "csv": from = marshal.csv(); break;
 			case "avro": from = marshal.avro(); break;
 			case "base64": from = marshal.base64(); break;
-			case "castor": from = marshal.castor(); break;
-			case "gzip": from = marshal.gzip(); break;
 			case "jaxb": from = marshal.jaxb(); break;
 			case "hl7": from = marshal.hl7(); break;
-			case "jibx": from = marshal.jibx(); break;
 			case "protobuf": from = marshal.protobuf(); break;
 			case "rss": from = marshal.rss(); break;
-			case "secureXML": from = marshal.secureXML(); break;
-			case "serialization": from = marshal.serialization(); break;
-			case "soapjaxb": from = marshal.soapjaxb(); break;
-			case "string": from = marshal.string(); break;
+			case "soapjaxb": from = marshal.custom(type); break;
+			case "string": from = marshal.custom(type); break;
 			case "syslog": from = marshal.syslog(); break;
 			case "tidyMarkup": from = marshal.tidyMarkup(); break;
-			case "xmlBeans": from = marshal.xmlBeans(); break;
-			case "xmljson": from = marshal.xmljson(); break;
-			case "zip": from = marshal.zip(); break;
 			case "zipFile": from = marshal.zipFile(); break;
+			default: from = marshal.custom(type); break;
 		}
 		return from;
 	}
@@ -411,7 +403,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			asset = assetRegister.getAsset(to.stringValue(), null);
 		} else if (to instanceof Literal) {
 			final Literal ***REMOVED*** = (Literal)to;
-			URI dataType = ***REMOVED***.getDatatype();
+			IRI dataType = ***REMOVED***.getDatatype();
 			log.debug("\tScript: "+language+"\n"+***REMOVED***);
 			if (dataType==null) {
 				// default to Simple Expression, if data-type is missing
@@ -522,7 +514,5 @@ class ScriptProcessor implements Processor {
 		Future body =  scripting.execute(asset, exchange.getIn().getHeaders());
 		exchange.getOut().setBody(body.get());
 		exchange.getOut().setHeaders(exchange.getIn().getHeaders());
-		exchange.getOut().setAttachments(exchange.getIn().getAttachments());
-
 	}
 }

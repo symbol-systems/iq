@@ -3,8 +3,8 @@ package systems.symbol.camel.component.fingerprint;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.bean.BeanEndpoint;
 import org.apache.camel.component.bean.BeanProcessor;
-import org.apache.camel.component.bean.ClassComponent;
-import org.apache.camel.util.IntrospectionSupport;
+import org.apache.camel.component.beanclass.ClassComponent;
+import org.apache.camel.support.IntrospectionSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

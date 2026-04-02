@@ -2,6 +2,12 @@ package systems.symbol.platform.runtime;
 
 import org.junit.jupiter.api.Test;
 
+import systems.symbol.runtime.ProcessServerRuntimeManager;
+import systems.symbol.runtime.QuarkusRuntimeManager;
+import systems.symbol.runtime.RuntimeStatus;
+import systems.symbol.runtime.ServerRuntimeManager;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ServerRuntimeManagerFactoryTest {

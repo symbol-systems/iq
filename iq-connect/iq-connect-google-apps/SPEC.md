@@ -1,108 +1,98 @@
-# IQ Connector: Google Apps# IQ Connector: Google Apps
+# IQ Connector: Google Workspace
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- Add support for domain-wide delegation for multiple users.- Add delta-sync support using Gmail/Drive change tokens.## Extension ideas- [ ] Registry descriptor- [ ] `Model` view for state- [ ] `I_Checkpoint` implementation- [ ] `I_ConnectorKernel` and sync loop- [ ] `I_Connector` implementation## Implementation checklist- graph IRI- supported capabilities- connector ID and nameProvide a `ConnectorDescriptor` RDF model describing:## Registration- **Read-write**: Full bidirectional sync.- **Write-only**: (Optional) Apply changes from IQ to Google Workspace.- **Read-only**: Sync Google Workspace state into IQ.## Sync Modes- Checkpoint (`connector:checkpoint`)- Workspace entities (e.g., `:user123 a :GmailMessage`)- Connector metadata (`connector:lastSyncedAt`, `connector:syncStatus`)### RDF conceptsGraph example: `spiffe://{domain}/connector:google-apps`.## State Model- Connector registry for discovery- IQ RDF repository via `Model`- Google Workspace APIs (OAuth2 service account or user consent)## Integration Points- **Checkpoint**: Tracks last synced timestamp / page token.- **Model**: Exposes synced state as an RDF `Model`.- **Kernel**: Polls Google Workspace APIs and updates connector graph.## ArchitectureThis connector syncs Google Workspace (Gmail, Drive, Calendar, etc.) data into IQ as RDF.## Purpose
 ## Purpose
 
-This connector syncs Google Workspace entities (Users, Groups, Drive files, Calendar events) into IQ as RDF.
+This connector syncs Google Workspace (formerly G Suite) entities (Users, Groups, Drive files, Calendar events) into IQ as RDF,
+enabling queries over organizational structure, file governance, and calendar/meeting data.
+
+## Scope / Resources scanned
+
+- Users and organizational structure
+- Groups and group memberships
+- Drive files, folders, and sharing permissions
+- Calendar events and attendee information
+- Apps and OAuth integrations
+- Security settings and device management (via Admin SDK)
 
 ## Architecture
 
-- **Kernel**: Polls Google Workspace APIs and updates connector state.
-- **Model**: Exposes state via an RDF `Model`.
-- **Checkpoint**: Tracks last sync timestamps or change tokens.
+- **Kernel**: Polls Google Workspace APIs and updates connector state
+- **Model**: Exposes state via an RDF `Model`
+- **Checkpoint**: Tracks last sync timestamps or change tokens for incremental sync
 
-## Integration Points
+## SDK / API
 
-- Google Workspace APIs (Admin, Drive, Calendar, etc.)
-- IQ RDF repository via `Model`
-- Connector registry for discovery
+- Uses Google Workspace APIs (Admin SDK, Drive API, Calendar API, etc.)
+- OAuth2 service account or user consent flow
+- Preferred: Service account with domain-wide delegation for organization-level access
+
+## Configuration & Secrets
+
+- **Config**:
+  - `google.domain`: Google Workspace domain name
+  - `google.pollInterval`: Polling interval in seconds
+  - `google.graphIri`: Named graph IRI (e.g., `urn:iq:connector:google-apps`)
+  - `google.scanAreas`: Which resources to scan (users, groups, drive, calendar, etc.)
+  - `google.adminEmail`: Admin account email for API delegated access
+
+- **Secrets**:
+  - `GOOGLE_SERVICE_ACCOUNT_KEY`: Service account JSON key
+  - Or: `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` for user OAuth flow
+
+## Risks & Issues
+
+- **API quotas**: Google enforces per-API quotas; implement backoff and retries
+- **Data volume**: Large workspaces with many files/calendars can produce massive graphs
+- **Permission complexity**: File sharing and access policies require complex RDF modeling
+- **PII concerns**: Avoid storing personal calendar details; focus on meeting metadata
 
 ## State Model
 
-Graph example: `spiffe://{domain}/connector:google-apps`.
+Connector state lives in a dedicated graph, e.g., `urn:iq:connector:google-apps`.
 
-### RDF concepts
+### Key RDF concepts
 
 - Connector metadata (`connector:lastSyncedAt`, `connector:syncStatus`)
-- Workspace entities (`:user123 a :GoogleUser`)
-- Checkpoint (`connector:checkpoint`)
+- Google Workspace entities:
+  - `:user123 a :GoogleUser ; :email "alice@domain.com" ; :name "Alice" ; :suspended false`
+  - `:group456 a :GoogleGroup ; :email "team@domain.com" ; :name "Team"`
+  - `:file789 a :GoogleDriveFile ; :title "Report.pdf" ; :owner :user123`
+  - `:event012 a :GoogleCalendarEvent ; :title "Meeting" ; :startTime "2026-04-01T10:00:00Z"`
+- Relationships:
+  - `:user123 :memberOf :group456`
+  - `:user123 :owns :file789`
+  - `:user123 :attendee :event012`
+- Checkpoint (`connector:checkpoint`) for resuming incremental sync
 
 ## Sync Modes
 
-- **Read-only**: Sync Workspace state into IQ.
-- **Write-only**: Apply changes from IQ to Workspace.
-- **Read-write**: Bidirectional sync with conflict handling.
+- **Read-only**: Sync Workspace state into IQ (most common)
+- **Write-only**: Apply changes from IQ to Workspace (create users, groups)
+- **Read-write**: Bidirectional sync with conflict handling
 
 ## Registration
 
 Provide a `ConnectorDescriptor` RDF model with:
 
 - connector ID and display name
-- supported capabilities
+- supported capabilities (polling, change tracking)
 - graph IRI
 
-## Implementation checklist
+## Implementation Checklist
 
 - [ ] `I_Connector` implementation
 - [ ] `I_ConnectorKernel` sync loop
-- [ ] `I_Checkpoint` implementation
-- [ ] `Model` view for state
-- [ ] Registry descriptor
+- [ ] `I_Checkpoint` implementation for incremental sync
+- [ ] RDF vocabulary for Google Workspace entities
+- [ ] Error handling and quota management
+- [ ] Unit tests with mocked Google APIs
+- [ ] Configuration for domain and admin access
+- [ ] Connector descriptor registration
 
-## Extension ideas
+## Extension Ideas
 
-- Add support for Google Apps Script events.
-- Add incremental sync using change tokens where available.
+- Add support for domain-wide delegation for multi-tenant setups
+- Add delta-sync support using Gmail/Drive change tokens
+- Map security policies (MFA enforcement, IP restrictions) to RDF
+- Support multiple Google Workspace domains via separate connector instances
+- Integrate with Cloud Identity for device management queries

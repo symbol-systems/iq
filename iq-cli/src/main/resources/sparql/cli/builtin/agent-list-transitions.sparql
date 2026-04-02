@@ -1,0 +1,9 @@
+PREFIX iq: <urn:iq:>
+SELECT ?agent ?actorName ?intent WHERE {
+  GRAPH <iq:agents> {
+?agent a iq:Agent ;
+   iq:name ?actorName ;
+   iq:to ?transition .
+?transition iq:intent ?intent .
+  }
+}

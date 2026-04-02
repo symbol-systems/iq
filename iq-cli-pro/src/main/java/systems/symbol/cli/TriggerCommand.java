@@ -1,7 +1,6 @@
 package systems.symbol.cli;
 
 import picocli.CommandLine;
-import org.eclipse.rdf4j.model.IRI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,7 +5,7 @@ import org.apache.camel.CamelException;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.bean.BeanEndpoint;
 import org.apache.camel.component.bean.BeanProcessor;
-import org.apache.camel.component.bean.ClassComponent;
+import org.apache.camel.component.beanclass.ClassComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +20,9 @@ import java.util.Map;
  */
 public class FLOComponent extends ClassComponent {
 	protected final Logger log = LoggerFactory.getLogger(FLOComponent.class);
-	;
+	protected ExecutionEnvironment engine;
 
-	public FLOComponent() {
+	public FLOComponent(ExecutionEnvironment engine) {
 		this.engine = engine;
 	}
 

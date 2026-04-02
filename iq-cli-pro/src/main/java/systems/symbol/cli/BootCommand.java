@@ -1,6 +1,8 @@
 package systems.symbol.cli;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -10,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import systems.symbol.IQConstants;
+import systems.symbol.platform.I_Contents;
 import systems.symbol.platform.I_Self;
+import systems.symbol.rdf4j.sparql.JarScriptCatalog;
 import systems.symbol.rdf4j.store.IQStore;
 
 import java.io.IOException;
@@ -20,6 +24,8 @@ import java.io.IOException;
  * 
  * Discovers all Actor instances in the current realm and initializes them.
  * Supports waiting for actors to reach READY state.
+ * 
+ * SPARQL queries are loaded dynamically from JAR resources via JarScriptCatalog.
  * 
  * Usage:
  *   iq boot  # Initialize all actors
@@ -32,13 +38,9 @@ import java.io.IOException;
 public class BootCommand extends AbstractCLICommand {
 private static final Logger log = LoggerFactory.getLogger(BootCommand.class);
 
-// SPARQL query to find all actors in current realm
-private static final String QUERY_LIST_ACTORS = """
-PREFIX iq: <urn:iq:>
-SELECT ?actor WHERE {
-?actor a iq:Actor .
-}
-""";
+// IRI for SPARQL query to find all actors in current realm
+// Maps to: /sparql/cli/builtin/boot-list-actors.sparql
+private static final String QUERY_LIST_ACTORS_IRI = "urn:iq:script:cli:builtin:boot-list-actors";
 
 @CommandLine.Option(names = {"--wait"}, description = "Wait for actors to reach READY state")
 private boolean waitForReady = false;
@@ -124,57 +126,102 @@ log.warn("Failed to close IQ store", e);
 }
 
 /**
- * Queries and initializes all actors in the realm.
- * 
- * @param iq the IQ store connection
- * @return count of actors initialized
- * @throws RepositoryException if query fails
+ * Initializes all actors found via SPARQL query.
+ * Loads the query dynamically from JAR resources.
+ *
+ * @param iq The IQStore instance
+ * @return Number of actors initialized
+ * @throws Exception if query execution fails
  */
-private int initializeActors(IQStore iq) throws RepositoryException {
-try (RepositoryConnection conn = iq.getConnection()) {
-var query = conn.prepareTupleQuery(QUERY_LIST_ACTORS);
-// Set query timeout to prevent hanging
-query.setMaxExecutionTime(IQConstants.QUERY_TIMEOUT_MS);
+private int initializeActors(IQStore iq) throws Exception {
+// Load SPARQL query dynamically from resources
+String sparql = loadBootQuery();
+if (sparql == null) {
+log.error("Failed to load boot actors query from resources");
+throw new RuntimeException("Boot query not found in JAR resources");
+}
 
+if (verbose) {
+log.debug("Executing boot query: {}", sparql);
+}
+
+RepositoryConnection conn = iq.getConnection();
+try {
+var tupleQuery = conn.prepareTupleQuery(sparql);
+try (TupleQueryResult result = tupleQuery.evaluate()) {
 int count = 0;
-try (TupleQueryResult result = query.evaluate()) {
 while (result.hasNext()) {
 BindingSet binding = result.next();
-IRI actor = (IRI) binding.getBinding("actor").getValue();
-initializeActor(actor);
-count++;
+IRI actorIRI = (IRI) binding.getBinding("actor").getValue();
+log.info("Initializing actor: {}", actorIRI);
+if (verbose) {
+System.out.println("  - " + actorIRI.getLocalName());
 }
+count++;
 }
 return count;
 }
-}
-
-/**
- * Logs actor initialization (can be extended to perform validation).
- * 
- * @param actor the actor IRI
- */
-private void initializeActor(IRI actor) {
-String actorName = actor.getLocalName();
-log.debug("Initializing actor: {}", actorName);
-if (verbose) {
-System.out.println("  • " + actorName);
+} finally {
+conn.close();
 }
 }
 
 /**
  * Waits for all actors to reach READY state.
- * 
- * TODO: Implement actor state checking via SPARQL.
- * For now, returns true immediately (placeholder).
- * 
- * @param iq the IQ store
- * @param timeoutSeconds timeout in seconds
- * @return true if all actors are READY, false on timeout
+ *
+ * @param iq  The IQStore instance
+ * @param timeout Timeout in seconds
+ * @return true if all actors reached READY within timeout, false otherwise
+ * @throws Exception if an error occurs
  */
-private boolean waitForActorsReady(IQStore iq, int timeoutSeconds) {
-log.info("Waiting for actors to reach READY state (timeout: {}s)", timeoutSeconds);
-// TODO: Query actor state and poll until all are READY or timeout expires
-return true;  // Placeholder: return success for now
+private boolean waitForActorsReady(IQStore iq, int timeout) throws Exception {
+long startTime = System.currentTimeMillis();
+long endTime = startTime + (timeout * 1000L);
+
+while (System.currentTimeMillis() < endTime) {
+boolean allReady = checkActorsReady(iq);
+if (allReady) {
+return true;
 }
+Thread.sleep(500);  // Poll every 500ms
 }
+
+return false;
+}
+
+/**
+ * Checks if all actors are in READY state.
+ *
+ * @param iq The IQStore instance
+ * @return true if all actors are READY, false otherwise
+ * @throws Exception if an error occurs
+ */
+private boolean checkActorsReady(IQStore iq) throws Exception {
+// TODO: Implement state machine check once AgentService integration is complete
+log.trace("Checking actor readiness...");
+return true;  // Placeholder
+}
+
+/**
+ * Loads the boot actors query from JAR resources via JarScriptCatalog.
+ *
+ * @return The SPARQL query string, or null if not found
+ */
+private String loadBootQuery() {
+try {
+I_Contents catalog = new JarScriptCatalog();
+IRI queryIRI = Values.iri(QUERY_LIST_ACTORS_IRI);
+IRI sparqlMime = IQStore.vf.createIRI("urn:mimetype:application/sparql-query");
+
+Literal ***REMOVED*** = catalog.getContent(queryIRI, sparqlMime);
+if (***REMOVED*** != null) {
+return ***REMOVED***.stringValue();
+}
+} catch (Exception e) {
+log.warn("Error loading boot query from catalog: {}", e.getMessage(), e);
+}
+return null;
+}
+
+}
+

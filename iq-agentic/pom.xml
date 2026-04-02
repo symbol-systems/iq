@@ -27,9 +27,7 @@
 <cloudevents.version>2.4.0</cloudevents.version>
 
 <skipITs>true</skipITs>
-<surefire.plugin.version>3.2.5</surefire.plugin.version>
-<kotlin.version>1.9.23</kotlin.version>
-</properties>
+<surefire.plugin.version>3.2.5</surefire.plugin.version></properties>
 <dependencies>
 <dependency>
 <groupId>systems.symbol</groupId>
@@ -41,11 +39,11 @@
 <artifactId>iq-lake</artifactId>
 <version>${project.version}</version>
 </dependency> -->
-<dependency>
+<!-- <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-intents</artifactId>
 <version>${project.version}</version>
-</dependency>
+</dependency> -->
 
 <dependency>
 <groupId>com.maxmind.geoip2</groupId>

@@ -3,7 +3,7 @@
   <parent>
 <artifactId>iq-parent</artifactId>
 <groupId>systems.symbol</groupId>
-<version>0.93.0</version>
+<version>0.94.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
@@ -198,7 +198,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.93.0</Implementation-Version>
+<Implementation-Version>0.94.0</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -223,7 +223,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.93.0</Implementation-Version>
+<Implementation-Version>0.94.0</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -243,7 +243,7 @@
   </manifest>
   <manifestEntries>
 <Implementation-Build>${buildNumber}</Implementation-Build>
-<Implementation-Version>0.93.0</Implementation-Version>
+<Implementation-Version>0.94.0</Implementation-Version>
 <Main-Class>systems.symbol.CLI</Main-Class>
   </manifestEntries>
 </archive>
@@ -301,7 +301,7 @@
   <mainClass>systems.symbol.CLI</mainClass>
 </transformer>
   </transformers>
-  <minimizeJar>true</minimizeJar>
+  <minimizeJar>false</minimizeJar>
   <filters>
 <filter>
   <artifact>*:*</artifact>
@@ -309,6 +309,7 @@
 <exclude>META-INF/*.SF</exclude>
 <exclude>META-INF/*.DSA</exclude>
 <exclude>META-INF/*.RSA</exclude>
+<exclude>META-INF/versions/**</exclude>
   </excludes>
 </filter>
   </filters>
@@ -330,7 +331,7 @@
   </dependency>
 </dependencies>
 <configuration>
-  <minimizeJar>true</minimizeJar>
+  <minimizeJar>false</minimizeJar>
   <filters>
 <filter>
   <artifact>*:*</artifact>
@@ -338,6 +339,7 @@
 <exclude>META-INF/*.SF</exclude>
 <exclude>META-INF/*.DSA</exclude>
 <exclude>META-INF/*.RSA</exclude>
+<exclude>META-INF/versions/**</exclude>
   </excludes>
 </filter>
   </filters>
@@ -474,7 +476,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.93.0</Implementation-Version>
+  <Implementation-Version>0.94.0</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -499,7 +501,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.93.0</Implementation-Version>
+  <Implementation-Version>0.94.0</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -519,7 +521,7 @@
 </manifest>
 <manifestEntries>
   <Implementation-Build>${buildNumber}</Implementation-Build>
-  <Implementation-Version>0.93.0</Implementation-Version>
+  <Implementation-Version>0.94.0</Implementation-Version>
   <Main-Class>systems.symbol.CLI</Main-Class>
 </manifestEntries>
   </archive>
@@ -669,7 +671,6 @@
   </dependencies>
   <properties>
 <project.build.directory>deploy</project.build.directory>
-<kotlin.version>1.9.23</kotlin.version>
 <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
 <site.host.stable>${project.url}</site.host.stable>
 <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>

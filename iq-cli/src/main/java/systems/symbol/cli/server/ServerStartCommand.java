@@ -1,7 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 
 @CommandLine.Command(name = "start", description = "Starts the selected runtime")
 public class ServerStartCommand implements Runnable {

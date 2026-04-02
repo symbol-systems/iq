@@ -68,9 +68,7 @@
 <groovy.version>5.0.0-alpha-8</groovy.version>
 
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
-<groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-<kotlin.version>1.9.23</kotlin.version>
-</properties>
+<groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version></properties>
 <build>
 <plugins>
 <!--Groovy Eclipse compiler plugin compiles both .groovy and .java sources-->

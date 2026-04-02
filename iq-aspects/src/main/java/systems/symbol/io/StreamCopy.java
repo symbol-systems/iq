@@ -1,7 +1,7 @@
 package systems.symbol.io;
 /*
  *  symbol.systems
- *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2026 Symbol Systems, All Rights Reserved.
  *  Licence: https://symbol.systems/about/license
  */
 

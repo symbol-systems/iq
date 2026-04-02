@@ -34,30 +34,35 @@
   </developers>
   <modules>
 <module>iq-abstract</module>
-<module>iq-kernel</module>
-<module>iq-aspects</module>
-<module>iq-rdf4j</module>
-<module>iq-intents</module>
-<module>iq-platform</module>
-<module>iq-secrets</module>
-<module>iq-lake</module>
-<module>iq-onnx</module>
 <module>iq-agentic</module>
 <module>iq-apis</module>
-<!-- <module>iq-persona</module> -->
-<module>iq-rdf4j-graphs</module>
-<module>iq-test-servers</module>
+<module>iq-aspects</module>
+<module>iq-camel</module>
 <module>iq-cli</module>
 <module>iq-cli-pro</module>
 <module>iq-cli-server</module>
-<module>iq-trusted</module>
-<module>iq-camel</module>
+<!-- <module>iq-intents</module> -->
+<module>iq-kernel</module>
+<module>iq-lab</module>
+<!-- <module>iq-lake</module> -->
+<module>iq-mcp</module>
+<module>iq-onnx</module>
+<module>iq-platform</module>
+<module>iq-rdf4j</module>
+<module>iq-rdf4j-camel</module>
 <module>iq-rdf4j-graphql</module>
+<module>iq-rdf4j-graphs</module>
+<module>iq-secrets</module>
+<module>iq-skeleton</module>
+<module>iq-test-servers</module>
+<module>iq-tokenomic</module>
+<module>iq-trusted</module>
+
+<!-- iq-connect modules -->
 <module>iq-connect/iq-connect-core</module>
 <module>iq-connect/iq-connect-template</module>
 <module>iq-connect/iq-connect-github</module>
 <module>iq-connect/iq-connect-aws</module>
-<module>iq-mcp</module>
   </modules>
   <scm>
 <url>github.com/symbol-systems/iq.git</url>
@@ -89,6 +94,7 @@
 <camel.version>4.0.0-RC2</camel.version>
 <handlebars.version>4.3.1</handlebars.version>
 <groovy.version>5.0.0-alpha-8</groovy.version>
+<kotlin.version>1.9.23</kotlin.version>
 
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
@@ -96,6 +102,7 @@
 
 <handlebars.version>4.3.1</handlebars.version>
 <jackson.version>2.17.1</jackson.version>
+<log4j.version>2.24.1</log4j.version>
 <junit.jupiter.version>5.9.3</junit.jupiter.version>
 
 <skipITs>true</skipITs>
@@ -146,6 +153,16 @@
 <groupId>com.auth0</groupId>
 <artifactId>java-jwt</artifactId>
 <version>4.4.0</version>
+</dependency>
+<dependency>
+<groupId>org.apache.logging.log4j</groupId>
+<artifactId>log4j-api</artifactId>
+<version>${log4j.version}</version>
+</dependency>
+<dependency>
+<groupId>org.apache.logging.log4j</groupId>
+<artifactId>log4j-core</artifactId>
+<version>${log4j.version}</version>
 </dependency>
 <dependency>
 <groupId>com.squareup.okhttp3</groupId>

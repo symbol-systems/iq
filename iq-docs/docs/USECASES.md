@@ -20,7 +20,6 @@ This file lists concrete, discoverable use cases implemented or demonstrated in 
 - What: Manage keys, JWTs and repository bootstrapping for multi-realm deployment.
 
 5) Domain demos (tropes, persona, tokenomics) ✅
-- `iq-tropes` demo shows RDF domain modelling with `.ttl` files.
 - `iq-persona` shows persona/UX integration.
 - `iq-tokenomic` outlines token usage patterns.
 

@@ -26,15 +26,14 @@ import java.util.concurrent.ExecutionException;
  */
 public class Infer extends Base {
 
-	public Infer(String uri) throws IOException {
-		super(engine,uri);
+	public Infer(ExecutionEnvironment engine, String uri) throws IOException {
+		super(engine, uri);
 	}
 
 	@Override
 	public void execute(Exchange exchange) throws RepositoryException, ExecutionException, IQException, InterruptedException, IOException, AssetNotSupported, FactException, QueryEvaluationException, MalformedQueryException {
 		Map<String, Object> headers = exchange.getIn().getHeaders();
 		exchange.getOut().setHeaders(headers);
-		exchange.getOut().setAttachments(exchange.getIn().getAttachments());
 
 		RepositoryConnection connection = getEngine().getRepository().getConnection();
 		SPARQLRules SPARQLRules = new SPARQLRules(connection, getIdentity());

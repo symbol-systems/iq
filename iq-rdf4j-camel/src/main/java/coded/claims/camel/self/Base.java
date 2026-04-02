@@ -29,15 +29,17 @@ abstract public class Base implements Identifiable {
 	static protected final Logger log = LoggerFactory.getLogger(Base.class);
 	protected String uri;
 	protected Asset asset;
+	protected ExecutionEnvironment engine;
 
 	protected Base() throws IOException {
 	}
 
-	public Base(String uri) throws IOException {
-		init(engine,uri);
+	public Base(ExecutionEnvironment engine, String uri) throws IOException {
+		this.engine = engine;
+		init(engine, uri);
 	}
 
-	public void init(String uri) throws IOException {
+	public void init(ExecutionEnvironment engine, String uri) throws IOException {
 		this.engine = engine;
 		this.uri=uri;
 		if (uri!=null && !uri.isEmpty()) {

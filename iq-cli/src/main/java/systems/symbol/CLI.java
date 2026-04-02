@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 import static systems.symbol.cli.CLIContext.CODENAME;
 
 /*
- *  Copyright (c) 2009-2015, 2021-2024 Symbol Systems, All Rights Reserved.
+ *  Copyright (c) 2009-2015, 2021-2026 Symbol Systems, All Rights Reserved.
  *  Licence: https://symbol.systems/about/license
  */
 @CommandLine.Command(name = "iq", description = "IQ: applied knowledge")

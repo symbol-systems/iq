@@ -1,8 +1,6 @@
 # iq-cli — Community Command-Line Interface
 
-`iq-cli` is the community edition CLI for the IQ platform. It gives you terminal access to IQ's knowledge graph, connector ecosystem, and agent workflows — without needing to write a single line of Java.
-
-It is designed to be approachable: start it, explore what's connected, run queries, and inspect your knowledge state — all from one command.
+`iq-cli` is the community edition CLI for the IQ platform. It gives you terminal access to IQ's knowledge graph, connector ecosystem, and agent workflows.
 
 ## What you can do with it
 

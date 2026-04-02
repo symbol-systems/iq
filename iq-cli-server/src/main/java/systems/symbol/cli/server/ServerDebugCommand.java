@@ -1,7 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 
 @CommandLine.Command(name = "debug", description = "Toggle runtime debug mode")
 public class ServerDebugCommand implements Runnable {

@@ -68,9 +68,7 @@
 <commons-validator>1.8.0</commons-validator>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-<lucene-analyzers-common.version>8.9.0</lucene-analyzers-common.version>
-<kotlin.version>1.9.23</kotlin.version>
-</properties>
+<lucene-analyzers-common.version>8.9.0</lucene-analyzers-common.version></properties>
 <build>
 <plugins>
 <plugin>

@@ -69,8 +69,6 @@
 <groovy.version>5.0.0-alpha-8</groovy.version>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-<kotlin.version>1.9.23</kotlin.version>
-
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
 <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
@@ -142,7 +140,7 @@
 </dependency>
 </dependencies>
 <configuration>
-<minimizeJar>true</minimizeJar>
+<minimizeJar>false</minimizeJar>
 <filters>
 <filter>
 <artifact>*:*</artifact>
@@ -150,6 +148,7 @@
 <exclude>META-INF/*.SF</exclude>
 <exclude>META-INF/*.DSA</exclude>
 <exclude>META-INF/*.RSA</exclude>
+<exclude>META-INF/versions/**</exclude>
 </excludes>
 </filter>
 </filters>

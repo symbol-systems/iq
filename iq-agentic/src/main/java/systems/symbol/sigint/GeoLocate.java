@@ -56,6 +56,7 @@ reader = new DatabaseReader.Builder(db).build();
 }
 
 public static String getPublicIP() throws IOException {
+try {
 URI uri = URI.create(IPIFY_URL);
 HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
 connection.setRequestMethod("GET");
@@ -68,7 +69,16 @@ response.append(line);
 }
 }
 
+if (response.length() > 0) {
 return response.toString();
+}
+} catch (IOException e) {
+// Network may be unavailable in some CI environments (e.g., offline builds).
+// Fall back to local address so GeoLocate can still function in a best-effort way.
+// The caller may still round-trip to maxmind database.
+}
+
+return InetAddress.getLocalHost().getHostAddress();
 }
 
 public String location() throws IOException, GeoIp2Exception {

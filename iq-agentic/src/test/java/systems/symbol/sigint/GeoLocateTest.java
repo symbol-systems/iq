@@ -1,8 +1,10 @@
 package systems.symbol.sigint;
 
-import org.eclipse.rdf4j.model.Model;
 import org.junit.jupiter.api.Test;
 import systems.symbol.rdf4j.io.RDFDump;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class GeoLocateTest {
 
@@ -10,12 +12,10 @@ class GeoLocateTest {
 void locate() throws Exception {
 GeoLocate geoLocate = new GeoLocate();
 
-try {
-Model located = geoLocate.locate();
-RDFDump.dump(located);
-} catch (java.net.SocketException e) {
-System.err.println("geo.offline");
-}
+// Use a stable public IP value to avoid dependence on external call reliability in CI.
+String result = geoLocate.location("8.8.8.8");
 
+assertNotNull(result);
+assertFalse(result.isBlank());
 }
 }

@@ -14,7 +14,7 @@ This is particularly useful for semantic search, document reranking, and intent 
 
 ## Role in the system
 
-`iq-onnx` is an optional inference backend. It integrates with `iq-finder` to provide locally computed similarity scores and reranked search results. Use it when you want semantic capabilities without external API calls.
+`iq-onnx` is an optional inference backend. Use it when you want semantic capabilities without external API calls.
 
 ## Requirements
 

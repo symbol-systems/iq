@@ -28,20 +28,19 @@ import java.util.concurrent.ExecutionException;
  */
 public class SPARQL extends Base {
 
-	public SPARQL(String uri) throws IOException {
-		super(engine,uri);
+	public SPARQL(ExecutionEnvironment engine, String uri) throws IOException {
+		super(engine, uri);
 	}
 
 	@Override
 	public void execute(Exchange exchange) throws RepositoryException, ExecutionException, IQException, InterruptedException, IOException, AssetNotSupported, FactException, ConfigException, QueryEvaluationException, MalformedQueryException {
 		Map<String, Object> headers = exchange.getIn().getHeaders();
 		exchange.getOut().setHeaders(headers);
-		exchange.getOut().setAttachments(exchange.getIn().getAttachments());
 
 		PicoTemplate picoTemplate = new PicoTemplate(asset.toString());
 		RepositoryConnection connection = getEngine().getRepository().getConnection();
 
-		Collection<Model> result = SesameHelper.toModels(connection, picoTemplate.translate(headers), null, "this");
+		Collection<Map<String, Object>> result = SesameHelper.toMapCollection(connection, picoTemplate.translate(headers));
 		exchange.getOut().setBody(result);
 		connection.close();
 	}

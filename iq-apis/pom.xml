@@ -28,9 +28,7 @@
 <cloudevents.version>2.4.0</cloudevents.version>
 
 <skipITs>true</skipITs>
-<surefire.plugin.version>3.2.5</surefire.plugin.version>
-<kotlin.version>1.9.23</kotlin.version>
-<main.class>systems.symbol.platform.RealmPlatform</main.class>
+<surefire.plugin.version>3.2.5</surefire.plugin.version><main.class>systems.symbol.platform.RealmPlatform</main.class>
 </properties>
 <dependencies>
 <dependency>
@@ -154,6 +152,16 @@
 <groupId>com.squareup.okhttp3</groupId>
 <artifactId>mockwebserver</artifactId>
 <version>4.12.0</version>
+</dependency>
+<dependency>
+<groupId>org.apache.logging.log4j</groupId>
+<artifactId>log4j-api</artifactId>
+<version>${log4j.version}</version>
+</dependency>
+<dependency>
+<groupId>org.apache.logging.log4j</groupId>
+<artifactId>log4j-core</artifactId>
+<version>${log4j.version}</version>
 </dependency>
 <dependency>
 <groupId>org.apache.groovy</groupId>

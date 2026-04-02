@@ -111,11 +111,12 @@
 </dependency>
 
 <!-- IQ Dependencies -->
-<dependency>
+<!-- iq-iq module is external and not included in this repository; skip local requirement for build consistency -->
+<!-- <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-iq</artifactId>
 <version>${project.version}</version>
-</dependency>
+</dependency> -->
 
 </dependencies>
 

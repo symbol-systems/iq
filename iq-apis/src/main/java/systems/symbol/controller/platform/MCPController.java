@@ -1,9 +1,11 @@
 package systems.symbol.controller.platform;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
@@ -133,9 +135,16 @@ return toolRegistry;
  * @return JSON response with status and available endpoints
  */
 @GET
-@Produces(MediaType.APPLICATION_JSON)
-public Response root() {
+@Produces({MediaType.APPLICATION_JSON, "text/event-stream"})
+public Response root(@Context HttpHeaders headers) {
 try {
+if (headers != null && headers.getAcceptableMediaTypes() != null) {
+boolean wantsSse = headers.getAcceptableMediaTypes().stream()
+.anyMatch(mt -> mt.toString().contains("text/event-stream") || mt.getSubtype().contains("event-stream"));
+if (wantsSse) {
+return handleMcpStreamingConnection();
+}
+}
 MCPToolRegistry registry = getToolRegistry();
 Map<String, Object> endpoints = jsonMap();
 endpoints.put("tools", "/mcp/tools");
@@ -172,7 +181,7 @@ return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
  */
 @GET
 @Path("/stream")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces("text/event-stream")
 public Response handleMcpStreamingConnection() {
 try {
 log.info("MCP streaming connection established");
@@ -203,6 +212,7 @@ throw e;
 };
 
 return addCorsHeaders(Response.ok(stream)
+.type("text/event-stream")
 .header("X-Content-Type-Options", "nosniff")
 .header("Cache-Control", "no-cache, no-store, must-revalidate")
 .header("Pragma", "no-cache")
@@ -352,6 +362,13 @@ try {
 MCPToolRegistry registry = getToolRegistry();
 if (registry == null) {
 return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "MCP tools not yet initialized");
+}
+// Validate JSON body, return 400 on invalid JSON
+try {
+om.readTree(params);
+} catch (JsonProcessingException e) {
+log.warn("Invalid JSON in MCP executeTool for {}: {}", toolName, e.getMessage());
+return errorResponse(Response.Status.BAD_REQUEST, "Invalid JSON payload");
 }
 MCPServerBuilder builder = registry.buildServerBuilder();
 Map<String, Object> body = jsonMap();

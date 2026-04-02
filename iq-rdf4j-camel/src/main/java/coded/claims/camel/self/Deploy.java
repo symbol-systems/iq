@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 public class Deploy extends Base {
 	static protected final Logger log = LoggerFactory.getLogger(Deploy.class);
 
-	public Deploy(String uri) throws IOException, FactException {
+	public Deploy(ExecutionEnvironment engine, String uri) throws IOException, FactException {
 		super(engine, uri);
 
 	}
@@ -35,6 +35,7 @@ public class Deploy extends Base {
 	@Handler
 	public void execute(Exchange exchange) throws RepositoryException, ExecutionException, IQException, InterruptedException, IOException, AssetNotSupported, FactException {
 		RepositoryConnection connection = engine.getRepository().getConnection();
+
 		BulkAssetLoader deployer = new BulkAssetLoader(engine.getIdentity(), connection);
 		deployer.setDeployScripts(false);
 		deployer.setDeployRDF(true);
@@ -46,12 +47,19 @@ public class Deploy extends Base {
 		if (file!=null) {
 			String from = exchange.getFromEndpoint().getEndpointUri();
 			log.info("Deploy File: "+from+" -> "+file.getAbsolutePath());
-			file = new File(file.getAbsolutePath());
-			deployer.deploy(file.getParentFile(), file);
+			try {
+				deployer.deploy(file.getParentFile(), file);
+			} catch (IOException e) {
+				log.warn("Failed to deploy file: {}", file, e);
+			}
 		}
 		if (uri!=null && !uri.isEmpty()) {
 			log.info("Deploy URL: "+uri);
-			deployer.deploy(new URL(uri));
+			try {
+				deployer.deploy(new URL(uri));
+			} catch (Exception e) {
+				log.warn("Failed to deploy URL: {}", uri, e);
+			}
 		}
 		connection.close();
 

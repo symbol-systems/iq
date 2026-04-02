@@ -5,7 +5,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
-import org.apache.camel.util.ExchangeHelper;
+import org.apache.camel.support.ExchangeHelper;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.resultio.QueryResultIO;
@@ -17,6 +17,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * systems.symbol (c) 2014-2023
@@ -89,7 +91,7 @@ public class SesameProcessor implements Processor {
 	}
 
 	private void processLoad(RepositoryConnection connection, Map<String, Object> headers, String contentType, String triples, Message out) throws RepositoryException, RDFParseException, IOException {
-		RDFFormat rdfFormat = RDFFormat.forMIMEType(contentType, RDFFormat.valueOf(contentType));
+		RDFFormat rdfFormat = Rio.getParserFormatForMIMEType(contentType).orElse(RDFFormat.TURTLE);
 		String baseURI = (String) headers.get("Sesame-Context");
 		if (baseURI==null||baseURI.isEmpty()) baseURI = "bean:"+getClass().getCanonicalName();
 		connection.begin();
@@ -99,13 +101,13 @@ public class SesameProcessor implements Processor {
 	}
 
 	private void processConstruct(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RDFHandlerException, MalformedQueryException, RepositoryException, IOException, QueryResultHandlerException, QueryEvaluationException {
-		RDFFormat rdfFormat = RDFFormat.forMIMEType(contentType, RDFFormat.valueOf(contentType));
+		RDFFormat rdfFormat = Rio.getWriterFormatForMIMEType(contentType).orElse(RDFFormat.TURTLE);
 		log.debug("CONSTRUCT: " + contentType+" -> "+rdfFormat);
 		if (rdfFormat!=null) {
 			headers.put("Content-Type", rdfFormat.getDefaultMIMEType()+";"+rdfFormat.getCharset());
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			GraphQueryResult graphQueryResult = handleGraph(connection, sparql);
-			QueryResultIO.write(graphQueryResult, rdfFormat, outputStream);
+			QueryResultIO.writeGraph(graphQueryResult, rdfFormat, outputStream);
 			outputStream.flush();
 			outputStream.close();
 			log.debug("GRAPH: "+outputStream);
@@ -117,17 +119,18 @@ public class SesameProcessor implements Processor {
 	}
 
 	private void processSelect(RepositoryConnection connection, Map<String, Object> headers, String contentType, String sparql, Message out) throws RepositoryException, QueryResultHandlerException, MalformedQueryException, QueryEvaluationException, IOException {
-		TupleQueryResultFormat parserFormatForMIMEType = QueryResultIO.getParserFormatForMIMEType(contentType, null);
-		if (parserFormatForMIMEType!=null) {
-			headers.put("Content-Type", parserFormatForMIMEType.getDefaultMIMEType()+";"+parserFormatForMIMEType.getCharset());
-			StringWriter stringWriter = handle(connection, sparql, parserFormatForMIMEType);
+		java.util.Optional<org.eclipse.rdf4j.query.resultio.QueryResultFormat> parserFormatForMIMEType = QueryResultIO.getParserFormatForMIMEType(contentType);
+		if (parserFormatForMIMEType.isPresent() && parserFormatForMIMEType.get() instanceof TupleQueryResultFormat) {
+			TupleQueryResultFormat format = (TupleQueryResultFormat) parserFormatForMIMEType.get();
+			headers.put("Content-Type", format.getDefaultMIMEType()+";"+format.getCharset());
+			StringWriter stringWriter = handle(connection, sparql, format);
 			log.trace("TUPLES: " + stringWriter.toString());
 			// output message
 			String results = stringWriter.toString();
 			out.setBody(results);
 		} else {
 			// unknown-type, internal
-			Collection<Map> results = SesameHelper.toMapCollection(connection, sparql);
+			Collection<Map<String, Object>> results = SesameHelper.toMapCollection(connection, sparql);
 			log.debug("COLLECTION: " + results);
 			out.setBody(results);
 		}
@@ -147,10 +150,8 @@ public class SesameProcessor implements Processor {
 		tupleQuery.setIncludeInferred(isInferred());
 		if (maxQueryTime>0) tupleQuery.setMaxQueryTime(getMaxQueryTime());
 
-		TupleQueryResultWriter resultWriter = QueryResultIO.createWriter(parserFormatForMIMEType, out);
-		resultWriter.startQueryResult(new ArrayList());
+		TupleQueryResultWriter resultWriter = QueryResultIO.createTupleWriter(parserFormatForMIMEType, out);
 		tupleQuery.evaluate(resultWriter);
-		resultWriter.endQueryResult();
 	}
 
 	public GraphQueryResult handleGraph(RepositoryConnection connection, String sparql) throws MalformedQueryException, RepositoryException, QueryResultHandlerException, QueryEvaluationException, IOException, RDFHandlerException {

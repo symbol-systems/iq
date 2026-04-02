@@ -1,8 +1,8 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
-import systems.symbol.platform.runtime.ServerDump;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
+import systems.symbol.runtime.ServerDump;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 
 @CommandLine.Command(name = "dump", description = "Dump runtime diagnostics")
 public class ServerDumpCommand implements Runnable {

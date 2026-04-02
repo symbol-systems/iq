@@ -1,12 +1,16 @@
 package systems.symbol.cli;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.Values;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import systems.symbol.io.Display;
 import systems.symbol.platform.AgentService;
+import systems.symbol.platform.I_Contents;
+import systems.symbol.rdf4j.sparql.JarScriptCatalog;
 import systems.symbol.rdf4j.store.IQStore;
 import systems.symbol.rdf4j.store.IQConnection;
 import systems.symbol.rdf4j.sparql.SPARQLMapper;
@@ -19,6 +23,10 @@ import java.util.Map;
 
 @CommandLine.Command(name = "agent", description = "Agent transition management: list and trigger agent transitions")
 public class AgentCommand extends AbstractCLICommand {
+
+// IRI for SPARQL query to list agent transitions
+// Maps to: /sparql/cli/builtin/agent-list-transitions.sparql
+private static final String QUERY_LIST_TRANSITIONS_IRI = "urn:iq:script:cli:builtin:agent-list-transitions";
 
 @CommandLine.Option(names = "--list", description = "List available agent transitions")
 boolean list = false;
@@ -64,15 +72,12 @@ try (RepositoryConnection conn = context.getRepository().getConnection()) {
 IQStore iq = new IQConnection(context.getSelf(), conn);
 SPARQLMapper mapper = new SPARQLMapper(iq);
 
-String q = "PREFIX iq: <iq:>\n" +
-"SELECT ?agent ?actorName ?intent WHERE {\n" +
-"  GRAPH <iq:agents> {\n" +
-"?agent a iq:Agent ;\n" +
-"   iq:name ?actorName ;\n" +
-"   iq:to ?transition .\n" +
-"?transition iq:intent ?intent .\n" +
-"  }\n" +
-"}";
+// Load SPARQL query dynamically from resources
+String q = loadListTransitionsQuery();
+if (q == null) {
+display("Error: Failed to load transitions query from resources");
+return;
+}
 
 List<Map<String, Object>> transitions = mapper.query(q, null);
 if (agent != null && !agent.isBlank()) {
@@ -117,4 +122,26 @@ display("Agent transition failed: " + e.getMessage());
 log.error("Agent transition error", e);
 }
 }
+
+/**
+ * Loads the list transitions query from JAR resources via JarScriptCatalog.
+ *
+ * @return The SPARQL query string, or null if not found
+ */
+private String loadListTransitionsQuery() {
+try {
+I_Contents catalog = new JarScriptCatalog();
+IRI queryIRI = Values.iri(QUERY_LIST_TRANSITIONS_IRI);
+IRI sparqlMime = IQStore.vf.createIRI("urn:mimetype:application/sparql-query");
+
+Literal ***REMOVED*** = catalog.getContent(queryIRI, sparqlMime);
+if (***REMOVED*** != null) {
+return ***REMOVED***.stringValue();
 }
+} catch (Exception e) {
+log.warn("Error loading transitions query from catalog: {}", e.getMessage());
+}
+return null;
+}
+}
+

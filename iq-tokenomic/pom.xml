@@ -58,6 +58,12 @@
 <groupId>org.web3j</groupId>
 <artifactId>crypto</artifactId>
 <version>4.11.0</version>
+<exclusions>
+<exclusion>
+<groupId>tech.pegasys</groupId>
+<artifactId>jc-kzg-4844</artifactId>
+</exclusion>
+</exclusions>
 </dependency>
 <dependency>
 <groupId>org.web3j</groupId>

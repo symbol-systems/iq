@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.HealthCheck;
 import systems.symbol.platform.WebURLs;
-import systems.symbol.platform.runtime.RuntimeStatus;
-import systems.symbol.platform.runtime.ServerDump;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
+import systems.symbol.runtime.RuntimeStatus;
+import systems.symbol.runtime.ServerDump;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 import systems.symbol.string.Validate;
 
 @Path("runtime")

@@ -1,8 +1,8 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
-import systems.symbol.platform.runtime.RuntimeStatus;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
+import systems.symbol.runtime.RuntimeStatus;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 
 @CommandLine.Command(name = "health", description = "Checks health of the selected runtime")
 public class ServerHealthCommand implements Runnable {

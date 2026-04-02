@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
  */
 public class Script extends Base {
 
-	public Script(String uri) throws IOException {
+	public Script(ExecutionEnvironment engine, String uri) throws IOException {
 		super(engine, uri);
 	}
 
@@ -33,7 +33,6 @@ public class Script extends Base {
 	public void execute(Exchange exchange) throws RepositoryException, ExecutionException, IQException, InterruptedException, IOException, AssetNotSupported, FactException, ConfigException, QueryEvaluationException, MalformedQueryException {
 		Map<String, Object> headers = exchange.getIn().getHeaders();
 		exchange.getOut().setHeaders(headers);
-		exchange.getOut().setAttachments(exchange.getIn().getAttachments());
 
 		Scripting scripting = new Scripting();
 		Future done = scripting.execute(asset, headers);

@@ -35,6 +35,20 @@ public Response check(@Context UriInfo info, @Context HttpHeaders headers) {
 return new HealthCheck(true, WebURLs.getRequestURL(info, headers)).build();
 }
 
+@Path("ready")
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+public Response ready(@Context UriInfo info, @Context HttpHeaders headers) {
+return new HealthCheck(true, WebURLs.getRequestURL(info, headers)).build();
+}
+
+@Path("live")
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+public Response live(@Context UriInfo info, @Context HttpHeaders headers) {
+return new HealthCheck(true, WebURLs.getRequestURL(info, headers)).build();
+}
+
 /**
  * Checks the health status of a specific repository.
  *

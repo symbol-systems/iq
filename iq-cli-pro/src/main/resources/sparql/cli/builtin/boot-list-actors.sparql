@@ -1,0 +1,4 @@
+PREFIX iq: <urn:iq:>
+SELECT ?actor WHERE {
+  ?actor a iq:Actor .
+}

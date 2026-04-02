@@ -12,5 +12,11 @@
 "approve": true,
 "matchCommandLine": true
 }
+},
+"java.configuration.runtimes": [
+{
+"name": "JavaSE-25",
+"path": "/usr/local/graal/"
 }
+]
 }

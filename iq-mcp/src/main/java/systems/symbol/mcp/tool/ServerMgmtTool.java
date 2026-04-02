@@ -5,8 +5,8 @@ import systems.symbol.mcp.I_MCPTool;
 import systems.symbol.mcp.MCPCallContext;
 import systems.symbol.mcp.MCPException;
 import systems.symbol.mcp.MCPResult;
-import systems.symbol.platform.runtime.ServerRuntimeManagerFactory;
-import systems.symbol.platform.runtime.RuntimeStatus;
+import systems.symbol.runtime.RuntimeStatus;
+import systems.symbol.runtime.ServerRuntimeManagerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

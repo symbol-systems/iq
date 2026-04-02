@@ -27,7 +27,6 @@ IQ reads your domain knowledge, applies declarative rules and LLM reasoning, and
 | `iq-lake` | Document and data lake ingestion pipeline |
 | `iq-onnx` | Local ONNX model inference, embeddings, and reranking |
 | `iq-trusted` | Auth, JWT, secrets, and trust primitives |
-| `iq-finder` | Semantic search and corpus indexing |
 | `iq-intents` | Intent definitions and RDF repository configuration |
 | `iq-camel` | Apache Camel routing and RDF stream processing |
 | `iq-rdf4j-graphql` | GraphQL access layer over your knowledge graph |
@@ -37,7 +36,6 @@ IQ reads your domain knowledge, applies declarative rules and LLM reasoning, and
 | `iq-abstract` | Core interfaces and contracts used across all modules |
 | `iq-lab` | Experimental features, persona engine, Discord integration |
 | `iq-onto` | Ontology management and vocabulary tooling |
-| `iq-tropes` | Narrative pattern library for agent personas |
 | `iq-skeleton` | Starter template for new connectors |
 
 ## Getting started
