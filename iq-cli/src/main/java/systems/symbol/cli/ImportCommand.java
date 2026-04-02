@@ -35,11 +35,11 @@ return 0;
 }
 
 private void doImport() throws IOException {
-System.out.printf("importing from: %s into realm: %s\n", from.getAbsolutePath(), realm.isBlank() ? context.getSelf() : realm);
+displayf("importing from: %s into realm: %s\n", from.getAbsolutePath(), realm.isBlank() ? context.getSelf() : realm);
 BootstrapLake load = ImportExport.load(context, from, forceDelete, realm);
 
 String[] columns = { "total", "assets", "rdf", "errors" };
 Object[] row = { load.total_files, load.total_asset_files, load.total_rdf_files, load.total_errors };
-System.out.println(AsciiTable.getTable(columns, new Object[][] { row }));
+display(AsciiTable.getTable(columns, new Object[][] { row }));
 }
 }

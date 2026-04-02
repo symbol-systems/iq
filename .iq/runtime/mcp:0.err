@@ -1,0 +1,2 @@
+Error: Could not find or load main class systems.symbol.MCPServerMain
+Caused by: java.lang.ClassNotFoundException: systems.symbol.MCPServerMain

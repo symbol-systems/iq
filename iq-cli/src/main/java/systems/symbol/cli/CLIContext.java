@@ -62,8 +62,24 @@ www_docs.mkdirs();
 assets.mkdirs();
 }
 
+private systems.symbol.io.I_Display display = systems.symbol.io.ConsoleDisplay.getInstance();
+
 public void display(String text) {
-System.out.println(text);
+display.out(text);
+}
+
+public void displayError(String text) {
+display.err(text);
+}
+
+public systems.symbol.io.I_Display getDisplay() {
+return display;
+}
+
+public void setDisplay(systems.symbol.io.I_Display display) {
+if (display != null) {
+this.display = display;
+}
 }
 
 public boolean isInitialized() {

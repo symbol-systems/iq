@@ -31,12 +31,12 @@ super(context);
 @Override
 public Object call() throws Exception {
 if (!context.isInitialized()) {
-System.out.println("iq.run.failed");
+display("iq.run.failed");
 return null;
 }
 
 if (path == null || path.isEmpty()) {
-System.out.println("iq.run.error: path is required");
+display("iq.run.error: path is required");
 return null;
 }
 
@@ -54,7 +54,7 @@ lang = "sparql"; // default
 }
 }
 
-System.out.println("iq.run: " + path + " [" + lang + "]");
+display("iq.run: " + path + " [" + lang + "]");
 
 IQStore iq = context.newIQBase();
 try {
@@ -63,20 +63,20 @@ String code = new String(Files.readAllBytes(Paths.get(path)));
 if ("sparql".equalsIgnoreCase(lang)) {
 executeSPARQL(iq, code);
 } else if ("groovy".equalsIgnoreCase(lang)) {
-System.out.println("iq.run.error: Groovy scripts are not supported in iq-cli-pro. Use iq-mcp for Groovy execution.");
+display("iq.run.error: Groovy scripts are not supported in iq-cli-pro. Use iq-mcp for Groovy execution.");
 return null;
 } else if ("js".equalsIgnoreCase(lang)) {
-System.out.println("iq.run.error: JavaScript scripts are not supported in iq-cli-pro yet.");
+display("iq.run.error: JavaScript scripts are not supported in iq-cli-pro yet.");
 return null;
 } else {
-System.out.println("iq.run.error: unsupported language: " + lang);
+display("iq.run.error: unsupported language: " + lang);
 return null;
 }
 
 return "run:" + path + ":" + lang;
 } catch (Exception e) {
 log.error("iq.run.error: {} - {}", path, e.getMessage(), e);
-System.out.println("iq.run.error: " + e.getMessage());
+display("iq.run.error: " + e.getMessage());
 return null;
 } finally {
 iq.close();
@@ -94,11 +94,11 @@ var tupleQuery = conn.prepareTupleQuery(sparql);
 try (TupleQueryResult result = tupleQuery.evaluate()) {
 // Print header
 var bindingNames = result.getBindingNames();
-System.out.println("Results:");
+display("Results:");
 for (String name : bindingNames) {
-System.out.print(name + "\t");
+display(name + "\t");
 }
-System.out.println();
+display();
 
 // Print rows
 int count = 0;
@@ -106,17 +106,17 @@ while (result.hasNext()) {
 var binding = result.next();
 for (String name : bindingNames) {
 var val = binding.getBinding(name);
-System.out.print((val != null ? val.getValue() : "null") + "\t");
+display((val != null ? val.getValue() : "null") + "\t");
 }
-System.out.println();
+display();
 count++;
 }
-System.out.println("\" + count + \" row(s)");
+display(count + " row(s)");
 }
 } else {
 // ASK or UPDATE queries
 boolean result = conn.prepareBooleanQuery(sparql).evaluate();
-System.out.println("Result: " + result);
+display("Result: " + result);
 }
 }
 }

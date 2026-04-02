@@ -25,7 +25,7 @@ BootstrapLake loader = new BootstrapLake(IQ_NS.TEST, connection, false, true, fa
 
 System.out.println("phi.loader: " + assetsRoot.getAbsolutePath());
 loader.deploy(assetsRoot);
-System.out.println("phi.loaded: " + stopWatch.elapsed());
+System.out.println("phi.loaded: " + stopWatch.elapsed()+"ms");
 
 LiveModel liveModel = new LiveModel(connection);
 

@@ -3,12 +3,14 @@ package systems.symbol.cli;
 import picocli.CommandLine;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import systems.symbol.platform.I_Self;
 import systems.symbol.platform.IQ_NS;
 import systems.symbol.rdf4j.store.IQStore;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @CommandLine.Command(name = "trust", description = "Export this "+ I_Self.CODENAME +" to another.")
 public class TrustCommand extends AbstractCLICommand{
@@ -26,19 +28,19 @@ super(context);
 @Override
 public Object call() throws Exception {
 if (!context.isInitialized()) {
-System.out.println("iq.trust.failed: not initialized");
+display("iq.trust.failed: not initialized");
 return "uninitialized";
 }
 
 IRI self = context.getSelf();
-System.out.println("iq.trust: self=" + self.getLocalName() + ", target=" + identity);
+display("iq.trust: self=" + self.getLocalName() + ", target=" + identity);
 
 if ("me".equalsIgnoreCase(identity)) {
 trustSelf();
 } else if ("list".equalsIgnoreCase(identity)) {
 listTrusts();
 } else if ("revoke".equalsIgnoreCase(identity)) {
-System.out.println("iq.trust.revoke: please specify IRI to revoke");
+display("iq.trust.revoke: please specify IRI to revoke");
 return "revoke:pending";
 } else {
 trustRemote(identity);
@@ -56,19 +58,19 @@ IRI self = context.getSelf();
 // Use the proper IQ_NS.TRUSTS predicate
 iq.getConnection().add(self, IQ_NS.TRUSTS, self);
 
-// Add timestamp
-Instant now = Instant.now();
-iq.getConnection().add(self, DCTERMS.MODIFIED, 
-IQStore.vf.createLiteral(now));
+// Add timestamp with XMLSchema dateTime compatible format
+Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+iq.getConnection().add(self, DCTERMS.MODIFIED,
+IQStore.vf.createLiteral(now.toString(), XMLSchema.DATETIME));
 
 if (!noCommit) {
 iq.getConnection().commit();
 }
 log.info("iq.trust.self: {} trusts itself", self);
-System.out.println("  ✓ Trust self: " + self.getLocalName());
+display("  ✓ Trust self: " + self.getLocalName());
 } catch (Exception e) {
 log.error("iq.trust.self.failed: {}", e.getMessage(), e);
-System.out.println("  ✗ Error: " + e.getMessage());
+display("  ✗ Error: " + e.getMessage());
 } finally {
 if (iq != null) {
 try { iq.close(); } catch (Exception ignored) {}
@@ -85,20 +87,20 @@ IRI target = IQStore.vf.createIRI(identity);
 
 iq.getConnection().add(self, IQ_NS.TRUSTS, target);
 
-// Add timestamp
-Instant now = Instant.now();
-iq.getConnection().add(self, DCTERMS.MODIFIED, 
-IQStore.vf.createLiteral(now));
+// Add timestamp with XMLSchema dateTime compatible format
+Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+iq.getConnection().add(self, DCTERMS.MODIFIED,
+IQStore.vf.createLiteral(now.toString(), XMLSchema.DATETIME));
 
 if (!noCommit) {
 iq.getConnection().commit();
 }
 
 log.info("iq.trust.remote: {} trusts {}", self, target);
-System.out.println("  ✓ Trust arc: " + self.getLocalName() + " -> " + target.getLocalName());
+display("  ✓ Trust arc: " + self.getLocalName() + " -> " + target.getLocalName());
 } catch (Exception e) {
 log.error("iq.trust.remote.failed: {}", e.getMessage(), e);
-System.out.println("  ✗ Error: " + e.getMessage());
+display("  ✗ Error: " + e.getMessage());
 } finally {
 if (iq != null) {
 try { iq.close(); } catch (Exception ignored) {}
@@ -112,17 +114,17 @@ try {
 iq = context.newIQBase();
 IRI self = context.getSelf();
 
-System.out.println("  Trusts for " + self.getLocalName() + ":");
+display("  Trusts for " + self.getLocalName() + ":");
 
 var stmts = iq.getConnection().getStatements(self, IQ_NS.TRUSTS, null);
 stmts.forEach(stmt -> {
-System.out.println("- " + ((IRI)stmt.getObject()).getLocalName());
+display("- " + ((IRI)stmt.getObject()).getLocalName());
 });
 
 log.info("iq.trust.list: {} has trust arcs", self);
 } catch (Exception e) {
 log.error("iq.trust.list.failed: {}", e.getMessage(), e);
-System.out.println("  ✗ Error: " + e.getMessage());
+display("  ✗ Error: " + e.getMessage());
 } finally {
 if (iq != null) {
 try { iq.close(); } catch (Exception ignored) {}

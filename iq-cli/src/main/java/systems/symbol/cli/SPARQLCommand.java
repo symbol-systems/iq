@@ -33,13 +33,13 @@ File qFile = new File(query);
 File localQueryFile = new File(assets, query + ".sparql");
 if (qFile.exists()) {
 sparql = StreamCopy.toString(qFile);
-System.out.println("executing query file: " + qFile.getAbsolutePath());
+display("executing query file: " + qFile.getAbsolutePath());
 } else if (localQueryFile.exists()) {
 sparql = StreamCopy.toString(localQueryFile);
-System.out.println("executing local asset query: " + localQueryFile.getAbsolutePath());
+display("executing local asset query: " + localQueryFile.getAbsolutePath());
 } else if (looksLikeSparql(query)) {
 sparql = query;
-System.out.println("executing inline query");
+display("executing inline query");
 } else {
 showQueries(assets);
 return 1;
@@ -56,7 +56,7 @@ if (graphResult == null) {
 display("Unsupported SPARQL form. Use SELECT, ASK, CONSTRUCT.");
 } else {
 while (graphResult.hasNext()) {
-System.out.println(graphResult.next());
+display(graphResult.next().toString());
 }
 }
 }
@@ -72,13 +72,13 @@ return upper.startsWith("SELECT") || upper.startsWith("ASK") || upper.startsWith
 void showQueries(File queryHome) {
 File[] files = queryHome.listFiles();
 if (files != null && files.length>0) {
-System.out.println("local sparql queries:");
+display("local sparql queries:");
 for (File file : files) {
 if (file.getName().contains(".sparql"))
-System.out.println(file.getName());
+display(file.getName());
 }
 } else {
-System.out.println("no queries in "+queryHome.getAbsolutePath());
+display("no queries in "+queryHome.getAbsolutePath());
 }
 }
 }

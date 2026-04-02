@@ -1,6 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
 
 @CommandLine.Command(name = "remove", description = "Remove node from cluster")
 public class ClusterRemoveCommand implements Runnable {
@@ -10,6 +11,6 @@ String node;
 
 @Override
 public void run() {
-System.out.println("cluster remove: " + node);
+ConsoleDisplay.getInstance().out("cluster remove: " + node);
 }
 }

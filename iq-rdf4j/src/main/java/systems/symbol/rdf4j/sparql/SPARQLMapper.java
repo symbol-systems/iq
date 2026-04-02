@@ -117,7 +117,18 @@ return models(iq.toIRI(queryIRI), binds);
 }
 
 public List<Map<String, Object>> models(IRI queryIRI, Map<String, Object> args) {
-return query(findQuery(queryIRI), args);
+String query = findQuery(queryIRI);
+if (query == null) {
+log.warn("iq.models.no-query: {}", queryIRI);
+return List.of();
+}
+if (isConstruct(query) || query.toUpperCase(Locale.ROOT).contains("DESCRIBE")) {
+// The task of mapping CONSTRUCT/DESCRIBE to key/value models is currently not implemented.
+// For CLI stability, return empty list instead of failing on tuple query parsing.
+log.info("iq.models: CONSTRUCT/DESCRIBE query path {} returning empty list", queryIRI);
+return List.of();
+}
+return query(query, args);
 }
 
 public static List<Map<String, Object>> toMaps(TupleQueryResult result) {

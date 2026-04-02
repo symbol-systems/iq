@@ -1,6 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
 
 @CommandLine.Command(name = "add", description = "Add node to cluster")
 public class ClusterAddCommand implements Runnable {
@@ -10,6 +11,6 @@ String node;
 
 @Override
 public void run() {
-System.out.println("cluster add: " + node);
+ConsoleDisplay.getInstance().out("cluster add: " + node);
 }
 }

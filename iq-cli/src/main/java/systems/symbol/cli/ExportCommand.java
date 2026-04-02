@@ -31,7 +31,7 @@ display("missing --to");
 return 1;
 }
 File toFolder = FileHelper.toTodayFile(to);
-System.out.printf("export < %s > to %s\n", realm.isBlank() ? context.getSelf() : realm, toFolder.getAbsolutePath());
+displayf("export < %s > to %s\n", realm.isBlank() ? context.getSelf() : realm, toFolder.getAbsolutePath());
 export(context, toFolder, comment, realm);
 return 0;
 }

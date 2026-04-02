@@ -27,13 +27,13 @@ if (context.isInitialized()) {
 displayNamespaces(context);
 displaySelf(context);
 } else {
-System.out.println("IQ not initialized");
+display("IQ not initialized");
 }
 return null;
 }
 
 
-public static void displayNamespaces(CLIContext context) {
+public void displayNamespaces(CLIContext context) {
 Column[] columns = {
 new Column().header("prefix").headerAlign(HorizontalAlign.RIGHT).with(Namespace::getPrefix),
 new Column().header("namespace").headerAlign(HorizontalAlign.LEFT).with(Namespace::getName)
@@ -44,19 +44,19 @@ conn.getNamespaces().forEach(ns -> {
 String[] row = { ns.getPrefix(), ns.getName()};
 rows.add(row);
 });
-System.out.println(AsciiTable.getTable(columns, rows.toArray(String[][]::new)));
-System.out.println();
+display(AsciiTable.getTable(columns, rows.toArray(String[][]::new)));
+display();
 }
 }
 
-public static void displaySelf(CLIContext context) {
+public void displaySelf(CLIContext context) {
 try (RepositoryConnection conn = context.getRepository().getConnection()) {
 String[] columns = { "workspace", "identity", "size" };
 Object[] row = { context.workspace.getCurrentRepositoryName(), context.getSelf(), conn.size() };
-System.out.println(AsciiTable.getTable(columns, new Object[][] { row }));
-System.out.println();
+display(AsciiTable.getTable(columns, new Object[][] { row }));
+display();
 }
-System.out.printf("%s folder: %s\n", CODENAME, context.home.getAbsolutePath());
+displayf("%s folder: %s\n", CODENAME, context.home.getAbsolutePath());
 ;
 
 }

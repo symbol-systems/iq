@@ -2,4 +2,33 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile quarkus:dev -pl iq-apis -am -Dorg.eclipse.rdf4j.repository.debug="false" -DskipTests
+
+JAVA_OPTS="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+CLI_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-cli/*/iq-cli-*-shaded.jar 2>/dev/null | tail -n1 || true)"
+[[ -z "$CLI_JAR" ]] && CLI_JAR="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
+[[ -z "$CLI_JAR" ]] && CLI_JAR="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
+
+if [[ -z "$CLI_JAR" ]]; then
+  echo "IQ CLI jar not found. Installing..." >&2
+  ./bin/install-cli
+  CLI_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-cli/*/iq-cli-*-shaded.jar 2>/dev/null | tail -n1 || true)"
+fi
+
+if [[ -z "$CLI_JAR" ]]; then
+  echo "Error: iq-cli jar not found after install. Aborting." >&2
+  exit 1
+fi
+
+CMD=()
+if [[ $# -eq 0 || "$1" == "start" ]]; then
+  CMD=(server api start "${@:2}")
+elif [[ "$1" == "stop" || "$1" == "status" || "$1" == "health" || "$1" == "reboot" || "$1" == "debug" || "$1" == "dump" ]]; then
+  CMD=(server api "$1" "${@:2}")
+elif [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
+  CMD=(help)
+else
+  CMD=(server api "$@")
+fi
+
+java $JAVA_OPTS -jar "$CLI_JAR" "${CMD[@]}"

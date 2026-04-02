@@ -36,11 +36,11 @@ return 0;
 
 private void doInitialize() throws IOException, URISyntaxException {
 if (!home.mkdirs()) {
-System.out.printf("Home folder could not be created; %s\n", home.getAbsolutePath());
+displayf("Home folder could not be created; %s\n", home.getAbsolutePath());
 return;
 }
 if (from==null) {
-System.out.println("missing --from <import-folder>");
+display("missing --from <import-folder>");
 return;
 }
 if (!from.exists()) {
@@ -48,8 +48,8 @@ display("empty file/folder: "+this.from.getAbsolutePath());
 return;
 }
 
-System.out.printf("Initialize %s from: %s\n", CODENAME, this.from.getAbsolutePath());
+displayf("Initialize %s from: %s\n", CODENAME, this.from.getAbsolutePath());
 ImportExport.load(context, this.from, this.forceDelete);
-AboutCommand.displaySelf(context);
+new AboutCommand(context).displaySelf(context);
 }
 }

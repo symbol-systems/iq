@@ -1,6 +1,8 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
+import systems.symbol.io.ConsoleDisplay;
 
 @CommandLine.Command(name = "cluster", description = "Manage server cluster nodes", subcommands = {
 ClusterListCommand.class,
@@ -11,6 +13,6 @@ public class ClusterCommand implements Runnable {
 
 @Override
 public void run() {
-System.out.println("Use --help for cluster commands");
+ConsoleDisplay.getInstance().out("Use --help for cluster commands");
 }
 }

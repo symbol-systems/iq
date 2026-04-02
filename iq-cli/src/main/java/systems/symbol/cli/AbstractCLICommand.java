@@ -32,7 +32,23 @@ return KernelRequest.on(context.getSelf())
 }
 
 public void display(String msg) {
-System.out.println(msg);
+context.getDisplay().out(msg);
+}
+
+public void displayError(String msg) {
+context.getDisplay().err(msg);
+}
+
+public void displayf(String format, Object... args) {
+context.getDisplay().out(String.format(format, args));
+}
+
+public void displayErrorf(String format, Object... args) {
+context.getDisplay().err(String.format(format, args));
+}
+
+public void display() {
+context.getDisplay().out("");
 }
 
 @Override

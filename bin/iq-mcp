@@ -2,4 +2,62 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-./mvnw compile quarkus:dev -pl iq-mcp -am -Dorg.eclipse.rdf4j.repository.debug="false" -DskipTests
+
+JAVA_OPTS="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+CLI_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-cli/*/iq-cli-*-shaded.jar 2>/dev/null | tail -n1 || true)"
+[[ -z "$CLI_JAR" ]] && CLI_JAR="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
+[[ -z "$CLI_JAR" ]] && CLI_JAR="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
+
+if [[ -z "$CLI_JAR" ]]; then
+  echo "IQ CLI jar not found. Installing..." >&2
+  ./bin/install-cli
+  CLI_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-cli/*/iq-cli-*-shaded.jar 2>/dev/null | tail -n1 || true)"
+fi
+
+if [[ -z "$CLI_JAR" ]]; then
+  echo "Error: iq-cli jar not found after install. Aborting." >&2
+  exit 1
+fi
+
+MCP_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-mcp/*/iq-mcp-*.jar 2>/dev/null | tail -n1 || true)"
+[[ -z "$MCP_JAR" ]] && MCP_JAR="$(ls -1 iq-mcp/target/iq-mcp-*.jar 2>/dev/null | head -n1 || true)"
+
+if [[ -z "$MCP_JAR" ]]; then
+  echo "iq-mcp artifact not found. Installing..." >&2
+  ./bin/install-mcp
+  MCP_JAR="$(ls -1 ~/.m2/repository/systems/symbol/iq-mcp/*/iq-mcp-*.jar 2>/dev/null | tail -n1 || true)"
+fi
+
+if [[ -z "$MCP_JAR" ]]; then
+  echo "Error: iq-mcp jar not found after install. Aborting." >&2
+  exit 1
+fi
+
+CLASSPATH_FILE="$(mktemp --tmpdir iq-mcp-classpath.XXXXXX)"
+trap 'rm -f "$CLASSPATH_FILE"' EXIT
+
+# build-classpath needs no full compile but uses the cached local repo
+if ! mvn -q -pl iq-mcp -am -DskipTests dependency:build-classpath -Dmdep.outputFile="$CLASSPATH_FILE"; then
+  echo "Could not compute classpath for iq-mcp. Falling back to direct jar path." >&2
+  CLASSPATH="$MCP_JAR"
+else
+  CLASSPATH="$(cat "$CLASSPATH_FILE"):$MCP_JAR"
+fi
+
+# user command handling
+if [[ $# -eq 0 || "$1" == "start" ]]; then
+  CMD=(server mcp start "${@:2}")
+elif [[ "$1" == "stop" || "$1" == "status" || "$1" == "health" || "$1" == "reboot" || "$1" == "debug" || "$1" == "dump" ]]; then
+  CMD=(server mcp "$1" "${@:2}")
+elif [[ "$1" == "help" || "$1" == "--help" || "$1" == "-h" ]]; then
+  CMD=(help)
+else
+  CMD=(server mcp "$@")
+fi
+
+export IQ_RUNTIME_MANAGER=quarkus
+export IQ_QUARKUS_COMMAND="java $JAVA_OPTS -cp '$CLASSPATH' systems.symbol.MCPServerMain"
+
+# use CLI as authority for controlling MCP runtime
+java $JAVA_OPTS -jar "$CLI_JAR" "${CMD[@]}"

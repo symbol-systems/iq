@@ -69,7 +69,7 @@ super(context);
 public Object call() {
 if (!context.isInitialized()) {
 log.error("Context not initialized; cannot boot realm");
-System.err.println("Error: iq context not initialized. Run 'iq init' first.");
+displayError("Error: iq context not initialized. Run 'iq init' first.");
 return null;
 }
 
@@ -78,28 +78,34 @@ try {
 iq = context.newIQBase();
 IRI realmIRI = context.getSelf();
 log.info("Boot sequence starting for realm: {}", realmIRI);
-System.out.println("Booting realm: " + realmIRI.getLocalName());
+display("Booting realm: " + realmIRI.getLocalName());
 
-int actorCount = initializeActors(iq);
+int actorCount = 0;
+try {
+actorCount = initializeActors(iq);
+} catch (RuntimeException e) {
+log.warn("Boot validation: no boot query available; assuming no actors to initialize", e);
+display("No boot query found, skipping actor discovery.");
+}
 
 if (actorCount == 0) {
 log.warn("No actors found in realm: {}", realmIRI);
-System.out.println("  (no actors to initialize)");
+display("  (no actors to initialize)");
 return "boot:empty";
 }
 
-System.out.println("  Initialized " + actorCount + " actor(s)");
+display("  Initialized " + actorCount + " actor(s)");
 log.info("Boot complete: {} actor(s) initialized", actorCount);
 
 if (waitForReady) {
-System.out.println("  Waiting for actors to reach READY state...");
+display("  Waiting for actors to reach READY state...");
 boolean allReady = waitForActorsReady(iq, timeout);
 if (allReady) {
-System.out.println("  ✓ All actors READY");
+display("  ✓ All actors READY");
 return "boot:success:" + actorCount;
 } else {
 log.warn("Not all actors reached READY state within {} seconds", timeout);
-System.err.println("  ✗ Timeout: Not all actors READY after " + timeout + "s");
+displayError("  ✗ Timeout: Not all actors READY after " + timeout + "s");
 return "boot:timeout:" + actorCount;
 }
 }
@@ -108,11 +114,11 @@ return "boot:success:" + actorCount;
 
 } catch (RepositoryException e) {
 log.error("Repository error during boot sequence", e);
-System.err.println("Error: RDF repository error: " + e.getMessage());
+displayError("Error: RDF repository error: " + e.getMessage());
 return null;
 } catch (Exception e) {
 log.error("Unexpected error during boot sequence", e);
-System.err.println("Error: " + e.getMessage());
+displayError("Error: " + e.getMessage());
 return null;
 } finally {
 if (iq != null) {
@@ -137,8 +143,8 @@ private int initializeActors(IQStore iq) throws Exception {
 // Load SPARQL query dynamically from resources
 String sparql = loadBootQuery();
 if (sparql == null) {
-log.error("Failed to load boot actors query from resources");
-throw new RuntimeException("Boot query not found in JAR resources");
+log.warn("Boot actors query not found in resources, skipping actor initialization");
+return 0;
 }
 
 if (verbose) {
@@ -155,7 +161,7 @@ BindingSet binding = result.next();
 IRI actorIRI = (IRI) binding.getBinding("actor").getValue();
 log.info("Initializing actor: {}", actorIRI);
 if (verbose) {
-System.out.println("  - " + actorIRI.getLocalName());
+display("  - " + actorIRI.getLocalName());
 }
 count++;
 }

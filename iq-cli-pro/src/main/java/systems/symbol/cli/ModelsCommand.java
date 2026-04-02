@@ -27,7 +27,7 @@ return;
 @Override
 public Object call() throws Exception {
 if (!context.isInitialized()) {
-System.out.println("iq.models.error: IQ not initialized");
+display("iq.models.error: IQ not initialized");
 return null;
 }
 
@@ -36,29 +36,29 @@ try {
 List<Map<String, Object>> models = Display.models(iq, "index");
 
 if (models == null || models.isEmpty()) {
-System.out.println("iq.models: no models found");
+display("iq.models: no models found");
 log.info("iq.models.missing: no models in realm");
 return null;
 }
 
-System.out.println("iq.models: " + models.size() + " model(s) available");
-System.out.println();
+display("iq.models: " + models.size() + " model(s) available");
+display();
 
 if ("json".equalsIgnoreCase(format)) {
 for (Map<String, Object> model : models) {
-System.out.println(model);
+Display.display(model);
 }
 } else if ("table".equalsIgnoreCase(format)) {
-System.out.println(String.format("%-30s | %-50s | %-20s", "Model", "ID", "Type"));
-System.out.println("-".repeat(110));
+display(String.format("%-30s | %-50s | %-20s", "Model", "ID", "Type"));
+display("-".repeat(110));
 for (Map<String, Object> model : models) {
 Object label = model.get("label");
 Object id = model.get(NS.KEY_AT_ID);
 Object type = model.get("type");
-System.out.println(String.format("%-30s | %-50s | %-20s", 
+displayf("%-30s | %-50s | %-20s", 
 label != null ? label : "(unnamed)", 
 id != null ? id : "(unknown)",
-type != null ? type : "(unknown)"));
+type != null ? type : "(unknown)");
 }
 } else {
 // default list format
@@ -67,19 +67,19 @@ Object label = model.get("label");
 Object id = model.get(NS.KEY_AT_ID);
 
 if (label != null) {
-System.out.println("  ✓ " + label + " @ " + id);
+display("  ✓ " + label + " @ " + id);
 } else {
-System.out.println("  ✓ " + model);
+display("  ✓ " + model);
 }
 
 // Show additional metadata if available
 Object version = model.get("version");
 if (version != null) {
-System.out.println("version: " + version);
+display("version: " + version);
 }
 Object provider = model.get("provider");
 if (provider != null) {
-System.out.println("provider: " + provider);
+display("provider: " + provider);
 }
 }
 }
@@ -88,7 +88,7 @@ log.info("iq.models.found: " + models.size());
 return models;
 } catch (Exception e) {
 log.error("iq.models.error: {}", e.getMessage(), e);
-System.out.println("iq.models.error: " + e.getMessage());
+display("iq.models.error: " + e.getMessage());
 return null;
 } finally {
 try {

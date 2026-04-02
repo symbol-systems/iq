@@ -43,6 +43,48 @@ kernel.stop();
 }
 
 @Test
+public void testRunBootTriggerTrustAndModelsBehavior() throws Exception {
+File home = Files.createTempDirectory("iq-cli-pro-test3").toFile();
+home.deleteOnExit();
+
+I_Kernel kernel = KernelBuilder.create().withHome(home).build();
+kernel.start();
+
+try {
+CLIContext context = new CLIContext(kernel);
+
+// boot should return empty with no actors
+assertEquals("boot:empty", new BootCommand(context).call());
+
+// script run sparql on empty data set (return non-null path output)
+File query = File.createTempFile("iq-cli-pro-test", ".sparql");
+query.deleteOnExit();
+java.nio.file.Files.writeString(query.toPath(), "SELECT * WHERE { ?s ?p ?o } LIMIT 1");
+
+RunCommand run = new RunCommand(context, new CommandLine(new PowerCLI()));
+run.path = query.getAbsolutePath();
+Object runRes = run.call();
+assertEquals("run:" + query.getAbsolutePath() + ":sparql", runRes);
+
+// trigger should at least return triggered
+assertEquals("triggered", new TriggerCommand(context).call());
+
+// trust self and list should work
+TrustCommand trust = new TrustCommand(context);
+assertEquals("trusted:me", trust.call());
+trust.identity = "list";
+assertEquals("trusted:list", trust.call());
+
+// models command at least returns null when none present
+ModelsCommand models = new ModelsCommand(context, new CommandLine(new PowerCLI()));
+assertDoesNotThrow(models::call);
+
+} finally {
+kernel.stop();
+}
+}
+
+@Test
 public void testProCommandsExecuteNoExceptions() throws Exception {
 File home = Files.createTempDirectory("iq-cli-pro-test2").toFile();
 home.deleteOnExit();

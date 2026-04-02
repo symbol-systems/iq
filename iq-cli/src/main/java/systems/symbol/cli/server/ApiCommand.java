@@ -1,6 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
 
 @CommandLine.Command(name = "api", description = "Manage API runtime", subcommands = {
 ServerStartCommand.class,
@@ -15,7 +16,7 @@ public class ApiCommand implements ServerRuntimeScope, Runnable {
 
 @Override
 public void run() {
-System.out.println("Use --help for api commands");
+ConsoleDisplay.getInstance().out("Use --help for api commands");
 }
 
 @Override

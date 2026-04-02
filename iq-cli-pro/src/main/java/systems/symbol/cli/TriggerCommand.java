@@ -34,7 +34,7 @@ super(context);
 @Override
 public Object call() throws Exception {
 if (!context.isInitialized()) {
-System.out.println("iq.trigger.failed");
+display("iq.trigger.failed");
 throw new CLIException("IQ not initialized");
 }
 
@@ -44,11 +44,11 @@ log.info("iq.cli.trigger.start: {} -> {}", targetActor, intent);
 // Parse bindings from key=value format
 Map<String, String> bindingMap = parseBindings(bindings);
 
-System.out.println("  actor: " + targetActor);
-System.out.println("  intent: " + intent);
+display("  actor: " + targetActor);
+display("  intent: " + intent);
 
 if (!bindingMap.isEmpty()) {
-System.out.println("  bindings: " + bindingMap);
+display("  bindings: " + bindingMap);
 }
 
 try {
@@ -60,7 +60,7 @@ try {
 
 // For now, just simulate the intent execution with logging
 if (waitForCompletion) {
-System.out.println("  waiting for completion (timeout: " + timeout + "s)...");
+display("  waiting for completion (timeout: " + timeout + "s)...");
 // Simulate async execution with timeout
 long startTime = System.currentTimeMillis();
 long timeoutMs = timeout * 1000L;
@@ -70,10 +70,10 @@ while (System.currentTimeMillis() - startTime < timeoutMs) {
 Thread.sleep(100);
 break; // For stub, exit immediately
 }
-System.out.println("  completed (stub implementation)");
+display("  completed (stub implementation)");
 }
 
-System.out.println("iq.cli.trigger.done: event fired");
+display("iq.cli.trigger.done: event fired");
 log.info("iq.cli.trigger.done: {} fired (stub)", intent);
 return "triggered";
 } catch (InterruptedException e) {

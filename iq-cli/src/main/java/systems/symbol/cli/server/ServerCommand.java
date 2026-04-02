@@ -17,7 +17,7 @@ this.context = context;
 
 @Override
 public void run() {
-System.out.println("Use --help for server subcommands: api,mcp");
+context.display("Use --help for server subcommands: api,mcp");
 }
 
 public CLIContext getContext() {

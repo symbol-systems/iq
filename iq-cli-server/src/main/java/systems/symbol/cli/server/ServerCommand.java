@@ -1,6 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
 import systems.symbol.cli.CLIContext;
 
 @CommandLine.Command(name = "server", description = "Manage IQ runtime server components", subcommands = {
@@ -17,7 +18,7 @@ this.context = context;
 
 @Override
 public void run() {
-System.out.println("Use --help for server subcommands: api,mcp");
+ConsoleDisplay.getInstance().out("Use --help for server subcommands: api,mcp");
 }
 
 public CLIContext getContext() {

@@ -1,6 +1,7 @@
 package systems.symbol.cli.server;
 
 import picocli.CommandLine;
+import systems.symbol.io.ConsoleDisplay;
 
 @CommandLine.Command(name = "mcp", description = "Manage MCP runtime", subcommands = {
 ServerStartCommand.class,
@@ -15,7 +16,7 @@ public class McpCommand implements ServerRuntimeScope, Runnable {
 
 @Override
 public void run() {
-System.out.println("Use --help for mcp commands");
+ConsoleDisplay.getInstance().out("Use --help for mcp commands");
 }
 
 @Override
