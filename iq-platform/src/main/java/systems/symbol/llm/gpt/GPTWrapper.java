@@ -70,7 +70,15 @@ tools.add(tool);
 
 @Override
 public I_Assist<String> complete(I_Assist<String> chats) throws APIException, IOException {
-return processAttempt(chats, retryCount);
+I_TokenCounter counter = new WordTokenCounter();
+int maxTokens = config.getMaxTokens();
+I_Assist<String> scoped = maxTokens > 0 ? Conversation.withTokenBudget(chats, counter, maxTokens) : chats;
+log.info("llm.gpt.tokenBudget: maxTokens={} used={} originalMessages={} trimmedMessages={}",
+maxTokens,
+scoped.tokensUsed(counter),
+chats == null ? 0 : chats.messages().size(),
+scoped == null ? 0 : scoped.messages().size());
+return processAttempt(scoped, retryCount);
 }
 
 protected I_Assist<String> processAttempt(I_Assist<String> chats, int attempt) throws APIException, IOException {

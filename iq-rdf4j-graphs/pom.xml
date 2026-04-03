@@ -11,7 +11,7 @@
 
 <artifactId>iq-rdf4j-graphs</artifactId>
 <name>IQ Graph Algos</name>
-<description>IQ - operating environment for cognitive AI.</description>
+<description>IQ - AI cognitive operating system.</description>
 <packaging>jar</packaging>
 
 <url>https://symbol.systems</url>

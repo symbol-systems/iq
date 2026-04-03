@@ -81,6 +81,7 @@ if (chat == null || chat.messages() == null || window <= 0) {
 return;
 }
 
+// Legacy behavior: treat window as message count
 List<I_LLMessage<String>> messages = chat.messages();
 int size = messages.size();
 
@@ -99,6 +100,45 @@ add(msg);
 }
 }
 }
+}
+
+/**
+ * Create a token-budgeted conversation slice from history.
+ */
+public static Conversation withTokenBudget(I_Assist<String> chat, I_TokenCounter counter, int maxTokens) {
+Conversation result = new Conversation();
+if (chat == null || counter == null || maxTokens <= 0) {
+return result;
+}
+
+// Always keep system messages (they are critical context in most LLM usage).
+for (I_LLMessage<String> msg : chat.messages()) {
+if (msg != null && msg.getRole() == I_LLMessage.RoleType.system) {
+result.add(msg);
+}
+}
+
+// Keep the newest non-system messages until we hit the 80% token soft budget.
+double softLimit = maxTokens * 0.8;
+int accumulated = 0;
+for (int i = chat.messages().size() - 1; i >= 0; i--) {
+I_LLMessage<String> msg = chat.messages().get(i);
+if (msg == null || msg.getRole() == I_LLMessage.RoleType.system) {
+continue;
+}
+String content = msg.getContent();
+if (content == null) {
+continue;
+}
+int tokenCount = counter.count(content);
+if (accumulated + tokenCount > softLimit) {
+break;
+}
+accumulated += tokenCount;
+result.messages.add(0, msg);
+}
+
+return result;
 }
 
 public I_Assist<String> add(String role, String content) {

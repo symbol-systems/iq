@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli</artifactId>
   <name>IQ CLI</name>
-  <description>IQ - operating environment for cognitive AI.</description>
+  <description>IQ - AI cognitive operating system.</description>
   <url>https://symbol.systems</url>
   <developers>
 <developer>
