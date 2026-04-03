@@ -142,8 +142,28 @@ public ExecutionResult execute(Repository repository, GraphQL graphQL, String qu
 log.info("GQL.execute.query: " + query);
 log.info("GQL.execute.vars: " + map);
 
+// pass context to data fetchers so AuthorizationDataFetcher can look up actor/ctx values
+Map<String, Object> context = new java.util.HashMap<>();
+if (map != null) {
+context.putAll(map);
+// copy explicit actor variable into context for policy enforcement
+Object actor = map.get("actor");
+if (actor == null) {
+actor = map.get("kernel.principal");
+}
+if (actor == null) {
+actor = map.get("principal");
+}
+if (actor == null) {
+actor = map.get("userPrincipal");
+}
+if (actor != null) {
+context.put("actor", actor);
+}
+}
+
 ExecutionInput.Builder builder = ExecutionInput.newExecutionInput();
-//builder.context(repository);
+builder.context(context);
 builder.query(query);
 builder.variables(map);
 ExecutionInput executionInput = builder.build();

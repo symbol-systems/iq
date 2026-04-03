@@ -46,13 +46,26 @@ if (actor==null) {
 Object ctx = environment.getContext();
 if (ctx instanceof Map) {
 Object a = ((Map)ctx).get("actor");
-if (a!=null) actor = a.toString();
+if (a != null) actor = a.toString();
+if (actor == null) {
+a = ((Map)ctx).get("kernel.principal");
+if (a != null) actor = a.toString();
+}
+if (actor == null) {
+a = ((Map)ctx).get("principal");
+if (a != null) actor = a.toString();
+}
+if (actor == null) {
+a = ((Map)ctx).get("userPrincipal");
+if (a != null) actor = a.toString();
+}
 }
 }
 
 if (actor==null) {
-log.debug("No actor provided in environment; denying by default");
-throw new SecurityException("Not authorized: no actor");
+// Fallback to a well-known anonymous actor so we can still evaluate policy and avoid n.g.e warnings.
+actor = "http://symbol.systems/v0/onto/trust#anonymous";
+log.debug("No actor provided in environment; falling back to anonymous actor");
 }
 
 // Explicit canQuery grants should short-circuit the policy engine.

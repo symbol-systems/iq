@@ -88,4 +88,25 @@ ExecutionInput input = ExecutionInput.newExecutionInput().query(q).build();
 ExecutionResult res = graphQL.execute(input);
 assertFalse(res.getErrors().isEmpty());
 }
+
+@Test
+public void testGraphqlFromKernelPrincipal() throws Exception {
+String schema = "directive @rdf(iri: String) on OBJECT | FIELD_DEFINITION\n" +
+"type Thing @rdf(iri: \"http://example.org/TypeX\") { id: ID name: String }\n" +
+"type Query { things(actor: String): [Thing] }";
+
+GQL gqlT = new GQL();
+var execSchema = gqlT.makeExecutableSchema(schema, repo);
+GraphQL graphQL = GraphQL.newGraphQL(execSchema).build();
+
+String q = "{ things { id name } }";
+ExecutionResult res = gqlT.execute(repo, graphQL, q, Map.of("kernel.principal", ACTOR));
+
+assertNotNull(res);
+assertTrue(res.getErrors().isEmpty(), () -> "Errors:" + res.getErrors());
+@SuppressWarnings("unchecked")
+var data = (Map<String,Object>) res.getData();
+assertNotNull(data);
+assertNotNull(data.get("things"));
+}
 }

@@ -47,3 +47,77 @@ connect:hasDescription a rdf:Property ;
 rdfs:label "has description" ;
 rdfs:comment "Human-friendly description of the connector." ;
 rdfs:range xsd:string .
+
+# Specific Connector types for IQ Connect modules
+
+connect:TemplateConnector a connect:Connector ;
+rdfs:label "Template Connector" ;
+rdfs:comment "Base template connector implementation." .
+
+connect:AwsConnector a connect:Connector ;
+rdfs:label "AWS Connector" ;
+rdfs:comment "Connector for AWS resources." .
+
+connect:AzureConnector a connect:Connector ;
+rdfs:label "Azure Connector" ;
+rdfs:comment "Connector for Azure resources." .
+
+connect:ConfluenceConnector a connect:Connector ;
+rdfs:label "Confluence Connector" ;
+rdfs:comment "Connector for Atlassian Confluence state." .
+
+connect:DatabricksConnector a connect:Connector ;
+rdfs:label "Databricks Connector" ;
+rdfs:comment "Connector for Databricks clusters and jobs." .
+
+connect:DatadogConnector a connect:Connector ;
+rdfs:label "Datadog Connector" ;
+rdfs:comment "Connector for Datadog metrics and alerts." .
+
+connect:DigitalOceanConnector a connect:Connector ;
+rdfs:label "DigitalOcean Connector" ;
+rdfs:comment "Connector for DigitalOcean resources." .
+
+connect:DockerConnector a connect:Connector ;
+rdfs:label "Docker Connector" ;
+rdfs:comment "Connector for Docker resources." .
+
+connect:GcpConnector a connect:Connector ;
+rdfs:label "GCP Connector" ;
+rdfs:comment "Connector for Google Cloud Platform resources." .
+
+connect:GithubConnector a connect:Connector ;
+rdfs:label "GitHub Connector" ;
+rdfs:comment "Connector for GitHub repositories and events." .
+
+connect:GoogleAppsConnector a connect:Connector ;
+rdfs:label "Google Apps Connector" ;
+rdfs:comment "Connector for Google Workspace resources." .
+
+connect:K8sConnector a connect:Connector ;
+rdfs:label "Kubernetes Connector" ;
+rdfs:comment "Connector for Kubernetes/EKS/GKE clusters." .
+
+connect:Office365Connector a connect:Connector ;
+rdfs:label "Office 365 Connector" ;
+rdfs:comment "Connector for Microsoft 365 resources." .
+
+connect:ParquetConnector a connect:Connector ;
+rdfs:label "Parquet Connector" ;
+rdfs:comment "Connector for Parquet dataset feathers." .
+
+connect:SalesforceConnector a connect:Connector ;
+rdfs:label "Salesforce Connector" ;
+rdfs:comment "Connector for Salesforce CRM data." .
+
+connect:SlackConnector a connect:Connector ;
+rdfs:label "Slack Connector" ;
+rdfs:comment "Connector for Slack workspace entities." .
+
+connect:SnowflakeConnector a connect:Connector ;
+rdfs:label "Snowflake Connector" ;
+rdfs:comment "Connector for Snowflake data warehouses." .
+
+connect:StripeConnector a connect:Connector ;
+rdfs:label "Stripe Connector" ;
+rdfs:comment "Connector for Stripe payment objects." .
