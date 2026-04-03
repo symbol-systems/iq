@@ -3,6 +3,7 @@ package systems.symbol.vfs;
 import com.github.vfss3.S3FileProvider;
 import org.apache.commons.vfs2.CacheStrategy;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.cache.DefaultFilesCache;
 import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs2.provider.http.HttpFileProvider;
@@ -11,10 +12,15 @@ import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
 
 import java.io.File;
 
-public class MyVFS extends DefaultFileSystemManager  {
+public class MyVFS extends DefaultFileSystemManager implements I_FileSystemFactory {
 
 public MyVFS() throws FileSystemException {
 init();
+}
+
+@Override
+public FileSystemManager create() throws Exception {
+return new MyVFS();
 }
 
 public void init() throws FileSystemException {

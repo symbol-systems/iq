@@ -1,6 +1,5 @@
 package systems.symbol.tools;
 
-import com.amazonaws.util.Base64;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import okhttp3.FormBody.Builder;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
+import java.util.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,7 +100,7 @@ public RestAPI basic() throws SecretsException {
 if (this.secrets == null)
 throw new SecretsException("missing.basic.secrets");
 String credentials = this.secrets.getSecret(getURL());
-String encoded = Base64.encodeAsString(credentials.getBytes(StandardCharsets.UTF_8));
+String encoded = Base64.getEncoder().encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
 log.debug("ux.basic.auth: configured for {}", getURL());
 header("Authorization", "Basic " + encoded);
 return this;

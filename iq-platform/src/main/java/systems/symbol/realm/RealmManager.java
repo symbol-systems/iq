@@ -22,6 +22,7 @@ import systems.symbol.secrets.*;
 import systems.symbol.string.PrettyString;
 import systems.symbol.trust.I_KeyStore;
 import systems.symbol.trust.VFSKeyStore;
+import systems.symbol.vfs.I_FileSystemFactory;
 import systems.symbol.vfs.MyVFS;
 
 import java.io.File;
@@ -33,6 +34,7 @@ import static systems.symbol.COMMONS.IQ;
 public class RealmManager implements RepositoryResolver, I_StartStop, I_Realms {
 protected final Logger log = LoggerFactory.getLogger(getClass());
 protected final RepositoryManager manager;
+protected I_FileSystemFactory vfsFactory;
 protected FileSystemManager vfs;
 protected FileObject home, lake;
 protected DynamicModelFactory dmf = new DynamicModelFactory();
@@ -46,8 +48,13 @@ this(new File("." + IQ.toLowerCase()));
 }
 
 public RealmManager(File home) throws Exception {
+this(new MyVFS(), home);
+}
+
+public RealmManager(I_FileSystemFactory vfsFactory, File home) throws Exception {
 new File(home, "repositories").mkdirs();
-this.vfs = new MyVFS();
+this.vfsFactory = vfsFactory;
+this.vfs = (FileSystemManager) vfsFactory.create();
 this.home = vfs.resolveFile(home, ".");
 this.lake = vfs.resolveFile(home, "lake");
 log.info("realms.home: {}", this.home.getPublicURIString());

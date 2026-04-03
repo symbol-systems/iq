@@ -143,11 +143,6 @@
 <artifactId>iq-abstract</artifactId>
 <version>${project.version}</version>
 </dependency>
-<dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-apis</artifactId>
-<version>${project.version}</version>
-</dependency>
 
 <dependency>
 <groupId>io.quarkus</groupId>

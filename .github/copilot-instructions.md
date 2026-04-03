@@ -43,5 +43,5 @@
 - Document `.ttl/.sparql` behavior and update related script catalogs when adding model rules.
 - For LLM integration changes, mock provider behavior in `iq-platform` tests (avoid live API keys in unit tests).
 - Do not commit production secrets to `.iq/vault`; change is valid only with sanitized sample data.
-- For working/temporary files use `./tmp/` not `/tmp/`
+- For working/temporary files use `./tmp/` not `/tmp/` - this keeps them in the project and avoids accidental local system pollution.
 - When fixing, always remove/stub/placeholder functionality - instead always fix it properly to be production-ready and work with the rest of the system. Do not leave any "TODO: fix this later" or "stubbed for now" code in place. If you cannot fix it properly, then stop and ask for help instead of leaving broken code in place. The goal is to maintain a clean and production-ready codebase at all times, even during development.

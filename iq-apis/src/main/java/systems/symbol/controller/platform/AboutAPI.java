@@ -5,7 +5,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import systems.symbol.controller.responses.OopsResponse;
 import systems.symbol.controller.responses.SimpleResponse;
-import systems.symbol.realm.About;
+import systems.symbol.rdf.analytics.GraphAnalytics;
 import systems.symbol.realm.I_Realm;
 import systems.symbol.secrets.SecretsException;
 import systems.symbol.string.Validate;
@@ -42,7 +42,7 @@ I_Realm realm = platform.getRealm(_realm);
 if (realm == null)
 return new OopsResponse("about.phi.realm", Response.Status.NOT_FOUND).build();
 
-double phi = About.computePhiNormal(realm.getModel());
+double phi = GraphAnalytics.computePhiNormal(realm.getModel());
 
 Map<String, Object> binding = new HashMap<>();
 binding.put("phi", phi);
