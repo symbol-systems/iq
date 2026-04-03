@@ -2,7 +2,7 @@ package systems.symbol.llm.gpt;
 
 import org.junit.jupiter.api.Test;
 import systems.symbol.llm.I_LLM;
-import systems.symbol.llm.GPTConfig;
+import systems.symbol.llm.gpt.GPTConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

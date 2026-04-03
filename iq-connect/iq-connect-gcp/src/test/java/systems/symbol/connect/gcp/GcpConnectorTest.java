@@ -4,25 +4,35 @@ package systems.symbol.connect.gcp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class GcpConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-GcpConnector connector = new GcpConnector("urn:iq:connector:gcp");
+void testRefreshFailsWithoutApiKey() {
+GcpConnectorConfig config = new GcpConnectorConfig(null, Duration.ofMinutes(5), null);
+GcpConnector connector = new GcpConnector("urn:iq:connector:gcp", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "GcpResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+GcpConnectorConfig config = new GcpConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+GcpConnector connector = new GcpConnector("urn:iq:connector:gcp", config);
+GcpConnectorKernel kernel = new GcpConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

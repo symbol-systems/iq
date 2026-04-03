@@ -2,6 +2,7 @@ package systems.symbol.llm.gpt;
 
 import org.junit.jupiter.api.Test;
 import systems.symbol.llm.Conversation;
+import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_LLMConfig;
 import systems.symbol.llm.I_LLMessage;
 

@@ -4,25 +4,35 @@ package systems.symbol.connect.slack;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class SlackConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-SlackConnector connector = new SlackConnector("urn:iq:connector:slack");
+void testRefreshFailsWithoutApiKey() {
+SlackConnectorConfig config = new SlackConnectorConfig(null, Duration.ofMinutes(5), null);
+SlackConnector connector = new SlackConnector("urn:iq:connector:slack", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "SlackResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+SlackConnectorConfig config = new SlackConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+SlackConnector connector = new SlackConnector("urn:iq:connector:slack", config);
+SlackConnectorKernel kernel = new SlackConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

@@ -26,6 +26,7 @@ import systems.symbol.kernel.policy.PolicyVocab;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,11 +42,11 @@ String adminRole;
 @ConfigProperty(name = "iq.policy.fail-mode", defaultValue = "closed")
 String failMode;
 
-@ConfigProperty(name = "iq.policy.opa-url", defaultValue = "")
-String opaUrl;
+@ConfigProperty(name = "iq.policy.opa-url")
+Optional<String> opaUrl;
 
-@ConfigProperty(name = "iq.policy.scope", defaultValue = "")
-String policyScope;
+@ConfigProperty(name = "iq.policy.scope")
+Optional<String> policyScope;
 
 @ConfigProperty(name = "iq.policy.cache.enabled", defaultValue = "false")
 boolean cacheEnabled;
@@ -93,7 +94,8 @@ base = new DenyAllEnforcer();
 break;
 case "scope":
 try {
-Set<org.eclipse.rdf4j.model.IRI> scopes = policyScope == null || policyScope.isBlank() ? Set.of() : Set.of(PolicyVocab.scope(policyScope));
+String scopeValue = policyScope.filter(s -> !s.isBlank()).orElse(null);
+Set<org.eclipse.rdf4j.model.IRI> scopes = scopeValue == null ? Set.of() : Set.of(PolicyVocab.scope(scopeValue));
 base = new ScopeEnforcer(scopes);
 } catch (Exception ex) {
 base = new DenyAllEnforcer();
@@ -108,10 +110,8 @@ base = new DenyAllEnforcer();
 break;
 case "opa":
 try {
-if (opaUrl == null || opaUrl.isBlank()) {
-throw new IllegalArgumentException("opa.url must be configured for opa enforcer");
-}
-base = new OPAPolicyEnforcer(opaUrl, Duration.ofSeconds(2), failMode);
+String resolvedOpaUrl = opaUrl.filter(url -> !url.isBlank()).orElseThrow(() -> new IllegalArgumentException("opa.url must be configured for opa enforcer"));
+base = new OPAPolicyEnforcer(resolvedOpaUrl, Duration.ofSeconds(2), failMode);
 } catch (Exception ex) {
 base = new DenyAllEnforcer();
 }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GPTWrapper implements I_LLM<String> {
 
@@ -32,10 +33,11 @@ ObjectMapper om = new ObjectMapper();
 String token;
 I_LLMConfig config;
 private final List<GPTResponse> history;
-private int retryCount = 2;
-private int backOffTime = 2000;
+private int retryCount = 3;
+private int backOffInitialMs = 200;
+private int maxBackOffMs = 30000;
 private List<Tool> tools = new ArrayList<>();
-private List<Usage> usage = new ArrayList<>();
+private List<Usage> usage = new ArrayList<>();private I_OutputSchema outputSchema;
 
 public GPTWrapper(String token, I_LLMConfig config) {
 this.token = token;
@@ -81,6 +83,10 @@ scoped == null ? 0 : scoped.messages().size());
 return processAttempt(scoped, retryCount);
 }
 
+public void setOutputSchema(I_OutputSchema schema) {
+this.outputSchema = schema;
+}
+
 protected I_Assist<String> processAttempt(I_Assist<String> chats, int attempt) throws APIException, IOException {
 if (attempt <= 0) {
 log.debug("llm.gpt.throttled: {} -> {}", config.getName(), attempt);
@@ -102,14 +108,25 @@ return processReply(chats, completion);
 } else {
 return processError(chats, attempt - 1, completion, response);
 }
-} else
+} else {
+sleepBackoff(attempt);
 return processAttempt(chats, attempt - 1);
+}
 } catch (StateException e) {
 // Wrap state exceptions as API errors and retry
 log.warn("oops.llm.gpt.state # {}: {}", attempt, e.getMessage());
+sleepBackoff(attempt);
 return processAttempt(chats, attempt - 1);
 } catch (IOException e) {
 log.info("oops.llm.gpt.fatal # {}: {}", attempt, e.getMessage());
+sleepBackoff(attempt);
+return processAttempt(chats, attempt - 1);
+} catch (APIException e) {
+log.warn("oops.llm.gpt.schema # {}: {}", attempt, e.getMessage());
+if (attempt <= 1) {
+throw e;
+}
+sleepBackoff(attempt);
 return processAttempt(chats, attempt - 1);
 }
 }
@@ -121,14 +138,18 @@ String code = completion.error != null ? completion.error.code : "unknown";
 String msg = completion.error != null ? completion.error.message : "unknown";
 String type = completion.error != null ? completion.error.type : "unknown";
 log.warn("oops.llm.gpt.error: {} -> {} => {}", code, msg, type);
+sleepBackoff(attempt);
 return processAttempt(chats, attempt);
 }
-if (response.code() == 429) {
+if (response.code() == 429 || response.code() == 503 || response.code() == 500) {
 try {
 String retry = response.header("retry-after");
-int backoff = retry == null ? backOffTime : 1000 * Integer.parseInt(retry);
-log.info("llm.gpt.backoff: {}ms -> {}", backoff, completion.error);
+long backoff = retry == null ? sleepBackoff(attempt) : Math.min(maxBackOffMs, 1000L * Long.parseLong(retry));
+if (retry != null) {
+log.info("llm.gpt.backoff: {}ms (Retry-After) -> {}", backoff, completion.error);
 Thread.sleep(backoff);
+return processAttempt(chats, attempt);
+}
 return processAttempt(chats, attempt);
 } catch (InterruptedException e) {
 Thread.currentThread().interrupt();
@@ -137,11 +158,33 @@ log.info("llm.gpt.interrupted: {}", e.getMessage());
 }
 log.info("oops.llm.gpt.generate: {} / {} => {}", response.code(), completion.error.code,
 completion.error.failed_generation);
+sleepBackoff(attempt);
 return processAttempt(chats, attempt);
 }
 
+/**
+ * Exponential backoff with jitter.
+ *
+ * @param attempt The remaining retry attempts for the current request
+ * @return the sleep duration (ms)
+ */
+private long sleepBackoff(int attempt) {
+int exponent = Math.max(0, retryCount - attempt);
+long base = backOffInitialMs * (1L << Math.min(exponent, 30));
+long jitter = ThreadLocalRandom.current().nextLong(0, Math.max(1, base / 2));
+long delay = Math.min(maxBackOffMs, base + jitter);
+try {
+Thread.sleep(delay);
+} catch (InterruptedException e) {
+Thread.currentThread().interrupt();
+log.info("llm.gpt.backoff.interrupted: {}", e.getMessage());
+}
+log.debug("llm.gpt.backoff.sleep: {}ms (attempt {} of {})", delay, attempt, retryCount);
+return delay;
+}
+
 private I_Assist<String> processReply(I_Assist<String> chats, GPTResponse completion)
-throws JsonMappingException, JsonProcessingException, StateException {
+throws JsonMappingException, JsonProcessingException, StateException, APIException {
 for (int c = 0; c < completion.choices.size(); c++) {
 GPTResponse.Choice choice = completion.choices.get(c);
 if (choice.finish_reason.equals("tool_calls")) {
@@ -167,7 +210,7 @@ chats.add(intent);
 }
 
 private void processMessage(I_Assist<String> chat, GPTResponse.Choice choice)
-throws JsonProcessingException, StateException {
+throws JsonMappingException, JsonProcessingException, StateException, APIException {
 GPTResponse.Message message = choice.message;
 I_LLMessage.RoleType role = I_LLMessage.RoleType.assistant;
 if (message.content == null) {
@@ -186,11 +229,36 @@ if (thinks >= 0) {
 processThinking(chat, message, thinks);
 return;
 }
+validateResponseSchema(content);
 chat.add(new TextMessage(role, content));
 }
 
+void validateResponseSchema(String content) throws APIException {
+String format = config.getResponseFormat();
+if (format == null || !"json".equalsIgnoreCase(format)) {
+return;
+}
+content = content.trim();
+if (content.isEmpty()) {
+throw new APIException("llm.gpt.response.empty", config.getURL(), null);
+}
+if (outputSchema != null) {
+java.util.List<String> violations = outputSchema.validate(content);
+if (!violations.isEmpty()) {
+log.warn("llm.gpt.schema.validation.errors: {}", violations);
+throw new APIException("llm.gpt.response.schema.invalid: " + violations, config.getURL(), null);
+}
+}
+try {
+om.readTree(content);
+} catch (Exception e) {
+log.warn("llm.gpt.schema.invalid: {}", e.getMessage());
+throw new APIException("llm.gpt.response.schema.invalid", config.getURL(), null);
+}
+}
+
 private void processThinking(I_Assist<String> chat, GPTResponse.Message message, int thinks)
-throws JsonMappingException, JsonProcessingException, StateException {
+throws JsonMappingException, JsonProcessingException, StateException, APIException {
 I_LLMessage.RoleType role = I_LLMessage.RoleType.assistant;
 int start = message.content.indexOf("<think>");
 String thoughts = message.content.substring(start + 7, thinks);
@@ -246,6 +314,16 @@ Map<String, Object> message = RestAPI.newParams();
 message.put("role", chat.getRole());
 message.put("content", chat.getContent());
 return message;
+}
+
+@Override
+public java.util.stream.Stream<I_LLMessage<String>> stream(I_Assist<String> chat) throws APIException, IOException {
+// Best-effort streaming; currently materialized from complete()
+I_Assist<String> result = complete(chat);
+if (result == null || result.messages() == null) {
+return java.util.stream.Stream.empty();
+}
+return result.messages().stream();
 }
 
 public List<GPTResponse> getHistory() {

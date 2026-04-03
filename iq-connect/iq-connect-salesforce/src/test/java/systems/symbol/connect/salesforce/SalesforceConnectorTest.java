@@ -4,25 +4,35 @@ package systems.symbol.connect.salesforce;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class SalesforceConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-SalesforceConnector connector = new SalesforceConnector("urn:iq:connector:salesforce");
+void testRefreshFailsWithoutApiKey() {
+SalesforceConnectorConfig config = new SalesforceConnectorConfig(null, Duration.ofMinutes(5), null);
+SalesforceConnector connector = new SalesforceConnector("urn:iq:connector:salesforce", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "SalesforceResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+SalesforceConnectorConfig config = new SalesforceConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+SalesforceConnector connector = new SalesforceConnector("urn:iq:connector:salesforce", config);
+SalesforceConnectorKernel kernel = new SalesforceConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

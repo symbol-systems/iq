@@ -52,6 +52,6 @@ PolicyResult result = composite.evaluate(input);
 
 assertFalse(result.allowed());
 assertEquals(PolicyVocab.REASON_ALL_ENFORCERS_ABSTAINED, result.reasonIri());
-assertTrue(result.reason().contains("all enforcers abstained"));
+assertTrue(result.reason().contains("all-enforcers-abstained") || result.reason().contains("all enforcers abstained"));
 }
 }

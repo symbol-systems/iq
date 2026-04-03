@@ -121,6 +121,7 @@ result.add(msg);
 // Keep the newest non-system messages until we hit the 80% token soft budget.
 double softLimit = maxTokens * 0.8;
 int accumulated = 0;
+java.util.List<I_LLMessage<String>> keep = new java.util.ArrayList<>();
 for (int i = chat.messages().size() - 1; i >= 0; i--) {
 I_LLMessage<String> msg = chat.messages().get(i);
 if (msg == null || msg.getRole() == I_LLMessage.RoleType.system) {
@@ -135,7 +136,11 @@ if (accumulated + tokenCount > softLimit) {
 break;
 }
 accumulated += tokenCount;
-result.messages.add(0, msg);
+keep.add(0, msg);
+}
+
+for (I_LLMessage<String> msg : keep) {
+result.add(msg);
 }
 
 return result;

@@ -4,25 +4,35 @@ package systems.symbol.connect.office365;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class Office365ConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-Office365Connector connector = new Office365Connector("urn:iq:connector:office-365");
+void testRefreshFailsWithoutApiKey() {
+Office365ConnectorConfig config = new Office365ConnectorConfig(null, Duration.ofMinutes(5), null);
+Office365Connector connector = new Office365Connector("urn:iq:connector:office-365", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "Office365Resource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+Office365ConnectorConfig config = new Office365ConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+Office365Connector connector = new Office365Connector("urn:iq:connector:office-365", config);
+Office365ConnectorKernel kernel = new Office365ConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

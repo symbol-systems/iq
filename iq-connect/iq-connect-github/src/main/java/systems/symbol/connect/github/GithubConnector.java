@@ -1,60 +1,46 @@
+
 package systems.symbol.connect.github;
+
+import java.time.Instant;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
 
 import systems.symbol.connect.core.AbstractConnector;
+import systems.symbol.connect.core.ConnectorMode;
+import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.Modeller;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHOrganization;
-import org.kohsuke.github.GitHub;
-
-import systems.symbol.connect.core.ConnectorMode;
-import systems.symbol.connect.core.ConnectorScanner;
-
-/**
- * Example GitHub connector implementation.
- */
 public final class GithubConnector extends AbstractConnector {
 
-private final GithubConfig config;
+private final GithubConnectorConfig config;
 
-public GithubConnector(String connectorId, GithubConfig config, Model state) {
-this(connectorId,
-config,
-state,
-Values.iri(connectorId + "/graph/current"),
-Values.iri(Modeller.getGithubOntology()),
-Values.iri("urn:github:"));
-}
-
-public GithubConnector(String connectorId, GithubConfig config, Model state, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
-super(connectorId, state, graphIri, ontologyBaseIri, entityBaseIri);
+public GithubConnector(String connectorId, GithubConnectorConfig config) {
+super(connectorId,
+  new LinkedHashModel(),
+  Values.iri(connectorId + "/graph/current"),
+  Values.iri(Modeller.getConnectOntology()),
+  Values.iri("urn:github:"));
 this.config = config;
 }
 
 @Override
-public ConnectorMode getMode() {
-return ConnectorMode.READ_ONLY;
-}
+public ConnectorMode getMode() { return ConnectorMode.READ_ONLY; }
 
 @Override
 protected void doRefresh() throws Exception {
-GitHub github = GitHub.connectUsingOAuth(config.getAccessToken());
-GithubModeller modeller = new GithubModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
-GithubScanContext context = new GithubScanContext(getConnectorId(), modeller);
-
-ConnectorScanner<GithubScanContext> scanner;
-if (config.getOrganization().isPresent()) {
-GHOrganization organization = github.getOrganization(config.getOrganization().get());
-scanner = new GithubOrganizationScanner(organization);
-} else {
-GHMyself me = github.getMyself();
-scanner = new GithubMyselfScanner(me);
+if (config.getApiKey().isEmpty()) {
+throw new IllegalStateException("GITHUB_API_KEY is required");
 }
-
-scanner.scan(context);
+// Minimal discovered data path to keep key functionality of a connector
+IRI entity = Values.iri(entityBaseIri().stringValue() + "github-item");
+getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "GithubResource"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("Github"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
 }
 }

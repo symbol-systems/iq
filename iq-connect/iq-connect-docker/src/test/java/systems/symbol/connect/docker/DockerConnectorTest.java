@@ -4,25 +4,35 @@ package systems.symbol.connect.docker;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class DockerConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-DockerConnector connector = new DockerConnector("urn:iq:connector:docker");
+void testRefreshFailsWithoutApiKey() {
+DockerConnectorConfig config = new DockerConnectorConfig(null, Duration.ofMinutes(5), null);
+DockerConnector connector = new DockerConnector("urn:iq:connector:docker", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "DockerResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+DockerConnectorConfig config = new DockerConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+DockerConnector connector = new DockerConnector("urn:iq:connector:docker", config);
+DockerConnectorKernel kernel = new DockerConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

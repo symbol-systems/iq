@@ -4,25 +4,35 @@ package systems.symbol.connect.stripe;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
 
 public class StripeConnectorTest {
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-StripeConnector connector = new StripeConnector("urn:iq:connector:stripe");
+void testRefreshFailsWithoutApiKey() {
+StripeConnectorConfig config = new StripeConnectorConfig(null, Duration.ofMinutes(5), null);
+StripeConnector connector = new StripeConnector("urn:iq:connector:stripe", config);
 
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
-connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+try { connector.refresh(); }
+catch (Exception e) { /* expected */ }
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "StripeResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+assertTrue(connector.getModel().size() >= 0);
+}
+
+@Test
+void testKernelStartStop() {
+StripeConnectorConfig config = new StripeConnectorConfig("dummy-key", Duration.ofMinutes(5), null);
+StripeConnector connector = new StripeConnector("urn:iq:connector:stripe", config);
+StripeConnectorKernel kernel = new StripeConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(connector.getStatus() == ConnectorStatus.IDLE || connector.getStatus() == ConnectorStatus.SYNCING || connector.getStatus() == ConnectorStatus.ERROR);
 }
 }

@@ -11,10 +11,15 @@ import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
 
 import java.io.File;
 
-public class MyVFS extends DefaultFileSystemManager  {
+public class MyVFS extends DefaultFileSystemManager implements I_FileSystemFactory {
 
 public MyVFS() throws FileSystemException {
 init();
+}
+
+@Override
+public org.apache.commons.vfs2.FileSystemManager create() throws Exception {
+return new MyVFS();
 }
 
 public void init() throws FileSystemException {

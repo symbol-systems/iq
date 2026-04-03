@@ -62,6 +62,7 @@
 <!-- iq-connect modules -->
 <module>iq-connect/iq-connect-core</module>
 <module>iq-connect/iq-connect-template</module>
+<module>iq-connect/iq-connect-confluence</module>
 <module>iq-connect/iq-connect-github</module>
 <module>iq-connect/iq-connect-aws</module>
 <module>iq-connect/iq-connect-azure</module>

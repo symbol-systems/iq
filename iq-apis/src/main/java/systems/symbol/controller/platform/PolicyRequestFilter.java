@@ -36,7 +36,7 @@ I_PolicyEnforcer enforcer;
 @Inject
 RealmPlatform platform;
 
-@ConfigProperty(name = "iq.policy.public-paths", defaultValue = "/health,/q/,/oauth/,/trust/nonce,/trust/guest")
+@ConfigProperty(name = "iq.policy.public-paths", defaultValue = "/health,/q/,/oauth/,/mcp,/mcp/,/trust/nonce,/trust/guest")
 String publicPaths;
 
 @Override

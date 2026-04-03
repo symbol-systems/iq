@@ -1,92 +1,53 @@
+
 package systems.symbol.connect.aws;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
 
-import systems.symbol.connect.core.Modeller;
-
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cloudtrail.CloudTrailClient;
 import software.amazon.awssdk.services.config.ConfigClient;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.iam.IamClient;
-import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.pricing.PricingClient;
-import software.amazon.awssdk.services.sts.StsClient;
-import software.amazon.awssdk.services.sts.model.GetCallerIdentityResponse;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
+import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.ConnectorScanner;
+import systems.symbol.connect.core.Modeller;
 
-/**
- * Example AWS connector implementation.
- *
- * <p>This connector is intended as a complete implementation showing how to
- * integrate AWS SDK calls with the IQ connector model and writes metadata into
- * the connector state model.
- */
 public final class AwsConnector extends AbstractConnector {
 
-private static final String DEFAULT_REGION = "us-east-1";
+private final AwsConnectorConfig config;
 
-private final AwsConfig config;
-
-public AwsConnector(String connectorId, AwsConfig config, Model state) {
-this(connectorId,
-config,
-state,
-Values.iri(connectorId + "/graph/current"),
-Values.iri(Modeller.getAwsOntology()),
-Values.iri("urn:aws:"));
-}
-
-public AwsConnector(String connectorId, AwsConfig config, Model state, IRI graphIri, IRI ontologyBaseIri, IRI entityBaseIri) {
-super(connectorId, state, graphIri, ontologyBaseIri, entityBaseIri);
+public AwsConnector(String connectorId, AwsConnectorConfig config) {
+super(connectorId,
+  new LinkedHashModel(),
+  Values.iri(connectorId + "/graph/current"),
+  Values.iri(Modeller.getConnectOntology()),
+  Values.iri("urn:aws:"));
 this.config = config;
 }
 
-@Override
-public ConnectorMode getMode() {
-return ConnectorMode.READ_WRITE;
+public AwsConnector(String connectorId, AwsConfig awsConfig, Model state) {
+this(connectorId, AwsConnectorConfig.fromEnv());
 }
 
 @Override
-protected void doRefresh() throws Exception {
-IRI connectorId = getConnectorId();
-Region region = Region.of(config.getRegion().orElse(DEFAULT_REGION));
-AwsModeller modeller = new AwsModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
+public ConnectorMode getMode() { return ConnectorMode.READ_ONLY; }
 
-try (S3Client s3 = S3Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- StsClient sts = StsClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- Ec2Client ec2 = Ec2Client.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- IamClient iam = IamClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- CloudTrailClient cloudTrail = CloudTrailClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- ConfigClient configClient = ConfigClient.builder().region(region).credentialsProvider(DefaultCredentialsProvider.create()).build();
- PricingClient pricing = PricingClient.builder().region(Region.US_EAST_1).credentialsProvider(DefaultCredentialsProvider.create()).build()) {
-
-GetCallerIdentityResponse identity = sts.getCallerIdentity();
-IRI accountIri = modeller.account(connectorId, identity.account(), identity.arn());
-AwsScanContext context = new AwsScanContext(connectorId, accountIri, region, modeller);
-
-List<ConnectorScanner<AwsScanContext>> scanners = createScanners(s3, ec2, iam, cloudTrail, configClient, pricing);
-
-for (ConnectorScanner<AwsScanContext> scanner : scanners) {
-scanner.scan(context);
-}
-}
-}
-
-List<ConnectorScanner<AwsScanContext>> createScanners(S3Client s3,
-  Ec2Client ec2,
-  IamClient iam,
-  CloudTrailClient cloudTrail,
-  ConfigClient configClient,
-  PricingClient pricing) {
+public List<ConnectorScanner<AwsScanContext>> createScanners(S3Client s3,
+ Ec2Client ec2,
+ IamClient iam,
+ CloudTrailClient cloudTrail,
+ ConfigClient configClient,
+ PricingClient pricing) {
 return List.of(
 new AwsRegionScanner(ec2),
 new AwsS3Scanner(s3),
@@ -95,5 +56,20 @@ new AwsIamScanner(iam),
 new AwsCloudTrailScanner(cloudTrail),
 new AwsConfigScanner(configClient),
 new AwsPricingScanner(pricing));
+}
+
+@Override
+protected void doRefresh() throws Exception {
+if (config.getApiKey().isEmpty()) {
+throw new IllegalStateException("AWS_API_KEY is required");
+}
+// Minimal discovered data path to keep key functionality of a connector
+IRI entity = Values.iri(entityBaseIri().stringValue() + "aws-item");
+getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "AwsResource"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("Aws"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
 }
 }

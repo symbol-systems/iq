@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import systems.symbol.IQConstants;
 import systems.symbol.llm.I_LLM;
 import systems.symbol.llm.I_LLMConfig;
+import systems.symbol.llm.I_LLMProvider;
 import systems.symbol.platform.Poke;
 import systems.symbol.secrets.I_Secrets;
 import systems.symbol.secrets.SecretsException;

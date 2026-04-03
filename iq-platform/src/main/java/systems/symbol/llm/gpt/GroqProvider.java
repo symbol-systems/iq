@@ -13,6 +13,9 @@ return "groq";
 
 @Override
 public I_LLM<String> build(I_LLMConfig config, String token) {
-return new GPTWrapper(token, config);
+GPTWrapper wrapper = new GPTWrapper(token, config);
+wrapper.tool(systems.symbol.llm.tools.Tool.defineFunction("groq.chat", "Invoke Groq chat completion").
+addStringParam("prompt", "Input text for completion", true).build());
+return wrapper;
 }
 }
