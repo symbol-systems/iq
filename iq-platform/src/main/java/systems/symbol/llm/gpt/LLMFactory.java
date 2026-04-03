@@ -35,6 +35,19 @@ public static I_LLMConfig GROQ_Llama3(int tokens) {
 return new GPTConfig(GROQ_COMPLETIONS, "llama-3.1-8b-instant", tokens);
 }
 
+public static I_LLM<String> provider(String uri, I_LLMConfig config, String token) {
+if (uri == null || uri.isBlank()) {
+throw new IllegalArgumentException("llm.uri required");
+}
+String scheme = uri.split(":", 2)[0].toLowerCase();
+for (I_LLMProvider provider : java.util.ServiceLoader.load(I_LLMProvider.class)) {
+if (scheme.equals(provider.scheme())) {
+return provider.build(config, token);
+}
+}
+throw new IllegalArgumentException("Unsupported LLM scheme: " + scheme);
+}
+
 public static I_LLMConfig GROQ_Llama_DeepSeek(int tokens) {
 return new GPTConfig(GROQ_COMPLETIONS, "deepseek-r1-distill-llama-70b", tokens);
 }

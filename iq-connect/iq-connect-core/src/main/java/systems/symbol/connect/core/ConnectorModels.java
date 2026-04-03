@@ -20,6 +20,7 @@ public static final String HAS_ACCOUNT = PREFIX + "hasAccount";
 public static final String HAS_REGION = PREFIX + "hasRegion";
 public static final String HAS_SUBSYSTEM = PREFIX + "hasSubsystem";
 public static final String HAS_ROLE = PREFIX + "hasRole";
+public static final String RESOURCE_COUNT = PREFIX + "resourceCount";
 public static final String HAS_USER = PREFIX + "hasUser";
 public static final String HAS_TEAM = PREFIX + "hasTeam";
 public static final String HAS_POLICY = PREFIX + "hasPolicy";
