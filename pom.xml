@@ -40,7 +40,8 @@
 <module>iq-camel</module>
 <module>iq-cli</module>
 <module>iq-cli-pro</module>
-<module>iq-cli-server</module>
+<module>iq-runtime</module>
+<module>iq-scripting</module>
 <!-- <module>iq-intents</module> -->
 <module>iq-kernel</module>
 <module>iq-lab</module>

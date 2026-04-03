@@ -1,4 +1,0 @@
-SELECT DISTINCT ?id ?label
-WHERE {
-?id a tropes:Character.
-}

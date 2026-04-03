@@ -29,4 +29,11 @@ var result5 = run("server", "cluster", "list");
 assertEquals(0, result5.exitCode);
 assertTrue(result5.stdout.contains("cluster list: no nodes configured"));
 }
+
+@Test
+void testServerHelpIncludesCluster() throws Exception {
+var result = run("server", "--help");
+assertEquals(0, result.exitCode);
+assertTrue(result.stdout.contains("cluster"), "server --help should list cluster subcommand");
+}
 }
