@@ -12,13 +12,10 @@ import systems.symbol.trust.I_Keys;
 import java.net.URISyntaxException;
 import java.security.KeyPair;
 
-public interface I_Realm extends I_Self, I_Keys { // , I_Corpus<IRI>, I_Indexer
+public interface I_Realm extends I_Self, I_Keys { 
 Model getModel();
 
 Repository getRepository();
-
-// FactFinder getFinder();
-// I_Search<I_Found<IRI>> getSearch(IRI index);
 
 FileObject locate(IRI iri) throws URISyntaxException, FileSystemException;
 

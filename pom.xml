@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>systems.symbol</groupId>
   <artifactId>iq-parent</artifactId>
- <version>0.94.0</version>
+ <version>0.94.1</version>
   <packaging>pom</packaging>
   <name>BoM</name>
   <url>https://symbol.systems</url>
@@ -52,6 +52,7 @@
 <module>iq-rdf4j-camel</module>
 <module>iq-rdf4j-graphql</module>
 <module>iq-rdf4j-graphs</module>
+<module>iq-policy</module>
 <module>iq-secrets</module>
 <module>iq-skeleton</module>
 <module>iq-test-servers</module>
@@ -84,26 +85,54 @@
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-<cloudevents.version>2.4.0</cloudevents.version>
-<quarkus.version>3.17.5</quarkus.version>
+<cloudevents.version>4.0.1</cloudevents.version>
+<quarkus.version>3.34.2</quarkus.version>
 <jakarta.activation.version>2.1.1</jakarta.activation.version>
 <spring.version>6.0.11</spring.version>
 <springboot.version>3.1.2</springboot.version>
 <slf4j.version>2.0.13</slf4j.version>
 <logback.version>1.5.3</logback.version>
-<camel.version>4.0.0-RC2</camel.version>
-<handlebars.version>4.3.1</handlebars.version>
-<groovy.version>5.0.0-alpha-8</groovy.version>
+<camel.version>4.18.1</camel.version>
+<handlebars.version>4.5.0</handlebars.version>
+<groovy.version>5.0.5</groovy.version>
 <kotlin.version>1.9.23</kotlin.version>
 
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-<rdf4j.version>5.0.2</rdf4j.version>
+<rdf4j.version>5.3.0-M2</rdf4j.version>
+<java-jwt.version>4.4.0</java-jwt.version>
+<okhttp.version>4.12.0</okhttp.version>
 
-<handlebars.version>4.3.1</handlebars.version>
+<handlebars.version>4.5.0</handlebars.version>
 <jackson.version>2.17.1</jackson.version>
-<log4j.version>2.24.1</log4j.version>
-<junit.jupiter.version>5.9.3</junit.jupiter.version>
+<log4j.version>2.25.4</log4j.version>
+<junit.jupiter.version>6.0.3</junit.jupiter.version>
+
+<javax.xml.bind.version>2.3.0</javax.xml.bind.version>
+<jsoup.version>1.18.1</jsoup.version>
+<snakeyaml.version>2.1</snakeyaml.version>
+<bcprov.version>1.79</bcprov.version>
+<bcpkix.version>1.79</bcpkix.version>
+<jersey.media.multipart.version>3.1.7</jersey.media.multipart.version>
+<annotations.version>24.0.1</annotations.version>
+<jakarta.activation-api.version>2.1.1</jakarta.activation-api.version>
+<gson.version>2.11.0</gson.version>
+<jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
+<commons-io.version>2.17.0</commons-io.version>
+<commons-codec.version>1.17.0</commons-codec.version>
+<commons-httpclient.version>3.1</commons-httpclient.version>
+<commons-vfs2.version>2.10.0</commons-vfs2.version>
+<vfs-s3.version>4.3.6</vfs-s3.version>
+<aws-java-sdk-s3.version>1.12.773</aws-java-sdk-s3.version>
+<rest-assured.version>5.3.0</rest-assured.version>
+<jquery.version>3.6.1</jquery.version>
+<onnxruntime.version>1.17.1</onnxruntime.version>
+<geoip2.version>4.2.0</geoip2.version>
+<jwks.rsa.version>0.22.1</jwks.rsa.version>
+<quarkus.tika.version>2.0.4</quarkus.tika.version>
+<tika.version>3.2.2</tika.version>
+<nashorn.version>15.4</nashorn.version>
+<jakarta.ws.rs.all.version>3.1.0</jakarta.ws.rs.all.version>
 
 <skipITs>true</skipITs>
 <surefire.plugin.version>3.2.5</surefire.plugin.version>
@@ -111,8 +140,30 @@
 
   <repositories>
 <repository>
+  <id>central</id>
+  <name>Maven Central</name>
+  <url>https://repo1.maven.org/maven2</url>
+  <releases>
+<enabled>true</enabled>
+<updatePolicy>never</updatePolicy>
+<checksumPolicy>warn</checksumPolicy>
+  </releases>
+  <snapshots>
+<enabled>false</enabled>
+  </snapshots>
+</repository>
+<repository>
   <id>jitpack.io</id>
+  <name>JitPack</name>
   <url>https://jitpack.io</url>
+  <releases>
+<enabled>true</enabled>
+<updatePolicy>never</updatePolicy>
+<checksumPolicy>warn</checksumPolicy>
+  </releases>
+  <snapshots>
+<enabled>false</enabled>
+  </snapshots>
 </repository>
   </repositories>
 
@@ -152,7 +203,7 @@
 <dependency>
 <groupId>com.auth0</groupId>
 <artifactId>java-jwt</artifactId>
-<version>4.4.0</version>
+<version>${java-jwt.version}</version>
 </dependency>
 <dependency>
 <groupId>org.apache.logging.log4j</groupId>
@@ -167,7 +218,37 @@
 <dependency>
 <groupId>com.squareup.okhttp3</groupId>
 <artifactId>okhttp</artifactId>
-<version>4.12.0</version>
+<version>${okhttp.version}</version>
+</dependency>
+<dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter-api</artifactId>
+<version>6.0.3</version>
+<scope>test</scope>
+</dependency>
+<dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter-engine</artifactId>
+<version>6.0.3</version>
+<scope>test</scope>
+</dependency>
+<dependency>
+<groupId>org.junit.platform</groupId>
+<artifactId>junit-platform-engine</artifactId>
+<version>6.0.3</version>
+<scope>test</scope>
+</dependency>
+<dependency>
+<groupId>org.junit.platform</groupId>
+<artifactId>junit-platform-commons</artifactId>
+<version>6.0.3</version>
+<scope>test</scope>
+</dependency>
+<dependency>
+<groupId>org.junit.platform</groupId>
+<artifactId>junit-platform-launcher</artifactId>
+<version>6.0.3</version>
+<scope>test</scope>
 </dependency>
   <dependency>
 <groupId>io.cloudevents</groupId>
@@ -183,7 +264,7 @@
   <dependency>
 <groupId>javax.xml.bind</groupId>
 <artifactId>jaxb-api</artifactId>
-<version>2.3.0</version>
+<version>${javax.xml.bind.version}</version>
   </dependency>
   <!-- <dependency>
 <groupId>com.apicatalog</groupId>
@@ -206,7 +287,7 @@
   <dependency>
 <groupId>org.glassfish.jersey.media</groupId>
 <artifactId>jersey-media-multipart</artifactId>
-<version>3.1.7</version>
+<version>${jersey.media.multipart.version}</version>
   </dependency>
 
   <dependency>
@@ -240,13 +321,13 @@
 <dependency>
 <groupId>org.bouncycastle</groupId>
 <artifactId>bcprov-jdk18on</artifactId>
-<version>1.79</version>
+<version>${bcprov.version}</version>
 </dependency>
 
 <dependency>
 <groupId>org.bouncycastle</groupId>
 <artifactId>bcpkix-jdk18on</artifactId>
-<version>1.79</version>
+<version>${bcpkix.version}</version>
 </dependency>
 
   <!-- Quarkus -->
@@ -290,12 +371,12 @@
   <dependency>
 <groupId>org.jetbrains</groupId>
 <artifactId>annotations</artifactId>
-<version>24.0.1</version>
+<version>${annotations.version}</version>
   </dependency>
   <dependency>
 <groupId>jakarta.activation</groupId>
 <artifactId>jakarta.activation-api</artifactId>
-<version>2.1.1</version>
+<version>${jakarta.activation-api.version}</version>
   </dependency>
 
   <dependency>
@@ -326,7 +407,7 @@
   <dependency>
 <groupId>com.google.code.gson</groupId>
 <artifactId>gson</artifactId>
-<version>2.11.0</version>
+<version>${gson.version}</version>
   </dependency>
 <!--  <dependency>-->
 <!--<groupId>javax.xml.bind</groupId>-->
@@ -336,22 +417,22 @@
   <dependency>
 <groupId>jakarta.xml.bind</groupId>
 <artifactId>jakarta.xml.bind-api</artifactId>
-<version>4.0.2</version>
+<version>${jakarta.xml.bind-api.version}</version>
   </dependency>
   <dependency>
 <groupId>commons-io</groupId>
 <artifactId>commons-io</artifactId>
-<version>2.17.0</version>
+<version>${commons-io.version}</version>
   </dependency>
   <dependency>
 <groupId>commons-codec</groupId>
 <artifactId>commons-codec</artifactId>
-<version>1.17.0</version>
+<version>${commons-codec.version}</version>
   </dependency>
 <dependency>
 <groupId>commons-httpclient</groupId>
 <artifactId>commons-httpclient</artifactId>
-<version>3.1</version>
+<version>${commons-httpclient.version}</version>
 </dependency>
 
 <!-- VFS2-->
@@ -359,18 +440,18 @@
 <dependency>
 <groupId>org.apache.commons</groupId>
 <artifactId>commons-vfs2</artifactId>
-<version>2.10.0</version>
+<version>${commons-vfs2.version}</version>
 </dependency>
 <dependency>
 <groupId>com.github.abashev</groupId>
 <artifactId>vfs-s3</artifactId>
-<version>4.3.6</version>
+<version>${vfs-s3.version}</version>
 </dependency>
 
 <dependency>
 <groupId>com.amazonaws</groupId>
 <artifactId>aws-java-sdk-s3</artifactId>
-<version>1.12.773</version>
+<version>${aws-java-sdk-s3.version}</version>
 </dependency>
 
 <!-- Test -->
@@ -395,13 +476,13 @@
   <dependency>
 <groupId>io.rest-assured</groupId>
 <artifactId>rest-assured</artifactId>
-<version>5.3.0</version>
+<version>${rest-assured.version}</version>
 <scope>test</scope>
   </dependency>
   <dependency>
 <groupId>org.webjars</groupId>
 <artifactId>jquery</artifactId>
-<version>3.6.1</version>
+<version>${jquery.version}</version>
   </dependency>
 
   <!-- Langchain dependency versions -->
@@ -410,13 +491,13 @@
   <dependency>
 <groupId>com.microsoft.onnxruntime</groupId>
 <artifactId>onnxruntime</artifactId>
-<version>1.17.1</version>
+<version>${onnxruntime.version}</version>
   </dependency>
 
   <dependency>
 <groupId>com.maxmind.geoip2</groupId>
 <artifactId>geoip2</artifactId>
-<version>4.2.0</version>
+<version>${geoip2.version}</version>
   </dependency>
 
 </dependencies>

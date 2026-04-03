@@ -4,7 +4,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-   <version>0.94.0</version>
+   <version>0.94.1</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-platform</artifactId>
@@ -12,7 +12,7 @@
 <description>IQ - operating environment for cognitive AI.</description>
 <url>https://symbol.systems</url>
 
-   <version>0.94.0</version>
+   <version>0.94.1</version>
 <properties>
 <compiler.plugin.version>3.10.1</compiler.plugin.version>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
@@ -22,11 +22,11 @@
 
 <!--<quarkus.version>3.11.1</quarkus.version>-->
 <graalvm.version>24.0.1</graalvm.version>
-<groovy.version>5.0.0-alpha-8</groovy.version>
+<groovy.version>5.0.5</groovy.version>
 
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-<cloudevents.version>2.4.0</cloudevents.version>
+<cloudevents.version>4.0.1</cloudevents.version>
 
 <skipITs>true</skipITs>
 <surefire.plugin.version>3.2.5</surefire.plugin.version>
@@ -46,6 +46,12 @@
 </dependency>
 
 <dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-kernel</artifactId>
+<version>${project.version}</version>
+</dependency>
+
+<dependency>
 <groupId>org.apache.groovy</groupId>
 <artifactId>groovy-all</artifactId>
 <type>pom</type>
@@ -60,7 +66,7 @@
 <dependency>
 <groupId>com.squareup.okhttp3</groupId>
 <artifactId>okhttp</artifactId>
-<version>4.12.0</version>
+<version>${okhttp.version}</version>
 </dependency>
 <dependency>
 <groupId>jakarta.ws.rs</groupId>
@@ -79,14 +85,9 @@
 </dependency>
 
 <dependency>
-<groupId>io.quarkiverse.tika</groupId>
-<artifactId>quarkus-tika</artifactId>
-<version>2.0.4</version>
-</dependency>
-<dependency>
 <groupId>org.apache.tika</groupId>
 <artifactId>tika-core</artifactId>
-<version>3.2.2</version>
+<version>${tika.version}</version>
 </dependency>
 
   <dependency>
@@ -100,49 +101,19 @@
 <dependency>
 <groupId>com.microsoft.onnxruntime</groupId>
 <artifactId>onnxruntime</artifactId>
-<version>1.17.1</version>
+<version>${onnxruntime.version}</version>
 </dependency>
 <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-onnx</artifactId>
 <version>${project.version}</version>
 </dependency>
-<!--Quarkus -->
+<!-- Quarkus runtime support is now provided by iq-apis/iq-cli; platform module keeps core utility libs only. -->
 
 <dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-core</artifactId>
-<exclusions>
-<exclusion>
-<groupId>org.jboss.slf4j</groupId>
-<artifactId>slf4j-jboss-logmanager</artifactId>
-</exclusion>
-</exclusions>
-</dependency>
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-vertx</artifactId>
-</dependency>
-<!--<dependency>-->
-<!--  <groupId>io.quarkus</groupId>-->
-<!--  <artifactId>quarkus-smallrye-openapi</artifactId>-->
-<!--</dependency>-->
-<!--<dependency>-->
-<!--<groupId>io.quarkus</groupId>-->
-<!--<artifactId>quarkus-rest-jackson</artifactId>-->
-<!--<version>${quarkus.version}</version>-->
-<!--</dependency>-->
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-arc</artifactId>
-</dependency>
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-container-image-docker</artifactId>
-</dependency>
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-container-image-buildpack</artifactId>
+<groupId>com.github.ben-manes.caffeine</groupId>
+<artifactId>caffeine</artifactId>
+<version>3.1.8</version>
 </dependency>
 
 <dependency>
@@ -214,12 +185,12 @@
 <dependency>
 <groupId>javax.xml.bind</groupId>
 <artifactId>jaxb-api</artifactId>
-<version>2.3.0</version>
+<version>${javax.xml.bind.version}</version>
 </dependency>
 <dependency>
 <groupId>com.auth0</groupId>
 <artifactId>java-jwt</artifactId>
-<version>4.4.0</version>
+<version>${java-jwt.version}</version>
 </dependency>
 <dependency>
 <groupId>org.jetbrains.kotlin</groupId>

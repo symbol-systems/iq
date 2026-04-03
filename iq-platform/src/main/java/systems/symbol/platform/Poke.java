@@ -3,6 +3,7 @@ package systems.symbol.platform;
 import org.eclipse.rdf4j.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.symbol.kernel.Pokeable;
 
 import java.lang.reflect.Field;
 
@@ -66,6 +67,10 @@ poke(field, stmt, todo);
 } catch (NoSuchFieldException ignored) {
 log.trace("No field '{}' found in {}", fieldName, todo.getClass().getSimpleName());
 } catch (PokeException | IllegalAccessException e) {
+if (e instanceof PokeableException) {
+throw (PokeableException) e;
+}
+
 if (e instanceof PokeException) {
 log.warn("Failed to poke field '{}': {}", fieldName, e.getMessage());
 } else {
@@ -87,6 +92,10 @@ log.debug("poked: {}", todo.getClass().getSimpleName());
  */
 private static void poke(Field field, Statement stmt, Object config) 
 throws PokeException, IllegalAccessException {
+
+if (!field.isAnnotationPresent(Pokeable.class)) {
+throw new PokeableException(String.format("Field '%s' is not annotated with @Pokeable", field.getName()));
+}
 
 field.setAccessible(true);
 
@@ -210,6 +219,12 @@ super(message);
 
 public PokeException(String message, Throwable cause) {
 super(message, cause);
+}
+}
+
+public static class PokeableException extends PokeException {
+public PokeableException(String message) {
+super(message);
 }
 }
 }

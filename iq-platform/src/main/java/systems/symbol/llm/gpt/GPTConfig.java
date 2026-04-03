@@ -1,17 +1,38 @@
 package systems.symbol.llm.gpt;
 
+import systems.symbol.kernel.Pokeable;
 import systems.symbol.llm.I_LLMConfig;
 
 public class GPTConfig implements I_LLMConfig {
 
+@Pokeable
 public String url;
+
+@Pokeable
 public String modelName;
+
+@Pokeable
 public float frequencyPenalty;
+
+@Pokeable
 public float temperature;
+
+@Pokeable
 public int maxTokens = 4096;
+
+@Pokeable
 public float topP;
-public int n, seed;
+
+@Pokeable
+public int n;
+
+@Pokeable
+public int seed;
+
+@Pokeable
 public String secret;
+
+@Pokeable
 public String response_format = null;
 
 public GPTConfig() {

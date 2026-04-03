@@ -7,7 +7,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.0</version>
+<version>0.94.1</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -17,7 +17,7 @@
 No framework annotations (no Quarkus, Picocli, MCP SDK, Camel).
 All surfaces (REST, MCP, CLI, event hub) depend on this module.</description>
 <url>https://symbol.systems</url>
-<version>0.94.0</version>
+<version>0.94.1</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>
@@ -52,7 +52,7 @@ All surfaces (REST, MCP, CLI, event hub) depend on this module.</description>
 <dependency>
 <groupId>org.apache.commons</groupId>
 <artifactId>commons-vfs2</artifactId>
-<version>2.10.0</version>
+<version>${commons-vfs2.version}</version>
 </dependency>
 
 <!-- Logging API only — no implementation -->

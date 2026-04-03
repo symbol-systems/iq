@@ -1,27 +1,19 @@
 package systems.symbol.controller.platform;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.rdf4j.model.IRI;
-import systems.symbol.controller.acl.I_ACLPolicy;
-import systems.symbol.controller.acl.RDFACLPolicy;
 import systems.symbol.controller.responses.OopsException;
+import systems.symbol.kernel.policy.I_PolicyEnforcer;
+import systems.symbol.kernel.policy.PolicyInput;
+import systems.symbol.kernel.policy.PolicyResult;
+import systems.symbol.kernel.policy.PolicyVocab;
 
 public class GuardedAPI extends RealmAPI {
 
-private I_ACLPolicy aclPolicy;
-
-protected I_ACLPolicy getACLPolicy() {
-if (aclPolicy == null && platform != null && platform.getRealms() != null) {
-// Lazy init: create RDF-based ACL policy
-try {
-aclPolicy = new RDFACLPolicy(platform);
-} catch (Exception ex) {
-log.warn("Failed to initialize ACL policy: {}", ex.getMessage());
-}
-}
-return aclPolicy;
-}
+@Inject
+I_PolicyEnforcer policyEnforcer;
 
 @Override
 public boolean entitled(DecodedJWT jwt, IRI agent) {
@@ -38,15 +30,34 @@ return jwt.getAudience().contains(agent.stringValue());
  * @throws OopsException if principal is not authorized for realm
  */
 public void checkRealmAccess(String principal, IRI realm, DecodedJWT jwt) throws OopsException {
-I_ACLPolicy policy = getACLPolicy();
-if (policy != null) {
-boolean authorized = policy.isAuthorized(principal, realm, jwt);
-if (!authorized) {
-log.warn("ACL: principal {} denied access to realm {}", principal, realm.stringValue());
+if (policyEnforcer == null) {
+log.warn("GuardedAPI: no policy enforcer configured; denying realm access");
 throw new OopsException("ux.realm.unauthorized", Response.Status.FORBIDDEN);
 }
-log.info("ACL: principal {} authorized for realm {} (policy: {})", 
-principal, realm.stringValue(), policy.describe());
+
+var ctx = new systems.symbol.kernel.pipeline.KernelCallContext();
+ctx.set(systems.symbol.kernel.pipeline.KernelCallContext.KEY_PRINCIPAL, principal);
+ctx.set(systems.symbol.kernel.pipeline.KernelCallContext.KEY_REALM, realm);
+ctx.set(systems.symbol.kernel.pipeline.KernelCallContext.KEY_JWT, jwt == null ? null : jwt.getToken());
+if (jwt != null) {
+ctx.set(systems.symbol.kernel.pipeline.KernelCallContext.KEY_ROLES, jwt.getClaim("roles").asList(String.class));
 }
+
+PolicyInput input;
+try {
+input = PolicyInput.from(ctx, PolicyVocab.ACTION_READ, realm);
+} catch (Exception ex) {
+log.warn("GuardedAPI: failed to build policy input", ex);
+throw new OopsException("ux.realm.unauthorized", Response.Status.FORBIDDEN);
+}
+
+PolicyResult result = policyEnforcer.evaluate(input);
+if (!result.allowed()) {
+String report = result.reasonIri() != null ? result.reasonIri().toString() : result.reason();
+log.warn("Policy denied realm access [{}] for principal {}: {}", realm, principal, report);
+throw new OopsException("ux.realm.unauthorized", Response.Status.FORBIDDEN);
+}
+
+log.info("Policy allowed realm access [{}] for principal {}", realm, principal);
 }
 }

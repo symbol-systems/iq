@@ -4,14 +4,14 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.0</version>
+<version>0.94.1</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <artifactId>iq-mcp</artifactId>
 <name>IQ MCP</name>
 <description>Model Context Protocol (MCP) integration for IQ. Exposes RDF graphs and agentic workflows as MCP tools.</description>
 <url>https://symbol.systems</url>
-<version>0.94.0</version>
+<version>0.94.1</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>
@@ -108,7 +108,7 @@
 <dependency>
 <groupId>com.auth0</groupId>
 <artifactId>jwks-rsa</artifactId>
-<version>0.22.1</version>
+<version>${jwks.rsa.version}</version>
 </dependency>
 
 <!-- Testing -->

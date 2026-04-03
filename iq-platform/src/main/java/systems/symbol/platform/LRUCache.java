@@ -14,12 +14,20 @@ private final Map<K, V> cache;
 
 public LRUCache(int capacity) {
 this.capacity = capacity;
-this.cache = Collections.synchronizedMap(new LinkedHashMap<>(capacity, 0.75f, true));
+this.cache = Collections.synchronizedMap(new LinkedHashMap<>(capacity, 0.75f, true) {
+@Override
+protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+boolean evict = size() > LRUCache.this.capacity;
+if (evict) {
+log.debug("lru.eviction: {}", eldest.getKey());
+}
+return evict;
+}
+});
 }
 
 public void put(K key, V value) {
 cache.put(key, value);
-optimize();
 }
 
 public V get(K key) {
@@ -36,16 +44,5 @@ cache.clear();
 
 public int size() {
 return cache.size();
-}
-
-public void optimize() {
-synchronized (cache) {
-if (cache.size() > capacity) {
-Map.Entry<K, V> eldestEntry = cache.entrySet().iterator().next();
-K eldestKey = eldestEntry.getKey();
-cache.remove(eldestKey);
-log.debug("lru.eviction: {}", eldestKey);
-}
-}
 }
 }
