@@ -30,6 +30,11 @@ return ConnectorMode.READ_ONLY;
 
 @Override
 protected void doRefresh() {
-// no-op in template; implement sync logic in connectors
+TemplateModeller modeller = new TemplateModeller(getModel(), graphIri(), ontologyBaseIri(), entityBaseIri());
+
+modeller.createTemplateItem(
+"default",
+"Template sample item",
+"Automatically generated sample entity to demonstrate real sync behavior.");
 }
 }
