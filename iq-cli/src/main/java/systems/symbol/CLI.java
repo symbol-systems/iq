@@ -32,6 +32,8 @@ try {
 CommandLine cli = new CommandLine(this);
 
 cli.addSubcommand(new InitCommand(context));
+cli.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
+
 if (context.isInitialized()) {
 cli.addSubcommand(new AboutCommand(context));
 cli.addSubcommand(new ListCommand(context));
@@ -45,7 +47,6 @@ cli.addSubcommand(new ImportCommand(context));
 cli.addSubcommand(new ExportCommand(context));
 cli.addSubcommand(new BackupCommand(context));
 cli.addSubcommand(new RecoverCommand(context));
-cli.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
 } else {
 context.display("run `iq init`");
 }

@@ -9,7 +9,9 @@ import systems.symbol.CLI;
 import systems.symbol.kernel.I_Kernel;
 import systems.symbol.kernel.KernelBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -82,28 +84,42 @@ int exitCode = 0;
 String stdout = "";
 String stderr = "";
 
+// Save original System streams
+PrintStream originalOut = System.out;
+PrintStream originalErr = System.err;
+
 try {
 // Capture output
-StringWriter outWriter = new StringWriter();
-StringWriter errWriter = new StringWriter();
-PrintWriter outPrintWriter = new PrintWriter(outWriter);
-PrintWriter errPrintWriter = new PrintWriter(errWriter);
+ByteArrayOutputStream outCapture = new ByteArrayOutputStream();
+ByteArrayOutputStream errCapture = new ByteArrayOutputStream();
+PrintStream outStream = new PrintStream(outCapture);
+PrintStream errStream = new PrintStream(errCapture);
+
+// Redirect System.out and System.err to capture ConsoleDisplay output
+System.setOut(outStream);
+System.setErr(errStream);
 
 CLI cli = new CLI();
 CommandLine cmd = cli.getCommandLine(context);
 
-cmd.setOut(outPrintWriter);
-cmd.setErr(errPrintWriter);
+cmd.setOut(new PrintWriter(outStream));
+cmd.setErr(new PrintWriter(errStream));
 
 // Execute command
 exitCode = cmd.execute(args);
 
-stdout = outWriter.toString();
-stderr = errWriter.toString();
+outStream.flush();
+errStream.flush();
+stdout = outCapture.toString(StandardCharsets.UTF_8);
+stderr = errCapture.toString(StandardCharsets.UTF_8);
 
 } catch (Exception e) {
 exitCode = 1;
 stderr = e.getClass().getSimpleName() + ": " + e.getMessage();
+} finally {
+// Restore original System streams
+System.setOut(originalOut);
+System.setErr(originalErr);
 }
 
 long executionTime = System.currentTimeMillis() - startTime;

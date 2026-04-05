@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+
+<parent>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-parent</artifactId>
+<version>0.94.1</version>
+<relativePath>../pom.xml</relativePath>
+</parent>
+
+<artifactId>iq-rdf4j-fedx</artifactId>
+<name>IQ RDF4J FedX</name>
+<description>
+Federated SPARQL query coordinator for IQ cluster.
+Uses Control Plane node registry to discover endpoints and optimize federated queries.
+</description>
+<url>https://symbol.systems</url>
+<version>0.94.1</version>
+
+<properties>
+<maven.compiler.source>21</maven.compiler.source>
+<maven.compiler.target>21</maven.compiler.target>
+<maven.compiler.release>21</maven.compiler.release>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<skipITs>true</skipITs>
+</properties>
+
+<dependencies>
+<!-- Core modules -->
+<dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-kernel</artifactId>
+<version>${project.version}</version>
+</dependency>
+
+<dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-rdf4j</artifactId>
+<version>${project.version}</version>
+</dependency>
+
+<dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-control-plane</artifactId>
+<version>${project.version}</version>
+</dependency>
+
+<!-- RDF4J for SPARQL -->
+<dependency>
+<groupId>org.eclipse.rdf4j</groupId>
+<artifactId>rdf4j-model-api</artifactId>
+<version>${rdf4j.version}</version>
+</dependency>
+
+<dependency>
+<groupId>org.eclipse.rdf4j</groupId>
+<artifactId>rdf4j-repository-api</artifactId>
+<version>${rdf4j.version}</version>
+</dependency>
+
+<!-- HTTP Client for remote SPARQL -->
+<dependency>
+<groupId>org.apache.httpcomponents.client5</groupId>
+<artifactId>httpclient5</artifactId>
+<version>5.2.1</version>
+</dependency>
+
+<!-- Logging -->
+<dependency>
+<groupId>org.slf4j</groupId>
+<artifactId>slf4j-api</artifactId>
+<version>${slf4j.version}</version>
+</dependency>
+
+<!-- Testing -->
+<dependency>
+<groupId>org.junit.jupiter</groupId>
+<artifactId>junit-jupiter</artifactId>
+<version>${junit.jupiter.version}</version>
+<scope>test</scope>
+</dependency>
+
+<dependency>
+<groupId>org.mockito</groupId>
+<artifactId>mockito-core</artifactId>
+<version>5.3.1</version>
+<scope>test</scope>
+</dependency>
+</dependencies>
+
+<build>
+<plugins>
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.11.0</version>
+<configuration>
+<source>21</source>
+<target>21</target>
+</configuration>
+</plugin>
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>3.0.0</version>
+</plugin>
+</plugins>
+</build>
+</project>

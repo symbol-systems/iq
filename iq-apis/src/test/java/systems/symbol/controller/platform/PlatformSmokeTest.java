@@ -293,6 +293,43 @@ given()
 .body("removed", equalTo(true));
 }
 
+@Test
+@DisplayName("Cluster: node heartbeat updates lastHeartbeat")
+void testClusterNodeHeartbeat() {
+String url = "http://localhost:8086";
+
+given()
+.contentType(ContentType.JSON)
+.body(Map.of("url", url, "role", "WORKER"))
+.when()
+.post("/oauth/auth/cluster/node")
+.then()
+.statusCode(200)
+.body("registered", equalTo(url));
+
+given()
+.contentType(ContentType.JSON)
+.body(Map.of("url", url))
+.when()
+.post("/oauth/auth/cluster/node/heartbeat")
+.then()
+.statusCode(200)
+.body("heartbeat", equalTo(true))
+.body("lastHeartbeat", notNullValue());
+}
+
+@Test
+@DisplayName("Cluster: leader election picks MASTER node")
+void testClusterLeaderElection() {
+String workerUrl = "http://localhost:8087";
+String masterUrl = "http://localhost:8088";
+
+given().contentType(ContentType.JSON).body(Map.of("url", workerUrl, "role", "WORKER")).when().post("/oauth/auth/cluster/node").then().statusCode(200);
+given().contentType(ContentType.JSON).body(Map.of("url", masterUrl, "role", "MASTER")).when().post("/oauth/auth/cluster/node").then().statusCode(200);
+
+given().when().get("/oauth/auth/cluster/leader").then().statusCode(200).body("leader.url", equalTo(masterUrl));
+}
+
 // ─────────────────────────────────────────────────────────────────────────
 // Response Structure Validation
 // ─────────────────────────────────────────────────────────────────────────

@@ -29,4 +29,8 @@ IRI SECRET = Values.iri(IQ, "secret");
 IRI OOPS = Values.iri(IQ, "oops");
 IRI NEEDS = Values.iri(IQ, "needs");
 IRI NAME = Values.iri(IQ, "name");
+
+// PKI and OAuth-related IRIs
+IRI SIGNATURE = Values.iri(IQ, "signature");
+IRI PROVIDER = Values.iri(IQ, "provider");
 }

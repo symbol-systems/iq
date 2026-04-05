@@ -209,6 +209,13 @@
 
 <dependency>
 <groupId>systems.symbol</groupId>
+<artifactId>iq-lake</artifactId>
+<version>${project.version}</version>
+<scope>compile</scope>
+</dependency>
+
+<dependency>
+<groupId>systems.symbol</groupId>
 <artifactId>iq-apis</artifactId>
 <version>${project.version}</version>
 <scope>compile</scope>

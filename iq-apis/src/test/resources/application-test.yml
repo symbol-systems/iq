@@ -1,0 +1,14 @@
+quarkus:
+  test-profile: test
+  profile: test
+  
+iq:
+  oauth:
+issuer: http://localhost:8080
+token:
+  duration: 3600
+keystore:
+  path: ./tested/tmp/oauth/keys
+  
+applications:
+  scan-packages: systems.symbol

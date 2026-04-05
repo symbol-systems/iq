@@ -143,30 +143,11 @@
   
 <!-- Project dependencies -->
 <dependencies>
-   <dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-aspects</artifactId>
-<version>${project.version}</version>
-</dependency>
-
-<dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-abstract</artifactId>
-<version>${project.version}</version>
-</dependency>
-
-<dependency>
-<groupId>systems.symbol</groupId>
-<artifactId>iq-kernel</artifactId>
-<version>${project.version}</version>
-</dependency>
-
 <dependency>
 <groupId>org.eclipse.rdf4j</groupId>
 <artifactId>rdf4j-storage</artifactId>
 <type>pom</type>
 </dependency>
-
 <dependency>
 <groupId>org.eclipse.rdf4j</groupId>
 <artifactId>rdf4j-model</artifactId>
@@ -179,9 +160,27 @@
 </dependency>
 
 <dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-aspects</artifactId>
+<version>${project.version}</version>
+</dependency>
+
+<dependency>
+<groupId>com.github.jknack</groupId>
+<artifactId>handlebars</artifactId>
+<version>${handlebars.version}</version>
+</dependency>
+
+<dependency>
 <groupId>org.springframework</groupId>
 <artifactId>spring-context</artifactId>
 <version>${spring.version}</version>
+</dependency>
+
+<dependency>
+<groupId>systems.symbol</groupId>
+<artifactId>iq-kernel</artifactId>
+<version>${project.version}</version>
 </dependency>
 
 <dependency>

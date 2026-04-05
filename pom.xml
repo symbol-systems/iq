@@ -37,7 +37,9 @@
 <module>iq-agentic</module>
 <module>iq-apis</module>
 <module>iq-aspects</module>
+<module>iq-auth</module>
 <module>iq-camel</module>
+<module>iq-control-plane</module>
 <module>iq-cli</module>
 <module>iq-cli-pro</module>
 <module>iq-runtime</module>
@@ -45,12 +47,13 @@
 <!-- <module>iq-intents</module> -->
 <module>iq-kernel</module>
 <module>iq-lab</module>
-<!-- <module>iq-lake</module> -->
+<module>iq-lake</module>
 <module>iq-mcp</module>
 <module>iq-onnx</module>
 <module>iq-platform</module>
 <module>iq-rdf4j</module>
 <module>iq-rdf4j-camel</module>
+<module>iq-rdf4j-fedx</module>
 <module>iq-rdf4j-graphql</module>
 <module>iq-rdf4j-graphs</module>
 <module>iq-policy</module>
@@ -122,7 +125,8 @@
 <handlebars.version>4.5.0</handlebars.version>
 <jackson.version>2.17.1</jackson.version>
 <log4j.version>2.25.4</log4j.version>
-<junit.jupiter.version>6.0.3</junit.jupiter.version>
+<junit.jupiter.version>5.14.3</junit.jupiter.version>
+<junit.platform.version>1.14.3</junit.platform.version>
 
 <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
 <jsoup.version>1.18.1</jsoup.version>
@@ -239,31 +243,31 @@
 <dependency>
 <groupId>org.junit.jupiter</groupId>
 <artifactId>junit-jupiter-api</artifactId>
-<version>6.0.3</version>
+<version>${junit.jupiter.version}</version>
 <scope>test</scope>
 </dependency>
 <dependency>
 <groupId>org.junit.jupiter</groupId>
 <artifactId>junit-jupiter-engine</artifactId>
-<version>6.0.3</version>
+<version>${junit.jupiter.version}</version>
 <scope>test</scope>
 </dependency>
 <dependency>
 <groupId>org.junit.platform</groupId>
 <artifactId>junit-platform-engine</artifactId>
-<version>6.0.3</version>
+<version>${junit.platform.version}</version>
 <scope>test</scope>
 </dependency>
 <dependency>
 <groupId>org.junit.platform</groupId>
 <artifactId>junit-platform-commons</artifactId>
-<version>6.0.3</version>
+<version>${junit.platform.version}</version>
 <scope>test</scope>
 </dependency>
 <dependency>
 <groupId>org.junit.platform</groupId>
 <artifactId>junit-platform-launcher</artifactId>
-<version>6.0.3</version>
+<version>${junit.platform.version}</version>
 <scope>test</scope>
 </dependency>
   <dependency>

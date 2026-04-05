@@ -3,7 +3,17 @@ package systems.symbol.cli;
 import picocli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+import systems.symbol.kernel.KernelException;
+import systems.symbol.kernel.event.I_EventHub;
+import systems.symbol.kernel.event.KernelEvent;
+import systems.symbol.platform.AgentAction;
+import systems.symbol.platform.AgentService;
+
+import javax.script.SimpleBindings;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,46 +49,92 @@ throw new CLIException("IQ not initialized");
 }
 
 String targetActor = (actor != null && !actor.isEmpty()) ? actor : context.getSelf().stringValue();
-log.info("iq.cli.trigger.start: {} -> {}", targetActor, intent);
+String intentTopic = (intent != null && !intent.isEmpty()) ? intent : "default";
+
+log.info("iq.cli.trigger.start: {} -> {}", targetActor, intentTopic);
 
 // Parse bindings from key=value format
 Map<String, String> bindingMap = parseBindings(bindings);
 
 display("  actor: " + targetActor);
-display("  intent: " + intent);
+display("  intent: " + intentTopic);
 
 if (!bindingMap.isEmpty()) {
 display("  bindings: " + bindingMap);
 }
 
 try {
-// TODO: Wire up Apache Camel integration for event routing
-// Current implementation is a stub; production implementation should:
-// 1. If server mode (iq-apis running): POST to /ux/intent/{realm}/trigger via IntentAPI
-// 2. If standalone: Execute intent directly via I_Intent interface
-// 3. Handle async execution and status polling if --wait flag is set
+// Get the event hub from kernel context
+I_EventHub eventHub = context.getKernelContext().getEventHub();
 
-// For now, just simulate the intent execution with logging
-if (waitForCompletion) {
-display("  waiting for completion (timeout: " + timeout + "s)...");
-// Simulate async execution with timeout
+// Create IRI for topic
+ValueFactory vf = SimpleValueFactory.getInstance();
+IRI topicIRI;
+try {
+// Try to parse as IRI first
+topicIRI = vf.createIRI(intentTopic);
+} catch (IllegalArgumentException e) {
+// If not valid IRI, wrap it with urn:iq:intent: prefix
+topicIRI = vf.createIRI("urn:iq:intent:" + intentTopic);
+}
+
+// Create event payload with bindings
+SimpleBindings eventBindings = new SimpleBindings();
+eventBindings.putAll(bindingMap);
+eventBindings.put("actor", targetActor);
+eventBindings.put("intent", intentTopic);
+
+// Build and publish the event
+KernelEvent event = KernelEvent.on(topicIRI)
+.source(vf.createIRI("urn:iq:surface:cli"))
+.contentType("text/plain")
+.text("actor=" + targetActor + ";intent=" + intentTopic)
+.build();
+
 long startTime = System.currentTimeMillis();
-long timeoutMs = timeout * 1000L;
 
-while (System.currentTimeMillis() - startTime < timeoutMs) {
-// Check for completion status (would poll Camel route or IntentAPI)
-Thread.sleep(100);
-break; // For stub, exit immediately
+// Publish the event via the kernel's event hub
+eventHub.publish(event);
+display("  ✓ Event published: " + event.getId());
+
+if (waitForCompletion) {
+display("  waiting for actor transition (timeout: " + timeout + "s)...");
+
+// For synchronous behavior, directly execute via AgentService if available
+// (In a full Camel environment, this would be async via event handlers)
+try {
+if (context.repository != null) {
+// Create AgentAction with proper String fields
+AgentAction action = new AgentAction(targetActor, intentTopic, eventBindings);
+
+AgentService service = new AgentService(
+vf.createIRI(targetActor),
+context.repository.getConnection(),
+null,  // secrets (optional)
+eventBindings
+);
+
+if (service.getAgent() != null) {
+service.next(vf.createIRI(intentTopic));
+display("  ✓ Actor transitioned successfully");
+} else {
+display("  ⚠ Actor not found; event queued for async processing");
 }
-display("  completed (stub implementation)");
+}
+} catch (Exception e) {
+log.warn("iq.cli.trigger.sync_exec_failed: {}", e.getMessage());
+display("  ⚠ Async event published; actor will process when ready");
+}
 }
 
-display("iq.cli.trigger.done: event fired");
-log.info("iq.cli.trigger.done: {} fired (stub)", intent);
+long elapsed = System.currentTimeMillis() - startTime;
+display("iq.cli.trigger.done: event fired (elapsed: " + elapsed + "ms)");
+log.info("iq.cli.trigger.done: {} fired via I_EventHub", intentTopic);
 return "triggered";
-} catch (InterruptedException e) {
-Thread.currentThread().interrupt();
-throw new CLIException("Trigger interrupted", e);
+
+} catch (KernelException e) {
+log.error("iq.cli.trigger.kernel_error: {}", e.getMessage(), e);
+throw new CLIException("Kernel error publishing event: " + e.getMessage(), e);
 } catch (Exception e) {
 log.error("iq.cli.trigger.error: {}", e.getMessage(), e);
 throw new CLIException("Failed to trigger intent: " + e.getMessage(), e);

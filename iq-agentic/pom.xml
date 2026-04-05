@@ -34,11 +34,11 @@
 <artifactId>iq-platform</artifactId>
 <version>${project.version}</version>
 </dependency>
-<!-- <dependency>
+<dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-lake</artifactId>
 <version>${project.version}</version>
-</dependency> -->
+</dependency>
 <!-- <dependency>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-intents</artifactId>
@@ -80,36 +80,6 @@
 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 <!--<maven.home>${maven.home}</maven.home>-->
 </systemPropertyVariables>
-</configuration>
-</plugin>
-<plugin>
-<groupId>org.jetbrains.kotlin</groupId>
-<artifactId>kotlin-maven-plugin</artifactId>
-<version>${kotlin.version}</version>
-<executions>
-<execution>
-<id>compile</id>
-<phase>compile</phase>
-<goals>
-<goal>compile</goal>
-</goals>
-<configuration>
-<sourceDirs>
-<source>src/main/java</source>
-<source>target/generated-sources/annotations</source>
-</sourceDirs>
-</configuration>
-</execution>
-<execution>
-<id>test-compile</id>
-<phase>test-compile</phase>
-<goals>
-<goal>test-compile</goal>
-</goals>
-</execution>
-</executions>
-<configuration>
-<jvmTarget>1.8</jvmTarget>
 </configuration>
 </plugin>
 <plugin>
