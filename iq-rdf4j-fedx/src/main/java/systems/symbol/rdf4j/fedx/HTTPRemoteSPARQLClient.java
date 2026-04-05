@@ -156,7 +156,8 @@ public long getEndpointLatency(FedXEndpoint endpoint) {
 try {
 long startTime = System.currentTimeMillis();
 
-String testQuery = "ASK WHERE { ?s ?p ?o } LIMIT 1";
+// Load endpoint probe query from resource
+String testQuery = loadSparqlTemplate("sparql/endpoint-probe.sparql");
 String url = endpoint.sparqlEndpoint() + "?query=" + URLEncoder.encode(testQuery, StandardCharsets.UTF_8);
 ClassicHttpRequest request = ClassicRequestBuilder.get(url)
 .addHeader("Accept", "application/sparql-results+json")
@@ -171,6 +172,26 @@ return latency;
 } catch (Exception e) {
 log.debug("Failed to measure latency for {}: {}", endpoint.nodeId(), e.getMessage());
 return -1;
+}
+}
+
+/**
+ * Load SPARQL query template from classpath resource.
+ * @param resourcePath path relative to classpath (e.g., "sparql/endpoint-probe.sparql")
+ * @return the query template text
+ */
+private static String loadSparqlTemplate(String resourcePath) {
+try {
+var resource = HTTPRemoteSPARQLClient.class.getClassLoader().getResourceAsStream(resourcePath);
+if (resource == null) {
+throw new IllegalArgumentException("Resource not found: " + resourcePath);
+}
+return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
+.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("\\s+", " ")  // Normalize whitespace
+.trim();
+} catch (Exception ex) {
+throw new RuntimeException("Failed to load SPARQL template from " + resourcePath, ex);
 }
 }
 

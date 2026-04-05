@@ -107,11 +107,20 @@ select.append(subject);
 
 where.append(subject).append(" rdf:type <").append(typeIRI).append(">.\n");
 
-// If context is available, add authorization/tenant filters
-if (context != null) {
-// Future: Add ACL/tenant filters based on context
-// where.append("# Context filters would be applied here\n");
-log.debug("sparql.select.context.available: true");
+// Extract realm from context and add tenant/authorization filtering
+String realm = extractRealmFromContext(context);
+if (realm != null) {
+// Add realm filtering to WHERE clause to prevent cross-tenant data access
+// This enforces multi-tenant isolation at the SPARQL query level
+where.append("\n# Realm isolation filter for tenant: ").append(realm).append("\n");
+where.append("FILTER( ");
+where.append("***REMOVED***(str(").append(subject).append("), \"^").append(realm).append("\") || ");
+where.append("***REMOVED***(str(").append(subject).append("), \"#").append(realm).append("$\")");
+where.append(" )\n");
+log.info("sparql.select.realm_filter: applied - realm={}", realm);
+} else {
+// No realm specified - this is a public/system query
+log.warn("sparql.select.realm_filter: WARNING - no realm context provided (public query or missing context)");
 }
 
 selections.forEach( f-> {
@@ -138,6 +147,113 @@ where.append("}\n");
 StringBuilder sparql = new StringBuilder();
 sparql.append("SELECT DISTINCT ").append(select).append(" WHERE {\n").append(where).append("\n}");
 return sparql;
+}
+
+/**
+ * Extract realm identifier from GraphQL context for multi-tenant isolation.
+ * 
+ * Tries multiple strategies in order:
+ * 1. Explicit "kernel.realm" or "realm" key in context map
+ * 2. Derive realm from "actor" principal IRI (expects format like "urn:iq:actor:{realm}:...")
+ * 3. Return null if no realm information available (public query)
+ * 
+ * @param context The GraphQL DataFetchingEnvironment context (typically a Map)
+ * @return the realm identifier, or null if not available
+ */
+String extractRealmFromContext(Object context) {
+if (context == null) {
+return null;
+}
+
+// Case 1: Direct realm key in context map
+if (context instanceof Map) {
+Map ctx = (Map) context;
+
+// Try explicit realm keys
+Object realmObj = ctx.get("kernel.realm");
+if (realmObj != null) return realmObj.toString();
+realmObj = ctx.get("realm");
+if (realmObj != null) return realmObj.toString();
+
+// Case 2: Derive realm from actor principal IRI
+// Actor IRIs typically follow patterns like:
+// - http://symbol.systems/{realm}/actor/{actorId}
+// - urn:iq:actor:{realm}:{actorId}
+// - urn:iq:realm:{realm}/actor/{actorId}
+Object actorObj = ctx.get("actor");
+if (actorObj == null) actorObj = ctx.get("kernel.principal");
+if (actorObj == null) actorObj = ctx.get("principal");
+if (actorObj == null) actorObj = ctx.get("userPrincipal");
+
+if (actorObj != null) {
+String actor = actorObj.toString();
+// Parse realm from actor IRI patterns
+String extractedRealm = parseRealmFromActorIRI(actor);
+if (extractedRealm != null) {
+log.debug("sparql.realm_extraction: derived from actor IRI - actor={}, realm={}", actor, extractedRealm);
+return extractedRealm;
+}
+}
+}
+
+return null;
+}
+
+/**
+ * Parse realm identifier from actor IRI using common URI patterns.
+ * 
+ * Supported patterns:
+ * - http://symbol.systems/{realm}/actor/{actorId}
+ * - urn:iq:actor:{realm}:{actorId}
+ * - urn:iq:realm:{realm}/actor/{actorId}
+ * - Fallback: use entire actor IRI as realm (conservative approach)
+ * 
+ * @param actorIRI the actor's IRI
+ * @return the realm identifier, or null if cannot parse
+ */
+String parseRealmFromActorIRI(String actorIRI) {
+if (actorIRI == null || actorIRI.isBlank()) {
+return null;
+}
+
+// Pattern 1: http://symbol.systems/REALM/actor/...
+if (actorIRI.contains("symbol.systems/")) {
+String[] parts = actorIRI.split("/");
+for (int i = 0; i < parts.length - 1; i++) {
+if ("symbol.systems".equals(parts[i]) && i + 1 < parts.length) {
+String candidate = parts[i + 1];
+if (!candidate.isEmpty() && !"actor".equals(candidate)) {
+return candidate;
+}
+}
+}
+}
+
+// Pattern 2: urn:iq:actor:REALM:...
+if (actorIRI.startsWith("urn:iq:actor:")) {
+String suffix = actorIRI.substring("urn:iq:actor:".length());
+String[] parts = suffix.split(":");
+if (parts.length > 0) {
+return parts[0];
+}
+}
+
+// Pattern 3: urn:iq:realm:REALM/actor/...
+if (actorIRI.contains("urn:iq:realm:")) {
+String[] parts = actorIRI.split("/");
+for (int i = 0; i < parts.length; i++) {
+if (parts[i].startsWith("urn:iq:realm:")) {
+String realmPart = parts[i].substring("urn:iq:realm:".length());
+if (!realmPart.isEmpty()) {
+return realmPart;
+}
+}
+}
+}
+
+// Fallback: use entire actor IRI as realm (conservative - allows same realm only)
+log.debug("sparql.realm_extraction: using entire actor IRI as realm - actor={}", actorIRI);
+return actorIRI;
 }
 
 private boolean isRequired(Type type) {

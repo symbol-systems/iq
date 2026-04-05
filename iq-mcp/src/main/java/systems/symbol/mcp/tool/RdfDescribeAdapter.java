@@ -15,6 +15,7 @@ import systems.symbol.mcp.MCPException;
 import systems.symbol.mcp.MCPResult;
 
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +65,11 @@ public I_MCPResult execute(MCPCallContext ctx, Map<String, Object> input) throws
 String uri = (String) input.get("uri");
 if (uri == null || uri.isBlank()) throw MCPException.badRequest("'uri' is required");
 
-String describe = "DESCRIBE <" + uri + ">";
 log.debug("[rdf.describe] uri={} [trace={}]", uri, ctx.traceId());
+
+// Load DESCRIBE template from resource and substitute URI parameter
+String template = loadSparqlTemplate("sparql/rdf-describe.sparql");
+String describe = template.replace("{uri}", uri);
 
 try (RepositoryConnection conn = repository.getConnection();
  GraphQueryResult result   = conn.prepareGraphQuery(describe).evaluate()) {
@@ -76,6 +80,26 @@ Rio.write(model, sw, RDFFormat.TURTLE);
 return MCPResult.ok(sw.toString(), "text/turtle");
 } catch (Exception ex) {
 throw MCPException.internal("DESCRIBE failed for <" + uri + ">: " + ex.getMessage(), ex);
+}
+}
+
+/**
+ * Load SPARQL query template from classpath resource.
+ * @param resourcePath path relative to classpath (e.g., "sparql/rdf-describe.sparql")
+ * @return the query template text
+ */
+private static String loadSparqlTemplate(String resourcePath) {
+try {
+var resource = RdfDescribeAdapter.class.getClassLoader().getResourceAsStream(resourcePath);
+if (resource == null) {
+throw new IllegalArgumentException("Resource not found: " + resourcePath);
+}
+return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
+.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("\\s+", " ")  // Normalize whitespace
+.trim();
+} catch (Exception ex) {
+throw new RuntimeException("Failed to load SPARQL template from " + resourcePath, ex);
 }
 }
 }

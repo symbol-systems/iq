@@ -1,0 +1,3 @@
+# RdfDescribeAdapter: Complete RDF description of an entity
+# Parameters: {uri} - the entity IRI to describe
+DESCRIBE <{uri}>

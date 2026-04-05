@@ -1,0 +1,6 @@
+# AskPolicyEngine: Default policy template for query authorization
+# Checks if an actor has canQuery permission on a type
+# Parameters: {actor} - the actor IRI, {type} - the resource type IRI
+ASK WHERE {
+<{actor}> <http://symbol.systems/v0/onto/trust#canQuery> <{type}>
+}

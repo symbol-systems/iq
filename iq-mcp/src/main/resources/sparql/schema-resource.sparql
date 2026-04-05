@@ -1,0 +1,8 @@
+# SchemaResourceProvider: Fetch all triples from a realm's schema named graph
+# Parameters: {realm} - the realm IRI
+CONSTRUCT { ?s ?p ?o }
+WHERE {
+GRAPH <{realm}/schema> {
+?s ?p ?o
+}
+}

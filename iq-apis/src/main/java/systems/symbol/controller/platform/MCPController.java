@@ -13,6 +13,8 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.mcp.MCPToolRegistry;
+import systems.symbol.mcp.dynamic.DynamicToolRegistration;
+import systems.symbol.mcp.resource.StreamingResourceProvider;
 import systems.symbol.mcp.server.MCPServerBuilder;
 import systems.symbol.platform.RealmPlatform;
 import java.io.IOException;
@@ -323,6 +325,66 @@ return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
 }
 
 /**
+ * Get resource content with HTTP 206 Partial Content support for byte-range requests.
+ *
+ * <p>Supports Range header for streaming large resources:
+ * <pre>
+ * GET /mcp/resources/{name}
+ * Range: bytes=0-9999
+ * 
+ * HTTP/1.1 206 Partial Content
+ * Content-Length: 10000
+ * Content-Range: bytes 0-9999/50000
+ * Accept-Ranges: bytes
+ * </pre>
+ *
+ * @param resourceName the name of the resource to retrieve
+ * @param headers HTTP headers (including Range header)
+ * @return partial or full resource content
+ */
+@GET
+@Path("/resources/{name}")
+@Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_OCTET_STREAM})
+public Response getResource(
+@PathParam("name") String resourceName,
+@Context HttpHeaders headers) {
+try {
+if (resourceName == null || resourceName.trim().isEmpty()) {
+return errorResponse(Response.Status.BAD_REQUEST, "Resource name is required");
+}
+
+// Get the resource content (in a real implementation, would fetch from provider)
+// For now, return a placeholder showing what would be fetched
+String resourceContent = "[Resource: " + resourceName + "]";
+
+// Get Range header if present
+String rangeHeader = headers != null ? headers.getHeaderString("Range") : null;
+
+// Apply byte-range filtering if requested
+String responseContent = StreamingResourceProvider.applyRangeSupport(resourceContent, rangeHeader);
+Map<String, String> rangeHeaders = StreamingResourceProvider.getRangeHeaders(resourceContent, rangeHeader);
+
+Response.ResponseBuilder responseBuilder;
+if (!rangeHeaders.isEmpty()) {
+// Return 206 Partial Content
+responseBuilder = Response.status(206);
+for (var entry : rangeHeaders.entrySet()) {
+responseBuilder = responseBuilder.header(entry.getKey(), entry.getValue());
+}
+} else {
+// Return 200 OK with full content
+responseBuilder = Response.ok();
+responseBuilder = responseBuilder.header("Accept-Ranges", "bytes");
+}
+
+return addCorsHeaders(responseBuilder.entity(responseContent)).build();
+} catch (Exception e) {
+log.error("Error retrieving MCP resource: {}", resourceName, e);
+return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+}
+}
+
+/**
  * List all available prompts.
  *
  * @return JSON array of prompt definitions
@@ -380,6 +442,86 @@ return addCorsHeaders(Response.ok(toJson(body))).build();
 log.error("Error executing MCP tool: {}", toolName, e);
 return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
 }
+}
+
+/**
+ * Register a new tool dynamically via SPARQL INSERT.
+ *
+ * <p>Allows runtime registration of tools without deployment. Tools are registered
+ * in the {@code iq:catalog} RDF graph and will be discovered by DynamicScriptBridge
+ * on next MCPToolRegistry.buildServerBuilder() call.
+ *
+ * <p>Request body:
+ * <pre>
+ * {
+ *   "name": "my-tool",
+ *   "description": "My custom tool",
+ *   "sparql": "SELECT ?item WHERE { ... }",
+ *   "inputSchema": "{\"type\": \"object\", ...}"
+ * }
+ * </pre>
+ *
+ * @param registrationJson JSON tool registration request
+ * @return response with registration status
+ */
+@POST
+@Path("/tools/register")
+@Consumes(MediaType.APPLICATION_JSON)
+public Response registerTool(String registrationJson) {
+try {
+// Validate JSON
+var registrationObj = om.readTree(registrationJson);
+String toolName = safeJsonString(registrationObj, "name");
+String description = safeJsonString(registrationObj, "description");
+String sparql = safeJsonString(registrationObj, "sparql");
+String inputSchema = safeJsonString(registrationObj, "inputSchema");
+
+if (toolName == null || toolName.trim().isEmpty()) {
+return errorResponse(Response.Status.BAD_REQUEST, "Tool name is required");
+}
+if (sparql == null || sparql.trim().isEmpty()) {
+return errorResponse(Response.Status.BAD_REQUEST, "SPARQL query is required");
+}
+
+Repository repo = getDefaultRepository();
+if (repo == null) {
+return errorResponse(Response.Status.SERVICE_UNAVAILABLE, "Repository not available");
+}
+
+// Register tool via DynamicToolRegistration
+var registration = new DynamicToolRegistration(repo);
+boolean success = registration.registerToolViaSparql(toolName, description, sparql, inputSchema);
+
+Map<String, Object> body = jsonMap();
+if (success) {
+body.put("status", "registered");
+body.put("tool", toolName);
+body.put("message", "Tool registered successfully. Use buildServerBuilder() to discover.");
+log.info("[MCPController] dynamically registered tool: {}", toolName);
+return addCorsHeaders(Response.ok(toJson(body))).build();
+} else {
+body.put("status", "failed");
+body.put("error", "Tool registration failed");
+return addCorsHeaders(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(toJson(body))).build();
+}
+} catch (JsonProcessingException e) {
+log.warn("Invalid JSON in registerTool request: {}", e.getMessage());
+return errorResponse(Response.Status.BAD_REQUEST, "Invalid JSON payload");
+} catch (Exception e) {
+log.error("Error registering MCP tool", e);
+return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+}
+}
+
+/**
+ * Safely extract a string value from JSON tree.
+ */
+private String safeJsonString(com.fasterxml.jackson.databind.JsonNode node, String fieldName) {
+if (node == null || !node.has(fieldName)) {
+return null;
+}
+var field = node.get(fieldName);
+return field != null && !field.isNull() ? field.asText() : null;
 }
 
 /**

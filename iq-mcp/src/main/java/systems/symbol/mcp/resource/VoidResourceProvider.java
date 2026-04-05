@@ -10,6 +10,8 @@ import systems.symbol.mcp.MCPCallContext;
 import systems.symbol.mcp.MCPException;
 import systems.symbol.mcp.MCPResult;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * VoidResourceProvider — serves the VoID (Vocabulary of Interlinked Datasets) description.
  *
@@ -47,13 +49,9 @@ ttl.append("@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .\n\n");
 ttl.append("<iq://self> a void:DatasetDescription ;\n");
 ttl.append("  void:subset ");
 
-var result = conn.prepareTupleQuery("""
-SELECT ?g (COUNT(*) AS ?count) WHERE {
-GRAPH ?g { ?s ?p ?o }
-}
-GROUP BY ?g
-ORDER BY DESC(?count)
-""").evaluate();
+// Load SPARQL query from resource
+String sparql = loadSparqlTemplate("sparql/void-graphs.sparql");
+var result = conn.prepareTupleQuery(sparql).evaluate();
 
 boolean firstGraph = true;
 while (result.hasNext()) {
@@ -72,6 +70,26 @@ ttl.append(" .\n");
 return MCPResult.ok(ttl.toString(), "text/turtle");
 } catch (Exception ex) {
 throw MCPException.internal("Failed to build VoID: " + ex.getMessage(), ex);
+}
+}
+
+/**
+ * Load SPARQL query template from classpath resource.
+ * @param resourcePath path relative to classpath (e.g., "sparql/void-graphs.sparql")
+ * @return the query template text
+ */
+private static String loadSparqlTemplate(String resourcePath) {
+try {
+var resource = VoidResourceProvider.class.getClassLoader().getResourceAsStream(resourcePath);
+if (resource == null) {
+throw new IllegalArgumentException("Resource not found: " + resourcePath);
+}
+return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
+.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("\\s+", " ")  // Normalize whitespace
+.trim();
+} catch (Exception ex) {
+throw new RuntimeException("Failed to load SPARQL template from " + resourcePath, ex);
 }
 }
 }

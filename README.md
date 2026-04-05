@@ -1,4 +1,4 @@
-# IQ — Knowledge Execution for Cognitive AI
+# IQ — A Cognitive Operating System for AI
 
 IQ is a runtime platform that turns structured knowledge and AI into executable, stateful workflows. It connects your data, your tools, and your reasoning in one coherent system — without rewriting integration logic every time something changes.
 

@@ -1,0 +1,3 @@
+# HTTPRemoteSPARQLClient: Probe query to verify endpoint connectivity
+# Simple existence check - returns true if endpoint has any data
+ASK WHERE { ?s ?p ?o } LIMIT 1

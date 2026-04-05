@@ -1,0 +1,10 @@
+# GQL: Look up a policy template by type and fetch default allow flag
+# Used to load custom ASK templates and policy engine configuration per GraphQL type
+# Parameters: {typeIRI} - the GraphQL object type IRI
+SELECT ?template ?allow
+WHERE {
+?p <http://symbol.systems/v0/onto/trust#forType> <{typeIRI}> .
+OPTIONAL { ?p <http://symbol.systems/v0/onto/trust#askTemplate> ?template }
+OPTIONAL { ?p <http://symbol.systems/v0/onto/trust#defaultAllow> ?allow }
+}
+LIMIT 1

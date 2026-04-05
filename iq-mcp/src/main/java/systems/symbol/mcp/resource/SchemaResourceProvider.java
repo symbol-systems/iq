@@ -15,6 +15,7 @@ import systems.symbol.mcp.MCPException;
 import systems.symbol.mcp.MCPResult;
 
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * SchemaResourceProvider — serves the OWL/SHACL class model for a realm.
@@ -58,8 +59,9 @@ if (realm == null) throw MCPException.badRequest("Could not extract realm from U
 
 log.debug("[SchemaResource] loading schema for realm={} [trace={}]", realm, ctx.traceId());
 
-// CONSTRUCT all triples from the realm's schema named graph
-String sparql = "CONSTRUCT { ?s ?p ?o } WHERE { GRAPH <" + realm + "/schema> { ?s ?p ?o } }";
+// Load SPARQL from resource file and substitute realm parameter
+String template = loadSparqlTemplate("sparql/schema-resource.sparql");
+String sparql = template.replace("{realm}", realm);
 
 try (RepositoryConnection conn = repository.getConnection();
  GraphQueryResult result   = conn.prepareGraphQuery(sparql).evaluate()) {
@@ -79,5 +81,25 @@ try {
 String path = uri.substring("iq://realm/".length());
 return path.substring(0, path.lastIndexOf("/schema"));
 } catch (Exception ex) { return null; }
+}
+
+/**
+ * Load SPARQL query template from classpath resource.
+ * @param resourcePath path relative to classpath (e.g., "sparql/schema-resource.sparql")
+ * @return the query template text
+ */
+private static String loadSparqlTemplate(String resourcePath) {
+try {
+var resource = SchemaResourceProvider.class.getClassLoader().getResourceAsStream(resourcePath);
+if (resource == null) {
+throw new IllegalArgumentException("Resource not found: " + resourcePath);
+}
+return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
+.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("\\s+", " ")  // Normalize whitespace
+.trim();
+} catch (Exception ex) {
+throw new RuntimeException("Failed to load SPARQL template from " + resourcePath, ex);
+}
 }
 }

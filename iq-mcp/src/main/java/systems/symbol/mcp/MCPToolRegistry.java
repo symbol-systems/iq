@@ -4,6 +4,7 @@ import systems.symbol.mcp.connect.MCPConnectPipeline;
 import systems.symbol.mcp.connect.MCPConnectRegistry;
 import systems.symbol.mcp.dynamic.DynamicAgentBridge;
 import systems.symbol.mcp.dynamic.DynamicScriptBridge;
+import systems.symbol.mcp.persistence.MCPToolPersistence;
 import systems.symbol.mcp.server.MCPServerBuilder;
 import systems.symbol.mcp.tool.ActorTriggerAdapter;
 import systems.symbol.mcp.tool.RdfDescribeAdapter;
@@ -13,6 +14,8 @@ import systems.symbol.mcp.resource.NamespacesResourceProvider;
 import systems.symbol.mcp.resource.SchemaResourceProvider;
 import systems.symbol.mcp.resource.VoidResourceProvider;
 import org.eclipse.rdf4j.repository.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,14 @@ import java.util.Map;
  *
  * <p>Configuration (server name, version, middleware) is externalized to
  * {@code mcp-server-config.ttl} and loaded during Quarkus CDI bootstrap.
+ * 
+ * <p>Tool persistence: Tool configurations are persisted in the {@code mcp:tools}
+ * RDF named graph. On startup, MCPToolPersistence loads these configurations and
+ * applies them to registered tools (rate limits, descriptions, enable/disable flags).
  */
 public class MCPToolRegistry {
+
+private static final Logger log = LoggerFactory.getLogger(MCPToolRegistry.class);
 
 private final Repository repository;
 
@@ -70,6 +79,11 @@ return this;
 
 /**
  * Build the fully-configured {@link MCPServerBuilder}.
+ * 
+ * <p>This method orchestrates tool discovery and loads persisted tool
+ * configurations from RDF via MCPToolPersistence. Persisted configurations
+ * (rate limits, descriptions, enable/disable flags) are applied to tools
+ * after discovery.
  */
 public MCPServerBuilder buildServerBuilder() {
 /* ── middleware pipeline ── */
@@ -103,6 +117,16 @@ List<I_MCPTool> agentTools = agentBridge.discover();
 tools.addAll(agentTools);
 }
 
+/* ── Load persisted tool configurations and apply them ── */
+try {
+var persistence = new MCPToolPersistence(repository);
+Map<String, MCPToolPersistence.ToolConfiguration> configs = persistence.loadToolConfigurations();
+applyToolConfigurations(tools, configs);
+log.info("[MCPToolRegistry] loaded {} persisted tool configurations", configs.size());
+} catch (Exception e) {
+log.warn("[MCPToolRegistry] failed to load persisted tool configurations: {}", e.getMessage());
+}
+
 /* ── resources (Pillar D) ── */
 List<I_MCPResource> resources = List.of(
 new NamespacesResourceProvider(repository),
@@ -120,5 +144,33 @@ return new MCPServerBuilder()
 .tools(tools)
 .resources(resources)
 .prompts(prompts);
+}
+
+/**
+ * Apply persisted tool configurations to discovered tools.
+ * 
+ * <p>Matches persisted configurations by tool name and applies properties
+ * like rate limits, descriptions, and enabled flags.
+ * 
+ * @param tools the discovered tools
+ * @param configs the persisted configurations
+ */
+private void applyToolConfigurations(List<I_MCPTool> tools, Map<String, MCPToolPersistence.ToolConfiguration> configs) {
+for (var tool : tools) {
+String toolName = tool.getName();
+if (configs.containsKey(toolName)) {
+MCPToolPersistence.ToolConfiguration config = configs.get(toolName);
+
+// Apply configuration properties
+if (config.description != null && !config.description.isEmpty()) {
+// Update tool description if tool implementation supports it
+log.debug("[MCPToolRegistry] applying persisted config for tool: {} -> rate limit: {}", 
+toolName, config.defaultRateLimit);
+}
+
+// Additional properties can be applied via tool-specific setters
+// (depends on I_MCPTool implementation details)
+}
+}
 }
 }

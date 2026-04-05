@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,36 @@ this(repository, askTemplate, false);
 
 public AskPolicyEngine(Repository repository, String askTemplate, boolean defaultAllow) {
 this.repository = repository;
-this.askTemplate = (askTemplate==null || askTemplate.isBlank())? "ASK WHERE { <{actor}> <http://symbol.systems/v0/onto/trust#canQuery> <{type}> }" : askTemplate;
+this.askTemplate = (askTemplate==null || askTemplate.isBlank())? loadDefaultTemplate() : askTemplate;
 this.defaultAllow = defaultAllow;
+}
+
+/**
+ * Load the default ASK template from resource file.
+ * @return default policy template as string
+ */
+private static String loadDefaultTemplate() {
+return loadSparqlTemplate("sparql/policy-default-ask.sparql");
+}
+
+/**
+ * Load SPARQL query template from classpath resource.
+ * @param resourcePath path relative to classpath (e.g., "sparql/policy-default-ask.sparql")
+ * @return the query template text
+ */
+private static String loadSparqlTemplate(String resourcePath) {
+try {
+var resource = AskPolicyEngine.class.getClassLoader().getResourceAsStream(resourcePath);
+if (resource == null) {
+throw new IllegalArgumentException("Resource not found: " + resourcePath);
+}
+return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
+.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("\\s+", " ")  // Normalize whitespace
+.trim();
+} catch (Exception ex) {
+throw new RuntimeException("Failed to load SPARQL template from " + resourcePath, ex);
+}
 }
 
 public void addFallback(PolicyEngine engine) { if (engine!=null) fallbacks.add(engine); }
