@@ -1,0 +1,6 @@
+# Find all metadata actions
+SELECT DISTINCT ?id ?type ?text ?target WHERE { 
+  ?that ?id ?target. 
+  ?id rdf:value ?text. 
+  BIND (datatype(?text) AS ?type)
+}

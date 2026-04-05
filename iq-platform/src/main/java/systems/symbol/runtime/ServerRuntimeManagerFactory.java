@@ -31,6 +31,8 @@ private static ServerRuntimeManager lookupManager(String manager) {
 switch (manager) {
 case "quarkus":
 return instantiate("systems.symbol.runtime.QuarkusRuntimeManager");
+case "application":
+return instantiate("systems.symbol.runtime.ApplicationRuntimeManager");
 case "default":
 return instantiate("systems.symbol.runtime.DefaultServerRuntimeManager");
 case "process":

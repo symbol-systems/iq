@@ -1,0 +1,4 @@
+# Find all RDF types used as objects
+SELECT DISTINCT ?id WHERE { 
+  ?s rdf:type ?id 
+}

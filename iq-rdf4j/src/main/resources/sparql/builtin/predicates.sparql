@@ -1,0 +1,4 @@
+# Find all predicates (properties) used in the repository
+SELECT DISTINCT ?id WHERE { 
+  ?s ?id ?o.
+}

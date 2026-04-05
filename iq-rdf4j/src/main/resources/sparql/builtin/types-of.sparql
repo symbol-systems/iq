@@ -1,0 +1,5 @@
+# Find all RDF types in the repository
+SELECT DISTINCT ?label ?id WHERE { 
+  ?s rdf:type ?id. 
+  OPTIONAL {?id rdfs:label ?label.} 
+}

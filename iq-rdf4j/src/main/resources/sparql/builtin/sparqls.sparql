@@ -1,0 +1,5 @@
+# Find all SPARQL scripts (scripts with application/sparql-query MIME type)
+SELECT DISTINCT ?id ?type WHERE { 
+  ?id rdf:value ?text. 
+  BIND (datatype(?text) AS ?type) 
+}

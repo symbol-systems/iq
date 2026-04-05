@@ -1,0 +1,4 @@
+# Find all named graphs in the repository
+SELECT DISTINCT ?id WHERE { 
+  GRAPH ?id { ?s ?p ?o. } 
+}

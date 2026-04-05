@@ -1,0 +1,4 @@
+# Construct index of all resources with their values
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+CONSTRUCT { ?this rdf:value ?text } 
+WHERE { ?this rdf:value ?text }

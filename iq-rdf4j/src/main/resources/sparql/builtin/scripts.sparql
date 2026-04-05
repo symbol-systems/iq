@@ -1,0 +1,5 @@
+# Find all SPARQL scripts stored in the repository
+SELECT DISTINCT ?id ?type ?text WHERE { 
+  ?id rdf:value ?text. 
+  BIND (datatype(?text) AS ?type) 
+}

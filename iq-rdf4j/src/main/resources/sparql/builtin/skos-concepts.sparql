@@ -1,0 +1,5 @@
+# Find all SKOS concepts with preferred labels
+SELECT DISTINCT ?label ?id WHERE { 
+  ?id ?p ?o. 
+  ?id skos:prefLabel ?label. 
+}

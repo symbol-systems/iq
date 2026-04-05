@@ -1,0 +1,4 @@
+# Find all subjects (resources) in the repository
+SELECT DISTINCT ?id WHERE { 
+  ?id ?p ?o.
+}

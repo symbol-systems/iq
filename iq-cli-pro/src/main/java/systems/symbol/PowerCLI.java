@@ -31,6 +31,7 @@ commands.addSubcommand(new AboutCommand(context));
 
 if (context.isInitialized()) {
 commands.addSubcommand(new ModelsCommand(context, commands));
+commands.addSubcommand(new AgentCommand(context));
 commands.addSubcommand(new RunCommand(context, commands));
 commands.addSubcommand(new TriggerCommand(context));
 commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
@@ -70,6 +71,9 @@ CommandLine commands = super.getCommandLine(context);
 if (context.isInitialized()) {
 if (!commands.getSubcommands().containsKey("models")) {
 commands.addSubcommand(new ModelsCommand(context, commands));
+}
+if (!commands.getSubcommands().containsKey("agent")) {
+commands.addSubcommand(new AgentCommand(context));
 }
 if (!commands.getSubcommands().containsKey("run")) {
 commands.addSubcommand(new RunCommand(context, commands));
