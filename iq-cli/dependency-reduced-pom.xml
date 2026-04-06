@@ -162,7 +162,7 @@
 <dependency>
   <groupId>org.eclipse.rdf4j</groupId>
   <artifactId>rdf4j-runtime</artifactId>
-  <version>5.3.0-M2</version>
+  <version>5.2.2</version>
   <type>pom</type>
   <scope>compile</scope>
   <exclusions>
@@ -175,7 +175,7 @@
 <dependency>
   <groupId>org.eclipse.rdf4j</groupId>
   <artifactId>rdf4j-storage</artifactId>
-  <version>5.3.0-M2</version>
+  <version>5.2.2</version>
   <type>pom</type>
   <scope>compile</scope>
   <exclusions>
@@ -199,29 +199,28 @@
 </dependency>
   </dependencies>
   <properties>
+<site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
 <project.build.directory>deploy</project.build.directory>
+<main.class>systems.symbol.CLI</main.class>
 <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
+<spring.version>6.1.5</spring.version>
+<springboot.version>4.0.5</springboot.version>
 <site.host.stable>${project.url}</site.host.stable>
 <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
 <site.host>${site.host.dev}</site.host>
+<groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+<site.host.other>${site.host.stable}</site.host.other>
 <maven.compiler.plugin.release>21</maven.compiler.plugin.release>
 <slf4j.version>2.0.13</slf4j.version>
+<site.host.dev>http://localhost:9000/</site.host.dev>
 <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<project.webapp.directory>src/main/resources/www/</project.webapp.directory>
 <site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
 <groovy.version>5.0.5</groovy.version>
 <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
 <logback.version>1.5.3</logback.version>
 <handlebars.version>4.5.0</handlebars.version>
-<site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
-<main.class>systems.symbol.CLI</main.class>
-<spring.version>6.1.5</spring.version>
-<springboot.version>4.0.5</springboot.version>
-<groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
-<site.host.other>${site.host.stable}</site.host.other>
-<site.host.dev>http://localhost:9000/</site.host.dev>
-<project.webapp.directory>src/main/resources/www/</project.webapp.directory>
-<camel.version>4.0.0-M1</camel.version>
   </properties>
 </project>
