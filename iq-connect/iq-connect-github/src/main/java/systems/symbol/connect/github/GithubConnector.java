@@ -17,8 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import systems.symbol.connect.core.AbstractConnector;
+import systems.symbol.connect.core.ConnectorErrorHandler;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
+import systems.symbol.connect.core.ConnectorState;
 import systems.symbol.connect.core.Modeller;
 
 public final class GithubConnector extends AbstractConnector {
@@ -50,8 +52,17 @@ String token = config.getApiKey().get();
 // Validate token by making an API call to GitHub
 validateGithubToken(token);
 
-// Wire GitHub scanner classes into discovery pipeline
+// Initialize framework components
+ConnectorState state = ConnectorState.start(getConnectorId().stringValue());
+ConnectorErrorHandler errorHandler = ConnectorErrorHandler.forConnector(getConnectorId().stringValue());
+
+// Register error callbacks
+errorHandler.on("error", err -> log.error("GitHub sync error: {} for item {}", err.message, err.itemId));
+errorHandler.on("retry", err -> log.warn("Retrying GitHub item: {}", err.itemId));
+errorHandler.on("dlq", err -> log.error("GitHub dead-letter: {}", err.itemId));
+
 try {
+// Wire GitHub scanner classes into discovery pipeline
 GitHub github = GitHub.connectUsingOAuth(token);
 GithubModeller modeller = new GithubModeller(
 getModel(),
@@ -74,10 +85,21 @@ getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT),
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), 
   Values.***REMOVED***(resourceCount), graphIri());
 
-log.info("GitHub connector sync completed: {} resources discovered", resourceCount);
+state.recordSuccess();
+var stats = state.finish();
+log.info("GitHub connector sync completed: {} resources discovered.{}", resourceCount, stats);
 } catch (IOException e) {
-log.error("GitHub API error during refresh: {}", e.getMessage(), e);
+state.recordFailure("github-api", e.getMessage());
+errorHandler.recordError("github-api", e);
+var stats = state.finish();
+log.error("GitHub connector sync failed: {}", stats, e);
 throw new Exception("GitHub discovery failed: " + e.getMessage(), e);
+} catch (Exception e) {
+state.recordFailure("github-sync", e.getMessage());
+errorHandler.recordError("github-sync", e);
+var stats = state.finish();
+log.error("GitHub connector sync failed: {}", stats, e);
+throw e;
 }
 }
 

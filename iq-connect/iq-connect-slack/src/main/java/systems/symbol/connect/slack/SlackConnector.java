@@ -8,19 +8,25 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.response.users.UsersListResponse;
 import com.slack.api.model.User;
 
 import systems.symbol.connect.core.AbstractConnector;
+import systems.symbol.connect.core.ConnectorErrorHandler;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
+import systems.symbol.connect.core.ConnectorState;
 import systems.symbol.connect.core.Modeller;
 
 public final class SlackConnector extends AbstractConnector {
 
 private final SlackConnectorConfig config;
+private static final Logger log = LoggerFactory.getLogger(SlackConnector.class);
 
 public SlackConnector(String connectorId, SlackConnectorConfig config) {
 super(connectorId,
@@ -40,6 +46,16 @@ if (config.getApiKey().isEmpty()) {
 throw new IllegalStateException("SLACK_API_KEY is required");
 }
 
+// Initialize framework components
+ConnectorState state = ConnectorState.start(getConnectorId().stringValue());
+ConnectorErrorHandler errorHandler = ConnectorErrorHandler.forConnector(getConnectorId().stringValue());
+
+// Register error callbacks
+errorHandler.on("error", err -> log.error("Slack sync error: {} for item {}", err.message, err.itemId));
+errorHandler.on("retry", err -> log.warn("Retrying Slack item: {}", err.itemId));
+errorHandler.on("dlq", err -> log.error("Slack dead-letter: {}", err.itemId));
+
+try {
 Slack slack = Slack.getInstance();
 MethodsClient methods = slack.methods(config.getApiKey().get());
 UsersListResponse usersResult = methods.usersList(req -> req.limit(200));
@@ -69,5 +85,16 @@ resourceCount++;
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(resourceCount), graphIri());
+
+state.recordSuccess();
+var stats = state.finish();
+log.info("Slack connector sync completed: {} resources discovered. {}", resourceCount, stats);
+} catch (Exception e) {
+state.recordFailure("slack-sync", e.getMessage());
+errorHandler.recordError("slack-sync", e);
+var stats = state.finish();
+log.error("Slack connector sync failed: {}", stats, e);
+throw e;
+}
 }
 }
