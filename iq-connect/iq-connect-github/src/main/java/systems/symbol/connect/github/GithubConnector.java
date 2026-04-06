@@ -12,6 +12,9 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
+import org.kohsuke.github.GitHub;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
@@ -22,6 +25,7 @@ public final class GithubConnector extends AbstractConnector {
 
 private final GithubConnectorConfig config;
 private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+private static final Logger log = LoggerFactory.getLogger(GithubConnector.class);
 
 public GithubConnector(String connectorId, GithubConnectorConfig config) {
 super(connectorId,
@@ -46,26 +50,35 @@ String token = config.getApiKey().get();
 // Validate token by making an API call to GitHub
 validateGithubToken(token);
 
-// TODO: Wire GitHub scanner classes into discovery pipeline
-// The following scanner classes exist but are not yet integrated:
-// - GithubMyselfScanner: requires GHMyself object from GitHub API
-// - GithubOrganizationScanner: requires GHOrganization object
-// - GithubRepositoryScanner: requires GHRepository object
-// - GithubTeamScanner: requires GHTeam object
-// - GithubUserScanner: requires GHUser object
-//
-// These scanners have a common interface that expects GitHub API objects,
-// which would require instantiating a GitHub client and fetching authenticated data.
-// Full implementation pending: github.com integration for org/repo/team/user enumeration
+// Wire GitHub scanner classes into discovery pipeline
+try {
+GitHub github = GitHub.connectUsingOAuth(token);
+GithubModeller modeller = new GithubModeller(
+getModel(),
+graphIri(),
+ontologyBaseIri(),
+entityBaseIri()
+);
+GithubScanContext context = new GithubScanContext(getConnectorId(), modeller);
 
-// Fallback: minimal discovered data path to keep connector functional
-IRI entity = Values.iri(entityBaseIri().stringValue() + "github-item");
-getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "GithubResource"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("Github"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+// Scan authenticated user and their resources
+new GithubMyselfScanner(github.getMyself()).scan(context);
+
+// Update connector metadata
+long resourceCount = getModel().stream()
+.filter(stmt -> stmt.getPredicate().stringValue().equals(ConnectorModels.HAS_RESOURCE))
+.count();
+
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), 
+  Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), 
+  Values.***REMOVED***(resourceCount), graphIri());
+
+log.info("GitHub connector sync completed: {} resources discovered", resourceCount);
+} catch (IOException e) {
+log.error("GitHub API error during refresh: {}", e.getMessage(), e);
+throw new Exception("GitHub discovery failed: " + e.getMessage(), e);
+}
 }
 
 /**

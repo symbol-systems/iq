@@ -18,7 +18,7 @@ return matcher.group(1);
 return "";
 }
 
-public static String hackItToWork(String msg) {
+public static String stripMarkdownCodeFence(String msg) {
 Matcher matcher = EXTRACT_SNIPPET.matcher(msg);
 if (!matcher.find())
 return msg;

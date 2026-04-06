@@ -116,7 +116,7 @@ I_Assist<String> thought = new Conversation();
 thought.user(remodelled);
 log.info("think.prompt: {}", thought);
 llm.complete(thought);
-String rdf = Extract.hackItToWork(thought.latest().getContent());
+String rdf = Extract.stripMarkdownCodeFence(thought.latest().getContent());
 log.info("think.thoughts: {}", rdf);
 
 ParserConfig config = new ParserConfig();

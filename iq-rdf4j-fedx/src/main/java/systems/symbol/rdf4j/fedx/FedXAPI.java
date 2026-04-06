@@ -92,17 +92,49 @@ throw new RepositoryException("ASK query evaluation failed", e);
 
 /**
  * Execute a CONSTRUCT query and return RDF results.
- * Note: Phase 3C stub - CONSTRUCT not yet fully implemented.
+ * Merges results from all federated endpoints into a single model.
  *
  * @param query SPARQL CONSTRUCT query
  * @param timeout Query timeout in seconds (optional)
- * @return RDF triples in Turtle or JSON-LD format
+ * @return RDF triples in Turtle format
  */
 public String constructQuery(String query, Integer timeout) throws RepositoryException {
 Objects.requireNonNull(query, "query parameter required");
 
-log.warn("CONSTRUCT queries not yet fully implemented for federation");
-throw new RepositoryException("CONSTRUCT queries require Phase 3C implementation");
+log.debug("Executing federated CONSTRUCT query");
+
+try {
+GraphQuery graphQuery = repository.prepareGraphQuery(query);
+
+if (timeout != null && timeout > 0) {
+graphQuery.setMaxExecutionTime(timeout);
+}
+
+GraphQueryResult result = graphQuery.evaluate();
+org.eclipse.rdf4j.model.Model constructedModel = new org.eclipse.rdf4j.model.impl.LinkedHashModel();
+
+// Collect all statements from the federated result
+while (result.hasNext()) {
+constructedModel.add(result.next());
+}
+result.close();
+
+// Serialize to Turtle format
+ByteArrayOutputStream out = new ByteArrayOutputStream();
+org.eclipse.rdf4j.rio.RDFWriter writer = org.eclipse.rdf4j.rio.Rio.createWriter(
+org.eclipse.rdf4j.rio.RDFFormat.TURTLE, out);
+writer.startRDF();
+for (org.eclipse.rdf4j.model.Statement stmt : constructedModel) {
+writer.handleStatement(stmt);
+}
+writer.endRDF();
+
+return out.toString("UTF-8");
+} catch (QueryEvaluationException e) {
+throw new RepositoryException("CONSTRUCT query evaluation failed", e);
+} catch (IOException e) {
+throw new RepositoryException("CONSTRUCT result serialization failed", e);
+}
 }
 
 /**

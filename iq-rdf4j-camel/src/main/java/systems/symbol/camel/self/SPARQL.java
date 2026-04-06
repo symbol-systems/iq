@@ -1,6 +1,5 @@
 package systems.symbol.camel.self;
 
-import systems.symbol.crud.Model;
 import systems.symbol.oops.AssetNotSupported;
 import systems.symbol.oops.ConfigException;
 import systems.symbol.oops.FactException;

@@ -91,7 +91,19 @@ return findScript(statementIterator, script, mimetype);
 }
 
 public static GraphQueryResult describe(RepositoryConnection connection, String self) {
-GraphQuery graphQuery = connection.prepareGraphQuery("DESCRIBE <" + self + ">");
+// Validate IRI to prevent SPARQL injection
+if (self == null || self.isEmpty()) {
+throw new IllegalArgumentException("self IRI cannot be null or empty");
+}
+
+// Validate that the IRI is safe
+if (self.contains(">") || self.contains("<") || self.contains("\n") || self.contains("\r")) {
+throw new IllegalArgumentException("IRI contains invalid characters that could enable SPARQL injection: " + self);
+}
+
+// Use parameterized query to prevent SPARQL injection
+GraphQuery graphQuery = connection.prepareGraphQuery("DESCRIBE $subject");
+graphQuery.setBinding("subject", org.eclipse.rdf4j.model.impl.SimpleValueFactory.getInstance().createIRI(self));
 return graphQuery.evaluate();
 }
 }

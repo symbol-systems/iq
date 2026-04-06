@@ -122,12 +122,47 @@ if (query == null) {
 log.warn("iq.models.no-query: {}", queryIRI);
 return List.of();
 }
+
 if (isConstruct(query) || query.toUpperCase(Locale.ROOT).contains("DESCRIBE")) {
-// The task of mapping CONSTRUCT/DESCRIBE to key/value models is currently not implemented.
-// For CLI stability, return empty list instead of failing on tuple query parsing.
-log.info("iq.models: CONSTRUCT/DESCRIBE query path {} returning empty list", queryIRI);
+// Handle CONSTRUCT/DESCRIBE queries by executing as graph query
+// and converting RDF statements to key-value maps
+try {
+GraphQueryResult graphResult = graph(query, args);
+if (graphResult == null) {
+log.warn("iq.models: failed to execute graph query for {}", queryIRI);
 return List.of();
 }
+
+List<Map<String, Object>> results = new ArrayList<>();
+Model model = new org.eclipse.rdf4j.model.impl.LinkedHashModel();
+while (graphResult.hasNext()) {
+model.add(graphResult.next());
+}
+graphResult.close();
+
+// Convert model statements to maps (subject as key, properties as values)
+Map<String, Map<String, Object>> subjects = new HashMap<>();
+for (org.eclipse.rdf4j.model.Statement stmt : model) {
+String subjectStr = stmt.getSubject().stringValue();
+subjects.computeIfAbsent(subjectStr, k -> new HashMap<>())
+.put(stmt.getPredicate().stringValue(), 
+ ValueTypeConverter.convert(stmt.getObject()));
+}
+
+// Convert to list of maps
+for (Map<String, Object> subjectMap : subjects.values()) {
+if (!subjectMap.isEmpty()) {
+results.add(subjectMap);
+}
+}
+
+return results;
+} catch (Exception e) {
+log.error("iq.models: CONSTRUCT/DESCRIBE query execution failed for {}: {}", queryIRI, e.getMessage(), e);
+return List.of();
+}
+}
+
 return query(query, args);
 }
 

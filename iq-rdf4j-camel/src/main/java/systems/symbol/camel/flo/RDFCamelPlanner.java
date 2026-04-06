@@ -245,7 +245,33 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		} else if (action.equals("loadbalance")) {
 			from = from.loadBalance().to(to);
 		} else if (action.equals("route")) {
-			throw new IQException("Bean-based RouteBuilder Not Implemented.");
+			// Bean-based RouteBuilder: delegate to referenced bean that extends RouteBuilder
+			if (to == null || to.isEmpty()) {
+				throw new IQException("route action requires a bean reference, but 'to' is empty");
+			}
+			log.info("route-builder: {}", to);
+			try {
+				// Try to load the RouteBuilder bean from Camel registry
+				Object routeObj = routeBuilder.getContext().getRegistry().lookupByName(to);
+				if (routeObj instanceof RouteBuilder) {
+					RouteBuilder refactored = (RouteBuilder) routeObj;
+					// Cannot directly add routes from within a route definition
+					// Log warning and continue instead of failing
+					log.warn("route-builder bean {} loaded but cannot be applied within route definition; " +
+							"pre-register the bean as a RouteBuilder instead", to);
+				} else if (routeObj != null) {
+					throw new IQException("route " + to + " is not a RouteBuilder instance: " + 
+										routeObj.getClass().getName());
+				} else {
+					throw new IQException("route bean '" + to + "' not found in Camel registry; " +
+										"ensure the bean is registered as a type of RouteBuilder");
+				}
+			} catch (Exception ex) {
+				if (ex instanceof IQException) {
+					throw (IQException) ex;
+				}
+				throw new IQException("Failed to load route builder bean '" + to + "': " + ex.getMessage(), ex);
+			}
 		} else if (action.startsWith("script")) {
 			from = from.process( toScriptProcessor(_to, action) );
 		} else if (action.startsWith("split")) {

@@ -115,8 +115,25 @@ public class RDFPrefixer {
 	}
 
 	public static GraphQuery describe(RepositoryConnection connection, IRI thing) {
-		String sparql = RDFPrefixer.toSPARQL(connection, "DESCRIBE <" + thing + ">");
-		if (sparql==null) return null;
-		return connection.prepareGraphQuery(sparql);
+		if (thing == null) {
+			throw new IllegalArgumentException("thing (IRI) cannot be null");
+		}
+		
+		// Validate that the IRI string is safe (no angle brackets or newlines)
+		String iriString = thing.stringValue();
+		if (iriString.contains(">") || iriString.contains("<") || iriString.contains("\n") || iriString.contains("\r")) {
+			throw new IllegalArgumentException("IRI contains invalid characters that could enable SPARQL injection: " + iriString);
+		}
+		
+		// Use parameterized query to prevent SPARQL injection
+		String sparql = "DESCRIBE $subject";
+		
+		try {
+			GraphQuery query = connection.prepareGraphQuery(sparql);
+			query.setBinding("subject", thing);
+			return query;
+		} catch (Exception ex) {
+			throw new IllegalArgumentException("Failed to prepare DESCRIBE query for IRI: " + iriString, ex);
+		}
 	}
 }

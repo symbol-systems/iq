@@ -66,13 +66,13 @@ RDFParser rdfParser = Rio.createParser(format);
 rdfParser.setParserConfig(config);
 rdfParser.setRDFHandler(new StatementCollector(model));
 
-String content = hackItToWork(rdf.getContent());
+String content = stripMarkdownCodeFence(rdf.getContent());
 StringReader reader = new StringReader(content);
 rdfParser.parse(reader, rdf.getSelf().stringValue());
 }
 
-// remove ```format``` from payload
-String hackItToWork(String msg) {
+// Remove markdown code fence (```language``` markers) from RDF payload
+String stripMarkdownCodeFence(String msg) {
 Matcher matcher = extractBody.matcher(msg);
 if (!matcher.find())
 return msg;

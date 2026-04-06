@@ -36,8 +36,12 @@ return self;
 @Override
 public void removeTermIteration(Iterator<Statement> iterator, Resource subj, IRI predicate, Value obj,
 Resource... contexts) {
-// TODO what is this?
-this.connection.rollback();
+// Iterate through statements and remove them from the repository
+while (iterator.hasNext()) {
+Statement stmt = iterator.next();
+this.connection.remove(stmt.getSubject(), stmt.getPredicate(), stmt.getObject(), 
+  stmt.getContext() != null ? (Resource) stmt.getContext() : getSelf());
+}
 }
 
 @Override
