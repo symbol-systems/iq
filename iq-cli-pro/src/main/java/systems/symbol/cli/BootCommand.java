@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import systems.symbol.IQConstants;
+import systems.symbol.agent.AgentService;
+import systems.symbol.agent.AgentService.ActorState;
 import systems.symbol.platform.I_Contents;
 import systems.symbol.platform.I_Self;
 import systems.symbol.rdf4j.sparql.JarScriptCatalog;
@@ -41,6 +43,8 @@ private static final Logger log = LoggerFactory.getLogger(BootCommand.class);
 // IRI for SPARQL query to find all actors in current realm
 // Maps to: /sparql/cli/builtin/boot-list-actors.sparql
 private static final String QUERY_LIST_ACTORS_IRI = "urn:iq:script:cli:builtin:boot-list-actors";
+
+private final AgentService agentService = new AgentService();
 
 @CommandLine.Option(names = {"--wait"}, description = "Wait for actors to reach READY state")
 private boolean waitForReady = false;
@@ -81,8 +85,9 @@ log.info("Boot sequence starting for realm: {}", realmIRI);
 display("Booting realm: " + realmIRI.getLocalName());
 
 int actorCount = 0;
+java.util.List<IRI> actorIRIs = new java.util.ArrayList<>();
 try {
-actorCount = initializeActors(iq);
+actorCount = initializeActors(iq, actorIRIs);
 } catch (RuntimeException e) {
 log.warn("Boot validation: no boot query available; assuming no actors to initialize", e);
 display("No boot query found, skipping actor discovery.");
@@ -99,7 +104,7 @@ log.info("Boot complete: {} actor(s) initialized", actorCount);
 
 if (waitForReady) {
 display("  Waiting for actors to reach READY state...");
-boolean allReady = waitForActorsReady(iq, timeout);
+boolean allReady = waitForActorsReady(iq, actorIRIs, timeout);
 if (allReady) {
 display("  ✓ All actors READY");
 return "boot:success:" + actorCount;
@@ -136,10 +141,11 @@ log.warn("Failed to close IQ store", e);
  * Loads the query dynamically from JAR resources.
  *
  * @param iq The IQStore instance
+ * @param actorIRIs List to populate with discovered actor IRIs
  * @return Number of actors initialized
  * @throws Exception if query execution fails
  */
-private int initializeActors(IQStore iq) throws Exception {
+private int initializeActors(IQStore iq, java.util.List<IRI> actorIRIs) throws Exception {
 // Load SPARQL query dynamically from resources
 String sparql = loadBootQuery();
 if (sparql == null) {
@@ -159,6 +165,11 @@ int count = 0;
 while (result.hasNext()) {
 BindingSet binding = result.next();
 IRI actorIRI = (IRI) binding.getBinding("actor").getValue();
+actorIRIs.add(actorIRI);
+
+// Mark actor as READY via AgentService
+agentService.startActor(actorIRI);
+
 log.info("Initializing actor: {}", actorIRI);
 if (verbose) {
 display("  - " + actorIRI.getLocalName());
@@ -175,17 +186,18 @@ conn.close();
 /**
  * Waits for all actors to reach READY state.
  *
- * @param iq  The IQStore instance
- * @param timeout Timeout in seconds
+ * @param iqThe IQStore instance
+ * @param actorIRIs List of actor IRIs to check
+ * @param timeout   Timeout in seconds
  * @return true if all actors reached READY within timeout, false otherwise
  * @throws Exception if an error occurs
  */
-private boolean waitForActorsReady(IQStore iq, int timeout) throws Exception {
+private boolean waitForActorsReady(IQStore iq, java.util.List<IRI> actorIRIs, int timeout) throws Exception {
 long startTime = System.currentTimeMillis();
 long endTime = startTime + (timeout * 1000L);
 
 while (System.currentTimeMillis() < endTime) {
-boolean allReady = checkActorsReady(iq);
+boolean allReady = checkActorsReady(actorIRIs);
 if (allReady) {
 return true;
 }
@@ -197,15 +209,26 @@ return false;
 
 /**
  * Checks if all actors are in READY state.
+ * Uses AgentService.getStatus() to check actual actor state.
  *
- * @param iq The IQStore instance
+ * @param actorIRIs List of actor IRIs to check
  * @return true if all actors are READY, false otherwise
- * @throws Exception if an error occurs
  */
-private boolean checkActorsReady(IQStore iq) throws Exception {
-// TODO: Implement state machine check once AgentService integration is complete
-log.trace("Checking actor readiness...");
-return true;  // Placeholder
+private boolean checkActorsReady(java.util.List<IRI> actorIRIs) {
+if (actorIRIs.isEmpty()) {
+return true;
+}
+
+for (IRI actorIRI : actorIRIs) {
+AgentService.ActorStatus status = agentService.getStatus(actorIRI);
+if (status.state != ActorState.READY) {
+log.trace("Actor {} is in state {}, waiting for READY", actorIRI, status.state);
+return false;
+}
+}
+
+log.debug("All {} actors have reached READY state", actorIRIs.size());
+return true;
 }
 
 /**
