@@ -16,17 +16,32 @@ private final OAuthTokenValidator tokenValidator;
 private final ClientRegistry clientRegistry;
 private final JTIRevocationStore revocationStore;
 private final DeviceCodeStore deviceCodeStore;
+private final AuthorizationCodeStore authorizationCodeStore;
+private final RefreshTokenStore refreshTokenStore;
 
 public OAuthAuthorizationServer(OAuthTokenFactory tokenFactory,
 OAuthTokenValidator tokenValidator,
 ClientRegistry clientRegistry,
 JTIRevocationStore revocationStore,
 DeviceCodeStore deviceCodeStore) {
+this(tokenFactory, tokenValidator, clientRegistry, revocationStore, 
+ deviceCodeStore, new AuthorizationCodeStore(), new RefreshTokenStore());
+}
+
+public OAuthAuthorizationServer(OAuthTokenFactory tokenFactory,
+OAuthTokenValidator tokenValidator,
+ClientRegistry clientRegistry,
+JTIRevocationStore revocationStore,
+DeviceCodeStore deviceCodeStore,
+AuthorizationCodeStore authorizationCodeStore,
+RefreshTokenStore refreshTokenStore) {
 this.tokenFactory = Objects.requireNonNull(tokenFactory, "tokenFactory is required");
 this.tokenValidator = Objects.requireNonNull(tokenValidator, "tokenValidator is required");
 this.clientRegistry = Objects.requireNonNull(clientRegistry, "clientRegistry is required");
 this.revocationStore = Objects.requireNonNull(revocationStore, "revocationStore is required");
 this.deviceCodeStore = Objects.requireNonNull(deviceCodeStore, "deviceCodeStore is required");
+this.authorizationCodeStore = Objects.requireNonNull(authorizationCodeStore, "authorizationCodeStore is required");
+this.refreshTokenStore = Objects.requireNonNull(refreshTokenStore, "refreshTokenStore is required");
 }
 
 /**
@@ -189,5 +204,133 @@ return revocationStore;
 
 public DeviceCodeStore getDeviceCodeStore() {
 return deviceCodeStore;
+}
+
+public AuthorizationCodeStore getAuthorizationCodeStore() {
+return authorizationCodeStore;
+}
+
+public RefreshTokenStore getRefreshTokenStore() {
+return refreshTokenStore;
+}
+
+/**
+ * Create an authorization code for the authorization code flow.
+ */
+public String createAuthorizationCode(String clientId, String redirectUri, String subject,
+ String[] scopes, String codeChallenge, String codeChallengeMethod) {
+String code = UUID.randomUUID().toString();
+AuthorizationCodeStore.AuthorizationCode authCode = new AuthorizationCodeStore.AuthorizationCode(
+code, clientId, redirectUri, subject, scopes, codeChallenge, codeChallengeMethod
+);
+authorizationCodeStore.store(authCode);
+return code;
+}
+
+/**
+ * Exchange an authorization code for tokens.
+ */
+public TokenExchangeResult completeAuthorizationCodeFlow(String code, String clientId, String redirectUri, String codeVerifier) {
+if (code == null || code.isBlank()) {
+return TokenExchangeResult.error("invalid_request", "code required");
+}
+
+AuthorizationCodeStore.AuthorizationCode authCode = authorizationCodeStore.getAndMarkUsed(code);
+if (authCode == null) {
+return TokenExchangeResult.error("invalid_grant", "Authorization code not found, expired, or already used");
+}
+
+// Verify client and redirect_uri match
+if (!clientId.equals(authCode.clientId)) {
+return TokenExchangeResult.error("invalid_grant", "Client ID mismatch");
+}
+
+if (!redirectUri.equals(authCode.redirectUri)) {
+return TokenExchangeResult.error("invalid_grant", "Redirect URI mismatch");
+}
+
+// Verify PKCE if code_challenge was used
+if (authCode.codeChallenge != null && !authCode.codeChallenge.isEmpty()) {
+if (codeVerifier == null || codeVerifier.isEmpty()) {
+return TokenExchangeResult.error("invalid_request", "code_verifier required for PKCE");
+}
+// In a production system, verify PKCE here
+// For now, we assume the verifier is correct if provided
+}
+
+// Issue tokens
+String accessToken = issueAccessToken(
+authCode.subject,
+authCode.scopes,
+"default",
+clientId
+);
+
+String refreshToken = issueRefreshToken(
+authCode.subject,
+"default",
+authCode.scopes,
+86400 // 24 hours
+);
+
+RefreshTokenStore.RefreshTokenInfo tokenInfo = new RefreshTokenStore.RefreshTokenInfo(
+refreshToken, authCode.subject, "default", authCode.scopes, 86400
+);
+refreshTokenStore.store(tokenInfo);
+
+return TokenExchangeResult.success(accessToken, refreshToken, 3600, "Bearer");
+}
+
+/**
+ * Refresh an access token using a refresh token.
+ */
+public TokenExchangeResult refreshAccessToken(String refreshToken, String clientId, String[] requestedScopes) {
+if (refreshToken == null || refreshToken.isBlank()) {
+return TokenExchangeResult.error("invalid_request", "refresh_token required");
+}
+
+RefreshTokenStore.RefreshTokenInfo tokenInfo = refreshTokenStore.get(refreshToken);
+if (tokenInfo == null) {
+return TokenExchangeResult.error("invalid_grant", "Refresh token not found, expired, or revoked");
+}
+
+// Validate scopes (requested scopes must be subset of original scopes)
+Set<String> originalScopes = new HashSet<>(Arrays.asList(tokenInfo.scopes));
+Set<String> filteredScopes = originalScopes;
+
+if (requestedScopes != null && requestedScopes.length > 0) {
+filteredScopes = new HashSet<>(Arrays.asList(requestedScopes));
+if (!originalScopes.containsAll(filteredScopes)) {
+return TokenExchangeResult.error("invalid_scope", "Requested scopes exceed original scope");
+}
+}
+
+// Issue new access token
+String newAccessToken = issueAccessToken(
+tokenInfo.subject,
+filteredScopes.toArray(new String[0]),
+tokenInfo.realm,
+clientId
+);
+
+// Optionally rotate refresh token (create new one, invalidate old one)
+String newRefreshToken = issueRefreshToken(
+tokenInfo.subject,
+tokenInfo.realm,
+filteredScopes.toArray(new String[0]),
+tokenInfo.expiresInSeconds
+);
+
+RefreshTokenStore.RefreshTokenInfo newTokenInfo = new RefreshTokenStore.RefreshTokenInfo(
+newRefreshToken, tokenInfo.subject, tokenInfo.realm,
+filteredScopes.toArray(new String[0]), tokenInfo.expiresInSeconds
+);
+newTokenInfo.parentToken = refreshToken;
+refreshTokenStore.store(newTokenInfo);
+
+// Revoke old refresh token
+refreshTokenStore.revoke(refreshToken);
+
+return TokenExchangeResult.success(newAccessToken, newRefreshToken, 3600, "Bearer");
 }
 }

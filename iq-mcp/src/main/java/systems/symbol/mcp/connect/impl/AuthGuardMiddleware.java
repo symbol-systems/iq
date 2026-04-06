@@ -9,6 +9,7 @@ import systems.symbol.mcp.connect.I_MCPPipeline;
 import systems.symbol.mcp.connect.MCPChain;
 
 import java.util.Base64;
+import java.util.Map;
 import java.util.***REMOVED***.Matcher;
 import java.util.***REMOVED***.Pattern;
 
@@ -30,10 +31,13 @@ private static final IRI SELF = SimpleValueFactory.getInstance()
 private final JwtPrincipalExtractor principalExtractor;
 
 /**
- * Default constructor uses a best-effort subject extractor.
+ * Default constructor loads JWT config from environment variables or system properties.
+ * Checks for: MCP_JWT_SECRET, MCP_JWT_ISSUER, MCP_JWT_AUDIENCE, MCP_JWKS_URI, MCP_OIDC_DISCOVERY_URL.
+ * If no config is provided and a production profile is detected, throws an exception.
+ * Otherwise falls back to a stub extractor (for development).
  */
 public AuthGuardMiddleware() {
-this(principalFromJwtPayload());
+this(buildExtractorFromEnvironment());
 }
 
 /**
@@ -92,6 +96,67 @@ return JwtPrincipalExtractors.fromJwksUrl(jwksUri, issuer, audience, cacheTtlMs)
 if (secret != null && !secret.isBlank()) {
 return JwtPrincipalExtractors.fromHmacSecret(secret, issuer, audience);
 }
+return principalFromJwtPayload();
+}
+
+private static JwtPrincipalExtractor buildExtractorFromEnvironment() {
+Map<String, Object> config = new java.util.HashMap<>();
+
+String oidcDiscoveryUrl = System.getenv("MCP_OIDC_DISCOVERY_URL");
+if (oidcDiscoveryUrl != null && !oidcDiscoveryUrl.isBlank()) {
+config.put("oidcDiscoveryUrl", oidcDiscoveryUrl);
+}
+
+String jwksUri = System.getenv("MCP_JWKS_URI");
+if (jwksUri != null && !jwksUri.isBlank()) {
+config.put("jwksUri", jwksUri);
+}
+
+String jwtSecret = System.getenv("MCP_JWT_SECRET");
+if (jwtSecret != null && !jwtSecret.isBlank()) {
+config.put("jwtSecret", jwtSecret);
+}
+
+String jwtIssuer = System.getenv("MCP_JWT_ISSUER");
+if (jwtIssuer != null && !jwtIssuer.isBlank()) {
+config.put("jwtIssuer", jwtIssuer);
+}
+
+String jwtAudience = System.getenv("MCP_JWT_AUDIENCE");
+if (jwtAudience != null && !jwtAudience.isBlank()) {
+config.put("jwtAudience", jwtAudience);
+}
+
+String cacheTtl = System.getenv("MCP_JWKS_CACHE_TTL_MS");
+if (cacheTtl != null && !cacheTtl.isBlank()) {
+config.put("jwksCacheTtlMs", cacheTtl);
+}
+
+if (!config.isEmpty()) {
+return buildExtractorFromConfig(config);
+}
+
+// Check if we're in a production-like profile
+String quarkusProfile = System.getenv("QUARKUS_PROFILE");
+if (quarkusProfile == null) {
+quarkusProfile = System.getProperty("quarkus.profile", "");
+}
+
+boolean isProduction = quarkusProfile != null && !quarkusProfile.isBlank() 
+&& !quarkusProfile.equals("dev") && !quarkusProfile.equals("test");
+
+if (isProduction) {
+throw new IllegalStateException(
+"JWT verification is not configured but running in production mode (" + quarkusProfile + "). "
++ "Set one of: MCP_OIDC_DISCOVERY_URL, MCP_JWKS_URI, or MCP_JWT_SECRET "
++ "(with MCP_JWT_ISSUER and MCP_JWT_AUDIENCE)."
+);
+}
+
+// Development/test: warn but use stub
+System.err.println("WARNING: AuthGuardMiddleware is using a stub JWT extractor (no signature verification). "
++ "This is only safe for development. To enable JWT verification, set MCP_JWT_SECRET, MCP_JWKS_URI, or MCP_OIDC_DISCOVERY_URL.");
+
 return principalFromJwtPayload();
 }
 

@@ -1,6 +1,12 @@
 package systems.symbol.connect.confluence;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.util.Base64;
 
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -43,6 +49,9 @@ if (config.getApiToken().isEmpty() && (config.getUsername().isEmpty() || config.
 throw new IllegalStateException("Confluence credentials are required (API token or username/password)");
 }
 
+// Validate credentials with actual API call
+validateConfluenceCredentials();
+
 IRI space = Values.iri(entityBaseIri().stringValue() + "space-1");
 getModel().add(space, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "ConfluenceSpace"), graphIri());
 getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "name"), Values.***REMOVED***("Default Space"), graphIri());
@@ -52,5 +61,45 @@ getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), space, graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+}
+
+private void validateConfluenceCredentials() throws IOException, InterruptedException {
+try {
+String baseUrl = config.getBaseUrl().get();
+if (!baseUrl.endsWith("/")) {
+baseUrl += "/";
+}
+
+HttpClient client = HttpClient.newBuilder().build();
+HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+.uri(URI.create(baseUrl + "rest/api/2/user/current"));
+
+if (config.getApiToken().isPresent()) {
+String token = config.getApiToken().get();
+String basicAuth = "Basic " + Base64.getEncoder().encodeToString(("apiToken:" + token).getBytes());
+requestBuilder.header("Authorization", basicAuth);
+} else if (config.getUsername().isPresent() && config.getPassword().isPresent()) {
+String basicAuth = "Basic " + Base64.getEncoder().encodeToString(
+(config.getUsername().get() + ":" + config.getPassword().get()).getBytes());
+requestBuilder.header("Authorization", basicAuth);
+} else {
+throw new IllegalStateException("No valid Confluence credentials provided");
+}
+
+HttpRequest request = requestBuilder.GET().build();
+HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+if (response.statusCode() == 401 || response.statusCode() == 403) {
+throw new IllegalStateException("Confluence authentication failed: Invalid credentials");
+}
+
+if (response.statusCode() >= 400) {
+throw new IllegalStateException("Confluence API error: " + response.statusCode());
+}
+} catch (IllegalStateException e) {
+throw e;
+} catch (Exception e) {
+throw new IllegalStateException("Confluence validation failed: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
+}
 }
 }

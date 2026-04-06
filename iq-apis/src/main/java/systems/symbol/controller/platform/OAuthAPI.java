@@ -140,7 +140,9 @@ public Response token(
 @FormParam("code") String code,
 @FormParam("refresh_token") String refreshToken,
 @FormParam("device_code") String deviceCode,
-@FormParam("scope") String scope) {
+@FormParam("scope") String scope,
+@FormParam("redirect_uri") String redirectUri,
+@FormParam("code_verifier") String codeVerifier) {
 
 try {
 if (clientId == null || clientId.isBlank()) {
@@ -193,7 +195,57 @@ log.info("oauth.token.device_flow.success: {}", clientId);
 return Response.ok(response).build();
 }
 
-// Other grant types (stub - to be implemented)
+// OAuth 2.0 Authorization Code Grant (RFC 6749)
+if ("authorization_code".equals(grantType)) {
+if (code == null || code.isBlank()) {
+return errorResponse("invalid_request", "code required");
+}
+if (redirectUri == null || redirectUri.isBlank()) {
+return errorResponse("invalid_request", "redirect_uri required");
+}
+
+OAuthAuthorizationServer.TokenExchangeResult result =
+authServer.completeAuthorizationCodeFlow(code, clientId, redirectUri, codeVerifier);
+
+if (!result.success) {
+return errorResponse(result.errorCode, result.errorDescription);
+}
+
+Map<String, Object> response = new LinkedHashMap<>();
+response.put("access_token", result.accessToken);
+response.put("refresh_token", result.refreshToken);
+response.put("expires_in", result.expiresIn);
+response.put("token_type", result.tokenType);
+
+log.info("oauth.token.authorization_code.success: {}", clientId);
+return Response.ok(response).build();
+}
+
+// OAuth 2.0 Refresh Token Grant (RFC 6749 Section 6)
+if ("refresh_token".equals(grantType)) {
+if (refreshToken == null || refreshToken.isBlank()) {
+return errorResponse("invalid_request", "refresh_token required");
+}
+
+String[] requestedScopes = scope != null ? scope.split(" ") : null;
+OAuthAuthorizationServer.TokenExchangeResult result =
+authServer.refreshAccessToken(refreshToken, clientId, requestedScopes);
+
+if (!result.success) {
+return errorResponse(result.errorCode, result.errorDescription);
+}
+
+Map<String, Object> response = new LinkedHashMap<>();
+response.put("access_token", result.accessToken);
+response.put("refresh_token", result.refreshToken);
+response.put("expires_in", result.expiresIn);
+response.put("token_type", result.tokenType);
+
+log.info("oauth.token.refresh_token.success: {}", clientId);
+return Response.ok(response).build();
+}
+
+// Client Credentials Grant
 if ("client_credentials".equals(grantType)) {
 String[] scopes = scope != null ? scope.split(" ") : new String[0];
 String accessToken = authServer.issueAccessToken("client:" + clientId, scopes, "default", clientId);

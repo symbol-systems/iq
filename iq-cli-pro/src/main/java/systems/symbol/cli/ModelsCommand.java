@@ -261,9 +261,28 @@ return null;
 try {
 display("Setting default LLM provider: " + provider);
 
-// TODO: Implement persistent configuration storage
-// Once ServerRuntimeManager and config persistence are in place
-display("  Configuration would be saved to: .iq/llm-config.yaml");
+// Create config manager and persist setting
+systems.symbol.llm.config.LLMConfigManager configManager = 
+new systems.symbol.llm.config.LLMConfigManager(context.getKernelContext());
+
+// Validate provider exists
+boolean found = false;
+for (systems.symbol.llm.I_LLMProvider llmProvider : 
+ ServiceLoader.load(systems.symbol.llm.I_LLMProvider.class)) {
+if (provider.equalsIgnoreCase(llmProvider.scheme())) {
+found = true;
+break;
+}
+}
+
+if (!found) {
+display("iq.models.error: provider not found: " + provider);
+return null;
+}
+
+// Save default provider
+configManager.setDefaultProvider(provider);
+display("  Configuration saved to: .iq/llm-config.yaml");
 display("  ✓ Default provider set to: " + provider);
 
 log.info("iq.models.set-default: {}", provider);
@@ -283,21 +302,49 @@ private Object handleCost() throws Exception {
 try {
 display("LLM Token Usage & Costs");
 display("-".repeat(60));
-display("  Note: This requires integration with cost tracking service");
+
+// Load cost tracking from config manager
+systems.symbol.llm.config.LLMConfigManager configManager = 
+new systems.symbol.llm.config.LLMConfigManager(context.getKernelContext());
+
+Map<String, systems.symbol.llm.config.LLMConfigManager.ProviderCosts> allCosts = 
+configManager.getCosting();
 
 if (showMonth) {
 display();
 display("Monthly Statistics:");
-display("  Total requests: (not yet tracked)");
-display("  Total tokens: (not yet tracked)");
-display("  Estimated cost: (not yet tracked)");
+Map<String, Object> summary = configManager.getMonthlySummary();
+
+display("  Total requests: " + summary.get("totalRequests"));
+display("  Total input tokens: " + summary.get("totalInputTokens"));
+display("  Total output tokens: " + summary.get("totalOutputTokens"));
+display("  Total cost: $" + String.format("%.2f", summary.get("totalCost")));
+display("  Average per req   : $" + String.format("%.4f", summary.get("averageCost")));
 }
 
-// TODO: Implement cost tracking once analytics service is integrated
+// Show per-provider breakdown
+if (!allCosts.isEmpty()) {
 display();
-display("  Cost tracking will be available once billing service is integrated");
+display("Cost by Provider:");
+display(String.format("  %-15s | %-20s | %10s | %10s | %10s", 
+"Provider", "Model", "Requests", "Tokens", "Cost (USD)"));
+display("  " + "-".repeat(70));
 
-log.info("iq.models.cost: month={}", showMonth);
+for (Map.Entry<String, systems.symbol.llm.config.LLMConfigManager.ProviderCosts> entry : allCosts.entrySet()) {
+systems.symbol.llm.config.LLMConfigManager.ProviderCosts costs = entry.getValue();
+displayf("  %-15s | %-20s | %10d | %10d | $%9.2f",
+costs.provider,
+costs.model,
+costs.requestCount,
+costs.totalInputTokens + costs.totalOutputTokens,
+costs.estimatedCostUSD);
+}
+} else {
+display();
+display("  (no usage data yet - cost tracking enabled)");
+}
+
+log.info("iq.models.cost: month={}, providers={}", showMonth, allCosts.size());
 return "cost:report:generated";
 } catch (Exception e) {
 display("iq.models.error: failed to retrieve costs: " + e.getMessage());
@@ -315,26 +362,64 @@ private Object handleConfig() throws Exception {
 // and value would contain the key
 String subaction = provider != null ? provider.toLowerCase() : "show";
 
+systems.symbol.llm.config.LLMConfigManager configManager = 
+new systems.symbol.llm.config.LLMConfigManager(context.getKernelContext());
+
 if ("set".equalsIgnoreCase(subaction)) {
 if (value == null || value.isEmpty()) {
 display("iq.models.error: config key and value required for 'config set'");
-display("Usage: iq models config set KEY VALUE");
+display("Usage: iq models config set PROVIDER KEY VALUE");
 return null;
 }
 
-// In a real implementation, would parse the value parameter for key=value
+// Parse "PROVIDER:KEY=VALUE" format from value parameter
+if (!value.contains(":") || !value.contains("=")) {
+display("iq.models.error: invalid format, expected: PROVIDER:KEY=VALUE");
+return null;
+}
+
+String[] parts = value.split(":", 2);
+String providerName = parts[0];
+String[] keyValue = parts[1].split("=", 2);
+
+if (keyValue.length != 2) {
+display("iq.models.error: invalid format, expected: PROVIDER:KEY=VALUE");
+return null;
+}
+
+String key = keyValue[0];
+String val = keyValue[1];
+
+// Set the configuration
+configManager.setProviderConfig(providerName, key, val);
 display("Configuration set:");
-display("  Key  : " + value);
-display("  Value: (would be provided as next argument)");
-log.info("iq.models.config.set: {} = {}", value, "(value)");
+display("  Provider: " + providerName);
+display("  Key : " + key);
+display("  Value   : " + val);
+log.info("iq.models.config.set: {}:{} = {}", providerName, key, val);
 return "config:set:" + value;
 } else if ("show".equalsIgnoreCase(subaction)) {
 display("Current LLM Configuration:");
-display("  Default provider : (not yet configured)");
-display("  Context length   : (using defaults)");
-display("  Model mapping: (using defaults)");
+display("  Default provider : " + configManager.getDefaultProvider());
+display("  Config file  : .iq/llm-config.yaml");
 display();
-display("  Configuration file: .iq/llm-config.yaml");
+
+// Show all provider configurations
+display("Provider Configurations:");
+for (systems.symbol.llm.I_LLMProvider llmProvider : 
+ ServiceLoader.load(systems.symbol.llm.I_LLMProvider.class)) {
+Map<String, Object> providerConfig = configManager.getProviderConfig(llmProvider.scheme());
+
+if (!providerConfig.isEmpty()) {
+display("  " + llmProvider.scheme() + ":");
+for (Map.Entry<String, Object> entry : providerConfig.entrySet()) {
+display("" + entry.getKey() + ": " + entry.getValue());
+}
+} else {
+display("  " + llmProvider.scheme() + ": (default configuration)");
+}
+}
+
 log.info("iq.models.config.show");
 return "config:show";
 } else {

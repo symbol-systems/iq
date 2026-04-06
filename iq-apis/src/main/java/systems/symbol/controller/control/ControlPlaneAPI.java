@@ -2,8 +2,10 @@ package systems.symbol.controller.control;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import systems.symbol.control.election.I_LeaderElector;
 import systems.symbol.control.election.LeaderElectionResult;
 import systems.symbol.control.node.ClusterNode;
@@ -43,6 +45,9 @@ I_LeaderElector leaderElector;
 
 @Inject
 I_PolicyDistributor policyDistributor;
+
+@Context
+SecurityContext securityContext;
 
 /**
  * GET /cluster/nodes — List all nodes
@@ -204,9 +209,32 @@ if (policyBytes == null || policyBytes.length == 0) {
 return Response.status(400).entity("policyBytes is required").build();
 }
 
-// Verify caller is leader (simplified: check Authorization header scope)
+// Verify caller is leader
+String currentLeaderId = leaderElector.getCurrentLeaderId();
+if (currentLeaderId == null || currentLeaderId.trim().isEmpty()) {
+return Response.status(503).entity("No leader elected").build();
+}
+
+String callerId = extractCallerId();
+if (callerId == null || !callerId.equals(currentLeaderId)) {
+return Response.status(403)
+.entity("Only the cluster leader can publish policy bundles. "
++ "Current leader: " + currentLeaderId).build();
+}
+
 long version = policyDistributor.publishPolicyBundle(policyBytes);
 return Response.status(201).entity(Map.of("version", version)).build();
+}
+
+/**
+ * Extract the caller's principal ID from SecurityContext or Authorization header.
+ * Returns null if the caller is not authenticated.
+ */
+private String extractCallerId() {
+if (securityContext != null && securityContext.getUserPrincipal() != null) {
+return securityContext.getUserPrincipal().getName();
+}
+return null;
 }
 
 /**

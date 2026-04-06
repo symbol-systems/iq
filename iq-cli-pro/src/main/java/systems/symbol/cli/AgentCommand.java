@@ -266,12 +266,24 @@ try {
 display("Starting agent: " + actorIRI);
 display("  Transitioning to READY state...");
 
-// TODO: Implement actual actor state transition once AgentService integration complete
-display("  ✓ Agent started successfully");
-display("  State: READY");
+// Use AgentService to manage state transitions
+systems.symbol.agent.AgentService agentService = 
+new systems.symbol.agent.AgentService();
 
+org.eclipse.rdf4j.model.IRI iri = org.eclipse.rdf4j.model.util.Values.iri(actorIRI);
+boolean success = agentService.startActor(iri);
+
+if (success) {
+systems.symbol.agent.AgentService.ActorStatus status = agentService.getStatus(iri);
+display("  ✓ Agent started successfully");
+display("  State: " + status.state.label);
 log.info("iq.agent.start: {}", actorIRI);
 return "agent:started:" + actorIRI;
+} else {
+systems.symbol.agent.AgentService.ActorStatus status = agentService.getStatus(iri);
+displayError("  ✗ Failed to start agent: " + status.lastError);
+return null;
+}
 } catch (Exception e) {
 log.error("Failed to start agent: {}", e.getMessage(), e);
 displayError("Error: " + e.getMessage());
@@ -291,17 +303,30 @@ return null;
 
 try {
 display("Stopping agent: " + actorIRI);
-display("  Saving checkpoint...");
-display("  ✓ Checkpoint saved");
 
-// TODO: Implement actual graceful shutdown once AgentService integration complete
+// Use AgentService to manage state transitions
+systems.symbol.agent.AgentService agentService = 
+new systems.symbol.agent.AgentService();
+
+org.eclipse.rdf4j.model.IRI iri = org.eclipse.rdf4j.model.util.Values.iri(actorIRI);
+
+display("  Saving checkpoint...");
+boolean success = agentService.stopActor(iri);
+
+if (success) {
+systems.symbol.agent.AgentService.ActorStatus status = agentService.getStatus(iri);
+display("  ✓ Checkpoint saved");
 display("  Closing connections...");
 display("  ✓ Connections closed");
-
-display("  State: STOPPED");
+display("  State: " + status.state.label);
 
 log.info("iq.agent.stop: {}", actorIRI);
 return "agent:stopped:" + actorIRI;
+} else {
+systems.symbol.agent.AgentService.ActorStatus status = agentService.getStatus(iri);
+displayError("  ✗ Failed to stop agent: " + status.lastError);
+return null;
+}
 } catch (Exception e) {
 log.error("Failed to stop agent: {}", e.getMessage(), e);
 displayError("Error: " + e.getMessage());

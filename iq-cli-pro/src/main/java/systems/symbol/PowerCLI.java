@@ -38,6 +38,8 @@ commands.addSubcommand(new systems.symbol.cli.server.ServerCommand(context));
 commands.addSubcommand(new TrustCommand(context));
 commands.addSubcommand(new ServeCommand(context));
 commands.addSubcommand(new BootCommand(context));
+commands.addSubcommand(new VerifyCommand(context));
+commands.addSubcommand(new RepairCommand(context));
 }
 
 int exitCode = commands.execute(args);
@@ -89,6 +91,12 @@ commands.addSubcommand(new TrustCommand(context));
 }
 if (!commands.getSubcommands().containsKey("boot")) {
 commands.addSubcommand(new BootCommand(context));
+}
+if (!commands.getSubcommands().containsKey("verify")) {
+commands.addSubcommand(new VerifyCommand(context));
+}
+if (!commands.getSubcommands().containsKey("repair")) {
+commands.addSubcommand(new RepairCommand(context));
 }
 }
 return commands;

@@ -27,27 +27,29 @@ return dump(runtimeType, 0, path);
 }
 
 default boolean start(String runtimeType, int port) {
-throw new UnsupportedOperationException("start with port not implemented");
+// Port-based operations delegate to the No-arg variant (port=0)
+// The implementing class should handle port affinity internally if needed
+return start(runtimeType);
 }
 
 default boolean stop(String runtimeType, int port) {
-throw new UnsupportedOperationException("stop with port not implemented");
+return stop(runtimeType);
 }
 
 default boolean reboot(String runtimeType, int port) {
-throw new UnsupportedOperationException("reboot with port not implemented");
+return reboot(runtimeType);
 }
 
 default RuntimeStatus health(String runtimeType, int port) {
-throw new UnsupportedOperationException("health with port not implemented");
+return health(runtimeType);
 }
 
 default boolean debug(String runtimeType, int port, boolean enable) {
-throw new UnsupportedOperationException("debug with port not implemented");
+return debug(runtimeType, enable);
 }
 
 default ServerDump dump(String runtimeType, int port, String path) {
-throw new UnsupportedOperationException("dump with port not implemented");
+return dump(runtimeType, path);
 }
 
 default java.util.Map<String, RuntimeStatus> listRuntimes(String runtimeType) {

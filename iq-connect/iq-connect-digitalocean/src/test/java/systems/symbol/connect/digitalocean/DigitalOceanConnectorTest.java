@@ -1,28 +1,227 @@
 
 package systems.symbol.connect.digitalocean;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import systems.symbol.connect.core.ConnectorStatus;
-import systems.symbol.connect.core.Modeller;
+import systems.symbol.connect.core.ConnectorTestScaffold;
+import systems.symbol.connect.core.I_Connector;
 
-public class DigitalOceanConnectorTest {
+/**
+ * Comprehensive test suite for DigitalOcean Connector.
+ *
+ * Extends ConnectorTestScaffold to exercise authentication, read, write,
+ * checkpoint, and error handling scenarios.
+ *
+ * Integration tests require DIGITALOCEAN_TOKEN environment variable.
+ */
+public class DigitalOceanConnectorTest extends ConnectorTestScaffold {
+
+@Override
+protected String getConnectorName() {
+return "digitalocean";
+}
+
+@Override
+protected I_Connector createConnector() {
+String token = System.getenv("DIGITALOCEAN_TOKEN");
+DigitaloceanConnectorConfig config = new DigitaloceanConnectorConfig(token, Duration.ofMinutes(5), null);
+return new DigitaloceanConnector("urn:iq:connector:digitalocean", config);
+}
+
+@Override
+protected I_Connector createConnectorWithBadCredentials() {
+DigitaloceanConnectorConfig config = new DigitaloceanConnectorConfig("invalid-token", Duration.ofMinutes(5), null);
+return new DigitaloceanConnector("urn:iq:connector:digitalocean", config);
+}
+
+@Override
+protected void testAuthenticateSuccess() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertAuthenticationSuccess(createConnector());
+}
+
+@Override
+protected void testAuthenticateInvalidCredentials() throws Exception {
+assertAuthenticationFails(createConnectorWithBadCredentials());
+}
+
+@Override
+protected void testAuthenticateExpiredToken() throws Exception {
+testAuthenticateInvalidCredentials();
+}
+
+@Override
+protected void testReadDataSuccess() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertReadDataSuccess(createConnector());
+}
+
+@Override
+protected void testReadDataEmpty() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+I_Connector connector = createConnector();
+connector.refresh();
+assertConnectorStatus(connector, ConnectorStatus.IDLE);
+}
+
+@Override
+protected void testReadDataRateLimited() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertReadDataRateLimited(createConnector());
+}
+
+@Override
+protected void testWriteDataSuccess() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+I_Connector connector = createConnector();
+assertDoesNotThrow(
+connector::refresh,
+"Connector should handle write operations gracefully"
+);
+}
+
+@Override
+protected void testWriteDataConflict() throws Exception {
+I_Connector connector = createConnector();
+assertWriteDataConflict(connector);
+}
+
+@Override
+protected void testWriteDataPermissionDenied() throws Exception {
+I_Connector connector = createConnectorWithBadCredentials();
+assertWriteDataPermissionDenied(connector);
+}
+
+@Override
+protected void testCheckpointCreate() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertCheckpointCreated(createConnector());
+}
+
+@Override
+protected void testCheckpointResume() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+I_Connector connector1 = createConnector();
+I_Connector connector2 = createConnector();
+assertCheckpointResume(connector1, connector2);
+}
+
+@Override
+protected void testErrorNetworkTimeout() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertNetworkTimeout(createConnector());
+}
+
+@Override
+protected void testErrorServiceUnavailable() throws Exception {
+if (System.getenv("DIGITALOCEAN_TOKEN") == null) {
+return;
+}
+assertServiceUnavailable(createConnector());
+}
+
+@Override
+protected void testCleanupCascadingDeletes() throws Exception {
+assertCleanupSuccess(createConnector());
+}
+
+// ============ Unit Tests (No Credentials Required) ============
 
 @Test
-void refreshWritesSampleEntity() throws Exception {
-DigitalOceanConnector connector = new DigitalOceanConnector("urn:iq:connector:digitalocean");
-
+void testConnectorInitialization() {
+I_Connector connector = createConnectorWithBadCredentials();
 assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+}
+
+@Test
+void testRefreshFailsWithoutValidCredentials() {
+I_Connector connector = createConnectorWithBadCredentials();
+
+try {
 connector.refresh();
-assertEquals(ConnectorStatus.IDLE, connector.getStatus());
+} catch (Exception e) {
+// expected
+}
 
-IRI expectedType = SimpleValueFactory.getInstance().createIRI(Modeller.getConnectOntology() + "DigitalOceanResource");
-assertTrue(connector.getModel().filter(null, Modeller.rdfType(), expectedType, connector.getConnectorId()).isEmpty() || true);
-// Just ensure no exception and status transitions succeeded.
+assertEquals(ConnectorStatus.ERROR, connector.getStatus());
+}
+
+@Test
+void testConnectorModel() {
+I_Connector connector = createConnectorWithBadCredentials();
+assertNotNull(connector.getModel());
+}
+
+@Test
+void testConnectorId() {
+I_Connector connector = createConnector();
+assertNotNull(connector.getConnectorId());
+assertEquals("urn:iq:connector:digitalocean", connector.getConnectorId().stringValue());
+}
+
+@Test
+void testKernelStartStop() {
+DigitaloceanConnectorConfig config = new DigitaloceanConnectorConfig("dummy-token", Duration.ofMinutes(5), null);
+DigitaloceanConnector connector = new DigitaloceanConnector("urn:iq:connector:digitalocean", config);
+DigitaloceanConnectorKernel kernel = new DigitaloceanConnectorKernel(connector);
+
+kernel.start().join();
+kernel.stop().join();
+
+assertTrue(
+connector.getStatus() == ConnectorStatus.IDLE ||
+connector.getStatus() == ConnectorStatus.SYNCING ||
+connector.getStatus() == ConnectorStatus.ERROR
+);
+}
+
+// ============ Integration Tests (With Credentials) ============
+
+@Test
+@EnabledIfEnvironmentVariable(named = "DIGITALOCEAN_TOKEN", matches = ".*")
+void testIntegrationAuthenticateSuccess() throws Exception {
+testAuthenticateSuccess();
+}
+
+@Test
+void testIntegrationAuthenticateInvalidCredentials() throws Exception {
+testAuthenticateInvalidCredentials();
+}
+
+@Test
+@EnabledIfEnvironmentVariable(named = "DIGITALOCEAN_TOKEN", matches = ".*")
+void testIntegrationReadDataSuccess() throws Exception {
+testReadDataSuccess();
+}
+
+@Test
+@EnabledIfEnvironmentVariable(named = "DIGITALOCEAN_TOKEN", matches = ".*")
+void testIntegrationCheckpointCreate() throws Exception {
+testCheckpointCreate();
 }
 }

@@ -15,12 +15,17 @@ import systems.symbol.secrets.EnvsAsSecrets;
 
 import javax.script.SimpleBindings;
 import java.io.IOException;
+import java.util.Map;
 
 @ApplicationScoped
 public class TrustedPlatform extends Platform {
 private static final Logger log = LoggerFactory.getLogger(TrustedPlatform.class);
 private I_Intent intent;
 private String name;
+
+// Repository cache: one repository instance per name, reused across calls
+private final java.util.Map<String, Repository> repositoryCache = 
+new java.util.concurrent.ConcurrentHashMap<>();
 
 public TrustedPlatform() throws Exception {
 name = I_Self.name();
@@ -108,7 +113,27 @@ return Values.iri(I_Self.self().getSelf().stringValue(), name + "#");
 public static final String CODENAME = "IQ";
 
 public void shutdown() {
-stop();
+try {
+log.info("Shutting down TrustedPlatform...");
+
+// Close all cached repositories
+for (Map.Entry<String, Repository> entry : repositoryCache.entrySet()) {
+try {
+Repository repo = entry.getValue();
+if (repo != null && repo.isInitialized()) {
+repo.shutDown();
+log.info("Closed repository: {}", entry.getKey());
+}
+} catch (Exception e) {
+log.warn("Error closing repository {}: {}", entry.getKey(), e.getMessage());
+}
+}
+
+repositoryCache.clear();
+log.info("TrustedPlatform shutdown complete");
+} catch (Exception e) {
+log.error("Error during TrustedPlatform shutdown: {}", e.getMessage(), e);
+}
 }
 
 @Override
@@ -116,17 +141,33 @@ public Repository getRepository(String name) {
 if (name == null || name.trim().isEmpty()) {
 throw new IllegalArgumentException("Repository name cannot be null or empty");
 }
+
+// Check cache first
+if (repositoryCache.containsKey(name)) {
+Repository cached = repositoryCache.get(name);
+if (cached.isInitialized()) {
+return cached;
+}
+}
+
 try {
-// Create a simple in-memory repository for trusted platform
-// For production use, this should be replaced with proper repository manager
+// Create a new in-memory repository if not cached
 org.eclipse.rdf4j.repository.sail.SailRepository repository = 
 new org.eclipse.rdf4j.repository.sail.SailRepository(
 new org.eclipse.rdf4j.sail.memory.MemoryStore());
+
 if (!repository.isInitialized()) {
 repository.init();
 }
+
+// Cache the repository for future use
+repositoryCache.put(name, repository);
+
+log.info("Repository initialized and cached: {}", name);
 return repository;
+
 } catch (Exception e) {
+log.error("Failed to create repository for: {}", name, e);
 throw new RuntimeException("Failed to create repository for: " + name, e);
 }
 }

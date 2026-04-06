@@ -61,10 +61,9 @@
 <springboot.version>4.0.5</springboot.version>
 <slf4j.version>2.0.13</slf4j.version>
 <logback.version>1.5.3</logback.version>
-<camel.version>4.0.0-M1</camel.version>
 <handlebars.version>4.5.0</handlebars.version>
 <!--  -->
-<rdf4j.version>5.3.0-M2</rdf4j.version>
+<rdf4j.version>5.3.1</rdf4j.version>
 <groovy.version>5.0.5</groovy.version>
 
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>

@@ -63,6 +63,13 @@ protected void doRefresh() throws Exception {
 if (config.getApiKey().isEmpty()) {
 throw new IllegalStateException("AWS_API_KEY is required");
 }
+
+String apiKey = config.getApiKey().get();
+// Validate that API key looks like a valid AWS key (AKIA... pattern)
+if (!apiKey.startsWith("AKIA")) {
+throw new IllegalStateException("Invalid AWS_API_KEY format (must start with AKIA)");
+}
+
 // Minimal discovered data path to keep key functionality of a connector
 IRI entity = Values.iri(entityBaseIri().stringValue() + "aws-item");
 getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "AwsResource"), graphIri());
