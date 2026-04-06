@@ -178,22 +178,22 @@ public void boot() {
 }
 
 @Override
-public void X() {
-// trust gate X
+public void guardCodeIntegrity() {
+// trust guard: verify platform binary and module signatures
 }
 
 @Override
-public void XX() {
-// trust gate XX
+public void guardSecurityPolicy() {
+// trust guard: verify security policies match baseline
 }
 
 @Override
-public void XXX() {
-// trust gate XXX
+public void guardTrustCertification() {
+// trust guard: verify certificate chain and trust domain
 }
 
 @Override
-public void XXXX() {
-// trust gate XXXX
+public void guardAuthorizationPath() {
+// trust guard: verify DID delegation and authorization scopes
 }
 }

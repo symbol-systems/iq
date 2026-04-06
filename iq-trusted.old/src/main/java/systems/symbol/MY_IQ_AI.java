@@ -39,10 +39,10 @@ TrustedPlatform ai = new TrustedPlatform(args[0]);
 // Q = AI + IQ
 ai.boot();  // Boot up AI
 // Guardians of CODE - will be checked again during `start`
-ai.X(); // Guard X
-ai.XX();// Guard XX
-ai.XXX();   // Guard XXX
-ai.XXXX();  // Guard XXXX
+ai.guardCodeIntegrity();  // Guard: Code Integrity
+ai.guardSecurityPolicy(); // Guard: Security Policy
+ai.guardTrustCertification(); // Guard: Trust Certification
+ai.guardAuthorizationPath();  // Guard: Authorization Path
 // Oracle of TRUTH - Establish trust with Oracle
 ai.trusts();
 return ai;

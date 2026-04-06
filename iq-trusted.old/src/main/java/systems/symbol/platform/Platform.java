@@ -20,19 +20,35 @@ public void boot() {
 // default no-op
 }
 
-public void X() {
+/**
+ * Trust guard: Verify code integrity.
+ * Checks signature of platform binary and loaded modules.
+ */
+public void guardCodeIntegrity() {
 // default no-op
 }
 
-public void XX() {
+/**
+ * Trust guard: Verify security policy compliance.
+ * Checks that platform policies match expected security baseline.
+ */
+public void guardSecurityPolicy() {
 // default no-op
 }
 
-public void XXX() {
+/**
+ * Trust guard: Verify trust domain certification.
+ * Validates public key certificates and trust chain.
+ */
+public void guardTrustCertification() {
 // default no-op
 }
 
-public void XXXX() {
+/**
+ * Trust guard: Verify authorization path.
+ * Checks DID delegation chain and authorization scopes.
+ */
+public void guardAuthorizationPath() {
 // default no-op
 }
 
