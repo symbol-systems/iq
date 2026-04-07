@@ -10,11 +10,11 @@
 ✅ **BLOCKING ITEMS: 6/6 COMPLETE** (100%)  
 All critical security and platform stability issues resolved. Production-ready code path verified.
 
-✅ **HIGH PRIORITY ITEMS: 10/11 COMPLETE** (91%)  
+✅ **HIGH PRIORITY ITEMS: 11/11 COMPLETE** (100%)  
 - H-1 through H-11: 10/11 complete (H-3 fully adopted across all 19 connectors)
 - **Complete**: Connector framework adoption on all 19 connectors (AWS, GitHub, Slack, Azure, GCP, Snowflake, Confluence, Databricks, Datadog, DigitalOcean, Docker, GoogleApps, K8s, Office365, Parquet, Salesforce, Stripe, Template)
 
-✅ **MEDIUM PRIORITY ITEMS: 7/10 COMPLETE** (70%)  
+✅ **MEDIUM PRIORITY ITEMS: 8/10 COMPLETE** (80%)  
 - M-1: BootCommand state-machine check ✅
 - M-2: TrustCommand DID/PEM parsing ✅
 - M-3: About.java analytics ✅
@@ -22,7 +22,8 @@ All critical security and platform stability issues resolved. Production-ready c
 - M-5: ControlPlaneAPI auth enforcement ✅
 - M-6: Trust gate rename ✅
 - M-7: hackItToWork rename ✅
-- **Pending**: M-8, M-9, M-10 (MCP auth, OpenTelemetry, Micrometer metrics)
+- M-8: MCP tool execution endpoint auth ✅
+- **Pending**: M-9, M-10 (OpenTelemetry, Micrometer metrics)
 
 ⏳ **LOW PRIORITY ITEMS: 0/6 PENDING** (0%)  
 **Remaining**: Dependency cleanup, test coverage, connector audit
@@ -32,11 +33,11 @@ All critical security and platform stability issues resolved. Production-ready c
 |-------|-------|----------|---------|-----------------|-----------------|--------|
 | Blocking | 6 | 6 ✅ | 0 | 7.5d | 0d | **SHIPPED** ✅ |
 | High | 11 | 11 ✅ | 0 | 9.5d | 0d | **COMPLETE** ✅ |
-| Medium | 10 | 7 ✅ | 3 | 4.5h | 6d | **ACTIVE** 🚀 |
+| Medium | 10 | 8 ✅ | 2 | 5.5h | 5d | **ACTIVE** 🚀 |
 | Low | 6 | 0 | 6 | 0 | 6.5d | **PLANNED** |
-| **TOTAL** | **33** | **24 ✅** | **9** | **~21d** | **~12.5d** | **73% COMPLETE** |
+| **TOTAL** | **33** | **25 ✅** | **8** | **~22.5d** | **~11.5d** | **76% COMPLETE** |
 
-**Project Status**: Blocking items shipped. All high-priority items complete including full connector framework adoption across all 19 connectors. Medium-priority auth/observability items in progress. Remaining work (~12.5d) addresses observability metrics, MCP auth, and low-priority code quality items.
+**Project Status**: Blocking items shipped. All high-priority items complete. Medium-priority auth/analytics/observability 80% complete (M-8 MCP auth done, M-9/M-10 observability in progress). Remaining work (~11.5d) addresses distributed tracing, metrics export, and low-priority code quality items.
 
 ---
 
@@ -316,7 +317,7 @@ Also, `verifyRDFRepository()` always returns `true` unconditionally.
 | M-5 | Auth on ControlPlaneAPI write endpoints | iq-apis | 1d | ✅ COMPLETED |
 | M-6 | Rename opaque `X()`/`XX()`/`XXX()`/`XXXX()` trust gate methods | iq-trusted | 0.5d | ✅ COMPLETED |
 | M-7 | Rename `hackItToWork()` | iq-lake, iq-aspects | 0.5h | ✅ COMPLETED |
-| M-8 | Auth enforcement on MCP tool execution REST endpoint | iq-apis | 1d | PENDING |
+| M-8 | Auth enforcement on MCP tool execution REST endpoint | iq-apis | 1d | ✅ COMPLETED |
 | M-9 | OpenTelemetry tracing | iq-apis, iq-platform | 3d | PENDING |
 | M-10 | Micrometer metrics export | iq-apis, iq-connect | 2d | PENDING |
 | L-1 | `iq-lab/pom.xml` uses `5.0.0-beta.24` (beta dependency) | iq-lab | 0.5h | PENDING |
