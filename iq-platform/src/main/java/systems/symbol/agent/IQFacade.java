@@ -129,21 +129,21 @@ return NS.toIRI(model, self, thing);
  * Retrieves ***REMOVED***s associated with a property in the RDF4J model.
  *
  * @param key The key of the property.
- * @return A list of ***REMOVED***s associated with the property.
+ * @return A list of literals associated with the property.
  */
 public List<Literal> get(String key) {
-return get(toIRI(key));
+    return get(toIRI(key));
 }
 
 protected List<Literal> get(IRI predicate) {
-List<Literal> ***REMOVED***s = new ArrayList<>();
-Iterable<Statement> statements = model.getStatements(self, predicate, null, this.self);
-for (Statement statement : statements) {
-if (statement.getObject() instanceof Literal) {
-***REMOVED***s.add((Literal) statement.getObject());
-}
-}
-return ***REMOVED***s;
+    List<Literal> literals = new ArrayList<>();
+    Iterable<Statement> statements = model.getStatements(self, predicate, null, this.self);
+    for (Statement statement : statements) {
+        if (statement.getObject() instanceof Literal) {
+            literals.add((Literal) statement.getObject());
+        }
+    }
+    return literals;
 }
 
 public FileObject download(String url) throws APIException, IOException, StateException {
