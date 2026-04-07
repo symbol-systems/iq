@@ -18,13 +18,13 @@ IRI connector = SimpleValueFactory.getInstance().createIRI("urn:connector:test")
 IRI graph = SimpleValueFactory.getInstance().createIRI("urn:connector:test:graph");
 
 ConnectorSyncMetadata.markSyncing(model, connector, graph);
-assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.***REMOVED***("SYNCING"), graph));
+assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.literal("SYNCING"), graph));
 assertTrue(model.contains(connector, Values.iri(ConnectorModels.LAST_SYNCED_AT), null, graph));
 
 ConnectorSyncMetadata.markSynced(model, connector, graph);
-assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.***REMOVED***("SYNCED"), graph));
+assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.literal("SYNCED"), graph));
 
 ConnectorSyncMetadata.markError(model, connector, graph);
-assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.***REMOVED***("ERROR"), graph));
+assertTrue(model.contains(connector, Values.iri(ConnectorModels.HAS_SYNC_STATUS), Values.literal("ERROR"), graph));
 }
 }
