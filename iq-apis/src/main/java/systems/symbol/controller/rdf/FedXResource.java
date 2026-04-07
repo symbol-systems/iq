@@ -1,5 +1,6 @@
 package systems.symbol.controller.rdf;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -92,6 +93,7 @@ return "localhost";
  * @param timeout Optional query timeout in seconds
  * @return JSON SPARQL results
  */
+@WithSpan("sparql.query")
 @GET
 @Path("/query")
 public Response query(
@@ -176,6 +178,7 @@ return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
  * @param timeout Optional query timeout in seconds
  * @return JSON SPARQL results
  */
+@WithSpan("sparql.query.post")
 @POST
 @Path("/query")
 public Response postQuery(
