@@ -95,20 +95,20 @@ return "TEST_WH";
 
 // Slack Credentials
 public static String mockSlackBotToken() {
-return "***REMOVED***";
+return "mock-slack-bot-token-for-testing-only";
 }
 
 public static String mockSlackAppToken() {
-return "xapp-1-xxxxxxxxxxxxxxxxxxxx";
+return "mock-slack-app-token-for-testing-only";
 }
 
 public static String mockSlackTeamId() {
-return "T0123456789";
+return "mock-slack-team-id-12345";
 }
 
 // GitHub Credentials
 public static String mockGitHubToken() {
-return "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+return "mock-github-token-for-testing-only";
 }
 
 public static String mockGitHubOwner() {
