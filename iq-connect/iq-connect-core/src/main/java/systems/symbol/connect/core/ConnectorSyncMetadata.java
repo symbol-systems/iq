@@ -36,7 +36,7 @@ IRI lastSyncedPredicate = Values.iri(ConnectorModels.LAST_SYNCED_AT);
 model.remove(connectorId, statusPredicate, null, contexts);
 model.remove(connectorId, lastSyncedPredicate, null, contexts);
 
-model.add(connectorId, statusPredicate, Values.***REMOVED***(status), contexts);
+model.add(connectorId, statusPredicate, Values.literal(status), contexts);
 model.add(connectorId, lastSyncedPredicate, SimpleValueFactory.getInstance().createLiteral(Instant.now().toString()), contexts);
 }
 }
