@@ -26,7 +26,7 @@ public final class KernelContext implements I_KernelContext {
 private final IRI   self;
 private final I_Secrets secrets;
 private final File  home;
-private final Stringversion;
+private final String version;
 private final Map<String, Object> attributes;
 private final systems.symbol.kernel.agent.I_AgentRegistry agentRegistry;
 

@@ -63,7 +63,7 @@ private final IRI subject;
 private IRI  caller;
 private IRI  realm;
 private Bindings params  = new SimpleBindings();
-private Modelmodel   = null;
+private Model model   = null;
 private systems.symbol.agent.I_Command command = null;
 
 private Builder(IRI subject) { this.subject = subject; }
