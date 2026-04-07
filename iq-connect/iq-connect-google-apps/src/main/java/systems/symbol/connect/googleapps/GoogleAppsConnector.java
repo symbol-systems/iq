@@ -12,15 +12,20 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.Modeller;
+import systems.symbol.connector.error.ConnectorErrorHandler;
+import systems.symbol.connector.state.ConnectorState;
 
 public final class GoogleAppsConnector extends AbstractConnector {
 
 private final GoogleAppsConnectorConfig config;
+private static final Logger log = LoggerFactory.getLogger(GoogleAppsConnector.class);
 
 public GoogleAppsConnector(String connectorId, GoogleAppsConnectorConfig config) {
 super(connectorId,
@@ -36,6 +41,15 @@ public ConnectorMode getMode() { return ConnectorMode.READ_ONLY; }
 
 @Override
 protected void doRefresh() throws Exception {
+ConnectorState state = ConnectorState.start(getConnectorId().stringValue());
+ConnectorErrorHandler errorHandler = ConnectorErrorHandler.forConnector(getConnectorId().stringValue());
+
+// Register error callbacks
+errorHandler.on("error", err -> log.error("[GoogleApps] sync error: {} for item {}", err.message, err.itemId));
+errorHandler.on("retry", err -> log.warn("Retrying [GoogleApps] item: {}", err.itemId));
+errorHandler.on("dlq", err -> log.error("[GoogleApps] dead-letter: {}", err.itemId));
+
+try {
 if (config.getApiKey().isEmpty()) {
 throw new IllegalStateException("GOOGLE_APPS_API_KEY is required");
 }
@@ -49,6 +63,17 @@ getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"),
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+
+state.recordSuccess();
+var stats = state.finish();
+log.info("GoogleApps connector sync completed: {}", stats);
+} catch (Exception ex) {
+state.recordFailure("googleapps-sync", ex.getMessage());
+errorHandler.recordError("googleapps-sync", ex);
+var stats = state.finish();
+log.error("GoogleApps connector sync failed: {}", stats, ex);
+throw ex;
+}
 }
 
 private void validateGoogleAppsCredentials(String apiKey) throws IOException, InterruptedException {

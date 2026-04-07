@@ -11,15 +11,20 @@ import java.util.Base64;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.Modeller;
+import systems.symbol.connector.error.ConnectorErrorHandler;
+import systems.symbol.connector.state.ConnectorState;
 
 public final class ConfluenceConnector extends AbstractConnector {
 
 private final ConfluenceConnectorConfig config;
+private static final Logger log = LoggerFactory.getLogger(ConfluenceConnector.class);
 
 public ConfluenceConnector(String connectorId, ConfluenceConnectorConfig config) {
 super(connectorId,
@@ -41,6 +46,15 @@ return config.getPollInterval();
 
 @Override
 protected void doRefresh() throws Exception {
+ConnectorState state = ConnectorState.start(getConnectorId().stringValue());
+ConnectorErrorHandler errorHandler = ConnectorErrorHandler.forConnector(getConnectorId().stringValue());
+
+// Register error callbacks
+errorHandler.on("error", err -> log.error("[Confluence] sync error: {} for item {}", err.message, err.itemId));
+errorHandler.on("retry", err -> log.warn("Retrying [Confluence] item: {}", err.itemId));
+errorHandler.on("dlq", err -> log.error("[Confluence] dead-letter: {}", err.itemId));
+
+try {
 if (config.getBaseUrl().isEmpty()) {
 throw new IllegalStateException("CONFLUENCE_BASE_URL is required");
 }
@@ -61,6 +75,17 @@ getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), space, graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+
+state.recordSuccess();
+var stats = state.finish();
+log.info("Confluence connector sync completed: {}", stats);
+} catch (Exception ex) {
+state.recordFailure("confluence-sync", ex.getMessage());
+errorHandler.recordError("confluence-sync", ex);
+var stats = state.finish();
+log.error("Confluence connector sync failed: {}", stats, ex);
+throw ex;
+}
 }
 
 private void validateConfluenceCredentials() throws IOException, InterruptedException {

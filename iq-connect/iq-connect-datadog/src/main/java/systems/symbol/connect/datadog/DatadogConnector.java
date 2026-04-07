@@ -7,6 +7,8 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Values;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,10 +20,13 @@ import systems.symbol.connect.core.AbstractConnector;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.Modeller;
+import systems.symbol.connector.error.ConnectorErrorHandler;
+import systems.symbol.connector.state.ConnectorState;
 
 public final class DatadogConnector extends AbstractConnector {
 
 private final DatadogConnectorConfig config;
+private static final Logger log = LoggerFactory.getLogger(DatadogConnector.class);
 
 public DatadogConnector(String connectorId, DatadogConnectorConfig config) {
 super(connectorId,
@@ -37,6 +42,15 @@ public ConnectorMode getMode() { return ConnectorMode.READ_ONLY; }
 
 @Override
 protected void doRefresh() throws Exception {
+ConnectorState state = ConnectorState.start(getConnectorId().stringValue());
+ConnectorErrorHandler errorHandler = ConnectorErrorHandler.forConnector(getConnectorId().stringValue());
+
+// Register error callbacks
+errorHandler.on("error", err -> log.error("[Datadog] sync error: {} for item {}", err.message, err.itemId));
+errorHandler.on("retry", err -> log.warn("Retrying [Datadog] item: {}", err.itemId));
+errorHandler.on("dlq", err -> log.error("[Datadog] dead-letter: {}", err.itemId));
+
+try {
 if (config.getApiKey().isEmpty() || config.getAppKey().isEmpty()) {
 throw new IllegalStateException("DATADOG_API_KEY and DATADOG_APP_KEY are required");
 }
@@ -84,6 +98,17 @@ count++;
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(count), graphIri());
+
+state.recordSuccess();
+var stats = state.finish();
+log.info("Datadog connector sync completed: {}", stats);
+}
+} catch (Exception ex) {
+state.recordFailure("datadog-sync", ex.getMessage());
+errorHandler.recordError("datadog-sync", ex);
+var stats = state.finish();
+log.error("Datadog connector sync failed: {}", stats, ex);
+throw ex;
 }
 }
 }
