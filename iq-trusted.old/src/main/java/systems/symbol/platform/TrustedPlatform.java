@@ -85,11 +85,11 @@ return false;
 
 public void start() {
 if (name == null || name.trim().isEmpty()) {
-throw new RuntimeException("export MY_IQ");
+throw new RuntimeException("export IQ");
 }
 
 EnvsAsSecrets secrets = new EnvsAsSecrets();
-String true_name = secrets.getSecret("MY_IQ");
+String true_name = secrets.getSecret("IQ");
 String trustee = secrets.getSecret(name);
 
 boot();

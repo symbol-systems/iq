@@ -19,7 +19,7 @@ private MCPServerMain() {
 }
 
 public static void main(String[] args) throws Exception {
-String repoName = System.getenv("MY_IQ");
+String repoName = System.getenv("IQ");
 if (repoName == null || repoName.isBlank()) {
 repoName = "iq";
 }

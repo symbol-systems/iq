@@ -15,8 +15,8 @@ public final static Logger log = LoggerFactory.getLogger(I_Response.class);
 public Response build();
 
 default Response.ResponseBuilder addCORS(Response.ResponseBuilder builder) {
-String origin = PrettyString.getenv("MY_CORS_ORIGIN", "*");
-String cors_header = PrettyString.getenv("MY_CORS_HEADERS", "origin, content-type, accept, authorization");
+String origin = PrettyString.getenv("CORS_ORIGIN", "*");
+String cors_header = PrettyString.getenv("CORS_HEADERS", "origin, content-type, accept, authorization");
 log.debug("CORS: origin={}, headers={}", origin, cors_header);
 return builder.header("Access-Control-Allow-Origin", origin)
 .header("Access-Control-Allow-Credentials", "true")

@@ -9,7 +9,7 @@
 - **VFSKeyStore** — manages cryptographic key pairs per realm, stored on the Virtual File System
 - **Trust connectors** — integrations with external identity providers: GitHub, Discord, Web3, LinkedIn, and mobile auth flows
 - **TrustedPlatform** — realm bootstrapping with trust-aware agent initialisation
-- **MY_IQ_AI** — the trusted AI runtime entry point, runnable standalone
+- **IQ_AI** — the trusted AI runtime entry point, runnable standalone
 
 ## Running the standalone trusted AI entry point
 

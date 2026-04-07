@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class EnvsAsSecrets implements I_Secrets {
 private final Logger log = LoggerFactory.getLogger(getClass());
-String prefix = "MY_";
+String prefix = "";
 
 public EnvsAsSecrets(String prefix) {
 this.prefix = prefix;

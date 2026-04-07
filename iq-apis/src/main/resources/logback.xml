@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Logback configuration for IQ APIs.
+  Properly initializes logging and suppresses JBoss LogManager warnings.
+-->
+<configuration>
+  <!-- Define a property for log directory -->
+  <property name="LOG_DIR" value="logs" />
+  <property name="LOG_FILE_NAME" value="application" />
+
+  <!-- Console Appender -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <!-- File Appender with rolling policy -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/${LOG_FILE_NAME}.log</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>10MB</maxFileSize>
+      <maxHistory>5</maxHistory>
+      <totalSizeCap>50MB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Suppress JBoss LogManager initialization warnings -->
+  <logger name="org.jboss.logmanager" level="OFF" />
+  
+  <!-- Suppress SLF4J multiple binding warnings -->
+  <logger name="org.slf4j" level="WARN" />
+  
+  <!-- Suppress ONNX Runtime warnings -->
+  <logger name="ai.onnxruntime" level="WARN" />
+  
+  <!-- Suppress excessive RDF4J DEBUG logging -->
+  <logger name="org.eclipse.rdf4j" level="WARN" />
+  <logger name="org.eclipse.rdf4j.sail.nativerdf" level="WARN" />
+  <logger name="org.eclipse.rdf4j.sail.nativerdf.ValueStore" level="OFF" />
+  <logger name="org.eclipse.rdf4j.sail.nativerdf.datastore.DataStore" level="OFF" />
+  
+  <!-- Suppress other verbose loggers -->
+  <logger name="io.netty" level="WARN" />
+  <logger name="io.vertx" level="WARN" />
+  <logger name="org.eclipse.jetty" level="WARN" />
+  <logger name="org.glassfish" level="WARN" />
+  <logger name="io.quarkus" level="WARN" />
+  
+  <!-- Keep important application loggers at INFO -->
+  <logger name="systems.symbol" level="INFO" />
+  <logger name="systems.symbol.controller.rdf.DistributedQueryOptimizer" level="DEBUG" />
+  <logger name="systems.symbol.mcp" level="INFO" />
+
+  <!-- Root Logger -->
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="FILE" />
+  </root>
+
+  <!-- Development profile: selective verbose logging -->
+  <springProfile name="dev">
+    <logger name="systems.symbol" level="DEBUG" />
+    <root level="INFO">
+      <appender-ref ref="CONSOLE" />
+      <appender-ref ref="FILE" />
+    </root>
+  </springProfile>
+
+  <!-- Test profile: minimal output -->
+  <springProfile name="test">
+    <root level="WARN">
+      <appender-ref ref="FILE" />
+    </root>
+  </springProfile>
+</configuration>

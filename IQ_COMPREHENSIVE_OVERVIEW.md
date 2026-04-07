@@ -172,7 +172,7 @@ IQ bridges three fundamental gaps in current AI systems:
   - `VFSKeyStore` — per-realm RSA key pairs; used for JWT signing
   - Trust connectors — OAuth integrations (GitHub, Discord, LinkedIn, Web3, mobile auth flows)
   - `TrustedPlatform` — realm bootstrapping with trust-aware agent initialization
-  - `MY_IQ_AI` — standalone trusted AI entry point
+  - `IQ_AI` — standalone trusted AI entry point
 - **JWT Model:** Each call includes bearer token; token minted per realm, contains actor IRI in claims, signed with realm's private key
 - **Per-type policies:** SHACL shapes + SPARQL ASK templates; checked at GraphQL resolution time
 
@@ -1116,7 +1116,7 @@ Use env vars for runtime control:
 
 ```bash
 # Realm selection
-export MY_IQ=default
+export IQ=default
 
 # LLM provider selection
 export IQ_LLM_PROVIDER=groq-llama

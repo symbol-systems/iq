@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class Validate {
 
 public static boolean isUnGuarded() {
-return !isMissing(System.getenv("MY_IQ_UNGUARDED"));
+return !isMissing(System.getenv("IQ_UNGUARDED"));
 }
 
 public static boolean isNonAlphanumeric(String string) {

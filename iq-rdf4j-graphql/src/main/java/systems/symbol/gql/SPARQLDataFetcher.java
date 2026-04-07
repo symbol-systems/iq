@@ -114,8 +114,9 @@ if (realm != null) {
 // This enforces multi-tenant isolation at the SPARQL query level
 where.append("\n# Realm isolation filter for tenant: ").append(realm).append("\n");
 where.append("FILTER( ");
-where.append("literal(str(").append(subject).append("), \"^").append(realm).append("\") || ");
-where.append("literal(str(").append(subject).append("), \"#").append(realm).append("$\")");
+// Use STRSTARTS/STRENDS for realm boundary matching
+where.append("STRSTARTS(str(").append(subject).append("), \"").append(escapeStringLiteral(realm)).append("/\") || ");
+where.append("CONTAINS(str(").append(subject).append("), \"#").append(escapeStringLiteral(realm)).append("\")");
 where.append(" )\n");
 log.info("sparql.select.realm_filter: applied - realm={}", realm);
 } else {
@@ -254,6 +255,15 @@ return realmPart;
 // Fallback: use entire actor IRI as realm (conservative - allows same realm only)
 log.debug("sparql.realm_extraction: using entire actor IRI as realm - actor={}", actorIRI);
 return actorIRI;
+}
+
+/**
+ * Escape special characters in a string literal for use in SPARQL queries.
+ * Escapes backslash and double quotes.
+ */
+private String escapeStringLiteral(String value) {
+if (value == null) return "";
+return value.replace("\\", "\\\\").replace("\"", "\\\"");
 }
 
 private boolean isRequired(Type type) {

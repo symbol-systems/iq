@@ -262,7 +262,7 @@ image: iq:latest
 ports:
 - containerPort: 8080
 env:
-- name: MY_IQ
+- name: IQ
   valueFrom:
 fieldRef:
   fieldPath: metadata.pod-uid

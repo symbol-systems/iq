@@ -1,0 +1,32 @@
+#!/bin/bash
+# Script to run IQ APIs with proper JVM configuration for ONNX Runtime
+# This script sets the necessary JVM flags to suppress warnings and enable native access
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# JVM Options for suppressing warnings and enabling native access
+export JAVA_OPTS="${JAVA_OPTS:-}"
+JAVA_OPTS="$JAVA_OPTS --enable-native-access=ALL-UNNAMED"
+JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+# Optional: Set logging level
+# JAVA_OPTS="$JAVA_OPTS -Dquarkus.log.level=INFO"
+
+echo "Starting IQ APIs with JVM options: $JAVA_OPTS"
+echo ""
+
+# Run the application with the proper configuration
+cd "$PROJECT_ROOT"
+export JAVA_OPTS="$JAVA_OPTS"
+
+# Option 1: Using Maven (for development)
+# ./mvnw -pl iq-apis -am clean quarkus:dev
+
+# Option 2: Using pre-built JAR (if already compiled)
+# java $JAVA_OPTS -jar iq-apis/target/iq-apis-0.94.1-runner.jar
+
+# Option 3: Run with Maven (compile + run)
+./mvnw -pl iq-apis -am quarkus:dev

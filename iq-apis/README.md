@@ -56,7 +56,7 @@ Useful for verifying the build before a deploy without launching the server.
 
 ## Configuration
 
-IQ reads realm configuration from `.iq/` in the working directory. LLM provider mappings, prompt templates, and connector settings all live there. Set `MY_IQ` to identify the running instance.
+IQ reads realm configuration from `.iq/` in the working directory. LLM provider mappings, prompt templates, and connector settings all live there. Set `IQ` to identify the running instance.
 
 ## Requirements
 

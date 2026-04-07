@@ -37,7 +37,7 @@ export IQ_HOME="${HOME}/.iq"
 mkdir -p "${IQ_HOME}"
 
 # Set instance ID (identifies this IQ instance)
-export MY_IQ="prod-01"
+export IQ="prod-01"
 
 # Optional: Set data directory separately
 export IQ_DATA_DIR="/data/iq-prod"
@@ -199,7 +199,7 @@ iq:maxTokens 2048 .
 export JAVA_OPTS="-Xmx8g -XX:+UseG1GC"
 
 # IQ instance identifier
-export MY_IQ="prod-01"
+export IQ="prod-01"
 
 # Workspace location
 export IQ_HOME="/opt/iq/data"

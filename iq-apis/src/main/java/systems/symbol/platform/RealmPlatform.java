@@ -74,7 +74,7 @@ try {
 Stopwatch stopwatch = new Stopwatch();
 I_Realm seed = realms.newRealm(I_Self.self().getSelf());
 log.info("realms.start: {} -> {}", seed.getSelf(), new Date());
-log.info("realms.iq: {} -> {}", System.getenv("MY_IQ"), I_Self.version());
+log.info("realms.iq: {} -> {}", System.getenv("IQ"), I_Self.version());
 realms.start();
 log.info("realms.bootstrap: {} -> {} @ {}", realms.getHome().getName().getPath(), realms.getRealms(),
 stopwatch);

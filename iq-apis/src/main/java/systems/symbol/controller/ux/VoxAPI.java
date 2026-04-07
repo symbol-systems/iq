@@ -31,7 +31,7 @@ public class VoxAPI extends GuardedAPI {
 String url;
 @ConfigProperty(name = "iq.realm.vox.model", defaultValue = "distil-whisper-large-v3-en")
 String model;
-@ConfigProperty(name = "iq.realm.vox.secret", defaultValue = "MY_GROQ_API_KEY")
+@ConfigProperty(name = "iq.realm.vox.secret", defaultValue = "GROQ_API_KEY")
 String secretKeyGrant;
 @ConfigProperty(name = "iq.realm.vox.temperature", defaultValue = "0.1")
 String temperature;

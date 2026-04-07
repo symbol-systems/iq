@@ -30,7 +30,7 @@ System.out.println("* * version: " + IQ + " - v[unknown - MANIFEST.MF not found 
 @Test
 public void testGetSelf() {
 
-String my_iq = System.getenv("MY_IQ");
+String my_iq = System.getenv("IQ");
 assert my_iq == null || my_iq.isEmpty();
 assert I_Self.name().equals("iq");
 assert I_Self.self().getSelf().stringValue().equals("iq:");

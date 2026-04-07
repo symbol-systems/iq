@@ -157,7 +157,7 @@ List<String> aud = new ArrayList<>();
 Iterable<IRI> trusts = Realms.trusts(builder.getGround(), self, new IRIs(), true);
 trusts.forEach(trust -> aud.add(trust.stringValue()));
 
-int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
+int duration = PrettyString.getenv("IQ_JWT_DURATION", tokenDuration); // 10 mins
 String[] _aud = aud.toArray(new String[0]);
 String signedToken = tokenize(issuer.stringValue(), roles, self.stringValue(), human.toString(), _aud,
 realm, duration);
@@ -219,7 +219,7 @@ return new OopsResponse("trust.token.aud", Response.Status.FORBIDDEN).build();
 if (!Validate.contains(aud, realm.getSelf().stringValue()))
 return new OopsResponse("trust.token.self", Response.Status.FORBIDDEN).build();
 
-int duration = PrettyString.getenv("MY_IQ_JWT_DURATION", tokenDuration); // 10 mins
+int duration = PrettyString.getenv("IQ_JWT_DURATION", tokenDuration); // 10 mins
 
 log.debug("trust.refresh: {} -> {} -> {} == {}", jwt.getSubject(), jwt.getIssuer(), aud, duration);
 String[] roles = jwt.getClaims().get("roles").asArray(String.class);

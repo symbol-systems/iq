@@ -125,7 +125,7 @@
 
 ### M-6 · `TrustedPlatform` method names `X()`, `XX()`, `XXX()`, `XXXX()` are opaque no-ops
 **File:** `iq-trusted/src/main/java/systems/symbol/platform/TrustedPlatform.java` and `Platform.java`  
-**Problem:** Methods named `X()`, `XX()`, `XXX()`, `XXXX()` are present with comments like `// trust gate XXX`. The purpose is completely opaque; callers in `MY_IQ_AI.java` invoke `ai.XXX()` and `ai.XXXX()` without any semantics. These methods are no-ops.  
+**Problem:** Methods named `X()`, `XX()`, `XXX()`, `XXXX()` are present with comments like `// trust gate XXX`. The purpose is completely opaque; callers in `IQ_AI.java` invoke `ai.XXX()` and `ai.XXXX()` without any semantics. These methods are no-ops.  
 **Fix:** Rename to meaningful method names that express what trust gate they represent. Implement their actual guard logic or document explicitly that they are intentional no-ops. Remove them from the public API if they have no action.
 
 ---

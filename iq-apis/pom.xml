@@ -98,10 +98,20 @@
 <groupId>io.quarkus</groupId>
 <artifactId>quarkus-websockets</artifactId>
 </dependency>
-<dependency>
-<groupId>io.quarkus</groupId>
-<artifactId>quarkus-core</artifactId>
-</dependency>
+  <dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-core</artifactId>
+    <exclusions>
+      <exclusion>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jboss-logmanager</artifactId>
+      </exclusion>
+      <exclusion>
+        <groupId>org.jboss.slf4j</groupId>
+        <artifactId>jboss-slf4j</artifactId>
+      </exclusion>
+    </exclusions>
+  </dependency>
 <dependency>
 <groupId>io.quarkus</groupId>
 <artifactId>quarkus-vertx</artifactId>

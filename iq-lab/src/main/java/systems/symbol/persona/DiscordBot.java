@@ -34,7 +34,7 @@ this.userSubjects = new HashMap<>();
 }
 
 public static void main(String[] args) throws InterruptedException {
-String botToken = System.getenv("MY_DISCORD_BOT_TOKEN");
+String botToken = System.getenv("DISCORD_BOT_TOKEN");
 System.out.println("token: "+botToken);
 if (botToken==null) return;
 

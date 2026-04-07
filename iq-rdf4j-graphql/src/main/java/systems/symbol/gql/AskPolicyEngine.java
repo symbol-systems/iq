@@ -57,7 +57,7 @@ if (resource == null) {
 throw new IllegalArgumentException("Resource not found: " + resourcePath);
 }
 return new String(resource.readAllBytes(), StandardCharsets.UTF_8)
-.replaceAll("^#.*$", "")  // Remove comment lines
+.replaceAll("(?m)^\\s*#.*$\\n?", "")  // Remove comment lines (multiline mode)
 .replaceAll("\\s+", " ")  // Normalize whitespace
 .trim();
 } catch (Exception ex) {

@@ -12,7 +12,7 @@ import systems.symbol.llm.tools.Tool;
 import systems.symbol.tools.APIException;
 
 public class LLMFactoryTestIT {
-String authKey = System.getenv("MY_GROQ_API_KEY");
+String authKey = System.getenv("GROQ_API_KEY");
 int tokens = 200;
 
 @BeforeEach

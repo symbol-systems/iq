@@ -43,7 +43,7 @@ this.agentRegistry = agentRegistry != null
 : new systems.symbol.kernel.agent.SimpleAgentRegistry();
 }
 
-/** The canonical IRI of this running instance (from {@code MY_IQ} env or default). */
+/** The canonical IRI of this running instance (from {@code IQ} env or default). */
 @Override
 public IRI getSelf() { return self; }
 

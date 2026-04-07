@@ -161,7 +161,7 @@ ${IQ_HOME}/
 ### Environment Variables
 
 ```bash
-MY_IQ   # Instance identifier
+IQ   # Instance identifier
 IQ_HOME # Workspace location
 JAVA_OPTS   # JVM settings
 OPENAI_API_KEY  # LLM key

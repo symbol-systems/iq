@@ -79,7 +79,7 @@ return () -> Values.iri(name() + ":");
 }
 
 static String name() {
-return System.getenv("MY_IQ") == null ? CODENAME : System.getenv("MY_IQ");
+return System.getenv("IQ") == null ? CODENAME : System.getenv("IQ");
 }
 
 static boolean trust(I_Self self) {

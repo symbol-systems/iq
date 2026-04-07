@@ -56,7 +56,7 @@ return "native";
 }
 
 private static IRI resolveIRI(File home) {
-String env = System.getenv("MY_IQ");
+String env = System.getenv("IQ");
 if (env != null && !env.isBlank()) {
 return SimpleValueFactory.getInstance().createIRI(env.endsWith(":" ) ? env : env + ":");
 }

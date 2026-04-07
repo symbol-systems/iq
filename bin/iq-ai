@@ -11,7 +11,7 @@ if [[ -z "${JAR_PATH}" ]]; then
 fi
 if [[ -z "${JAR_PATH}" ]]; then
   echo "[INFO] quarkus-run jar still missing, falling back to maven exec..."
-  ./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.MY_IQ_AI -DskipTests "$@"
+  ./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.IQ_AI -DskipTests "$@"
 else
   echo "[INFO] Reusing existing jar: $JAR_PATH"
   java -jar "$JAR_PATH" "$@"

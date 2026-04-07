@@ -18,7 +18,7 @@ import systems.symbol.platform.I_Self;
  *
  * <p>The workspace IRI is derived in the following order:
  * <ol>
- *   <li>Environment variable {@code MY_IQ} (e.g. {@code acme:})</li>
+ *   <li>Environment variable {@code IQ} (e.g. {@code acme:})</li>
  *   <li>Basename of {@code home} directory (e.g. {@code file:///home/user/.iq})</li>
  *   <li>Default fallback: {@code iq:}</li>
  * </ol>
@@ -110,7 +110,7 @@ return null;
 /* ── private helpers ──────────────────────────────────────────────────── */
 
 private static IRI resolveIRI(FileObject home) {
-String env = System.getenv("MY_IQ");
+String env = System.getenv("IQ");
 if (env != null && !env.isBlank()) {
 return SimpleValueFactory.getInstance().createIRI(
 env.endsWith(":") ? env : env + ":");
