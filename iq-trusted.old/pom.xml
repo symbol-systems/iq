@@ -69,6 +69,8 @@
 <logback.version>1.5.3</logback.version>
 <handlebars.version>4.5.0</handlebars.version>
 
+<quarkus.container-image.build>false</quarkus.container-image.build>
+
 <groovy.version>5.0.5</groovy.version>
 <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
 <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
