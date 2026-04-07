@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-<artifactId>iq-parent</artifactId>
-<groupId>systems.symbol</groupId>
-<version>0.94.1</version>
+    <artifactId>iq-parent</artifactId>
+    <groupId>systems.symbol</groupId>
+    <version>0.94.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>iq-cli-pro</artifactId>
@@ -11,246 +11,246 @@
   <description>IQ - AI cognitive operating system.</description>
   <url>https://symbol.systems</url>
   <developers>
-<developer>
-  <id>symbol.systems</id>
-  <name>symbol.systems</name>
-  <email>JO@symbol.systems</email>
-  <organization>symbol.systems</organization>
-  <roles>
-<role>architect</role>
-<role>developer</role>
-  </roles>
-  <timezone>+0</timezone>
-</developer>
+    <developer>
+      <id>symbol.systems</id>
+      <name>symbol.systems</name>
+      <email>JO@symbol.systems</email>
+      <organization>symbol.systems</organization>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>+0</timezone>
+    </developer>
   </developers>
   <licenses>
-<license>
-  <name>GNU Affero General Public License v3.0</name>
-  <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-  <distribution>repo</distribution>
-</license>
+    <license>
+      <name>GNU Affero General Public License v3.0</name>
+      <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+      <distribution>repo</distribution>
+    </license>
   </licenses>
   <scm>
-<connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
-<url>github.com/symbol-systems/iq-todo.git</url>
+    <connection>scm:git:https://github.com/symbol-systems/iq-todo.git</connection>
+    <url>github.com/symbol-systems/iq-todo.git</url>
   </scm>
   <organization>
-<name>symbol.systems</name>
-<url>https://symbol.systems/</url>
+    <name>symbol.systems</name>
+    <url>https://symbol.systems/</url>
   </organization>
   <build>
-<finalName>${project.artifactId}</finalName>
-<plugins>
-  <plugin>
-<groupId>org.codehaus.mojo</groupId>
-<artifactId>properties-maven-plugin</artifactId>
-<version>1.0.0</version>
-<executions>
-  <execution>
-<phase>initialize</phase>
-<goals>
-  <goal>read-project-properties</goal>
-</goals>
-<configuration>
-  <files>
-<file>../build.properties</file>
-  </files>
-</configuration>
-  </execution>
-</executions>
-  </plugin>
-  <plugin>
-<artifactId>maven-shade-plugin</artifactId>
-<version>3.6.0</version>
-<executions>
-  <execution>
-<phase>package</phase>
-<goals>
-  <goal>shade</goal>
-</goals>
-<configuration>
-  <transformers>
-<transformer />
-<transformer>
-  <mainClass>${main.class}</mainClass>
-</transformer>
-  </transformers>
-</configuration>
-  </execution>
-</executions>
-<dependencies>
-  <dependency>
-<groupId>org.ow2.asm</groupId>
-<artifactId>asm</artifactId>
-<version>9.7.1</version>
-  </dependency>
-  <dependency>
-<groupId>org.ow2.asm</groupId>
-<artifactId>asm-commons</artifactId>
-<version>9.7.1</version>
-  </dependency>
-</dependencies>
-<configuration>
-  <minimizeJar>false</minimizeJar>
-  <filters>
-<filter>
-  <artifact>*:*</artifact>
-  <excludes>
-<exclude>META-INF/*.SF</exclude>
-<exclude>META-INF/*.DSA</exclude>
-<exclude>META-INF/*.RSA</exclude>
-<exclude>META-INF/versions/**</exclude>
-  </excludes>
-</filter>
-  </filters>
-</configuration>
-  </plugin>
-  <plugin>
-<groupId>org.jetbrains.kotlin</groupId>
-<artifactId>kotlin-maven-plugin</artifactId>
-<version>${kotlin.version}</version>
-<executions>
-  <execution>
-<id>compile</id>
-<phase>compile</phase>
-<goals>
-  <goal>compile</goal>
-</goals>
-<configuration>
-  <sourceDirs>
-<source>src/main/java</source>
-<source>target/generated-sources/annotations</source>
-  </sourceDirs>
-</configuration>
-  </execution>
-  <execution>
-<id>test-compile</id>
-<phase>test-compile</phase>
-<goals>
-  <goal>test-compile</goal>
-</goals>
-  </execution>
-</executions>
-<configuration>
-  <jvmTarget>1.8</jvmTarget>
-</configuration>
-  </plugin>
-  <plugin>
-<artifactId>maven-compiler-plugin</artifactId>
-<executions>
-  <execution>
-<id>default-compile</id>
-<phase>none</phase>
-  </execution>
-  <execution>
-<id>default-testCompile</id>
-<phase>none</phase>
-  </execution>
-  <execution>
-<id>compile</id>
-<phase>compile</phase>
-<goals>
-  <goal>compile</goal>
-</goals>
-  </execution>
-  <execution>
-<id>testCompile</id>
-<phase>test-compile</phase>
-<goals>
-  <goal>testCompile</goal>
-</goals>
-  </execution>
-</executions>
-  </plugin>
-</plugins>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>../build.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer />
+                <transformer>
+                  <mainClass>${main.class}</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.7.1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.7.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <minimizeJar>false</minimizeJar>
+          <filters>
+            <filter>
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>META-INF/*.SF</exclude>
+                <exclude>META-INF/*.DSA</exclude>
+                <exclude>META-INF/*.RSA</exclude>
+                <exclude>META-INF/versions/**</exclude>
+              </excludes>
+            </filter>
+          </filters>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <sourceDirs>
+                <source>src/main/java</source>
+                <source>target/generated-sources/annotations</source>
+              </sourceDirs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <jvmTarget>1.8</jvmTarget>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
   <dependencies>
-<dependency>
-  <groupId>org.junit.jupiter</groupId>
-  <artifactId>junit-jupiter-api</artifactId>
-  <version>5.14.3</version>
-  <scope>test</scope>
-  <exclusions>
-<exclusion>
-  <artifactId>opentest4j</artifactId>
-  <groupId>org.opentest4j</groupId>
-</exclusion>
-<exclusion>
-  <artifactId>apiguardian-api</artifactId>
-  <groupId>org.apiguardian</groupId>
-</exclusion>
-  </exclusions>
-</dependency>
-<dependency>
-  <groupId>org.junit.jupiter</groupId>
-  <artifactId>junit-jupiter-engine</artifactId>
-  <version>5.14.3</version>
-  <scope>test</scope>
-  <exclusions>
-<exclusion>
-  <artifactId>apiguardian-api</artifactId>
-  <groupId>org.apiguardian</groupId>
-</exclusion>
-  </exclusions>
-</dependency>
-<dependency>
-  <groupId>org.junit.platform</groupId>
-  <artifactId>junit-platform-engine</artifactId>
-  <version>1.14.3</version>
-  <scope>test</scope>
-  <exclusions>
-<exclusion>
-  <artifactId>opentest4j</artifactId>
-  <groupId>org.opentest4j</groupId>
-</exclusion>
-<exclusion>
-  <artifactId>apiguardian-api</artifactId>
-  <groupId>org.apiguardian</groupId>
-</exclusion>
-  </exclusions>
-</dependency>
-<dependency>
-  <groupId>org.junit.platform</groupId>
-  <artifactId>junit-platform-commons</artifactId>
-  <version>1.14.3</version>
-  <scope>test</scope>
-  <exclusions>
-<exclusion>
-  <artifactId>apiguardian-api</artifactId>
-  <groupId>org.apiguardian</groupId>
-</exclusion>
-  </exclusions>
-</dependency>
-<dependency>
-  <groupId>junit</groupId>
-  <artifactId>junit</artifactId>
-  <version>3.8.1</version>
-  <scope>test</scope>
-</dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.14.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>opentest4j</artifactId>
+          <groupId>org.opentest4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.14.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-engine</artifactId>
+      <version>1.14.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>opentest4j</artifactId>
+          <groupId>org.opentest4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <version>1.14.3</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <properties>
-<site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
-<project.build.directory>deploy</project.build.directory>
-<main.class>systems.symbol.PowerCLI</main.class>
-<maven.compiler.plugin.target>21</maven.compiler.plugin.target>
-<spring.version>6.1.5</spring.version>
-<springboot.version>4.0.5</springboot.version>
-<site.host.stable>${project.url}</site.host.stable>
-<site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
-<site.host>${site.host.dev}</site.host>
-<groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
-<groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
-<site.host.other>${site.host.stable}</site.host.other>
-<maven.compiler.plugin.release>21</maven.compiler.plugin.release>
-<slf4j.version>2.0.13</slf4j.version>
-<site.host.dev>http://localhost:9000/</site.host.dev>
-<maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<project.webapp.directory>src/main/resources/www/</project.webapp.directory>
-<site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
-<groovy.version>5.0.5</groovy.version>
-<logback.version>1.5.3</logback.version>
-<maven.compiler.plugin.source>21</maven.compiler.plugin.source>
-<handlebars.version>4.5.0</handlebars.version>
+    <site.host.stable.desc>PARENT-STABLE</site.host.stable.desc>
+    <project.build.directory>deploy</project.build.directory>
+    <main.class>systems.symbol.PowerCLI</main.class>
+    <maven.compiler.plugin.target>21</maven.compiler.plugin.target>
+    <spring.version>6.1.5</spring.version>
+    <springboot.version>4.0.5</springboot.version>
+    <site.host.stable>${project.url}</site.host.stable>
+    <site.host.dev.desc>PARENT-DEV</site.host.dev.desc>
+    <site.host>${site.host.dev}</site.host>
+    <groovy-eclipse-compiler.version>3.7.0</groovy-eclipse-compiler.version>
+    <groovy-eclipse-batch.version>3.0.8-01</groovy-eclipse-batch.version>
+    <site.host.other>${site.host.stable}</site.host.other>
+    <maven.compiler.plugin.release>21</maven.compiler.plugin.release>
+    <slf4j.version>2.0.13</slf4j.version>
+    <site.host.dev>http://localhost:9000/</site.host.dev>
+    <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.webapp.directory>src/main/resources/www/</project.webapp.directory>
+    <site.host.other.desc>${site.host.stable.desc}</site.host.other.desc>
+    <groovy.version>5.0.5</groovy.version>
+    <logback.version>1.5.3</logback.version>
+    <maven.compiler.plugin.source>21</maven.compiler.plugin.source>
+    <handlebars.version>4.5.0</handlebars.version>
   </properties>
 </project>
