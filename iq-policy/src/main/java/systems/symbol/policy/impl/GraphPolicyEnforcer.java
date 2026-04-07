@@ -59,8 +59,8 @@ if (!input.scopes().contains(scope)) {
 return PolicyResult.deny("required scope not present: " + scope, ENFORCER);
 }
 }
-if (statement.getObject() instanceof Literal ***REMOVED***Scope) {
-IRI requiredScope = PolicyVocab.scope(***REMOVED***Scope.stringValue());
+if (statement.getObject() instanceof Literal literalScope) {
+IRI requiredScope = PolicyVocab.scope(literalScope.stringValue());
 if (!input.scopes().contains(requiredScope)) {
 return PolicyResult.deny("required scope not present: " + requiredScope, ENFORCER);
 }
