@@ -1,7 +1,7 @@
 # IQ Platform User Stories
 
 **Document Overview:** This document captures 75+ user stories for the IQ platform, organized by user role. The focus areas include:
-- How TTL/RDF graphs inform runtime behavior and decision-making
+- How RDF/RDF graphs inform runtime behavior and decision-making
 - Enterprise-scale deployment and configuration
 - Compliance, governance, and audit capabilities
 
@@ -38,11 +38,11 @@
 
 ### 2. Enterprise Agent Fleet Governance
 **As an** Enterprise AI Architect
-**I want to** define a TTL graph that describes all authorized agents in the fleet, including their capabilities, scope, and compliance classification
+**I want to** define a graph that describes all authorized agents in the fleet, including their capabilities, scope, and compliance classification
 **So that** the runtime can enforce which agents are allowed to execute, which data they access, and audit trail requirements they must follow.
 
 **Acceptance Criteria:**
-- TTL schema defines `iq:Agent`, `iq:Capability`, `iq:Scope`, `iq:ComplianceClass`
+- RDF schema defines `iq:Agent`, `iq:Capability`, `iq:Scope`, `iq:ComplianceClass`
 - SPARQL query identifies agents by compliance class (e.g., `HIGH_RISK`, `PCI-DSS`)
 - Runtime checks agent registry before execution
 - Capability matrix prevents unauthorized operations
@@ -52,14 +52,14 @@
 
 ### 3. Cluster-Wide Policy Distribution
 **As an** Enterprise AI Architect
-**I want to** define compliance policies in a central TTL graph that are automatically distributed across all nodes in a Raft-based cluster
+**I want to** define compliance policies in a central graph that are automatically distributed across all nodes in a Raft-based cluster
 **So that** policy changes (e.g., blocking a risky intent pattern) take effect immediately across all instances without manual node restarts.
 
 **Acceptance Criteria:**
 - Policies defined via SPARQL INSERT/UPDATE statements
 - Leader node distributes policy changes via heartbeat
 - Follower nodes validate and apply policies within 5 seconds
-- Policy version tracking in TTL (policy:version)
+- Policy version tracking in RDF (policy:version)
 - Rollback mechanism available for failed policy rollouts
 
 ---
@@ -70,7 +70,7 @@
 **So that** access control is declarative, auditable, and doesn't require code changes.
 
 **Acceptance Criteria:**
-- TTL defines roles, users, attributes, permissions as RDF triples
+- RDF defines roles, users, attributes, permissions as RDF triples
 - SPARQL query determines user permissions at request time
 - Dynamic attributes (e.g., project membership from HR system) can be queried
 - Access decisions logged with "why authorized/denied" reasoning
@@ -94,11 +94,11 @@
 
 ### 6. LLM Provider Governance and Cost Control
 **As an** Enterprise AI Architect
-**I want to** define a TTL graph that describes allowed LLM providers, their cost limits, model selection rules, and fallback chains
+**I want to** define a graph that describes allowed LLM providers, their cost limits, model selection rules, and fallback chains
 **So that** the runtime selects the optimal model based on budget, performance requirements, and risk classification of the agent.
 
 **Acceptance Criteria:**
-- TTL schema defines `iq:LLMProvider`, `iq:ProviderConfig`, `iq:CostLimit`, `iq:ModelSelectionRule`
+- RDF schema defines `iq:LLMProvider`, `iq:ProviderConfig`, `iq:CostLimit`, `iq:ModelSelectionRule`
 - SPARQL query selects provider based on agent intent, budget constraints, and risk level
 - Cost tracking per agent/tenant/provider with real-time alerts
 - Fallback chain (e.g., GPT-4 → GPT-3.5 → Groq) configurable via RDF
@@ -108,14 +108,14 @@
 
 ### 7. Semantic Vault Management for Secrets
 **As an** Enterprise AI Architect
-**I want to** manage secrets (API keys, DB passwords) in a semantic vault where each secret is linked to agents/services/roles via TTL
-**So that** secrets are automatically plumbed to agents based on TTL permissions, reducing manual credential management.
+**I want to** manage secrets (API keys, DB passwords) in a semantic vault where each secret is linked to agents/services/roles via RDF
+**So that** secrets are automatically plumbed to agents based on RDF permissions, reducing manual credential management.
 
 **Acceptance Criteria:**
 - Vault organized as RDF triples (secret:uri → secret:value, secret:owner, secret:expiryDate)
 - SPARQL query finds secrets for a given agent/service
 - Access to secrets logged and audited
-- Secret rotation policies defined in TTL (immutability rules, expiry schedules)
+- Secret rotation policies defined in RDF (immutability rules, expiry schedules)
 - Multi-factor approval required for highly sensitive secrets (audit trail)
 
 ---
@@ -140,7 +140,7 @@
 **So that** agents can query distributed data without replication while respecting access control per source.
 
 **Acceptance Criteria:**
-- FedX-based federation configured via TTL (repo:endpoint, repo:type, repo:accessPolicy)
+- FedX-based federation configured via RDF (repo:endpoint, repo:type, repo:accessPolicy)
 - SPARQL queries transparently distribute to multiple backends
 - Filter-down to minimize data transfer (pushdown predicates)
 - Performance metrics collected (per-endpoint query time)
@@ -168,7 +168,7 @@
 **So that** all agents and systems operate from a single source of truth with enforced data integrity.
 
 **Acceptance Criteria:**
-- TTL schema defines data governance model (ontology: versions, owners, approval workflows)
+- RDF schema defines data governance model (ontology: versions, owners, approval workflows)
 - SHACL shape graphs enforce data quality constraints
 - Impact analysis before ontology changes (which agents/queries affected?)
 - Version control and rollback for ontology changes
@@ -194,9 +194,9 @@
 
 > **Role Description:** Expresses business logic, compliance rules, and domain knowledge as RDF/TTL without writing Java code. Owns the semantic model that drives agent behavior.
 
-### 13. Encode Domain Ontology in TTL
+### 13. Encode Domain Ontology in RDF
 **As a** Domain Expert
-**I want to** define the complete domain ontology (classes, properties, relationships) for my business domain in TTL format
+**I want to** define the complete domain ontology (classes, properties, relationships) for my business domain in RDF format
 **So that** agents can reason about domain concepts and make decisions grounded in business semantics.
 
 **Acceptance Criteria:**
@@ -272,7 +272,7 @@
 **Acceptance Criteria:**
 - Mapping file (`.ttl`) describes source schema → domain ontology mappings
 - Automatic transformation of source queries to domain queries
-- Caching of mapped data with TTL-based invalidation
+- Caching of mapped data with RDF-based invalidation
 - Performance monitoring for slow-performing mappings
 - Validation that mapping covers all required domain entities
 
@@ -284,7 +284,7 @@
 **So that** agents can declare their intent and the runtime validates they have proper authorization and context.
 
 **Acceptance Criteria:**
-- Intent model defined in TTL (intent:name, intent:requiredInputs, intent:expectedOutputs, intent:riskLevel, intent:approvalRequired)
+- Intent model defined in RDF (intent:name, intent:requiredInputs, intent:expectedOutputs, intent:riskLevel, intent:approvalRequired)
 - Runtime validates agent intent matches execution context
 - Policy rules can reference intent type
 - Cost attribution per intent enables business cost analytics
@@ -312,7 +312,7 @@
 **So that** agents can immediately start reasoning about new concepts without waiting for code changes.
 
 **Acceptance Criteria:**
-- Add entity definitions to ontology TTL file
+- Add entity definitions to ontology RDF file
 - Define relationships between entities (cardinality, symmetry, transitivity)
 - Automatic inference of derived relationships
 - Impact analysis shows which agents can now access new entities
@@ -354,7 +354,7 @@
 **So that** agents know when to escalate decisions and to whom based on defined policies.
 
 **Acceptance Criteria:**
-- Workflow states and transitions defined in TTL
+- Workflow states and transitions defined in RDF
 - Escalation rules link decision attributes (e.g., amount, risk) to workflow triggers
 - Approval chain defined per actor role
 - Timeout and override handling for stuck approvals
@@ -429,7 +429,7 @@
 
 **Acceptance Criteria:**
 - Reasoner supports RDFS, OWL (selected profiles), custom SPARQL rules
-- Inference results cached with TTL-based invalidation
+- Inference results cached with RDF-based invalidation
 - Ability to "explain" inferred facts (which rules/facts led to this conclusion?)
 - Materialization vs. query-time inference tradeoff configurable
 - Infinite loop detection in rule chains
@@ -528,7 +528,7 @@
 **Acceptance Criteria:**
 - Test environment variable support (mock connector implementations)
 - In-memory RDF repository for test runs
-- Test data fixtures (sample TTL files) loaded before tests
+- Test data fixtures (sample RDF files) loaded before tests
 - Assertion methods for RDF state (triple exists, query returns X)
 - Performance targets for test runs (quick feedback)
 
@@ -1022,7 +1022,7 @@
 
 ---
 
-### 71. Audit TTL Rule Changes for Compliance Violations
+### 71. Audit RDF Rule Changes for Compliance Violations
 **As a** Compliance Officer
 **I want to** review all changes to business rules (TTL, SPARQL) to ensure they don't weaken compliance controls
 **So that** compliance cannot be accidentally or maliciously undermined.
@@ -1127,7 +1127,7 @@ Stories about orchestrating complex workflows with agents, RDF-informed decision
 
 ### Phase 1: Core Platform (Foundational User Stories)
 - Story 1: Multi-Tenant Realm Isolation
-- Story 13: Encode Domain Ontology in TTL
+- Story 13: Encode Domain Ontology in RDF
 - Story 28: Retrieve RDF Facts During Agent Execution
 - Story 54: Deploy IQ Cluster with Raft-Based HA
 - Story 66: Query Agent Decision Audit Trail

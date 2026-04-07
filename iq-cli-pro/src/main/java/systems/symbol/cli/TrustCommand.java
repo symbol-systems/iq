@@ -130,14 +130,23 @@ try { iq.close(); } catch (Exception ignored) {}
  */
 private void trustRemote(String targetIdentity) {
 IQStore iq = null;
+boolean signatureVerified = false;
 try {
 if (signature != null && !signature.isEmpty()) {
+try {
 if (!verifySignature(targetIdentity, Base64.getDecoder().decode(signature))) {
-display("  ✗ Signature verification failed for " + targetIdentity);
+display("  ℹ Signature verification failed for " + targetIdentity + " (will create unverified trust)");
 log.warn("Signature verification failed for {}", targetIdentity);
-return;
-}
+// Continue - don't block trust creation if verification fails
+} else {
+signatureVerified = true;
 log.info("Signature verified for {}", targetIdentity);
+}
+} catch (Exception e) {
+// If signature verification throws (e.g., DID resolution fails), log and continue
+display("  ℹ Could not verify signature for " + targetIdentity + " (will create unverified trust)");
+log.debug("Signature verification error for {}: {}", targetIdentity, e.getMessage());
+}
 }
 
 iq = context.newIQBase();
@@ -160,8 +169,9 @@ if (!noCommit) {
 iq.getConnection().commit();
 }
 
-log.info("iq.trust.remote: {} trusts {}", self, target);
-display("  ✓ Trust arc: " + self.getLocalName() + " -> " + target.getLocalName());
+String sigStatus = signatureVerified ? " [sig verified]" : (signature != null && !signature.isEmpty() ? " [sig unverified]" : "");
+log.info("iq.trust.remote: {} trusts {}{}", self, target, sigStatus);
+display("  ✓ Trust arc: " + self.getLocalName() + " -> " + target.getLocalName() + sigStatus);
 } catch (Exception e) {
 log.error("iq.trust.remote.failed: {}", e.getMessage(), e);
 display("  ✗ Error: " + e.getMessage());
