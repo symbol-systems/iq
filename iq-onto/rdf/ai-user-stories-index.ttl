@@ -29,17 +29,17 @@ ai:RoleComplianceOfficer .
 ai:storyType a rdf:Property ;
 rdfs:label "story type" ;
 rdfs:comment "The type of user story (User Story, Technical Story, Epic)" ;
-rdfs:range xsd:string .
+rdfs:range skos:Concept .
 
 ai:theme a rdf:Property ;
 rdfs:label "theme" ;
 rdfs:comment "Business/technical theme categorizing the story" ;
-rdfs:range xsd:string .
+rdfs:range skos:Concept .
 
 ai:priority a rdf:Property ;
 rdfs:label "priority" ;
-rdfs:comment "Priority level (critical, high, medium, low)" ;
-rdfs:range xsd:string .
+rdfs:comment "Priority level mapped to Priority concepts" ;
+rdfs:range skos:Concept .
 
 ai:rdfPattern a rdf:Property ;
 rdfs:label "RDF pattern" ;
@@ -108,6 +108,117 @@ skos:definition "Stories on deployment, monitoring, changes, reliability" ;
 skos:scopeNote "High availability, backup/recovery, zero-downtime upgrades, health monitoring" ;
 skos:example "Story 54 (Raft HA), Story 60 (Config Changes)" .
 
+# Additional Theme Concepts (used in stories but not in top-level scheme)
+ai:ThemeClustering a skos:Concept ;
+skos:prefLabel "Clustering" ;
+skos:definition "Multi-node deployment, consensus, replication" ;
+skos:broader ai:ThemePerformance .
+
+ai:ThemeDataReliability a skos:Concept ;
+skos:prefLabel "Data Reliability" ;
+skos:definition "Backup, recovery, replication, fault tolerance" ;
+skos:broader ai:ThemeGovernance .
+
+ai:ThemeObservability a skos:Concept ;
+skos:prefLabel "Observability" ;
+skos:definition "Monitoring, metrics, logging, alerting" ;
+skos:broader ai:ThemeGovernance .
+
+ai:ThemeDevOps a skos:Concept ;
+skos:prefLabel "DevOps & Deployment" ;
+skos:definition "Build, deployment, testing, CI/CD" ;
+skos:broader ai:ThemeGovernance .
+
+ai:ThemeKnowledgeModeling a skos:Concept ;
+skos:prefLabel "Knowledge Modeling" ;
+skos:definition "Ontology design, schema, semantic models" ;
+skos:broader ai:ThemeRDFDriven .
+
+ai:ThemeRuleEngine a skos:Concept ;
+skos:prefLabel "Rule Engine & Reasoning" ;
+skos:definition "SPARQL rules, SHACL shapes, inference" ;
+skos:broader ai:ThemeRDFDriven .
+
+ai:ThemePolicy a skos:Concept ;
+skos:prefLabel "Policy Management" ;
+skos:definition "Policy definition, distribution, enforcement" ;
+skos:broader ai:ThemeCompliance .
+
+ai:ThemeDataQuality a skos:Concept ;
+skos:prefLabel "Data Quality" ;
+skos:definition "Data validation, conflict resolution, ontology compliance" ;
+skos:broader ai:ThemeIntegration .
+
+ai:ThemeAgentModeling a skos:Concept ;
+skos:prefLabel "Agent Modeling" ;
+skos:definition "Agent definition, capabilities, governance" ;
+skos:broader ai:ThemeRDFDriven .
+
+ai:ThemeLLMIntegration a skos:Concept ;
+skos:prefLabel "LLM Integration" ;
+skos:definition "Language model integration, prompting, grounding" ;
+skos:broader ai:ThemeWorkflow .
+
+ai:ThemeKnowledgeDiscovery a skos:Concept ;
+skos:prefLabel "Knowledge Discovery" ;
+skos:definition "Data exploration, pattern mining, fact extraction" ;
+skos:broader ai:ThemeIntegration .
+
+ai:ThemePrivacy a skos:Concept ;
+skos:prefLabel "Privacy & Data Minimization" ;
+skos:definition "PII classification, purpose limitation, retention" ;
+skos:broader ai:ThemeCompliance .
+
+ai:ThemeLegal a skos:Concept ;
+skos:prefLabel "Legal & Regulatory" ;
+skos:definition "Legal holds, regulatory reporting, evidence" ;
+skos:broader ai:ThemeCompliance .
+
+ai:ThemeAgentReasoning a skos:Concept ;
+skos:prefLabel "Agent Reasoning Loops" ;
+skos:definition "Self-correcting agents, reflection, iteration" ;
+skos:broader ai:ThemeWorkflow .
+
+ai:ThemeTesting a skos:Concept ;
+skos:prefLabel "Testing & Quality Assurance" ;
+skos:definition "Test isolation, fixtures, performance benchmarks" ;
+skos:broader ai:ThemeGovernance .
+
+ai:ThemeScalability a skos:Concept ;
+skos:prefLabel "Scalability & Performance" ;
+skos:definition "Distributed processing, caching, optimization" ;
+skos:broader ai:ThemePerformance .
+
+ai:ThemeDistributedSystems a skos:Concept ;
+skos:prefLabel "Distributed Systems" ;
+skos:definition "Async patterns, streaming, eventual consistency" ;
+skos:broader ai:ThemeScalability .
+
+ai:ThemeScheduling a skos:Concept ;
+skos:prefLabel "Scheduling & Workflows" ;
+skos:definition "Scheduled execution, event triggers, workflows" ;
+skos:broader ai:ThemeWorkflow .
+
+ai:ThemeSDK a skos:Concept ;
+skos:prefLabel "SDK & Core Libraries" ;
+skos:definition "Agent SDK, domain libraries, framework features" ;
+skos:broader ai:ThemeWorkflow .
+
+ai:ThemeResourceManagement a skos:Concept ;
+skos:prefLabel "Resource Management" ;
+skos:definition "CPU/memory/storage tracking, quotas, cost attribution" ;
+skos:broader ai:ThemePerformance .
+
+ai:ThemeGeoDistribution a skos:Concept ;
+skos:prefLabel "Geo-Distribution" ;
+skos:definition "Multi-region deployment, data residency, failover" ;
+skos:broader ai:ThemeClustering .
+
+ai:ThemeReasoning a skos:Concept ;
+skos:prefLabel "RDF Reasoning" ;
+skos:definition "RDFS/OWL reasoning, rule-based inference, fact derivation" ;
+skos:broader ai:ThemeRDFDriven .
+
 # Priority taxonomy
 ai:PriorityScheme a skos:ConceptScheme ;
 dct:title "Story Priorities" ;
@@ -136,6 +247,26 @@ ai:PriorityLow a skos:Concept ;
 skos:prefLabel "Low" ;
 skos:definition "Nice-to-have features enabling advanced scenarios" ;
 skos:scopeNote "Deferred until core features mature" .
+
+# Story Type taxonomy
+ai:StoryTypeScheme a skos:ConceptScheme ;
+dct:title "Story Types" ;
+skos:hasTopConcept ai:UserStory , ai:TechnicalStory , ai:Epic .
+
+ai:UserStory a skos:Concept ;
+skos:prefLabel "User Story" ;
+skos:definition "User-facing story describing capability from user perspective" ;
+skos:scopeNote "Format: As a [role] I want [capability] so that [benefit]" .
+
+ai:TechnicalStory a skos:Concept ;
+skos:prefLabel "Technical Story" ;
+skos:definition "Technical/infrastructure story addressing system-level requirements" ;
+skos:scopeNote "Internal implementation details, performance, reliability" .
+
+ai:Epic a skos:Concept ;
+skos:prefLabel "Epic" ;
+skos:definition "Large feature spanning multiple stories" ;
+skos:scopeNote "Composed of multiple User Stories and/or Technical Stories" .
 
 # Phase taxonomy for implementation roadmap
 ai:PhaseScheme a skos:ConceptScheme ;
