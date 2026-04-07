@@ -39,6 +39,6 @@ public Literal getContent(Resource subject, IRI datatype) {
 String query = queries.get(subject.stringValue());
 if (query == null)
 return null;
-return Values.***REMOVED***(query);
+return Values.literal(query);
 }
 }

@@ -4,9 +4,9 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 
 import java.io.File;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 
-import static java.util.***REMOVED***.Pattern.compile;
+import static java.util.regex.Pattern.compile;
 
 public class Files {
 

@@ -80,25 +80,25 @@ model.add(s);
 return model;
 }
 
-public static Literal ***REMOVED***(Iterator<Statement> iterator, IRI mimetype) {
-if (mimetype == null)
-iterator.next();
-HashSet<IRI> mimes = new HashSet<>();
-mimes.add(mimetype);
-return ***REMOVED***(iterator, mimes);
-}
+public static Literal extractLiteral(Iterator<Statement> iterator, IRI mimetype) {
+        if (mimetype == null)
+            iterator.next();
+        HashSet<IRI> mimes = new HashSet<>();
+        mimes.add(mimetype);
+        return extractLiteral(iterator, mimes);
+    }
 
-public static Literal ***REMOVED***(Iterator<Statement> iterator, Set<IRI> mimetypes) {
-while (iterator.hasNext()) {
-Statement statement = iterator.next();
-if (statement.getObject() instanceof Literal) {
-Literal ***REMOVED*** = (Literal) statement.getObject();
-log.debug("***REMOVED***.found: " + statement.getSubject() + " --> " + ***REMOVED*** + " -> " + mimetypes);
-if (mimetypes.contains(***REMOVED***.getDatatype()))
-return ***REMOVED***;
-}
-}
-log.debug("***REMOVED***.unknown");
+    public static Literal extractLiteral(Iterator<Statement> iterator, Set<IRI> mimetypes) {
+        while (iterator.hasNext()) {
+            Statement statement = iterator.next();
+            if (statement.getObject() instanceof Literal) {
+                Literal literal = (Literal) statement.getObject();
+                log.debug("literal.found: " + statement.getSubject() + " --> " + literal + " -> " + mimetypes);
+                if (mimetypes.contains(literal.getDatatype()))
+                    return literal;
+            }
+        }
+        log.debug("literal.unknown");
 return null;
 }
 

@@ -314,9 +314,9 @@ operation.setBinding(key, Values.iri(value$));
 log.debug("iq.queries.bind.urn: {} == {}", key, value$);
 operation.setBinding(key, Values.iri(value$));
 } else {
-// everything else is a ***REMOVED***
+// everything else is a literal
 log.debug("iq.queries.bind.$: {} == {}", key, value$);
-operation.setBinding(key, Values.***REMOVED***(value$));
+operation.setBinding(key, Values.literal(value$));
 }
 }
 }
