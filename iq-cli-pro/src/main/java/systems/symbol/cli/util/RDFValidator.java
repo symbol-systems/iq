@@ -35,7 +35,7 @@ import java.util.Map;
  * </pre>
  * 
  * @author Symbol Systems
- * @since 0.94.1
+ * @since 0.94.3
  */
 public class RDFValidator {
 

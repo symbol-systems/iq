@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
  *   null = Command exception occurred
  * 
  * @author Symbol Systems
- * @since 0.94.1
+ * @since 0.94.3
  */
 @Command(
 name = "verify",

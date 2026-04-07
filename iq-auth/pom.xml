@@ -7,7 +7,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.1</version>
+<version>0.94.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -18,7 +18,7 @@ Self-contained OAuth 2.0 Authorization Server with RFC 8628 device authorization
 Includes token issuance, validation, introspection, revocation, and JWKS endpoints.
 </description>
 <url>https://symbol.systems</url>
-<version>0.94.1</version>
+<version>0.94.3</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>

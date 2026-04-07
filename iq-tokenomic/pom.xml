@@ -3,13 +3,13 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.1</version>
+<version>0.94.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 <modelVersion>4.0.0</modelVersion>
 
 <artifactId>iq-tokenomic</artifactId>
-<version>0.94.1</version>
+<version>0.94.3</version>
 <packaging>jar</packaging>
 
 <name>IQ Tokenomics</name>

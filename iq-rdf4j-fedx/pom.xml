@@ -7,7 +7,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.1</version>
+<version>0.94.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -18,7 +18,7 @@ Federated SPARQL query coordinator for IQ cluster.
 Uses Control Plane node registry to discover endpoints and optimize federated queries.
 </description>
 <url>https://symbol.systems</url>
-<version>0.94.1</version>
+<version>0.94.3</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>

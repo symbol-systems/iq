@@ -26,7 +26,7 @@ export JAVA_OPTS="$JAVA_OPTS"
 # ./mvnw -pl iq-apis -am clean quarkus:dev
 
 # Option 2: Using pre-built JAR (if already compiled)
-# java $JAVA_OPTS -jar iq-apis/target/iq-apis-0.94.1-runner.jar
+# java $JAVA_OPTS -jar iq-apis/target/iq-apis-0.94.3-runner.jar
 
 # Option 3: Run with Maven (compile + run)
 ./mvnw -pl iq-apis -am quarkus:dev

@@ -7,7 +7,7 @@
 <parent>
 <groupId>systems.symbol</groupId>
 <artifactId>iq-parent</artifactId>
-<version>0.94.1</version>
+<version>0.94.3</version>
 <relativePath>../pom.xml</relativePath>
 </parent>
 
@@ -18,7 +18,7 @@ Distributed cluster coordination for IQ: node registry, leader election,
 policy distribution, mTLS node-to-node communication.
 </description>
 <url>https://symbol.systems</url>
-<version>0.94.1</version>
+<version>0.94.3</version>
 
 <properties>
 <maven.compiler.source>21</maven.compiler.source>

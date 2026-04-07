@@ -20,7 +20,7 @@ Tracing is configured in `iq-apis/src/main/resources/application.properties`:
 quarkus.otel.enabled=true
 quarkus.otel.traces.exporter=otlp
 quarkus.otel.service.name=iq-apis
-quarkus.otel.service.version=0.94.1
+quarkus.otel.service.version=0.94.3
 quarkus.otel.exporter.otlp.endpoint=http://localhost:4317
 quarkus.otel.traces.sampler=parentbased_always_on
 quarkus.otel.traces.sampler.arg=0.9
