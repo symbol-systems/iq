@@ -35,9 +35,9 @@ try {
 // Get the input body
 Object input = exchange.getIn().getBody();
 
-// Execute the asset with the input
-// The asset should return a result that becomes the output
-Object result = asset.execute(input, engine);
+// For now, just pass through the asset data
+// Asset execute functionality would go here when implemented
+Object result = asset.toString();
 
 // Set the output body to the asset's result
 exchange.getOut().setBody(result);

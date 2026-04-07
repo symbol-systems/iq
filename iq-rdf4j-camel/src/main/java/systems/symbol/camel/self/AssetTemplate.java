@@ -41,7 +41,7 @@ Object body = exchange.getIn().getBody();
 PicoTemplate template = new PicoTemplate(asset.toString());
 
 // Render the template with the message context
-String result = template.render(context);
+String result = template.translate(context);
 
 // Set the output body to the rendered template
 exchange.getOut().setBody(result);

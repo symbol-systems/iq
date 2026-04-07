@@ -17,10 +17,10 @@ import com.slack.api.methods.response.users.UsersListResponse;
 import com.slack.api.model.User;
 
 import systems.symbol.connect.core.AbstractConnector;
-import systems.symbol.connect.core.ConnectorErrorHandler;
+import systems.symbol.connector.error.ConnectorErrorHandler;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
-import systems.symbol.connect.core.ConnectorState;
+import systems.symbol.connector.state.ConnectorState;
 import systems.symbol.connect.core.Modeller;
 
 public final class SlackConnector extends AbstractConnector {

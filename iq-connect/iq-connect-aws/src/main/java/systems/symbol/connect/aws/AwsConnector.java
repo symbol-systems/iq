@@ -20,12 +20,12 @@ import software.amazon.awssdk.services.pricing.PricingClient;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import systems.symbol.connect.core.AbstractConnector;
-import systems.symbol.connect.core.ConnectorCheckpoint;
-import systems.symbol.connect.core.ConnectorErrorHandler;
+import systems.symbol.connector.persistence.ConnectorCheckpoint;
+import systems.symbol.connector.error.ConnectorErrorHandler;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
 import systems.symbol.connect.core.ConnectorScanner;
-import systems.symbol.connect.core.ConnectorState;
+import systems.symbol.connector.state.ConnectorState;
 import systems.symbol.connect.core.Modeller;
 
 public final class AwsConnector extends AbstractConnector {

@@ -385,7 +385,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			case "soapjaxb": from = unmarshal.custom(type); break;
 			case "string": from = unmarshal.custom(type); break;
 			case "syslog": from = unmarshal.syslog(); break;
-			case "tidyMarkup": from = unmarshal.tidyMarkup(); break;
+			case "tidyMarkup": from = unmarshal.custom("tidyMarkup"); break;
 			case "zipFile": from = unmarshal.zipFile(); break;
 			default: from = unmarshal.custom(type); break;
 		}
@@ -407,7 +407,7 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			case "soapjaxb": from = marshal.custom(type); break;
 			case "string": from = marshal.custom(type); break;
 			case "syslog": from = marshal.syslog(); break;
-			case "tidyMarkup": from = marshal.tidyMarkup(); break;
+			case "tidyMarkup": from = marshal.custom("tidyMarkup"); break;
 			case "zipFile": from = marshal.zipFile(); break;
 			default: from = marshal.custom(type); break;
 		}

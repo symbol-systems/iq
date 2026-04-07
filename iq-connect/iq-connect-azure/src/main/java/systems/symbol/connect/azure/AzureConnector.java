@@ -16,10 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import systems.symbol.connect.core.AbstractConnector;
-import systems.symbol.connect.core.ConnectorErrorHandler;
+import systems.symbol.connector.error.ConnectorErrorHandler;
 import systems.symbol.connect.core.ConnectorMode;
 import systems.symbol.connect.core.ConnectorModels;
-import systems.symbol.connect.core.ConnectorState;
+import systems.symbol.connector.state.ConnectorState;
 import systems.symbol.connect.core.Modeller;
 
 public final class AzureConnector extends AbstractConnector {
