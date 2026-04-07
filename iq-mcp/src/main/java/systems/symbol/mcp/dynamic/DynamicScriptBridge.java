@@ -149,7 +149,7 @@ private final String  toolName;
 private final String  description;
 private final String  scriptUri;
 private final Map<String, Object> schema;
-private final ScriptRunnerrunner;
+private final ScriptRunner runner;
 
 ScriptToolProxy(String toolName, String description,
 String scriptUri, Map<String, Object> schema, ScriptRunner runner) {

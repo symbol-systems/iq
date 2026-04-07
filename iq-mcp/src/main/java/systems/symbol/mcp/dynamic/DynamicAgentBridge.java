@@ -49,7 +49,7 @@ public interface AgentTransitionRunner {
 String run(String agentUri, String actor, String intent, Map<String, Object> bindings) throws Exception;
 }
 
-private final Repositoryrepository;
+private final Repository repository;
 private final AgentTransitionRunner runner;
 
 public DynamicAgentBridge(Repository repository, AgentTransitionRunner runner) {
