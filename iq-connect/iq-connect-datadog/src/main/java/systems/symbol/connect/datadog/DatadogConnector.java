@@ -83,21 +83,21 @@ IRI monitorNode = Values.iri(entityBaseIri().stringValue() + safeId);
 
 getModel().add(monitorNode, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "DatadogMonitor"), graphIri());
 if (monitor.hasNonNull("name")) {
-getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "name"), Values.***REMOVED***(monitor.get("name").asText()), graphIri());
+getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "name"), Values.literal(monitor.get("name").asText()), graphIri());
 }
 if (monitor.hasNonNull("type")) {
-getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "type"), Values.***REMOVED***(monitor.get("type").asText()), graphIri());
+getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "type"), Values.literal(monitor.get("type").asText()), graphIri());
 }
 if (monitor.hasNonNull("query")) {
-getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "query"), Values.***REMOVED***(monitor.get("query").asText()), graphIri());
+getModel().add(monitorNode, Values.iri(ontologyBaseIri().stringValue() + "query"), Values.literal(monitor.get("query").asText()), graphIri());
 }
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), monitorNode, graphIri());
 count++;
 }
 
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(count), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(count), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

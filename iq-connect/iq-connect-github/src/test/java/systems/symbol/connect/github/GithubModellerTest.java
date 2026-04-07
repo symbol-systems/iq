@@ -34,6 +34,6 @@ assertTrue(model.contains(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE),
 assertTrue(model.contains(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE), repoIri, graph));
 assertTrue(model.contains(repoIri, Values.iri(ConnectorModels.HAS_RESOURCE), branchIri, graph));
 assertTrue(model.contains(repoIri, Values.iri(ConnectorModels.HAS_CONTROL), hookIri, graph));
-assertTrue(model.contains(repoIri, Values.iri("https://example.org/github#name"), Values.***REMOVED***("repo"), graph));
+assertTrue(model.contains(repoIri, Values.iri("https://example.org/github#name"), Values.literal("repo"), graph));
 }
 }

@@ -81,9 +81,9 @@ long resourceCount = getModel().stream()
 .count();
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), 
-  Values.***REMOVED***(Instant.now().toString()), graphIri());
+  Values.literal(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), 
-  Values.***REMOVED***(resourceCount), graphIri());
+  Values.literal(resourceCount), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

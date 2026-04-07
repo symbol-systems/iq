@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 
 /**
  * Validates SPARQL queries for the FedX REST API.

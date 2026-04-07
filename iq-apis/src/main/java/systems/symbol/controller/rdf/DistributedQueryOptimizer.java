@@ -7,7 +7,7 @@ import systems.symbol.control.node.ClusterNodeState;
 import systems.symbol.control.node.I_NodeRegistry;
 
 import java.util.*;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**

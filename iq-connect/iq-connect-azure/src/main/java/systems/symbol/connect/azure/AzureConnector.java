@@ -61,11 +61,11 @@ validateAzureToken(config.getApiKey().get());
 // Minimal discovered data path to keep key functionality of a connector
 IRI entity = Values.iri(entityBaseIri().stringValue() + "azure-item");
 getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "AzureResource"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("Azure"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.literal("Azure"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.literal(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(1), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

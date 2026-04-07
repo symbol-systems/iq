@@ -68,13 +68,13 @@ validateConfluenceCredentials();
 
 IRI space = Values.iri(entityBaseIri().stringValue() + "space-1");
 getModel().add(space, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "ConfluenceSpace"), graphIri());
-getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "name"), Values.***REMOVED***("Default Space"), graphIri());
-getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "key"), Values.***REMOVED***("DS"), graphIri());
-getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "name"), Values.literal("Default Space"), graphIri());
+getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "key"), Values.literal("DS"), graphIri());
+getModel().add(space, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.literal(Instant.now().toString()), graphIri());
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), space, graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(1), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

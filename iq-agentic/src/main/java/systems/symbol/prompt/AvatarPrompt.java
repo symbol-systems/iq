@@ -85,7 +85,7 @@ public String value(Resource state, IRI predicate) {
 if (state == null)
 return null;
 Optional<Literal> found = Models.getPropertyLiteral(facts, state, predicate);
-return found.orElse(Values.***REMOVED***("")).stringValue();
+return found.orElse(Values.literal("")).stringValue();
 }
 
 @Override

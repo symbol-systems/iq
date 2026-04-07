@@ -72,19 +72,19 @@ IRI entity = Values.iri(entityBaseIri().stringValue() + safeId);
 
 getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "SlackUser"), graphIri());
 if (user.getName() != null) {
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "username"), Values.***REMOVED***(user.getName()), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "username"), Values.literal(user.getName()), graphIri());
 }
 if (user.getRealName() != null) {
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "realName"), Values.***REMOVED***(user.getRealName()), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "realName"), Values.literal(user.getRealName()), graphIri());
 }
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "isBot"), Values.***REMOVED***(user.isBot()), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "isBot"), Values.literal(user.isBot()), graphIri());
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
 resourceCount++;
 }
 
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(resourceCount), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(resourceCount), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

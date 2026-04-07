@@ -89,7 +89,7 @@ return gson.fromJson(body.string(), type);
  */
 public IQFacade value(Object value) {
 model.remove(self, RDF.VALUE, null);
-model.add(self, RDF.VALUE, Values.***REMOVED***(value), this.self);
+model.add(self, RDF.VALUE, Values.literal(value), this.self);
 return this;
 }
 
@@ -99,7 +99,7 @@ return get(RDF.VALUE).getFirst();
 
 public String name(String subject) {
 Optional<Literal> label = Models.getPropertyLiteral(model, toIRI(subject), IQ_NS.NAME);
-return label.orElse(Values.***REMOVED***("")).stringValue();
+return label.orElse(Values.literal("")).stringValue();
 }
 
 /**
@@ -111,7 +111,7 @@ return label.orElse(Values.***REMOVED***("")).stringValue();
  */
 public IQFacade set(String key, Object value) {
 model.remove(self, toIRI(key), null);
-model.add(self, toIRI(key), Values.***REMOVED***(value), this.self);
+model.add(self, toIRI(key), Values.literal(value), this.self);
 return this;
 }
 

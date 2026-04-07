@@ -40,7 +40,7 @@ import java.util.*;
  * try (RepositoryConnection conn = repo.getConnection()) {
  * conn.add(Values.iri("http://example.org/alice"),
  *  Values.iri("http://xmlns.com/foaf/0.1/name"),
- *  Values.***REMOVED***("Alice"));
+ *  Values.literal("Alice"));
  * }
  * }
  *

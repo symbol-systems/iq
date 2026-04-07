@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.***REMOVED***.Matcher;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Policy engine that evaluates a configurable ASK SPARQL template.

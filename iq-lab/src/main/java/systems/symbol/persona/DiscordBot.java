@@ -50,10 +50,10 @@ IRI person1 = Values.iri(qrx, "Person1");
 IRI person2 = Values.iri(qrx, "Person2");
 
 model.add(root, knows, person1);
-model.add(person1, name, Values.***REMOVED***("Alice"));
-model.add(person1, age, Values.***REMOVED***("30"));
-model.add(person2, name, Values.***REMOVED***("Bob"));
-model.add(person2, age, Values.***REMOVED***("25"));
+model.add(person1, name, Values.literal("Alice"));
+model.add(person1, age, Values.literal("30"));
+model.add(person2, name, Values.literal("Bob"));
+model.add(person2, age, Values.literal("25"));
 
 model.setNamespace(cmd, qrx);
 DiscordBot bot = new DiscordBot(model, qrx);
@@ -132,7 +132,7 @@ return resolveIri(input);
 
 private Value resolveObject(String input) {
 if (input.startsWith("\"") && input.endsWith("\"")) {
-return Values.***REMOVED***(input.substring(1, input.length() - 1));
+return Values.literal(input.substring(1, input.length() - 1));
 } else if (input.contains(":")) {
 return resolveIri(input);
 } else {

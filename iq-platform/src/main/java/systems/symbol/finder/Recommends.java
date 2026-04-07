@@ -97,7 +97,7 @@ return dotProduct / magnitudeProduct;
 
 public static Model score(Model memoryModel, Map<Resource, Double> similarity) {
 for (Resource r : similarity.keySet()) {
-memoryModel.add(r, Values.iri(IQ_NS.IQ, "score"), Values.***REMOVED***(similarity.get(r).floatValue()));
+memoryModel.add(r, Values.iri(IQ_NS.IQ, "score"), Values.literal(similarity.get(r).floatValue()));
 }
 return memoryModel;
 }

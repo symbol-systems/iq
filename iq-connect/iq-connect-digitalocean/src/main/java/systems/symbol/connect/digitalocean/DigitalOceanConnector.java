@@ -29,6 +29,6 @@ return ConnectorMode.READ_ONLY;
 protected void doRefresh() throws Exception {
 IRI subject = Values.iri(entityBaseIri().stringValue() + "digitalocean-sample");
 getModel().add(subject, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "DigitalOceanResource"), graphIri());
-getModel().add(subject, Values.iri(ontologyBaseIri().stringValue() + "hasName"), Values.***REMOVED***("DigitalOcean test"), graphIri());
+getModel().add(subject, Values.iri(ontologyBaseIri().stringValue() + "hasName"), Values.literal("DigitalOcean test"), graphIri());
 }
 }

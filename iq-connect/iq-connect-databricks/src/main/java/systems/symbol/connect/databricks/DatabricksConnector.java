@@ -87,21 +87,21 @@ IRI resource = Values.iri(entityBaseIri().stringValue() + safeId);
 
 getModel().add(resource, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "DatabricksCluster"), graphIri());
 if (cluster.hasNonNull("cluster_name")) {
-getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "clusterName"), Values.***REMOVED***(cluster.get("cluster_name").asText()), graphIri());
+getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "clusterName"), Values.literal(cluster.get("cluster_name").asText()), graphIri());
 }
 if (cluster.hasNonNull("state")) {
-getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "state"), Values.***REMOVED***(cluster.get("state").asText()), graphIri());
+getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "state"), Values.literal(cluster.get("state").asText()), graphIri());
 }
 if (cluster.hasNonNull("spark_version")) {
-getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "sparkVersion"), Values.***REMOVED***(cluster.get("spark_version").asText()), graphIri());
+getModel().add(resource, Values.iri(ontologyBaseIri().stringValue() + "sparkVersion"), Values.literal(cluster.get("spark_version").asText()), graphIri());
 }
 
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), resource, graphIri());
 counted++;
 }
 
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(counted), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(counted), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

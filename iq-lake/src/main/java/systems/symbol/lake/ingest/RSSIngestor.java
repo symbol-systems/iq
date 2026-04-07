@@ -149,7 +149,7 @@ if (model.contains(conceptIRI, RDF.TYPE, SKOS.CONCEPT))
 return;
 
 model.add(conceptIRI, RDF.TYPE, SKOS.CONCEPT, channelLink);
-model.add(conceptIRI, SKOS.PREF_LABEL, Values.***REMOVED***(category), channelLink);
+model.add(conceptIRI, SKOS.PREF_LABEL, Values.literal(category), channelLink);
 model.add(conceptIRI, SKOS.IN_SCHEME, Values.iri(schemaIRI), channelLink);
 }
 
@@ -158,7 +158,7 @@ model.add(conceptIRI, SKOS.IN_SCHEME, Values.iri(schemaIRI), channelLink);
 private void add(Resource subject, IRI predicate, String object, IRI channel) {
 if (object == null)
 return;
-model.add(subject, predicate, Values.***REMOVED***(object), channel);
+model.add(subject, predicate, Values.literal(object), channel);
 }
 
 // private IRI toRSSPredicate(String p) {

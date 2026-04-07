@@ -58,11 +58,11 @@ validateK8sCredentials(config.getApiKey().get());
 
 IRI entity = Values.iri(entityBaseIri().stringValue() + "k8s-item");
 getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "K8sResource"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("K8s"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.literal("K8s"), graphIri());
+getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.literal(Instant.now().toString()), graphIri());
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.***REMOVED***(1), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), Values.literal(Instant.now().toString()), graphIri());
+getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), Values.literal(1), graphIri());
 
 state.recordSuccess();
 var stats = state.finish();

@@ -10,8 +10,8 @@ import systems.symbol.mcp.connect.MCPChain;
 
 import java.util.Base64;
 import java.util.Map;
-import java.util.***REMOVED***.Matcher;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * AuthGuardMiddleware — JWT bearer token principal extraction (order 10).

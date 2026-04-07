@@ -25,8 +25,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.***REMOVED***.Matcher;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SitemapScan extends IQIntent {
 private final DefaultFileSystemManager vfs;

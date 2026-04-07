@@ -77,17 +77,17 @@ conn.setNamespace("ex", "http://example.org/");
 // Add test triples: example:alice is a foaf:Person with name "Alice"
 IRI alice = Values.iri(EX + "alice");
 conn.add(alice, RDF_TYPE, FOAF_PERSON);
-conn.add(alice, FOAF_NAME, Values.***REMOVED***("Alice"));
+conn.add(alice, FOAF_NAME, Values.literal("Alice"));
 
 // Add example:bob
 IRI bob = Values.iri(EX + "bob");
 conn.add(bob, RDF_TYPE, FOAF_PERSON);
-conn.add(bob, FOAF_NAME, Values.***REMOVED***("Bob"));
+conn.add(bob, FOAF_NAME, Values.literal("Bob"));
 
 // Add example:charlie
 IRI charlie = Values.iri(EX + "charlie");
 conn.add(charlie, RDF_TYPE, FOAF_PERSON);
-conn.add(charlie, FOAF_NAME, Values.***REMOVED***("Charlie"));
+conn.add(charlie, FOAF_NAME, Values.literal("Charlie"));
 }
 
 // 3. Initialize MCP middleware pipeline (no middleware = direct tool call)

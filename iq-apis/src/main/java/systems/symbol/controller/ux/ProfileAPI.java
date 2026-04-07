@@ -147,7 +147,7 @@ return new OopsResponse("ux.profile.repository", Response.Status.NOT_FOUND).buil
 try (RepositoryConnection connection = repository.getConnection()) {
 IRI resource = Values.iri(jwt.getSubject());
 connection.remove(resource, RDF.VALUE, null);
-Literal value = Values.***REMOVED***(gson.toJson(json), JSON_TYPE);
+Literal value = Values.literal(gson.toJson(json), JSON_TYPE);
 connection.add(resource, RDF.VALUE, value, resource);
 log.info("ux.profile.saved: {} --> {}", value.stringValue(), value.getDatatype());
 connection.commit();

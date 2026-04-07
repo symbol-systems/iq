@@ -32,9 +32,9 @@ IRI trail = modeller.cloudTrail(connectorId, account, region, "my-trail", bucket
 IRI pricingService = modeller.pricingService(connectorId, "AmazonEC2", List.of("instanceType", "regionCode"));
 
 assertTrue(model.contains(connectorId, Values.iri(ConnectorModels.HAS_ACCOUNT), account, graph));
-assertTrue(model.contains(account, Values.iri("https://example.org/aws#accountId"), Values.***REMOVED***("123456789012"), graph));
+assertTrue(model.contains(account, Values.iri("https://example.org/aws#accountId"), Values.literal("123456789012"), graph));
 assertTrue(model.contains(connectorId, Values.iri(ConnectorModels.HAS_RESOURCE), bucket, graph));
-assertTrue(model.contains(bucket, Values.iri("https://example.org/aws#name"), Values.***REMOVED***("my-bucket"), graph));
+assertTrue(model.contains(bucket, Values.iri("https://example.org/aws#name"), Values.literal("my-bucket"), graph));
 assertTrue(model.contains(bucket, Values.iri("https://example.org/aws#inAccount"), account, graph));
 assertTrue(model.contains(bucket, Values.iri("https://example.org/aws#inRegion"), region, graph));
 assertTrue(model.contains(trail, Values.iri("https://example.org/aws#logsToBucket"), bucket, graph));

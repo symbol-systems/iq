@@ -12,7 +12,7 @@ import systems.symbol.mcp.MCPResult;
 
 import java.util.List;
 import java.util.Map;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 
 /**
  * SparqlUpdateAdapter — Pillar B: the universal write tool.

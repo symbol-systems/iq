@@ -10,7 +10,7 @@ import systems.symbol.mcp.connect.I_MCPPipeline;
 import systems.symbol.mcp.connect.MCPChain;
 
 import java.util.Map;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 
 /**
  * SparqlSafetyMiddleware — prevents write abuse in read-only tools (order: 45).

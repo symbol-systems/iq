@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.***REMOVED***.Matcher;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RDFModelIngestor extends AbstractIngestor<ContentEntity<String>> {
 private static final Logger log = LoggerFactory.getLogger(RDFModelIngestor.class);
