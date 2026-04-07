@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Pattern;
 
 public class Validate {
 
@@ -68,8 +68,8 @@ return thing != null && thing.contains(":");
  * (`/v1/example{param1}/{param2}`)
  */
 public static boolean isSwaggerPath(String pattern, String url) {
-String ***REMOVED***Pattern = pattern.replaceAll("\\{[^/]+\\}", "[^/]+");
-return url.matches(***REMOVED***Pattern);
+String regexPattern = pattern.replaceAll("\\{[^/]+\\}", "[^/]+");
+return url.matches(regexPattern);
 }
 
 public static boolean contains(String[] array, String value) {

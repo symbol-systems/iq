@@ -1,7 +1,7 @@
 package systems.symbol.string;
 
-import java.util.***REMOVED***.Matcher;
-import java.util.***REMOVED***.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Extract {
 static String EXTRACT_REGEX = "([a-zA-Z0-9:/]+)";
