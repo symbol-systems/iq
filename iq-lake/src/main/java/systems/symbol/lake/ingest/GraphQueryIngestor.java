@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 public class GraphQueryIngestor implements Consumer<ContentEntity<Literal>> {
 
 public static void transmit(GraphQueryResult results, Consumer<ContentEntity<Literal>> consumer) {
-// for each result in GraphQueryResult, emit each ***REMOVED*** as a ContentEntity
+// for each result in GraphQueryResult, emit each literal as a ContentEntity
 while (results.hasNext()) {
 Statement statement = results.next();
 if (statement.getSubject() instanceof IRI && statement.getObject() instanceof Literal) {

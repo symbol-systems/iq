@@ -37,7 +37,7 @@ public UUID() {
  * is
  * not
  * a
- * ***REMOVED***.
+ * literal.
  */
 
 public Value evaluate(ValueFactory valueFactory, Value... args) throws ValueExprEvaluationException {

@@ -126,7 +126,7 @@ return NS.toIRI(model, self, thing);
 }
 
 /**
- * Retrieves ***REMOVED***s associated with a property in the RDF4J model.
+ * Retrieves literals associated with a property in the RDF4J model.
  *
  * @param key The key of the property.
  * @return A list of literals associated with the property.

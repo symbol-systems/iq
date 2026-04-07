@@ -265,8 +265,8 @@ if (quoteEnd <= quoteStart) continue;
 
 String value = bindingJson.substring(quoteStart + 1, quoteEnd);
 
-// For now, treat all values as simple ***REMOVED***s
-// In production, inspect "type" field (uri, ***REMOVED***, bnode)
+// For now, treat all values as simple literals
+// In production, inspect "type" field (uri, literal, bnode)
 binding.addBinding(var, SimpleValueFactory.getInstance().createLiteral(value));
 }
 

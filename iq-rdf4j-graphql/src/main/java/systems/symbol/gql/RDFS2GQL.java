@@ -152,8 +152,8 @@ public class RDFS2GQL {
 	}
 
 	private Collection<GraphQLFieldDefinition> defineLiterals(GraphQLObjectType.Builder typeDef, RDFSClass rdfsClass) {
-		Collection<GraphQLFieldDefinition> ***REMOVED***s = new ArrayList<>();
-		rdfsClass.***REMOVED***s.forEach((s_iri, scalar) -> {
+		Collection<GraphQLFieldDefinition> literals = new ArrayList<>();
+		rdfsClass.literals.forEach((s_iri, scalar) -> {
 			GraphQLFieldDefinition.Builder fieldDef = newFieldDefinition();
 			GraphQLObjectType scalarType = null;
 //			if (scalar.range!=null) {
@@ -166,9 +166,9 @@ public class RDFS2GQL {
 //			fieldDef.name(s_iri.getLocalName());
 //			if (scalar.description != null)
 //				fieldDef.description(scalar.description);
-//			***REMOVED***s.add(fieldDef);
+//			literals.add(fieldDef);
 		});
-		return ***REMOVED***s;
+		return literals;
 	}
 
 	void dump(ExecutionResult executionResult) {

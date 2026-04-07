@@ -144,7 +144,7 @@ return null;
  *
  * @param actor The actor/agent who is executing the intent.
  * @param state The current state of the actor/agent.
- * @param rdfString The RDF data as a ***REMOVED*** string.
+ * @param rdfString The RDF data as a literal string.
  * @param myAdditional bindings for the execution.
  * @param model The RDF4J model containing the knowledge graph.
  * @return The set of learned facts.

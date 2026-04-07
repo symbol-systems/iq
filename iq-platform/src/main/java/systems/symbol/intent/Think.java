@@ -104,7 +104,7 @@ String intent = my.containsKey(SELF) ? my.get(SELF).toString() : IdentityHelper.
 log.info("think.bindings: {} -> {}", template.getDatatype(), bindings.keySet());
 String mime = FileFormats.toMime(fallbackMime);
 
-// Determine the RDF format based on the datatype of the template ***REMOVED***, or
+// Determine the RDF format based on the datatype of the template literal, or
 // TURTLE.
 RDFFormat format = Rio.getWriterFormatForMIMEType(template.getDatatype().stringValue())
 .orElseGet(() -> Rio.getWriterFormatForMIMEType(mime).orElse(RDFFormat.TURTLE));

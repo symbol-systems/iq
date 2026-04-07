@@ -27,8 +27,8 @@ classes.put(iri, rdfsClass);
 return rdfsClass;
 }
 
-public RDFSProperty ***REMOVED***(IRI classIRI, IRI iri, String description) {
-return addClass(classIRI, null).***REMOVED***(iri, description);
+public RDFSProperty literal(IRI classIRI, IRI iri, String description) {
+return addClass(classIRI, null).literal(iri, description);
 }
 
 public RDFSClass object(IRI domainIRI, IRI rangeIRI, String description) {
@@ -39,20 +39,20 @@ return addClass(domainIRI, null).object(range);
 }
 }
 class RDFSClass extends RDFSResource {
-Map<IRI, RDFSProperty> ***REMOVED***s = new HashMap<>();
+Map<IRI, RDFSProperty> literals = new HashMap<>();
 Map<IRI, RDFSResource> objects = new HashMap<>();
 
 RDFSClass(IRI iri, String description) {
 super(iri, description);
 }
 
-public RDFSProperty ***REMOVED***(IRI iri, String description) {
-return ***REMOVED***(iri, XSD.STRING, description);
+public RDFSProperty literal(IRI iri, String description) {
+return literal(iri, XSD.STRING, description);
 }
 
-public RDFSProperty ***REMOVED***(IRI iri, IRI type, String description) {
+public RDFSProperty literal(IRI iri, IRI type, String description) {
 RDFSProperty rdfsProperty = new RDFSProperty(iri, type, description);
-***REMOVED***s.put( iri, rdfsProperty);
+literals.put( iri, rdfsProperty);
 return rdfsProperty;
 }
 

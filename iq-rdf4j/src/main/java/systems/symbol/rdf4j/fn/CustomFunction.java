@@ -8,7 +8,7 @@ import systems.symbol.platform.IQ_NS;
 import systems.symbol.string.PrettyString;
 
 /**
- * a custom SPARQL function that determines whether an input ***REMOVED*** string is a palindrome.
+ * a custom SPARQL function that determines whether an input literal string is a palindrome.
  * see: http://rivuli-development.com/further-reading/sesame-cookbook/creating-custom-sparql-functions/
  *
  * To build the custom function, ensure that

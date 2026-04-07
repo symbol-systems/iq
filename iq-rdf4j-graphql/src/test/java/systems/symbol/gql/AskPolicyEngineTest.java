@@ -55,7 +55,7 @@ String ttl = "<"+ACTOR+"> <http://example.org/role> \"admin\" .";
 conn.add(new StringReader(ttl), "http://example/base", RDFFormat.TURTLE);
 }
 
-// template uses arg.role to compare a ***REMOVED*** value
+// template uses arg.role to compare a literal value
 String template = "ASK WHERE { <{actor}> <http://example.org/role> \"{arg.role}\" }";
 AskPolicyEngine engine = new AskPolicyEngine(repo(), template, false);
 

@@ -195,7 +195,7 @@ return "{\"head\":{},\"boolean\":" + result + "}";
 /**
  * Format an RDF Value in SPARQL JSON format.
  * For URIs: { "type": "uri", "value": "http://..." }
- * For Literals: { "type": "***REMOVED***", "value": "..." }
+ * For Literals: { "type": "literal", "value": "..." }
  */
 private String formatRDFValue(org.eclipse.rdf4j.model.Value value) {
 if (value instanceof org.eclipse.rdf4j.model.IRI) {
@@ -203,7 +203,7 @@ org.eclipse.rdf4j.model.IRI iri = (org.eclipse.rdf4j.model.IRI) value;
 return "{\"type\":\"uri\",\"value\":\"" + escapeJSON(iri.stringValue()) + "\"}";
 } else if (value instanceof org.eclipse.rdf4j.model.Literal) {
 org.eclipse.rdf4j.model.Literal lit = (org.eclipse.rdf4j.model.Literal) value;
-return "{\"type\":\"***REMOVED***\",\"value\":\"" + escapeJSON(lit.stringValue()) + "\"}";
+return "{\"type\":\"literal\",\"value\":\"" + escapeJSON(lit.stringValue()) + "\"}";
 } else if (value instanceof org.eclipse.rdf4j.model.BNode) {
 org.eclipse.rdf4j.model.BNode bnode = (org.eclipse.rdf4j.model.BNode) value;
 return "{\"type\":\"bnode\",\"value\":\"" + escapeJSON(bnode.getID()) + "\"}";

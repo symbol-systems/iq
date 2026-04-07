@@ -114,8 +114,8 @@ if (realm != null) {
 // This enforces multi-tenant isolation at the SPARQL query level
 where.append("\n# Realm isolation filter for tenant: ").append(realm).append("\n");
 where.append("FILTER( ");
-where.append("***REMOVED***(str(").append(subject).append("), \"^").append(realm).append("\") || ");
-where.append("***REMOVED***(str(").append(subject).append("), \"#").append(realm).append("$\")");
+where.append("literal(str(").append(subject).append("), \"^").append(realm).append("\") || ");
+where.append("literal(str(").append(subject).append("), \"#").append(realm).append("$\")");
 where.append(" )\n");
 log.info("sparql.select.realm_filter: applied - realm={}", realm);
 } else {

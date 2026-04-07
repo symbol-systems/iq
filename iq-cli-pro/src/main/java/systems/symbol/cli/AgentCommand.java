@@ -429,9 +429,9 @@ I_Contents catalog = new JarScriptCatalog();
 IRI iri = Values.iri(queryIRI);
 IRI sparqlMime = IQStore.vf.createIRI("urn:mimetype:application/sparql-query");
 
-Literal ***REMOVED*** = catalog.getContent(iri, sparqlMime);
-if (***REMOVED*** != null) {
-return ***REMOVED***.stringValue();
+Literal literal = catalog.getContent(iri, sparqlMime);
+if (literal != null) {
+return literal.stringValue();
 }
 } catch (Exception e) {
 log.debug("Query not found in catalog ({}); using fallback query", queryIRI, e);

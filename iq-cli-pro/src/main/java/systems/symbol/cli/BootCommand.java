@@ -242,9 +242,9 @@ I_Contents catalog = new JarScriptCatalog();
 IRI queryIRI = Values.iri(QUERY_LIST_ACTORS_IRI);
 IRI sparqlMime = IQStore.vf.createIRI("urn:mimetype:application/sparql-query");
 
-Literal ***REMOVED*** = catalog.getContent(queryIRI, sparqlMime);
-if (***REMOVED*** != null) {
-return ***REMOVED***.stringValue();
+Literal literal = catalog.getContent(queryIRI, sparqlMime);
+if (literal != null) {
+return literal.stringValue();
 }
 } catch (Exception e) {
 log.warn("Error loading boot query from catalog: {}", e.getMessage(), e);

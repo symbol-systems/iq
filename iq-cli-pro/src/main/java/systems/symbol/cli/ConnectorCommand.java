@@ -147,7 +147,7 @@ String sparql = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
 "  OPTIONAL { ?connector iq:status ?status }\n" +
 "  OPTIONAL { ?connector iq:lastSyncTime ?lastSync }\n" +
 "  OPTIONAL { ?connector iq:resourceCount ?recordCount}\n" +
-"  FILTER(***REMOVED***(str(?name), \"" + connectorName + "\", \"i\"))\n" +
+"  FILTER(literal(str(?name), \"" + connectorName + "\", \"i\"))\n" +
 "}\n" +
 "LIMIT 1";
 
@@ -227,7 +227,7 @@ String sparql = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
 "rdfs:label ?name .\n" +
 "  OPTIONAL { ?connector connect:type ?type }\n" +
 "  OPTIONAL { ?connector connect:mode ?mode }\n" +
-"  FILTER(***REMOVED***(str(?name), \"" + connectorName + "\", \"i\"))\n" +
+"  FILTER(literal(str(?name), \"" + connectorName + "\", \"i\"))\n" +
 "}\n" +
 "LIMIT 1";
 

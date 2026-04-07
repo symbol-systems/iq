@@ -246,7 +246,7 @@ args.put(KEY_SELF, iq.getSelf()); // @self for self-referential
 // log.debug("iq.sparql.args: {}" , args.keySet());
 }
 
-// special treatment of values - var is for ***REMOVED***s, @var is for IRIs
+// special treatment of values - var is for literals, @var is for IRIs
 TupleQuery tupleQuery = iq.getConnection().prepareTupleQuery(sparql_select);
 if (args != null) {
 setBindings(tupleQuery, args);

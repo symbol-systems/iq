@@ -73,29 +73,29 @@ log.debug("\t{} = {}", key, node.get(key));
 
 private static void processLiteral(Map<Resource, Bindings> nodes, Bindings node, Statement next,
 Map<String, String> context) {
-Literal ***REMOVED*** = ((Literal) next.getObject());
+Literal literal = ((Literal) next.getObject());
 String name = next.getPredicate().getLocalName();
-if (null != ***REMOVED***.getDatatype()) {
-if (***REMOVED***.getCoreDatatype().isXSDDatatype()) {
-processXSD(node, name, ***REMOVED***);
+if (null != literal.getDatatype()) {
+if (literal.getCoreDatatype().isXSDDatatype()) {
+processXSD(node, name, literal);
 } else {
-Bindings content = content(***REMOVED***, context);
+Bindings content = content(literal, context);
 node.put(name, content);
 }
-} else if (***REMOVED***.getLanguage().isPresent()) {
-node.put(***REMOVED***.getLanguage().orElse("en"), ***REMOVED***.stringValue());
-node.put(name, ***REMOVED***.stringValue());
+} else if (literal.getLanguage().isPresent()) {
+node.put(literal.getLanguage().orElse("en"), literal.stringValue());
+node.put(name, literal.stringValue());
 } else {
-node.put(next.getPredicate().getLocalName(), ***REMOVED***.getCoreDatatype().asXSDDatatype());
+node.put(next.getPredicate().getLocalName(), literal.getCoreDatatype().asXSDDatatype());
 }
 }
 
-private static void processXSD(Bindings node, String name, Literal ***REMOVED***) {
-CoreDatatype.XSD xsd = ***REMOVED***.getCoreDatatype().asXSDDatatype().orElse(CoreDatatype.XSD.STRING);
+private static void processXSD(Bindings node, String name, Literal literal) {
+CoreDatatype.XSD xsd = literal.getCoreDatatype().asXSDDatatype().orElse(CoreDatatype.XSD.STRING);
 if (xsd.isBuiltInDatatype()) {
-node.put(name, ***REMOVED***.stringValue());
+node.put(name, literal.stringValue());
 } else if (xsd.isNumericDatatype()) {
-node.put(name, ***REMOVED***.doubleValue());
+node.put(name, literal.doubleValue());
 }
 }
 

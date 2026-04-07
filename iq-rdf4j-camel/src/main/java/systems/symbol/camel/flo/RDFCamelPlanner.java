@@ -485,15 +485,15 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		if (to instanceof Resource) {
 			asset = assetRegister.getAsset(to.stringValue(), null);
 		} else if (to instanceof Literal) {
-			final Literal ***REMOVED*** = (Literal)to;
-			IRI dataType = ***REMOVED***.getDatatype();
-			log.debug("\tScript: "+language+"\n"+***REMOVED***);
+			final Literal literal = (Literal)to;
+			IRI dataType = literal.getDatatype();
+			log.debug("\tScript: "+language+"\n"+literal);
 			if (dataType==null) {
 				// default to Simple Expression, if data-type is missing
 				return new Processor() {
 					@Override
 					public void process(Exchange exchange) throws Exception {
-						Expression expression = new LanguageExpression(getActionLanguage(language), ***REMOVED***.stringValue()).createExpression(context);
+						Expression expression = new LanguageExpression(getActionLanguage(language), literal.stringValue()).createExpression(context);
 						Object evaluate = expression.evaluate(exchange, Object.class);
 						exchange.getIn().setBody(evaluate);
 					}
