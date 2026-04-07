@@ -2,6 +2,7 @@ package systems.symbol.controller.platform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -419,6 +420,7 @@ return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
 @POST
 @Path("/tools/{name}/execute")
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("mcp:execute")
 public Response executeTool(@PathParam("name") String toolName, String params) {
 try {
 MCPToolRegistry registry = getToolRegistry();
@@ -467,6 +469,7 @@ return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
 @POST
 @Path("/tools/register")
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"admin", "mcp:admin"})
 public Response registerTool(String registrationJson) {
 try {
 // Validate JSON
