@@ -87,18 +87,41 @@ errorHandler.on("retry", err -> log.warn("Retrying AWS item: {}", err.itemId));
 errorHandler.on("dlq", err -> log.error("AWS dead-letter: {}", err.itemId));
 
 try {
-// Discover AWS resources
-int resourceCount = 0;
+// Initialize AWS SDK clients for service discovery
+S3Client s3 = S3Client.builder().build();
+Ec2Client ec2 = Ec2Client.builder().build();
+IamClient iam = IamClient.builder().build();
+CloudTrailClient cloudTrail = CloudTrailClient.builder().build();
+ConfigClient configClient = ConfigClient.builder().build();
+PricingClient pricing = PricingClient.builder().build();
 
-// Add placeholder resources with framework tracking
-IRI entity = Values.iri(entityBaseIri().stringValue() + "aws-item");
-getModel().add(entity, Modeller.rdfType(), Values.iri(ontologyBaseIri().stringValue() + "AwsResource"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "service"), Values.***REMOVED***("Aws"), graphIri());
-getModel().add(entity, Values.iri(ontologyBaseIri().stringValue() + "lastSeen"), Values.***REMOVED***(Instant.now().toString()), graphIri());
-getModel().add(getConnectorId(), Values.iri(ConnectorModels.HAS_RESOURCE), entity, graphIri());
+try {
+// Wire scanner classes into discovery pipeline
+AwsModeller modeller = new AwsModeller(
+getModel(),
+graphIri(),
+ontologyBaseIri(),
+entityBaseIri()
+);
 
-state.recordSuccess();
-resourceCount = 1;
+// Use configured region or default to us-east-1
+software.amazon.awssdk.regions.Region region = software.amazon.awssdk.regions.Region.US_EAST_1;
+IRI accountIri = Values.iri(entityBaseIri().stringValue() + "account-default");
+AwsScanContext context = new AwsScanContext(getConnectorId(), accountIri, region, modeller);
+
+// Execute all AWS discovery scanners
+new AwsRegionScanner(ec2).scan(context);
+new AwsS3Scanner(s3).scan(context);
+new AwsEc2Scanner(ec2).scan(context);
+new AwsIamScanner(iam).scan(context);
+new AwsCloudTrailScanner(cloudTrail).scan(context);
+new AwsConfigScanner(configClient).scan(context);
+new AwsPricingScanner(pricing).scan(context);
+
+// Count discovered AWS resources
+long resourceCount = getModel().stream()
+.filter(stmt -> stmt.getPredicate().stringValue().equals(ConnectorModels.HAS_RESOURCE))
+.count();
 
 // Update connector metadata
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT), 
@@ -106,8 +129,18 @@ getModel().add(getConnectorId(), Values.iri(ConnectorModels.LAST_SYNCED_AT),
 getModel().add(getConnectorId(), Values.iri(ConnectorModels.RESOURCE_COUNT), 
   Values.***REMOVED***(resourceCount), graphIri());
 
+state.recordSuccess();
 var stats = state.finish();
-log.info("AWS connector sync completed: {}", stats);
+log.info("AWS connector sync completed: {} resources discovered. {}", resourceCount, stats);
+} finally {
+// Clean up AWS SDK resources
+s3.close();
+ec2.close();
+iam.close();
+cloudTrail.close();
+configClient.close();
+pricing.close();
+}
 } catch (Exception ex) {
 state.recordFailure("aws-sync", ex.getMessage());
 errorHandler.recordError("aws-sync", ex);
