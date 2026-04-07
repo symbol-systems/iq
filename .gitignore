@@ -31,4 +31,5 @@ todo
 .env
 .run
 *.onnx
+errs
 
