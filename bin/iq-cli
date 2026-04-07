@@ -3,6 +3,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+JAVA_OPTS="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
 JAR_PATH="$(ls -1 ~/.m2/repository/systems/symbol/iq-cli/*/iq-cli-*-shaded.jar 2>/dev/null | tail -n1 || true)"
 [[ -z "$JAR_PATH" ]] && JAR_PATH="$(ls -1 iq-cli/target/iq-cli-*-shaded.jar 2>/dev/null | head -n1 || true)"
 [[ -z "$JAR_PATH" ]] && JAR_PATH="$(ls -1 iq-cli/target/iq-cli.jar 2>/dev/null | head -n1 || true)"
@@ -12,7 +14,7 @@ if [[ -z "$JAR_PATH" ]]; then
   exit 1
 fi
 
-java -jar "$JAR_PATH" "$@" || {
+java $JAVA_OPTS -jar "$JAR_PATH" "$@" || {
   echo "[WARN] jar exec failed; retrying with maven..." >&2
-  ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=systems.symbol.CLI -DskipTests "$@"
+  JAVA_OPTS="$JAVA_OPTS" ./mvnw compile exec:java -pl iq-cli -am -Dexec.mainClass=systems.symbol.CLI -DskipTests "$@"
 }

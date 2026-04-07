@@ -3,6 +3,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+JAVA_OPTS="-Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
 JAR_PATH="$(ls -1 iq-trusted/target/quarkus-app/quarkus-run.jar 2>/dev/null | head -n1 || true)"
 if [[ -z "${JAR_PATH}" ]]; then
   echo "[INFO] No existing iq-trusted quarkus-run jar found. Building..."
@@ -11,8 +13,8 @@ if [[ -z "${JAR_PATH}" ]]; then
 fi
 if [[ -z "${JAR_PATH}" ]]; then
   echo "[INFO] quarkus-run jar still missing, falling back to maven exec..."
-  ./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.IQ_AI -DskipTests "$@"
+  JAVA_OPTS="$JAVA_OPTS" ./mvnw compile exec:java -pl iq-trusted -am -Dexec.mainClass=systems.symbol.IQ_AI -DskipTests "$@"
 else
   echo "[INFO] Reusing existing jar: $JAR_PATH"
-  java -jar "$JAR_PATH" "$@"
+  java $JAVA_OPTS -jar "$JAR_PATH" "$@"
 fi
