@@ -1,5 +1,6 @@
 package systems.symbol.controller.control;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -80,6 +81,7 @@ return nodeRegistry.get(nodeId)
  */
 @POST
 @Path("/nodes")
+@RolesAllowed("control:write")
 public Response registerNode(NodeRegistrationRequest req) {
 if (req.nodeId == null || req.nodeId.isBlank() ||
 req.nickname == null || req.nickname.isBlank() ||
@@ -110,6 +112,7 @@ return Response.status(500).entity("Registration failed: " + e.getMessage()).bui
  */
 @DELETE
 @Path("/nodes/{nodeId}")
+@RolesAllowed("control:write")
 public Response unregisterNode(@PathParam("nodeId") String nodeId) {
 boolean removed = nodeRegistry.unregister(nodeId);
 if (removed) {
@@ -124,6 +127,7 @@ return Response.status(404).entity("Node not found").build();
  */
 @PUT
 @Path("/nodes/{nodeId}/state")
+@RolesAllowed("control:write")
 public Response updateNodeState(@PathParam("nodeId") String nodeId, NodeStateUpdateRequest req) {
 if (req.state == null) {
 return Response.status(400).entity("state is required").build();
@@ -158,6 +162,7 @@ return nodeRegistry.findLeader()
  */
 @POST
 @Path("/leader/elect")
+@RolesAllowed("control:write")
 public Response electLeader(LeaderElectionRequest req) {
 if (req.nodeId == null || req.nodeId.isBlank()) {
 return Response.status(400).entity("nodeId is required").build();
@@ -174,6 +179,7 @@ return Response.status(status).entity(result).build();
  */
 @POST
 @Path("/leader/heartbeat")
+@RolesAllowed("control:write")
 public Response sendLeaderHeartbeat(LeaderHeartbeatRequest req) {
 if (req.nodeId == null || req.nodeId.isBlank()) {
 return Response.status(400).entity("nodeId is required").build();
@@ -204,6 +210,7 @@ return policyDistributor.getLatestBundle()
 @POST
 @Path("/policy/bundle")
 @Consumes("application/octet-stream")
+@RolesAllowed({"control:write", "control:admin"})
 public Response publishPolicyBundle(byte[] policyBytes) {
 if (policyBytes == null || policyBytes.length == 0) {
 return Response.status(400).entity("policyBytes is required").build();

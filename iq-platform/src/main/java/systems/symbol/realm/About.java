@@ -1,13 +1,11 @@
 package systems.symbol.realm;
 
-import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import systems.symbol.rdf4j.store.LiveModel;
 
 /**
  * Analytics for the IQ realm.
@@ -24,13 +22,11 @@ private About() {
  * Compute Phi metric: normalized graph density and health.
  * Phi = (triple_count * graph_count * agent_count / 1000000)
  *
- * @param model The realm's LiveModel
+ * @param repository The realm's Repository
  * @return Phi value (higher = more active realm)
  */
-public static double computePhi(LiveModel model) {
-try {
-RepositoryConnection conn = model.getConnection();
-
+public static double computePhi(Repository repository) {
+try (RepositoryConnection conn = repository.getConnection()) {
 // Query 1: Count total triples in realm
 long tripleCount = countTriples(conn);
 
@@ -57,12 +53,12 @@ return 1.0;
  * Compute normalized Phi: Phi divided by expected baseline.
  * Shows how active the realm is relative to a "normal" realm.
  *
- * @param model The realm's LiveModel
+ * @param repository The realm's Repository
  * @return Normalized Phi (1.0 = baseline, >1.0 = very active)
  */
-public static double computePhiNormal(LiveModel model) {
+public static double computePhiNormal(Repository repository) {
 try {
-double phi = computePhi(model);
+double phi = computePhi(repository);
 // Baseline: realm with 100K triples, 50 graphs, 10 agents
 double basePhi = (100000.0 * 50.0 * 10.0) / 1000000.0;
 return phi / Math.max(1.0, basePhi);
