@@ -1,5 +1,6 @@
 package systems.symbol.llm.gpt;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
@@ -91,6 +92,7 @@ return config;
  * @return initialized LLM wrapper
  * @throws SecretsException if any validation or configuration step fails
  */
+@WithSpan("LLMFactory.llm")
 public static GPTWrapper llm(Resource self, Model model, int contextLength, I_Secrets secrets)
 throws SecretsException {
 I_LLMConfig config = configure(self, model, contextLength);

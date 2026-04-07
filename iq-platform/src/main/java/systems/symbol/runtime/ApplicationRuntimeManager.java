@@ -1,5 +1,6 @@
 package systems.symbol.runtime;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.symbol.IQConstants;
@@ -68,6 +69,7 @@ private java.util.concurrent.CopyOnWriteArrayList<Object> rdfConnections = new j
  * @return true if startup successful, false otherwise
  */
 @Override
+@WithSpan("ApplicationRuntime.start")
 public boolean start(String runtimeType, int port) {
 if (isRunning.getAndSet(true)) {
 log.info("Application runtime already started");
@@ -150,6 +152,7 @@ return false;
  * @return true if shutdown successful, false otherwise
  */
 @Override
+@WithSpan("ApplicationRuntime.stop")
 public boolean stop(String runtimeType, int port) {
 if (!isRunning.getAndSet(false)) {
 log.info("Application runtime not running");

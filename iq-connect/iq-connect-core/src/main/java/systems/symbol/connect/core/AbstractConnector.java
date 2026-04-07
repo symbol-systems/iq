@@ -3,6 +3,8 @@ package systems.symbol.connect.core;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.util.Values;
@@ -83,6 +85,7 @@ status = ConnectorStatus.IDLE;
 }
 
 @Override
+@WithSpan(value = "connector.refresh")
 public final void refresh() {
 status = ConnectorStatus.SYNCING;
 state.remove(null, null, null, graphIri);
