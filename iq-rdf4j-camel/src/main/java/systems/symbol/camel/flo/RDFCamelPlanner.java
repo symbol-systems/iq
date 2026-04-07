@@ -231,13 +231,35 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			log.info("to-bean: "+to);
 			from = from.bean(to);
 		} else if (action.startsWith("setBody") || action.startsWith("body")) {
-			from = from.setBody(toExpression(connection, _to, action));
-		} else if (action.startsWith("setBody") || action.startsWith("fault") ) {
-			from = from.setBody(toExpression(connection, _to, action));
+			Expression bodyExpr = toExpression(connection, _to, action);
+			if (bodyExpr == null) {
+				log.error("setBody action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.setBody(bodyExpr);
+			}
+		} else if (action.startsWith("setBody") || action.startsWith("fault")) {
+			Expression faultExpr = toExpression(connection, _to, action);
+			if (faultExpr == null) {
+				log.error("fault action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.setBody(faultExpr);
+			}
 		} else if (action.startsWith("aggregate")) {
-			from = from.aggregate(toExpression(connection, _to, action));
+			Expression aggregateExpr = toExpression(connection, _to, action);
+			if (aggregateExpr == null) {
+				log.error("aggregate action could not create expression from: " + action + " (result was null)");
+				// Skip aggregate if expression is null
+			} else {
+				from = from.aggregate(aggregateExpr);
+			}
 		} else if (action.startsWith("validate")) {
-			from = from.validate(toExpression(connection, _to, action));
+			Expression validateExpr = toExpression(connection, _to, action);
+			if (validateExpr == null) {
+				log.error("validate action could not create expression from: " + action + " (result was null)");
+				// Skip validate if expression is null
+			} else {
+				from = from.validate(validateExpr);
+			}
 		} else if (action.equals("multicast")) {
 			from = from.multicast().to(to);
 		} else if (action.equals("log")) {
@@ -278,7 +300,12 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 			if (_to instanceof Literal && _to.stringValue().isEmpty()) {
 				from = from.split(routeBuilder.body()).shareUnitOfWork();
 			} else {
-				from = from.split(toExpression(connection, _to, action));
+				Expression splitExpr = toExpression(connection, _to, action);
+				if (splitExpr == null) {
+					log.error("split action could not create expression from: " + action + " (result was null)");
+				} else {
+					from = from.split(splitExpr);
+				}
 			}
 		} else if (action.startsWith("marshal:")) {
 			from = doMarshal(action, from);
@@ -287,7 +314,12 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		} else if (action.startsWith("filter")) {
 			from = from.filter(toPredicate(connection, _to, action));
 		} else if (action.startsWith("sort")) {
-			from = from.sort(toExpression(connection, _to, action));
+			Expression sortExpr = toExpression(connection, _to, action);
+			if (sortExpr == null) {
+				log.error("sort action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.sort(sortExpr);
+			}
 		} else if (action.equals("threads")) {
 			from = from.threads().to(to);
 		} else if (action.equals("onCompletion")) {
@@ -297,16 +329,36 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		} else if (action.equals("parallelProcessing")) {
 			from.multicast().parallelProcessing();
 		} else if (action.startsWith("resequence")) {
-			from = from.resequence(toExpression(connection, _to, action));
+			Expression reseqExpr = toExpression(connection, _to, action);
+			if (reseqExpr == null) {
+				log.error("resequence action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.resequence(reseqExpr);
+			}
 		} else if (action.equals("convertBodyTo") && action.equals("as")) {
 			// "as" is a FLO synonym for convertBodyTo
 			from = doConvertBodyTo(from, to);
 		} else if (action.startsWith("recipientList")) {
-			from = from.recipientList(toExpression(connection, _to, action));
+			Expression recipientExpr = toExpression(connection, _to, action);
+			if (recipientExpr == null) {
+				log.error("recipientList action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.recipientList(recipientExpr);
+			}
 		} else if (action.startsWith("loop")) {
-			from = from.loop(toExpression(connection, _to, action));
+			Expression loopExpr = toExpression(connection, _to, action);
+			if (loopExpr == null) {
+				log.error("loop action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.loop(loopExpr);
+			}
 		} else if (action.startsWith("delay")) {
-			from = from.delay(toExpression(connection, _to, action));
+			Expression delayExpr = toExpression(connection, _to, action);
+			if (delayExpr == null) {
+				log.error("delay action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.delay(delayExpr);
+			}
 		} else if (action.equals("choice")) {
 			from = doChoice(routeBuilder,  from.choice(), action, _to);
 		} else if (action.equals("when") && from instanceof ChoiceDefinition) {
@@ -317,7 +369,12 @@ public class RDFCamelPlanner extends FLOSupport implements Identifiable {
 		} else if (action.equals("if")) {
 			from = doChoice(routeBuilder, from.choice(), action, _to);
 		} else if (action.startsWith("transform")) {
-			from = from.transform(toExpression(connection, _to, action));
+			Expression transformExpr = toExpression(connection, _to, action);
+			if (transformExpr == null) {
+				log.error("transform action could not create expression from: " + action + " (result was null)");
+			} else {
+				from = from.transform(transformExpr);
+			}
 		} else {
 			log.warn("??? action: " + action);
 			return from;
