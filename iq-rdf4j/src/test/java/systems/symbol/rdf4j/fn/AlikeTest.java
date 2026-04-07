@@ -14,9 +14,9 @@ import java.io.IOException;
 
 public class AlikeTest extends CustomFunctionsTest {
 
-Literal bob = Values.***REMOVED***("Bob");
-Literal alec = Values.***REMOVED***("Alec");
-Literal alice = Values.***REMOVED***("Alice");
+    Literal bob = Values.literal("Bob");
+    Literal alec = Values.literal("Alec");
+    Literal alice = Values.literal("Alice");
 
 public AlikeTest() throws IOException {
 }

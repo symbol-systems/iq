@@ -15,10 +15,10 @@ import java.io.IOException;
 
 public class LevenshteinTest extends CustomFunctionsTest {
 
-Literal bob = Values.***REMOVED***("Bob");
-Literal brad = Values.***REMOVED***("Brad");
-Literal alec = Values.***REMOVED***("Alec");
-Literal alice = Values.***REMOVED***("Alice");
+    Literal bob = Values.literal("Bob");
+    Literal brad = Values.literal("Brad");
+    Literal alec = Values.literal("Alec");
+    Literal alice = Values.literal("Alice");
 
 public LevenshteinTest() throws IOException {
 }
