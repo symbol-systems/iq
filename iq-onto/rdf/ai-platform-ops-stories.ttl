@@ -1,0 +1,159 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Platform Operations
+# Role: Deploys, scales, monitors, and maintains the IQ platform in production environments.
+#   Ensures reliability, performance, and compliance with SLAs.
+
+ai:RolePlatformOps a skos:Concept ;
+skos:prefLabel "Platform Operations" ;
+skos:definition "Deploys, scales, monitors, and maintains the IQ platform in production environments. Ensures reliability, performance, and compliance with SLAs." ;
+skos:narrower 
+ai:Story054-RaftHA ,
+ai:Story055-Replication ,
+ai:Story056-HealthMonitoring ,
+ai:Story057-MultiTenantScale ,
+ai:Story058-BackupRecovery ,
+ai:Story059-RepositoryPerformance ,
+ai:Story060-ConfigChanges ,
+ai:Story061-SecurityHardening ,
+ai:Story062-ResourceOptimization ,
+ai:Story063-MultiRegion ,
+ai:Story064-NamespaceIsolation ,
+ai:Story065-ZeroDowntimeUpgrade .
+
+# Story 54: Raft HA
+ai:Story054-RaftHA a skos:Concept ;
+skos:prefLabel "Deploy IQ Cluster with Raft-Based High Availability" ;
+skos:definition "Deploy multi-node cluster with Raft consensus meeting enterprise availability SLAs" ;
+skos:scopeNote "Configurable node count/quorum; automatic leader election; heartbeat monitoring; network partition handling; graceful node add/remove with rebalancing" ;
+dct:identifier "054" ;
+ai:storyType "User Story" ;
+ai:theme "clustering" ;
+ai:priority "critical" ;
+ai:rdfPattern "raft:Cluster rdf:type iq:Cluster ; iq:hasNode . raft:Node rdf:type iq:Node ; iq:role ; iq:heartbeat ." .
+
+# Story 55: Replication
+ai:Story055-Replication a skos:Concept ;
+skos:prefLabel "Configure RDF Repository Replication and Failover" ;
+skos:definition "Configure RDF repository replication ensuring data always available" ;
+skos:scopeNote "Master-replica or master-master replication; lag monitoring/alerting; automatic failover; consistent reads; backup/restore tested/automated" ;
+dct:identifier "055" ;
+ai:storyType "User Story" ;
+ai:theme "data-reliability" ;
+ai:priority "critical" ;
+ai:rdfPattern "repl:ReplicationConfig rdf:type iq:ReplicationConfig ; iq:mode ; iq:replica . backup:Backup rdf:type iq:Backup ; iq:timestamp ." .
+
+# Story 56: Health Monitoring
+ai:Story056-HealthMonitoring a skos:Concept ;
+skos:prefLabel "Monitor Platform Health and Performance" ;
+skos:definition "Collect/monitor metrics from cluster nodes proactively detecting degradation" ;
+skos:scopeNote "Prometheus/StatsD metrics collection; health check for load balancers; alerting for thresholds; Grafana dashboard; historical metrics for capacity planning" ;
+dct:identifier "056" ;
+ai:storyType "User Story" ;
+ai:theme "observability" ;
+ai:priority "high" ;
+ai:rdfPattern "metric:Metric rdf:type iq:Metric ; iq:name ; iq:value ; iq:timestamp . alert:Alert rdf:type iq:Alert ; iq:severity ." .
+
+# Story 57: Multi-Tenant Scale
+ai:Story057-MultiTenantScale a skos:Concept ;
+skos:prefLabel "Configure Multi-Tenant Isolation at Scale" ;
+skos:definition "Set up thousand-tenant deployment with complete isolation" ;
+skos:scopeNote "Tenant-aware repo config (per-tenant graph namespace); query isolation; compute quota/fair-share; billing/cost tracking; tenant auto-provisioning" ;
+dct:identifier "057" ;
+ai:storyType "User Story" ;
+ai:theme "multi-tenancy" ;
+ai:priority "high" ;
+ai:rdfPattern "tenant:Tenant rdf:type iq:Tenant ; iq:hasNamespace ; iq:hasQuota . quota:Quota rdf:type iq:Quota ; iq:maxQueries ." .
+
+# Story 58: Backup and Recovery
+ai:Story058-BackupRecovery a skos:Concept ;
+skos:prefLabel "Set Up Automated Backup and Disaster Recovery" ;
+skos:definition "Automate backup with RPO/RTO SLAs enabling quick recovery" ;
+skos:scopeNote "Incremental backup with configurable frequency; encryption/integrity checks; point-in-time recovery testing; geographically diverse storage; estimated recovery time SLAs" ;
+dct:identifier "058" ;
+ai:storyType "User Story" ;
+ai:theme "data-reliability" ;
+ai:priority "critical" ;
+ai:rdfPattern "backup:BackupConfig rdf:type iq:BackupConfig ; iq:frequency ; iq:rpo ; iq:rto . backup:Restore rdf:type iq:RestoreOperation ; iq:targetTime ." .
+
+# Story 59: Repository Performance
+ai:Story059-RepositoryPerformance a skos:Concept ;
+skos:prefLabel "Scale RDF Repository Performance" ;
+skos:definition "Configure caching/indexing/optimization handling millions of triples and K queries/sec" ;
+skos:scopeNote "Tiered storage (hot/warm/cold); query caching with intelligent invalidation; full-text/geo-spatial indexes; query optimizer with explain plans" ;
+dct:identifier "059" ;
+ai:storyType "User Story" ;
+ai:theme "performance" ;
+ai:priority "high" ;
+ai:rdfPattern "cache:CacheConfig rdf:type iq:CacheConfig ; iq:ttl ; iq:maxSize . index:Index rdf:type iq:Index ; iq:type ." .
+
+# Story 60: Config Changes
+ai:Story060-ConfigChanges a skos:Concept ;
+skos:prefLabel "Manage Cluster Configuration Changes" ;
+skos:definition "Safely roll out configuration changes without downtime" ;
+skos:scopeNote "Blue-green deployment (shadow nodes); rolling updates; health checks between stages; automatic rollback on errors; change audit trail" ;
+dct:identifier "060" ;
+ai:storyType "User Story" ;
+ai:theme "devops" ;
+ai:priority "high" ;
+ai:rdfPattern "deploy:Deployment rdf:type iq:Deployment ; iq:blue ; iq:green . rollout:Rollout rdf:type iq:Rollout ; iq:currentVersion ." .
+
+# Story 61: Security Hardening
+ai:Story061-SecurityHardening a skos:Concept ;
+skos:prefLabel "Implement Security Hardening and Compliance Scanning" ;
+skos:definition "Run compliance scanners and implement hardening maintaining security certs" ;
+skos:scopeNote "Vulnerability scanning (images/dependencies); security config scanner (TLS/crypto/firewalls); penetration testing; remediation SLAs for critical issues; audit reports" ;
+dct:identifier "061" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "critical" ;
+ai:rdfPattern "scan:VulnerabilityScan rdf:type iq:Scan ; iq:finding . hardening:HardeningRule rdf:type iq:SecurityRule ." .
+
+# Story 62: Resource Optimization
+ai:Story062-ResourceOptimization a skos:Concept ;
+skos:prefLabel "Monitor and Optimize Resource Allocation" ;
+skos:definition "Track and optimize CPU/memory/storage consumption per tenant" ;
+skos:scopeNote "Usage tracking by tenant; capacity planning forecasts; auto-scaling policies (CPU > 70%); cost attribution; reserved capacity management" ;
+dct:identifier "062" ;
+ai:storyType "User Story" ;
+ai:theme "resource-mgmt" ;
+ai:priority "medium" ;
+ai:rdfPattern "usage:ResourceUsage rdf:type iq:ResourceUsage ; iq:cpu ; iq:memory ; iq:storage . forecast:CapacityForecast rdf:type iq:Forecast ." .
+
+# Story 63: Multi-Region
+ai:Story063-MultiRegion a skos:Concept ;
+skos:prefLabel "Set Up Multi-Region Deployment" ;
+skos:definition "Deploy clusters in multiple geographic regions with failover" ;
+skos:scopeNote "Cross-region replication with consistency options; region-aware routing; failover on outage; data residency compliance; latency/consistency SLAs" ;
+dct:identifier "063" ;
+ai:storyType "User Story" ;
+ai:theme "geo-distribution" ;
+ai:priority "medium" ;
+ai:rdfPattern "region:Region rdf:type iq:Region ; iq:hasCluster . routing:RegionRouter rdf:type iq:Router ." .
+
+# Story 64: Namespace Isolation
+ai:Story064-NamespaceIsolation a skos:Concept ;
+skos:prefLabel "Implement Secure Multi-Tenancy Namespace Isolation" ;
+skos:definition "Ensure RDF named graphs isolated with no cross-tenant query leakage" ;
+skos:scopeNote "Query rewriter enforces tenant context; graph permissions at repo level; access audit logs; isolation overhead < 5%; penetration tested" ;
+dct:identifier "064" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "critical" ;
+ai:rdfPattern "isolation:IsolationPolicy rdf:type iq:SecurityPolicy ; iq:enforcesTenantContext . rewrite:QueryRewrite rdf:type iq:QueryTransform ." .
+
+# Story 65: Zero-Downtime Upgrades
+ai:Story065-ZeroDowntimeUpgrade a skos:Concept ;
+skos:prefLabel "Enable Zero-Downtime Upgrades" ;
+skos:definition "Upgrade software without service disruption" ;
+skos:scopeNote "Blue-green upgrade pattern; API compatibility checking; smoke tests after upgrade; automatic rollback on failures; monthly upgrade runbook testing" ;
+dct:identifier "065" ;
+ai:storyType "User Story" ;
+ai:theme "devops" ;
+ai:priority "high" ;
+ai:rdfPattern "upgrade:UpgradeConfig rdf:type iq:UpgradeConfig ; iq:blueVersion ; iq:greenVersion . smoke:SmokeTest rdf:type iq:Test ." .

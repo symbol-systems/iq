@@ -1,0 +1,207 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Agent Developer / Workflow Engineer
+# Role: Designs multi-step workflows where agents orchestrate tasks, use RDF for decisions,
+#   and integrate with enterprise systems. Extends agent capabilities via code and configuration.
+
+ai:RoleAgentDeveloper a skos:Concept ;
+skos:prefLabel "Agent Developer / Workflow Engineer" ;
+skos:definition "Designs multi-step workflows where agents orchestrate tasks, use RDF for decision-making, and integrate with enterprise systems. Extends agent capabilities via code and configuration." ;
+skos:narrower 
+ai:Story027-MultiStepWorkflows ,
+ai:Story028-RDFFacts ,
+ai:Story029-RDFReasoning ,
+ai:Story030-LLMIntegration ,
+ai:Story031-CustomExtractors ,
+ai:Story032-CustomConnectors ,
+ai:Story033-AgenticLoops ,
+ai:Story034-DomainLibraries ,
+ai:Story035-MonitorDebug ,
+ai:Story036-TestIsolation ,
+ai:Story037-StreamingAsync ,
+ai:Story038-DataPipelines ,
+ai:Story039-FederatedAgents ,
+ai:Story040-VersionManagement ,
+ai:Story041-SecurityChecks ,
+ai:Story042-ScheduledAgents .
+
+# Story 27: Multi-Step Workflows
+ai:Story027-MultiStepWorkflows a skos:Concept ;
+skos:prefLabel "Define Multi-Step Agent Workflows" ;
+skos:definition "Compose multi-step workflows where agents collaborate, pass RDF context, and make branching decisions" ;
+skos:scopeNote "Workflow definition in RDF; context passing via RDF triples between steps; conditional branching on SPARQL results; parallel execution; workflow state/history queryable" ;
+dct:identifier "027" ;
+ai:storyType "User Story" ;
+ai:theme "workflow" ;
+ai:priority "high" ;
+ai:rdfPattern "wf:Workflow rdf:type iq:Workflow ; iq:hasStep . wf:Step rdf:type iq:Step ; iq:executeAgent ; iq:transition . ctx:Context rdf:type iq:Context ." .
+
+# Story 28: Retrieve RDF Facts
+ai:Story028-RDFFacts a skos:Concept ;
+skos:prefLabel "Retrieve RDF Facts During Agent Execution" ;
+skos:definition "Execute SPARQL queries within agent code to retrieve facts, make decisions, update knowledge graph" ;
+skos:scopeNote "Agent SDK provides SPARQL query/update methods; results as RDF objects; named graph support; transaction semantics; query execution tracked/logged" ;
+dct:identifier "028" ;
+ai:storyType "User Story" ;
+ai:theme "sdk" ;
+ai:priority "high" ;
+ai:rdfPattern "ag:Agent rdf:type iq:Agent ; iq:executesQuery . query:SparqlQuery rdf:type iq:Query ; iq:selectsFrom ." .
+
+# Story 29: RDF Reasoning
+ai:Story029-RDFReasoning a skos:Concept ;
+skos:prefLabel "Implement Custom Decision-Making Logic via RDF Reasoning" ;
+skos:definition "Use RDF reasoner for ad-hoc fact derivation during agent execution" ;
+skos:scopeNote "Reasoner supports RDFS/OWL selected profiles/custom rules; caching with TTL invalidation; explain inferred facts; materialization vs query-time tradeoff; infinite loop detection" ;
+dct:identifier "029" ;
+ai:storyType "User Story" ;
+ai:theme "reasoning" ;
+ai:priority "high" ;
+ai:rdfPattern "reason:Reasoner rdf:type iq:Reasoner ; iq:appliesRules . infer:InferredFact rdf:type iq:Fact ; iq:derivedFrom ." .
+
+# Story 30: LLM Integration
+ai:Story030-LLMIntegration a skos:Concept ;
+skos:prefLabel "Integrate LLM Capabilities with RDF Context" ;
+skos:definition "Pass RDF context to LLMs with response validation and grounding in RDF" ;
+skos:scopeNote "SDK retrieves relevant RDF facts for prompt context; template injection of RDF values; LLM response validation against constraints; grounding of citations; confidence scoring" ;
+dct:identifier "030" ;
+ai:storyType "User Story" ;
+ai:theme "llm-integration" ;
+ai:priority "high" ;
+ai:rdfPattern "llm:Call rdf:type iq:LLMCall ; iq:context ; iq:prompt ; iq:response . grounding:Citation rdf:type iq:Citation ; iq:sourceTriple ." .
+
+# Story 31: Custom Extractors
+ai:Story031-CustomExtractors a skos:Concept ;
+skos:prefLabel "Create Custom Extractors for Knowledge Graph Population" ;
+skos:definition "Parse structured/unstructured data and emit RDF triples to populate knowledge graph" ;
+skos:scopeNote "Extractor SDK/template provided; extractors run scheduled or event-triggered; extracted triples validated against ontology; conflict resolution; performance metrics" ;
+dct:identifier "031" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "extract:Extractor rdf:type iq:Extractor ; iq:extractsFrom ; iq:emits . extracted:Triple rdf:type rdf:Statement ." .
+
+# Story 32: Custom Connectors
+ai:Story032-CustomConnectors a skos:Concept ;
+skos:prefLabel "Develop Custom Connectors for External Systems" ;
+skos:definition "Build connectors to new external systems enabling agents to invoke and retrieve data" ;
+skos:scopeNote "Connector SDK with auth/request/error handling; input/output RDF types; metadata queryable; pooling/caching; compliance with security/audit standards" ;
+dct:identifier "032" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "conn:Connector rdf:type iq:Connector ; iq:authenticatesWith ; iq:acceptsInput ; iq:producesOutput ." .
+
+# Story 33: Agentic Loops
+ai:Story033-AgenticLoops a skos:Concept ;
+skos:prefLabel "Build Agentic Loops with RDF-Driven Reflection" ;
+skos:definition "Implement self-correcting agent loops using RDF reflection and iteration" ;
+skos:scopeNote "Framework for reflection loop (plan→execute→observe→reflect); reflection queries retrieve RDF state; iteration limits/divergence detection; cost tracking; explanation of steps" ;
+dct:identifier "033" ;
+ai:storyType "User Story" ;
+ai:theme "agent-reasoning" ;
+ai:priority "medium" ;
+ai:rdfPattern "loop:AgenticLoop rdf:type iq:Loop ; iq:hasPlan ; iq:hasExecution ; iq:hasObservation ; iq:hasReflection ." .
+
+# Story 34: Domain Libraries
+ai:Story034-DomainLibraries a skos:Concept ;
+skos:prefLabel "Create Specialized Agents for Specific Domains" ;
+skos:definition "Extend agent SDK with domain-specific libraries avoiding duplication" ;
+skos:scopeNote "Domain library SDK with validation/RDF integration; published to artifact repo; unit/integration tests; documentation; performance benchmarks/SLAs" ;
+dct:identifier "034" ;
+ai:storyType "User Story" ;
+ai:theme "sdk" ;
+ai:priority "medium" ;
+ai:rdfPattern "lib:DomainLibrary rdf:type iq:Library ; iq:version ; iq:appliesToDomain ." .
+
+# Story 35: Monitor and Debug
+ai:Story035-MonitorDebug a skos:Concept ;
+skos:prefLabel "Monitor and Debug Agent Execution" ;
+skos:definition "Enable detailed logging/tracing of agent execution including RDF queries and decisions" ;
+skos:scopeNote "Structured logging (JSON, searchable); trace IDs for correlation; RDF query execution plans/timings; breakpoint debugging; performance profiling" ;
+dct:identifier "035" ;
+ai:storyType "User Story" ;
+ai:theme "devops" ;
+ai:priority "high" ;
+ai:rdfPattern "trace:Trace rdf:type iq:Trace ; iq:traceId ; iq:timestamp . log:LogEntry rdf:type iq:LogEntry ; iq:level ; iq:message ." .
+
+# Story 36: Test Isolation
+ai:Story036-TestIsolation a skos:Concept ;
+skos:prefLabel "Test Agent Workflows in Isolated Environments" ;
+skos:definition "Create test variants using mocked external systems and isolated RDF repositories" ;
+skos:scopeNote "Test environment variables; in-memory RDF repo; test data fixtures; RDF state assertions; performance targets for test feedback" ;
+dct:identifier "036" ;
+ai:storyType "User Story" ;
+ai:theme "testing" ;
+ai:priority "high" ;
+ai:rdfPattern "test:TestCase rdf:type iq:TestCase ; iq:usesFixture . fixture:Fixture rdf:type iq:Fixture ; iq:loadsData ." .
+
+# Story 37: Streaming and Async
+ai:Story037-StreamingAsync a skos:Concept ;
+skos:prefLabel "Implement Streaming and Async Agent Patterns" ;
+skos:definition "Build agents processing event streams asynchronously with incremental RDF updates" ;
+skos:scopeNote "Agent SDK async/await support; incremental updates without locking; backpressure handling; ordering guarantees; dead-letter queues" ;
+dct:identifier "037" ;
+ai:storyType "User Story" ;
+ai:theme "scalability" ;
+ai:priority "medium" ;
+ai:rdfPattern "stream:EventStream rdf:type iq:Stream ; iq:emitsEvent . event:Event rdf:type iq:Event ; iq:timestamp ; iq:payload ." .
+
+# Story 38: Data Pipelines
+ai:Story038-DataPipelines a skos:Concept ;
+skos:prefLabel "Create Agent Pipelines with Data Transformation" ;
+skos:definition "Chain agents where output feeds input with RDF transformations between steps" ;
+skos:scopeNote "Pipeline SDK with stage composition; schema validation; RDF transformation rules; batching/streaming; error recovery/partial results" ;
+dct:identifier "038" ;
+ai:storyType "User Story" ;
+ai:theme "workflow" ;
+ai:priority "medium" ;
+ai:rdfPattern "pipeline:Pipeline rdf:type iq:Pipeline ; iq:hasStage . stage:Stage rdf:type iq:Stage ; iq:inputSchema ; iq:outputSchema ." .
+
+# Story 39: Federated Coordination
+ai:Story039-FederatedAgents a skos:Concept ;
+skos:prefLabel "Implement Federated Agent Coordination" ;
+skos:definition "Build agent networks coordinating decisions across realms/regions via RDF sharing" ;
+skos:scopeNote "Cross-realm RDF sharing with permissions; message signing/verification; consensus/voting patterns; partial ordering; failure recovery" ;
+dct:identifier "039" ;
+ai:storyType "User Story" ;
+ai:theme "distributed-systems" ;
+ai:priority "low" ;
+ai:rdfPattern "federation:Federation rdf:type iq:Federation ; iq:includesAgent . msg:Message rdf:type iq:Message ; iq:signature ." .
+
+# Story 40: Version Management
+ai:Story040-VersionManagement a skos:Concept ;
+skos:prefLabel "Version Agent Code and RDF Dependencies" ;
+skos:definition "Manage versions of agent code and RDF graphs ensuring reproducible deployments" ;
+skos:scopeNote "Agent manifest with code/RDF dependency versions; RDF snapshot versioning; reproducible deployments; compatibility checks; canary rollout" ;
+dct:identifier "040" ;
+ai:storyType "User Story" ;
+ai:theme "devops" ;
+ai:priority "medium" ;
+ai:rdfPattern "manifest:AgentManifest rdf:type iq:Manifest ; iq:codeVersion ; iq:dependsOnRDF . dep:Dependency rdf:type iq:Dependency ; iq:version ." .
+
+# Story 41: Security Checks
+ai:Story041-SecurityChecks a skos:Concept ;
+skos:prefLabel "Implement Custom Security Checks in Agent Workflows" ;
+skos:definition "Enforce security checks at each agent step via authorization validation" ;
+skos:scopeNote "SDK method for authorization checks; rules in RDF; detailed denial messages; step-through validation in dev mode; performance monitoring" ;
+dct:identifier "041" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "high" ;
+ai:rdfPattern "sec:AuthorizationCheck rdf:type iq:SecurityCheck ; iq:validates agent:Agent ; iq:policy policy:AuthPolicy ." .
+
+# Story 42: Scheduled Agents
+ai:Story042-ScheduledAgents a skos:Concept ;
+skos:prefLabel "Create CronJob-Style Scheduled Agents" ;
+skos:definition "Define agents running on schedule maintaining RDF state across runs" ;
+skos:scopeNote "Schedule in agent manifest (cron notation); per-run state tracking; idempotency; timeout handling; metrics on successful/failed runs" ;
+dct:identifier "042" ;
+ai:storyType "User Story" ;
+ai:theme "scheduling" ;
+ai:priority "medium" ;
+ai:rdfPattern "sched:ScheduledAgent rdf:type iq:ScheduledAgent ; iq:schedule ; iq:lastExecutionTime . run:ExecutionRecord rdf:type iq:ExecutionRecord ; iq:status ." .

@@ -1,0 +1,137 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Data Analyst / Compliance Officer
+# Role: Analyzes system behavior, ensures regulatory compliance, investigates incidents,
+#   and generates compliance reports. Works with audit and legal teams.
+
+ai:RoleComplianceOfficer a skos:Concept ;
+skos:prefLabel "Data Analyst / Compliance Officer" ;
+skos:definition "Analyzes system behavior, ensures regulatory compliance, investigates incidents, and generates compliance reports. Works with audit and legal teams." ;
+skos:narrower 
+ai:Story066-AuditTrail ,
+ai:Story067-ComplianceCoverage ,
+ai:Story068-RegulatoryReports ,
+ai:Story069-InsiderThreatDetection ,
+ai:Story070-DataMinimization ,
+ai:Story071-RuleChangeAudit ,
+ai:Story072-LegalHolds ,
+ai:Story073-DataLineage ,
+ai:Story074-SoD ,
+ai:Story075-AuditExtracts .
+
+# Story 66: Audit Trail
+ai:Story066-AuditTrail a skos:Concept ;
+skos:prefLabel "Query Agent Decision Audit Trail" ;
+skos:definition "Query complete audit trail of agent decision including authorizations, policy checks, data access" ;
+skos:scopeNote "SPARQL returns decision record with full lineage; policy rules evaluated shown; access logs included; timestamp/sequence info; regulatory format export" ;
+dct:identifier "066" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "critical" ;
+ai:rdfPattern "audit:AuditRecord rdf:type iq:AuditRecord ; iq:decision ; iq:timestamp . prov:Activity rdf:type prov:Activity ; prov:wasAssociatedWith ." .
+
+# Story 67: Compliance Coverage
+ai:Story067-ComplianceCoverage a skos:Concept ;
+skos:prefLabel "Validate Compliance Rule Coverage" ;
+skos:definition "Analyze agent intents ensuring each has appropriate compliance rules" ;
+skos:scopeNote "SPARQL finds ungovernored intents; coverage matrix (intent vs. rule); risk assessment; recommendation engine; tracking of improvements" ;
+dct:identifier "067" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "high" ;
+ai:rdfPattern "coverage:ComplianceCoverage rdf:type iq:ComplianceCoverage ; iq:intent ; iq:rule . risk:RiskAssessment rdf:type iq:RiskAssessment ." .
+
+# Story 68: Regulatory Reports
+ai:Story068-RegulatoryReports a skos:Concept ;
+skos:prefLabel "Generate Regulatory Compliance Reports" ;
+skos:definition "Generate reports proving compliance (SOX, HIPAA, PCI-DSS) with decision sampling" ;
+skos:scopeNote "Report templates for major regulations; statistical sampling with audit details; policy snapshot; governance board signatures; digital archival with integrity" ;
+dct:identifier "068" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "critical" ;
+ai:rdfPattern "report:RegulatoryReport rdf:type iq:Report ; iq:regulation ; iq:generateDate . signature:Signature rdf:type iq:Signature ." .
+
+# Story 69: Insider Threat Detection
+ai:Story069-InsiderThreatDetection a skos:Concept ;
+skos:prefLabel "Monitor Data Access Patterns for Insider Threat Detection" ;
+skos:definition "Query access logs identifying unusual patterns for investigation" ;
+skos:scopeNote "Baseline model of normal access; anomaly detection; alert rules (sensitive access, bulk export); user profiling; investigation tools (session replay, lineage)" ;
+dct:identifier "069" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "high" ;
+ai:rdfPattern "baseline:AccessBaseline rdf:type iq:Baseline ; iq:normalPattern . anomaly:Anomaly rdf:type iq:Anomaly ; iq:severity ." .
+
+# Story 70: Data Minimization
+ai:Story070-DataMinimization a skos:Concept ;
+skos:prefLabel "Validate Data Minimization Compliance" ;
+skos:definition "Query system identifying personal data usage ensuring it's for stated purposes only" ;
+skos:scopeNote "Personal data tagged (PII classification); purpose tracking; retention enforcement; purpose limitation checks; data minimization audit" ;
+dct:identifier "070" ;
+ai:storyType "User Story" ;
+ai:theme "privacy" ;
+ai:priority "high" ;
+ai:rdfPattern "pii:PersonalData rdf:type iq:PersonalData ; iq:purpose ; iq:retentionPolicy . purpose:Purpose rdf:type iq:Purpose ." .
+
+# Story 71: Rule Change Audit
+ai:Story071-RuleChangeAudit a skos:Concept ;
+skos:prefLabel "Audit TTL Rule Changes for Compliance Violations" ;
+skos:definition "Review rule changes ensuring they don't weaken compliance controls" ;
+skos:scopeNote "Change diff shows before/after; impact analysis (decision scope); risk assessment; approval workflow; rollback of problematic rules" ;
+dct:identifier "071" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "high" ;
+ai:rdfPattern "change:RuleChange rdf:type iq:Change ; iq:before ; iq:after . approval:Approval rdf:type iq:Approval ; iq:approver ." .
+
+# Story 72: Legal Holds
+ai:Story072-LegalHolds a skos:Concept ;
+skos:prefLabel "Configure Regulatory Holds on Data" ;
+skos:definition "Issue legal holds preventing deletion of specified data" ;
+skos:scopeNote "Hold issued via SPARQL UPDATE; retention policy respects holds; data owner notification; audit log; hold expiry/review" ;
+dct:identifier "072" ;
+ai:storyType "User Story" ;
+ai:theme "legal" ;
+ai:priority "critical" ;
+ai:rdfPattern "hold:LegalHold rdf:type iq:LegalHold ; iq:issuedDate ; iq:expiryDate . retain:RetentionPolicy rdf:type iq:Policy ." .
+
+# Story 73: Data Lineage
+ai:Story073-DataLineage a skos:Concept ;
+skos:prefLabel "Verify Data Lineage and Provenance" ;
+skos:definition "Trace lineage of decision/data value back to source data and policy rules" ;
+skos:scopeNote "Interactive provenance visualization; drilldown per step; source data validation; policy rule evidence; exportable lineage report" ;
+dct:identifier "073" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "high" ;
+ai:rdfPattern "prov:Provenance rdf:type prov:Provenance ; prov:entity ; prov:activity . lineage:DataLineage rdf:type iq:Lineage ." .
+
+# Story 74: Segregation of Duties
+ai:Story074-SoD a skos:Concept ;
+skos:prefLabel "Enforce Segregation of Duties (SoD)" ;
+skos:definition "Configure SoD policies preventing single-person control over critical processes" ;
+skos:scopeNote "Rules define conflicting roles; real-time violation detection; escalation for violations; audit of SoD breaches; SoD compliance reporting" ;
+dct:identifier "074" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "high" ;
+ai:rdfPattern "sod:SoD a skos:Concept :
+skos:prefLabel \"Segregation of Duties\" ;
+iq:role1 ; iq:role2 ; iq:conflict . violation:Violation rdf:type iq:Violation ." .
+
+# Story 75: Audit Extracts
+ai:Story075-AuditExtracts a skos:Concept ;
+skos:prefLabel "Generate Audit Trail Extracts for Legal Holds" ;
+skos:definition "Extract and preserve audit trail in tamper-proof format for litigation" ;
+skos:scopeNote "Immutable storage (append-only, cryptographically signed); hash chains prevent modification; chain of custody; e-discovery compatible; retention per legal/regulatory" ;
+dct:identifier "075" ;
+ai:storyType "User Story" ;
+ai:theme "legal" ;
+ai:priority "critical" ;
+ai:rdfPattern "extract:AuditExtract rdf:type iq:Extract ; iq:extractDate . chain:ChainOfCustody rdf:type iq:Document ; iq:signer ." .

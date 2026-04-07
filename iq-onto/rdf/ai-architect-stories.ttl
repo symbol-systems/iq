@@ -1,0 +1,159 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Enterprise AI Architect
+# Role: Designs AI governance frameworks, sets compliance policies at scale, 
+#   oversees multi-tenant deployments, and ensures enterprise safety guardrails
+
+ai:RoleEnterpriseArchitect a skos:Concept ;
+skos:prefLabel "Enterprise AI Architect" ;
+skos:definition "Designs AI governance frameworks, sets compliance policies at scale, oversees multi-tenant deployments, and ensures enterprise safety guardrails." ;
+skos:narrower 
+ai:Story001-MultiTenantRealm ,
+ai:Story002-AgentFleetGovernance ,
+ai:Story003-ClusterPolicyDistribution ,
+ai:Story004-DynamicRBAC ,
+ai:Story005-ComplianceAutomation ,
+ai:Story006-LLMGovernance ,
+ai:Story007-SemanticVault ,
+ai:Story008-MultiTenantCosts ,
+ai:Story009-FederatedQuery ,
+ai:Story010-ProvenanceTracking ,
+ai:Story011-KGGovernance ,
+ai:Story012-ZeroTrust .
+
+# Story 1: Multi-Tenant Realm Isolation
+ai:Story001-MultiTenantRealm a skos:Concept ;
+skos:prefLabel "Multi-Tenant Realm Isolation" ;
+skos:definition "Configure completely isolated realms for different business units with separate RDF repositories, vaults, and JWT key pairs" ;
+skos:scopeNote "Each realm has isolated repository structure, vault encryption keys differ per realm, JWT signing keys are realm-specific, SPARQL queries cannot cross boundaries, audit trails track realm membership" ;
+dct:identifier "001" ;
+ai:storyType "User Story" ;
+ai:theme "multi-tenancy" ;
+ai:priority "high" ;
+ai:rdfPattern "realm:Realm rdf:type iq:Realm ; iq:hasRepository ; iq:hasVault ; iq:hasJWTKeyPair ." .
+
+# Story 2: Enterprise Agent Fleet Governance
+ai:Story002-AgentFleetGovernance a skos:Concept ;
+skos:prefLabel "Enterprise Agent Fleet Governance" ;
+skos:definition "Define TTL graph describing authorized agents in fleet including capabilities, scope, and compliance classification" ;
+skos:scopeNote "TTL schema defines iq:Agent, iq:Capability, iq:Scope, iq:ComplianceClass; SPARQL identifies agents by compliance class; runtime enforces agent registry checks; capability matrix prevents unauthorized operations; changes propagate in real-time" ;
+dct:identifier "002" ;
+ai:storyType "User Story" ;
+ai:theme "governance" ;
+ai:priority "high" ;
+ai:rdfPattern "agent:Agent rdf:type iq:Agent ; iq:hasCapability ; iq:hasScope ; iq:hasComplianceClass ." .
+
+# Story 3: Cluster-Wide Policy Distribution
+ai:Story003-ClusterPolicyDistribution a skos:Concept ;
+skos:prefLabel "Cluster-Wide Policy Distribution" ;
+skos:definition "Define compliance policies in central TTL graph that distribute automatically across Raft-based cluster" ;
+skos:scopeNote "Policies defined via SPARQL INSERT/UPDATE; leader distributes via heartbeat; follower nodes apply within 5 seconds; version tracking via RDF; rollback available for failed rollouts" ;
+dct:identifier "003" ;
+ai:storyType "User Story" ;
+ai:theme "clustering" ;
+ai:priority "high" ;
+ai:rdfPattern "policy:Policy rdf:type iq:Policy ; iq:hasVersion ; iq:appliesTo raft:Node ." .
+
+# Story 4: Dynamic Role-Based Access Control (RBAC)
+ai:Story004-DynamicRBAC a skos:Concept ;
+skos:prefLabel "Dynamic Role-Based Access Control (RBAC) via RDF" ;
+skos:definition "Express RBAC rules in SPARQL that dynamically grant/revoke data access based on user attributes" ;
+skos:scopeNote "RDF defines roles, users, attributes, permissions; SPARQL determines permissions at request time; dynamic attributes queryable; decisions logged with reasoning; role changes take effect without restart" ;
+dct:identifier "004" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "high" ;
+ai:rdfPattern "user:User rdf:type iq:User ; iq:hasRole ; iq:hasAttribute ; iq:hasPermission ." .
+
+# Story 5: Compliance Rule Automation via SPARQL
+ai:Story005-ComplianceAutomation a skos:Concept ;
+skos:prefLabel "Compliance Rule Automation via SPARQL" ;
+skos:definition "Encode compliance rules (SOX, HIPAA, PCI-DSS) as SPARQL rules validating every agent decision and data access" ;
+skos:scopeNote "Rules in SPARQL or SHACL shapes; pre-execution validation prevents non-compliant actions; violations trigger alerts/logs; rule audit trail shown; business team updates without engineering" ;
+dct:identifier "005" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "critical" ;
+ai:rdfPattern "rule:ComplianceRule rdf:type iq:ComplianceRule ; iq:validates agent:Agent ." .
+
+# Story 6: LLM Provider Governance and Cost Control
+ai:Story006-LLMGovernance a skos:Concept ;
+skos:prefLabel "LLM Provider Governance and Cost Control" ;
+skos:definition "Define TTL graph describing allowed LLM providers, cost limits, model selection rules, and fallback chains" ;
+skos:scopeNote "RDF schema defines iq:LLMProvider, iq:ProviderConfig, iq:CostLimit; SPARQL selects provider based on budget/risk; cost tracking per agent/tenant; fallback chains configurable; health status tracked" ;
+dct:identifier "006" ;
+ai:storyType "User Story" ;
+ai:theme "llm-integration" ;
+ai:priority "high" ;
+ai:rdfPattern "llm:Provider rdf:type iq:LLMProvider ; iq:hasCostLimit ; iq:hasModelSelectionRule ; iq:hasFallbackChain ." .
+
+# Story 7: Semantic Vault Management for Secrets
+ai:Story007-SemanticVault a skos:Concept ;
+skos:prefLabel "Semantic Vault Management for Secrets" ;
+skos:definition "Manage secrets (API keys, DB passwords) in semantic vault linked to agents/services/roles via RDF" ;
+skos:scopeNote "Vault organized as RDF triples; SPARQL finds secrets for agent/service; access logged/audited; rotation policies defined in RDF; MFA for sensitive secrets" ;
+dct:identifier "007" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "high" ;
+ai:rdfPattern "secret:Secret rdf:type iq:Secret ; iq:owner ; iq:expiryDate ; iq:accessedBy ." .
+
+# Story 8: Multi-Tenant Cost Attribution via RDF
+ai:Story008-MultiTenantCosts a skos:Concept ;
+skos:prefLabel "Multi-Tenant Cost Attribution via RDF" ;
+skos:definition "Track costs (LLM calls, compute, storage) per tenant and agent using RDF triple linking" ;
+skos:scopeNote "Meter data as RDF triples; SPARQL aggregation computes billing; real-time budget alerts; cost attribution rules handle shared infra; billing reports exportable" ;
+dct:identifier "008" ;
+ai:storyType "User Story" ;
+ai:theme "multi-tenancy" ;
+ai:priority "medium" ;
+ai:rdfPattern "meter:Meter rdf:type iq:Meter ; iq:tenantId ; iq:agentId ; iq:cost ; iq:timestamp ." .
+
+# Story 9: Federated Query Across Distributed Data Lakes
+ai:Story009-FederatedQuery a skos:Concept ;
+skos:prefLabel "Federated Query Across Distributed Data Lakes" ;
+skos:definition "Configure federated SPARQL queries spanning multiple RDF repositories (internal, Data Lake, cloud warehouses)" ;
+skos:scopeNote "FedX federation configured via RDF; transparent SPARQL distribution; filter pushdown minimizes transfer; performance metrics collected; fallback on endpoint unavailable" ;
+dct:identifier "009" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "repo:Repository rdf:type iq:Repository ; iq:endpoint ; iq:type ; iq:accessPolicy ." .
+
+# Story 10: Provenance Tracking for Audit
+ai:Story010-ProvenanceTracking a skos:Concept ;
+skos:prefLabel "Provenance Tracking for Audit and Regulatory Compliance" ;
+skos:definition "Automatically capture and maintain provenance records (PROV-O) for all agent decisions, transformations, policy evaluations" ;
+skos:scopeNote "Decisions logged with prov:Activity, prov:Agent, prov:Entity, prov:wasGeneratedBy; queryable via SPARQL; immutable append-only storage; exportable for audits; links to compliance rules" ;
+dct:identifier "010" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "critical" ;
+ai:rdfPattern "prov:Activity rdf:type prov:Activity ; prov:wasGeneratedBy ; prov:agent ; prov:wasAssociatedWith ." .
+
+# Story 11: Enterprise Knowledge Graph Governance
+ai:Story011-KGGovernance a skos:Concept ;
+skos:prefLabel "Enterprise Knowledge Graph Governance" ;
+skos:definition "Define governance policies for enterprise knowledge graph (ontologies, data standards, quality rules)" ;
+skos:scopeNote "RDF schema defines governance model; SHACL shapes enforce quality; impact analysis before changes; version control/rollback; data quality metrics published" ;
+dct:identifier "011" ;
+ai:storyType "User Story" ;
+ai:theme "governance" ;
+ai:priority "high" ;
+ai:rdfPattern "dg:DataGovernance rdf:type iq:DataGovernance ; iq:defines iq:Ontology ; iq:enforces sh:Shape ." .
+
+# Story 12: Zero-Trust Security Model
+ai:Story012-ZeroTrust a skos:Concept ;
+skos:prefLabel "Zero-Trust Security Model Implementation" ;
+skos:definition "Configure zero-trust security where every agent request is authenticated, authorized, and validated against compliance rules" ;
+skos:scopeNote "JWT tokens required for all operations; every request checked via SPARQL policy; device posture validated; suspicious requests trigger step-up auth; security events logged/correlated" ;
+dct:identifier "012" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "critical" ;
+ai:rdfPattern "zt:ZeroTrustPolicy rdf:type iq:SecurityPolicy ; iq:requiresAuth ; iq:requiresAuthorization ; iq:validateDevicePosture ." .

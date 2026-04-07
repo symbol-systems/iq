@@ -1,0 +1,194 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# IQ Platform User Stories - Master Index
+# SKOS ConceptScheme organizing all 75 user stories across 6 user roles
+# Namespace: https://symbol.systems/v0/ai#
+
+ai:IQUserStoriesScheme a skos:ConceptScheme ;
+dct:title "IQ Platform User Stories" ;
+dct:description "Comprehensive collection of 75+ user stories for the IQ platform, organized by user role. Focus on RDF/TTL-driven behavior, enterprise-scale configuration, and compliance/governance." ;
+dct:creator "IQ Product Management" ;
+dct:issued "2026-04-07"^^xsd:date ;
+dct:modified "2026-04-07"^^xsd:date ;
+dct:language "en" ;
+skos:hasTopConcept 
+ai:RoleEnterpriseArchitect ,
+ai:RoleDomainExpert ,
+ai:RoleAgentDeveloper ,
+ai:RoleIntegrationEngineer ,
+ai:RolePlatformOps ,
+ai:RoleComplianceOfficer .
+
+# Define story properties
+ai:storyType a rdf:Property ;
+rdfs:label "story type" ;
+rdfs:comment "The type of user story (User Story, Technical Story, Epic)" ;
+rdfs:range xsd:string .
+
+ai:theme a rdf:Property ;
+rdfs:label "theme" ;
+rdfs:comment "Business/technical theme categorizing the story" ;
+rdfs:range xsd:string .
+
+ai:priority a rdf:Property ;
+rdfs:label "priority" ;
+rdfs:comment "Priority level (critical, high, medium, low)" ;
+rdfs:range xsd:string .
+
+ai:rdfPattern a rdf:Property ;
+rdfs:label "RDF pattern" ;
+rdfs:comment "Example RDF triple pattern showing how this story manifests in RDF" ;
+rdfs:range xsd:string .
+
+# Story theme taxonomy
+ai:ThemeScheme a skos:ConceptScheme ;
+dct:title "IQ User Story Themes" ;
+dct:description "Business and technical themes organizing user stories" ;
+skos:hasTopConcept 
+ai:ThemeRDFDriven ,
+ai:ThemeCompliance ,
+ai:ThemeMultiTenancy ,
+ai:ThemeIntegration ,
+ai:ThemeWorkflow ,
+ai:ThemeSecurity ,
+ai:ThemePerformance ,
+ai:ThemeGovernance .
+
+ai:ThemeRDFDriven a skos:Concept ;
+skos:prefLabel "RDF-Driven Behavior" ;
+skos:definition "Stories where RDF/TTL graphs inform runtime behavior and decision-making" ;
+skos:scopeNote "Business logic, policies, rules, configuration stored and queried from RDF" ;
+skos:example "Story 2 (Agent Fleet Governance), Story 14 (Business Rules via SPARQL)" .
+
+ai:ThemeCompliance a skos:Concept ;
+skos:prefLabel "Compliance & Governance" ;
+skos:definition "Stories focused on regulatory compliance, policy enforcement, audit trails" ;
+skos:scopeNote "Continuous automated compliance, evidence gathering, regulatory reporting" ;
+skos:example "Story 5 (Compliance Rule Automation), Story 68 (Regulatory Reports)" .
+
+ai:ThemeMultiTenancy a skos:Concept ;
+skos:prefLabel "Multi-Tenancy & Scale" ;
+skos:definition "Stories addressing isolation, cost tracking, scaling for many tenants" ;
+skos:scopeNote "Complete data/policy isolation, SaaS-grade scalability, fair-share resource allocation" ;
+skos:example "Story 1 (Multi-Tenant Realm Isolation), Story 57 (Multi-Tenant Scale)" .
+
+ai:ThemeIntegration a skos:Concept ;
+skos:prefLabel "Integration & Data Unification" ;
+skos:definition "Stories about connecting to external systems, mapping data, enabling data access" ;
+skos:scopeNote "Connectors to 25+ systems, semantic mappings, federated queries, data quality" ;
+skos:example "Story 44 (Semantic Mappings), Story 47 (Federated Queries)" .
+
+ai:ThemeWorkflow a skos:Concept ;
+skos:prefLabel "Workflows & Orchestration" ;
+skos:definition "Stories on agent workflows, orchestration, state management" ;
+skos:scopeNote "Multi-step processes, agent coordination, decision branching, async patterns" ;
+skos:example "Story 27 (Multi-Step Workflows), Story 39 (Federated Agents)" .
+
+ai:ThemeSecurity a skos:Concept ;
+skos:prefLabel "Security & Access Control" ;
+skos:definition "Stories on authentication, authorization, secret management, threat detection" ;
+skos:scopeNote "Zero-trust, RBAC, credential management, audit trails" ;
+skos:example "Story 4 (Dynamic RBAC), Story 69 (Insider Threat Detection)" .
+
+ai:ThemePerformance a skos:Concept ;
+skos:prefLabel "Performance & Scalability" ;
+skos:definition "Stories on optimization, caching, query performance, resource management" ;
+skos:scopeNote "Query optimization, tiered storage, auto-scaling, cost optimization" ;
+skos:example "Story 59 (Repository Performance), Story 62 (Resource Optimization)" .
+
+ai:ThemeGovernance a skos:Concept ;
+skos:prefLabel "Governance & Operations" ;
+skos:definition "Stories on deployment, monitoring, changes, reliability" ;
+skos:scopeNote "High availability, backup/recovery, zero-downtime upgrades, health monitoring" ;
+skos:example "Story 54 (Raft HA), Story 60 (Config Changes)" .
+
+# Priority taxonomy
+ai:PriorityScheme a skos:ConceptScheme ;
+dct:title "Story Priorities" ;
+skos:hasTopConcept ai:PriorityCritical , ai:PriorityHigh , ai:PriorityMedium , ai:PriorityLow .
+
+ai:PriorityCritical a skos:Concept ;
+skos:prefLabel "Critical" ;
+skos:definition "Required for enterprise deployment, immediate security/compliance risk if missing" ;
+skos:narrower ai:Story001-MultiTenantRealm , ai:Story005-ComplianceAutomation , ai:Story010-ProvenanceTracking ;
+skos:narrower ai:Story012-ZeroTrust , ai:Story054-RaftHA , ai:Story055-Replication ;
+skos:narrower ai:Story058-BackupRecovery , ai:Story061-SecurityHardening , ai:Story064-NamespaceIsolation ;
+skos:narrower ai:Story066-AuditTrail , ai:Story068-RegulatoryReports , ai:Story072-LegalHolds ;
+skos:narrower ai:Story075-AuditExtracts .
+
+ai:PriorityHigh a skos:Concept ;
+skos:prefLabel "High" ;
+skos:definition "Core platform features enabling key use cases" ;
+skos:scopeNote "Foundation for enterprise value, enable multiple workflows" .
+
+ai:PriorityMedium a skos:Concept ;
+skos:prefLabel "Medium" ;
+skos:definition "Important features enhancing capability and user experience" ;
+skos:scopeNote "Nice-to-haves for MVP but needed for complete solution" .
+
+ai:PriorityLow a skos:Concept ;
+skos:prefLabel "Low" ;
+skos:definition "Nice-to-have features enabling advanced scenarios" ;
+skos:scopeNote "Deferred until core features mature" .
+
+# Phase taxonomy for implementation roadmap
+ai:PhaseScheme a skos:ConceptScheme ;
+dct:title "Implementation Phases" ;
+skos:hasTopConcept ai:Phase1Core , ai:Phase2Enterprise , ai:Phase3Advanced , ai:Phase4Compliance .
+
+ai:Phase1Core a skos:Concept ;
+skos:prefLabel "Phase 1: Core Platform" ;
+skos:definition "Foundational platform capabilities" ;
+skos:narrower ai:Story001-MultiTenantRealm , ai:Story013-DomainOntology ;
+skos:narrower ai:Story028-RDFFacts , ai:Story054-RaftHA , ai:Story066-AuditTrail .
+
+ai:Phase2Enterprise a skos:Concept ;
+skos:prefLabel "Phase 2: Enterprise Features" ;
+skos:definition "Enterprise-scale deployment and governance" ;
+skos:narrower ai:Story002-AgentFleetGovernance , ai:Story003-ClusterPolicyDistribution ;
+skos:narrower ai:Story004-DynamicRBAC , ai:Story005-ComplianceAutomation ;
+skos:narrower ai:Story045-RealtimeSync , ai:Story057-MultiTenantScale .
+
+ai:Phase3Advanced a skos:Concept ;
+skos:prefLabel "Phase 3: Advanced Patterns" ;
+skos:definition "Advanced workflow and integration patterns" ;
+skos:narrower ai:Story006-LLMGovernance , ai:Story009-FederatedQuery ;
+skos:narrower ai:Story027-MultiStepWorkflows , ai:Story039-FederatedAgents ;
+skos:narrower ai:Story059-RepositoryPerformance .
+
+ai:Phase4Compliance a skos:Concept ;
+skos:prefLabel "Phase 4: Compliance & Analytics" ;
+skos:definition "Advanced compliance and analytics capabilities" ;
+skos:narrower ai:Story010-ProvenanceTracking , ai:Story011-KGGovernance ;
+skos:narrower ai:Story068-RegulatoryReports , ai:Story073-DataLineage ;
+skos:narrower ai:Story075-AuditExtracts .
+
+# User Role Statistics
+ai:Statistics a rdf:Description ;
+dct:description "User Stories Statistics" ;
+ai:totalStories 75 ;
+ai:totalRoles 6 ;
+ai:totalThemes 8 ;
+ai:criticalStories 15 ;
+ai:highPriorityStories 28 ;
+ai:mediumPriorityStories 22 ;
+ai:lowPriorityStories 10 .
+
+# Imports and related ontologies
+ai:IQUserStoriesScheme 
+rdfs:seeAlso <https://symbol.systems/v0/iq#> ;
+rdfs:seeAlso <http://www.w3.org/2004/02/skos/core#> ;
+rdfs:seeAlso <http://purl.org/dc/terms/> .
+
+# Versioning info
+ai:Version a rdf:Description ;
+dct:identifier "1.0" ;
+dct:issued "2026-04-07"^^xsd:date ;
+dct:description "Initial comprehensive user stories document covering all 6 user roles" ;
+dct:hasPart ai:IQUserStoriesScheme .

@@ -1,0 +1,183 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Domain Expert / Business Rules Engineer
+# Role: Expresses business logic, compliance rules, and domain knowledge as RDF/TTL
+#   without writing Java code. Owns the semantic model that drives agent behavior.
+
+ai:RoleDomainExpert a skos:Concept ;
+skos:prefLabel "Domain Expert / Business Rules Engineer" ;
+skos:definition "Expresses business logic, compliance rules, and domain knowledge as RDF/TTL without writing Java code. Owns the semantic model that drives agent behavior." ;
+skos:narrower 
+ai:Story013-DomainOntology ,
+ai:Story014-BusinessRules ,
+ai:Story015-ComplianceTemplates ,
+ai:Story016-PolicyRules ,
+ai:Story017-DataQuality ,
+ai:Story018-DataMappings ,
+ai:Story019-AgentIntents ,
+ai:Story020-LLMPrompts ,
+ai:Story021-EntitiesRelationships ,
+ai:Story022-SmartTaxonomies ,
+ai:Story023-TemporalReasoning ,
+ai:Story024-EscalationWorkflows ,
+ai:Story025-SemanticSearch ,
+ai:Story026-VersionControl .
+
+# Story 13: Encode Domain Ontology
+ai:Story013-DomainOntology a skos:Concept ;
+skos:prefLabel "Encode Domain Ontology in TTL" ;
+skos:definition "Define complete domain ontology (classes, properties, relationships) for business domain in TTL format" ;
+skos:scopeNote "TTL covers all key business entities/relationships; properties have domain/range/cardinality; version history maintained; imports standard ontologies (SKOS, Dublin Core); validation report shows coverage" ;
+dct:identifier "013" ;
+ai:storyType "User Story" ;
+ai:theme "knowledge-modeling" ;
+ai:priority "high" ;
+ai:rdfPattern "ont:Ontology rdf:type owl:Ontology ; owl:imports ; rdfs:seeAlso . ent:Entity rdf:type rdfs:Class ; rdfs:domain ; rdfs:range ." .
+
+# Story 14: Business Rules as SPARQL
+ai:Story014-BusinessRules a skos:Concept ;
+skos:prefLabel "Define Business Rules as SPARQL Queries" ;
+skos:definition "Write business rules as SPARQL CONSTRUCT queries adding inferred facts to knowledge graph" ;
+skos:scopeNote "Rule files contain SELECT/CONSTRUCT/UPDATE; rules organized by domain; execution order defined (DAG); performance metrics tracked; dry-run preview capability" ;
+dct:identifier "014" ;
+ai:storyType "User Story" ;
+ai:theme "rule-engine" ;
+ai:priority "high" ;
+ai:rdfPattern "rule:SparqlRule rdf:type iq:Rule ; iq:executionOrder ; iq:produces rdfs:Class ." .
+
+# Story 15: Compliance Rule Templates
+ai:Story015-ComplianceTemplates a skos:Concept ;
+skos:prefLabel "Compliance Rule Templates in SPARQL" ;
+skos:definition "Create reusable SPARQL rule templates for common compliance patterns (transaction monitoring, fraud detection, KYC)" ;
+skos:scopeNote "Template parameters substituted at deployment; library versioned/discoverable; example instantiations provided; performance expectations documented; audit trail shows applied templates" ;
+dct:identifier "015" ;
+ai:storyType "User Story" ;
+ai:theme "compliance" ;
+ai:priority "medium" ;
+ai:rdfPattern "tmpl:RuleTemplate rdf:type iq:Template ; iq:hasParameter ; iq:applicableScenario ." .
+
+# Story 16: Policy Rules as RDF Constraints
+ai:Story016-PolicyRules a skos:Concept ;
+skos:prefLabel "Define Policy Rules as RDF Constraints" ;
+skos:definition "Express policy constraints (e.g., no agent can access customer PII without approval) as RDF rules preventing runtime violations" ;
+skos:scopeNote "Rules in SHACL shapes or SPARQL ASK; violation detection before action; messages explain constraints; policy board reviews changes; rollback capability" ;
+dct:identifier "016" ;
+ai:storyType "User Story" ;
+ai:theme "policy" ;
+ai:priority "high" ;
+ai:rdfPattern "policy:PolicyConstraint rdf:type sh:Shape ; sh:targetClass ; sh:property . prov:ViolationReport rdf:type sh:ValidationReport ." .
+
+# Story 17: Data Quality Validation
+ai:Story017-DataQuality a skos:Concept ;
+skos:prefLabel "Data Quality Validation via RDF Constraints" ;
+skos:definition "Define data quality rules (required fields, value ranges, format patterns) in SHACL shapes" ;
+skos:scopeNote "SHACL describes valid data per entity type; validation at ingestion/query time; detailed violation reports; severity levels with auto-remediation; quality metrics dashboard" ;
+dct:identifier "017" ;
+ai:storyType "User Story" ;
+ai:theme "data-quality" ;
+ai:priority "medium" ;
+ai:rdfPattern "dq:QualityRule rdf:type sh:Shape ; sh:minCount ; sh:pattern ; sh:datatype . dq:QualityMetric rdf:type iq:Metric ." .
+
+# Story 18: Data Source Mappings
+ai:Story018-DataMappings a skos:Concept ;
+skos:prefLabel "Map External Data Sources to Domain Ontology" ;
+skos:definition "Define mappings from external data sources to domain ontology using RDF Mapping Language (RML)" ;
+skos:scopeNote "Mapping files describe source schema→domain mappings; automatic query transformation; mapped data cached with TTL invalidation; performance monitoring; validation of coverage" ;
+dct:identifier "018" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "map:Mapping rdf:type iq:Mapping ; map:source ; map:target ; map:transformationRule ." .
+
+# Story 19: Agent Intent Patterns
+ai:Story019-AgentIntents a skos:Concept ;
+skos:prefLabel "Define Agent Intent Patterns" ;
+skos:definition "Define recognized agent intents (CheckFraud, ApproveTransaction, GenerateReport) as RDF types with required inputs/outputs/constraints" ;
+skos:scopeNote "Intent model in RDF with name/inputs/outputs/riskLevel/approvalRequired; runtime validates intent matches context; policy rules reference intent type; cost attribution per intent; audit trail" ;
+dct:identifier "019" ;
+ai:storyType "User Story" ;
+ai:theme "agent-modeling" ;
+ai:priority "high" ;
+ai:rdfPattern "intent:Intent rdf:type iq:Intent ; iq:requiredInput ; iq:expectedOutput ; iq:riskLevel ; iq:requiresApproval ." .
+
+# Story 20: LLM Prompts via RDF
+ai:Story020-LLMPrompts a skos:Concept ;
+skos:prefLabel "Configure LLM Prompts and Instructions via RDF" ;
+skos:definition "Define LLM prompts, few-shot examples, and system instructions as RDF resources loaded at runtime" ;
+skos:scopeNote "Prompt RDF triples with text/examples/instructions/version; agents load based on intent/context; A/B testing of variants; performance metrics tracked; audit trail of versions" ;
+dct:identifier "020" ;
+ai:storyType "User Story" ;
+ai:theme "llm-integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "prompt:Prompt rdf:type iq:Prompt ; iq:text ; iq:examples ; iq:systemInstructions ; iq:version ." .
+
+# Story 21: Entities and Relationships
+ai:Story021-EntitiesRelationships a skos:Concept ;
+skos:prefLabel "Define Entities and Relationships for Knowledge Graph" ;
+skos:definition "Declaratively add new business entities and relationships to knowledge graph by defining RDF relations" ;
+skos:scopeNote "Entity definitions in ontology TTL; relationships defined with cardinality/symmetry/transitivity; automatic inference of derived relationships; impact analysis before changes; versioning/rollback" ;
+dct:identifier "021" ;
+ai:storyType "User Story" ;
+ai:theme "knowledge-modeling" ;
+ai:priority "medium" ;
+ai:rdfPattern "entity:Entity rdf:type rdfs:Class . rel:Relationship rdf:type rdf:Property ; rdfs:domain ; rdfs:range ." .
+
+# Story 22: Smart Taxonomies
+ai:Story022-SmartTaxonomies a skos:Concept ;
+skos:prefLabel "Create Smart Taxonomies and Hierarchies" ;
+skos:definition "Define business taxonomies as RDF SKOS hierarchies enabling concept relationships reasoning" ;
+skos:scopeNote "Taxonomies using SKOS Concept/broaderThan/narrowerThan; hierarchy navigation queries; multiple hierarchy views per context; versioning/merge; caching of navigation" ;
+dct:identifier "022" ;
+ai:storyType "User Story" ;
+ai:theme "knowledge-modeling" ;
+ai:priority "medium" ;
+ai:rdfPattern "tax:Taxonomy rdf:type skos:ConceptScheme . tax:Concept rdf:type skos:Concept ; skos:broader ; skos:narrower ." .
+
+# Story 23: Temporal Reasoning
+ai:Story023-TemporalReasoning a skos:Concept ;
+skos:prefLabel "Temporal Reasoning and Time-Based Business Rules" ;
+skos:definition "Define business rules applying at specific times or changing based on temporal conditions" ;
+skos:scopeNote "Time/date properties using standard temporal ontologies; SPARQL filters by temporal conditions; recurring rules (daily/weekly/monthly); historical analysis; timezone handling" ;
+dct:identifier "023" ;
+ai:storyType "User Story" ;
+ai:theme "rule-engine" ;
+ai:priority "low" ;
+ai:rdfPattern "time:TemporalEntity rdf:type time:TemporalEntity ; time:hasBeginning ; time:hasEnd ; time:hasDurationDescription ." .
+
+# Story 24: Escalation Workflows
+ai:Story024-EscalationWorkflows a skos:Concept ;
+skos:prefLabel "Define Escalation and Approval Workflows" ;
+skos:definition "Model approval workflows as RDF state machines for decisions" ;
+skos:scopeNote "Workflow states/transitions in TTL; escalation rules link decision attributes to triggers; approval chain per role; timeout/override handling; audit trail of approvals" ;
+dct:identifier "024" ;
+ai:storyType "User Story" ;
+ai:theme "workflow" ;
+ai:priority "medium" ;
+ai:rdfPattern "wf:Workflow rdf:type iq:Workflow ; iq:hasState . wf:State rdf:type iq:State ; iq:transition . esc:EscalationRule rdf:type iq:Rule ." .
+
+# Story 25: Semantic Search
+ai:Story025-SemanticSearch a skos:Concept ;
+skos:prefLabel "Semantic Search for Business Concepts" ;
+skos:definition "Query knowledge graph to find related business concepts and understand domain coverage" ;
+skos:scopeNote "SPARQL query interface for domain ontology; full-text search over descriptions; relationship path visualization; analytics on unused entities; export formats" ;
+dct:identifier "025" ;
+ai:storyType "User Story" ;
+ai:theme "knowledge-discovery" ;
+ai:priority "low" ;
+ai:rdfPattern "search:Query rdf:type iq:Query . results:Result rdf:type rdf:Resource ; rdfs:label ; search:relevanceScore ." .
+
+# Story 26: Version Control for Rules
+ai:Story026-VersionControl a skos:Concept ;
+skos:prefLabel "Version Control and Change Tracking for Business Rules" ;
+skos:definition "See audit trail of all changes to domain rules with impact analysis" ;
+skos:scopeNote "RDF triple versioning with timestamp/author/reason; diff view of rule versions; impact analysis before deploy; approval workflow for changes; traceability to regulations" ;
+dct:identifier "026" ;
+ai:storyType "User Story" ;
+ai:theme "governance" ;
+ai:priority "medium" ;
+ai:rdfPattern "vc:Commit rdf:type vc:Commit ; vc:author ; vc:timestamp ; vc:message . vc:Diff rdf:type vc:Diff ; vc:added ; vc:removed ." .

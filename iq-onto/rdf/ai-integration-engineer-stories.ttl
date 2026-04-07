@@ -1,0 +1,147 @@
+@prefix ai: <https://symbol.systems/v0/ai#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# User Stories for Integration Engineer
+# Role: Connects IQ platform to external systems (data sources, APIs, messaging systems, data warehouses),
+#   manages data synchronization, and ensures data quality.
+
+ai:RoleIntegrationEngineer a skos:Concept ;
+skos:prefLabel "Integration Engineer" ;
+skos:definition "Connects the IQ platform to external systems (data sources, APIs, messaging systems, data warehouses), manages data synchronization, and ensures data quality." ;
+skos:narrower 
+ai:Story043-CustomConnectors ,
+ai:Story044-SemanticMappings ,
+ai:Story045-RealtimeSync ,
+ai:Story046-CloudWarehouses ,
+ai:Story047-FederatedQueries ,
+ai:Story048-ExternalOntologies ,
+ai:Story049-MasterDataMgmt ,
+ai:Story050-DataQualityFramework ,
+ai:Story051-ChangeDataCapture ,
+ai:Story052-EventDrivenPipelines ,
+ai:Story053-SecretManagement .
+
+# Story 43: Custom Connectors
+ai:Story043-CustomConnectors a skos:Concept ;
+skos:prefLabel "Build Custom Connectors to Enterprise Data Sources" ;
+skos:definition "Implement connectors to diverse data sources enabling agent queries and updates" ;
+skos:scopeNote "SDK with REST/JDBC/S3/Spark/Kafka examples; auth/credential management; connection pooling; error/retry; connector metadata; schema information" ;
+dct:identifier "043" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "connector:Connector rdf:type iq:Connector ; iq:connectsTo datasource:DataSource ; iq:authenticate . meta:ConnectorMetadata rdf:type iq:Metadata ." .
+
+# Story 44: Semantic Mappings
+ai:Story044-SemanticMappings a skos:Concept ;
+skos:prefLabel "Define Semantic Mappings from Source Systems to Domain Ontology" ;
+skos:definition "Create ETL mappings translating source system data into domain ontology triples" ;
+skos:scopeNote "RML language for SQL→RDF; column/field mappings with computed triples; datatype conversions; schema change handling; incremental loading capability" ;
+dct:identifier "044" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "mapping:RMLMapping rdf:type iq:Mapping ; iq:subject ; iq:predicate ; iq:object . transform:ColumnMapping rdf:type iq:ColumnMapping ." .
+
+# Story 45: Realtime Sync
+ai:Story045-RealtimeSync a skos:Concept ;
+skos:prefLabel "Implement Real-Time Data Sync from Sources" ;
+skos:definition "Configure connectors continuously syncing data from sources (CDC, events, webhooks)" ;
+skos:scopeNote "Event-driven (Kafka topics, database CDC, webhooks); scheduled sync configurable; incremental loading; conflict resolution; monitoring of latency/error/staleness" ;
+dct:identifier "045" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "sync:SyncConfig rdf:type iq:SyncConfig ; iq:source ; iq:frequency ; iq:conflictResolution . metric:SyncMetric rdf:type iq:Metric ." .
+
+# Story 46: Cloud Warehouses
+ai:Story046-CloudWarehouses a skos:Concept ;
+skos:prefLabel "Connect to Enterprise Cloud Data Warehouses" ;
+skos:definition "Integrate with cloud data warehouses (Snowflake, Databricks, BigQuery) for large-scale analytics" ;
+skos:scopeNote "Pre-built connectors for major warehouses; query pushdown (SPARQL→warehouse SQL); caching of large results; partition pruning; cost optimization via transfer reduction" ;
+dct:identifier "046" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "warehouse:DataWarehouse rdf:type iq:DataWarehouse ; iq:queryable . pushdown:QueryPushdown rdf:type iq:Optimization ." .
+
+# Story 47: Federated Queries
+ai:Story047-FederatedQueries a skos:Concept ;
+skos:prefLabel "Build Federated Query Support Across Heterogeneous Stores" ;
+skos:definition "Configure federated SPARQL transparently joining RDF stores, databases, and data lakes" ;
+skos:scopeNote "FedX with SPARQL/SQL/Spark endpoints; query optimization with filter pushdown; caching intermediate results; timeout handling; partial result support" ;
+dct:identifier "047" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "high" ;
+ai:rdfPattern "fedx:Federation rdf:type iq:Federation ; iq:includes . endpoint:Endpoint rdf:type iq:Endpoint ; iq:type ." .
+
+# Story 48: External Ontologies
+ai:Story048-ExternalOntologies a skos:Concept ;
+skos:prefLabel "Sync External Ontologies and Reference Data" ;
+skos:definition "Periodically fetch and sync external ontologies/taxonomies into knowledge graph" ;
+skos:scopeNote "Scheduled fetching of external RDF sources; version tracking; merge/conflict resolution; impact analysis; rollback if issues" ;
+dct:identifier "048" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "ext:ExternalOntology rdf:type iq:ExternalResource ; iq:fetchURL ; iq:version . merge:MergeConflict rdf:type iq:Conflict ." .
+
+# Story 49: Master Data Mgmt
+ai:Story049-MasterDataMgmt a skos:Concept ;
+skos:prefLabel "Implement Master Data Management (MDM) via RDF" ;
+skos:definition "Use RDF to maintain master data with identity resolution across source systems" ;
+skos:scopeNote "Golden record in RDF; source records linked with confidence scores; identity resolution rules; change tracking; API for applications to fetch records" ;
+dct:identifier "049" ;
+ai:storyType "User Story" ;
+ai:theme "data-quality" ;
+ai:priority "medium" ;
+ai:rdfPattern "mdm:GoldenRecord rdf:type iq:MasterData ; iq:hasSource . source:SourceRecord rdf:type iq:SourceRecord ; iq:matchScore ." .
+
+# Story 50: Data Quality Framework
+ai:Story050-DataQualityFramework a skos:Concept ;
+skos:prefLabel "Build Data Quality Framework for RDF Integration" ;
+skos:definition "Implement automated data quality checks on integrated data" ;
+skos:scopeNote "Quality rules in SHACL shapes; validation at ingestion/periodic; metrics dashboard; auto-remediation where possible; SLA enforcement with quality thresholds" ;
+dct:identifier "050" ;
+ai:storyType "User Story" ;
+ai:theme "data-quality" ;
+ai:priority "high" ;
+ai:rdfPattern "dq:QualityRule rdf:type sh:Shape ; sh:targetClass . dq:QualityMetric rdf:type iq:Metric ; iq:measuresDimension ." .
+
+# Story 51: Change Data Capture
+ai:Story051-ChangeDataCapture a skos:Concept ;
+skos:prefLabel "Implement Change Data Capture (CDC) for Sync" ;
+skos:definition "Capture and propagate only changed data from sources reducing sync overhead" ;
+skos:scopeNote "CDC support for major databases; efficient change propagation; exactly-once semantics; delete handling (tombstones); checkpoint/resume capability" ;
+dct:identifier "051" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "cdc:Change rdf:type iq:Change ; iq:operationType ; iq:timestamp ; iq:data . checkpoint:Checkpoint rdf:type iq:Checkpoint ." .
+
+# Story 52: Event-Driven Pipelines
+ai:Story052-EventDrivenPipelines a skos:Concept ;
+skos:prefLabel "Build Event-Driven Integration Pipelines" ;
+skos:definition "Create reactive pipelines where RDF changes trigger external system updates" ;
+skos:scopeNote "Trigger rules (triple patterns match update targets); event publishing to queues; exactly-once delivery; error/dead-letter handling; audit trail" ;
+dct:identifier "052" ;
+ai:storyType "User Story" ;
+ai:theme "integration" ;
+ai:priority "medium" ;
+ai:rdfPattern "trigger:TriggerRule rdf:type iq:TriggerRule ; iq:pattern ; iq:target . evt:Event rdf:type iq:Event ; iq:triggeredBy ." .
+
+# Story 53: Secret Management
+ai:Story053-SecretManagement a skos:Concept ;
+skos:prefLabel "Manage Connector Credentials and Secrets" ;
+skos:definition "Store and manage connector credentials centrally in semantic vault with fine-grained access control" ;
+skos:scopeNote "Encrypted storage with per-connector keys; access control by role; usage audit logs; automatic rotation schedules; expiry warnings" ;
+dct:identifier "053" ;
+ai:storyType "User Story" ;
+ai:theme "security" ;
+ai:priority "high" ;
+ai:rdfPattern "vault:Secret rdf:type iq:Secret ; iq:value ; iq:encryptionKey . audit:AccessLog rdf:type iq:AccessLog ; iq:accessor ; iq:timestamp ." .
