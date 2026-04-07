@@ -1,5 +1,6 @@
 package systems.symbol.mcp.dynamic;
 
+import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -76,7 +77,7 @@ GRAPH <iq:agents> {
 """;
 try (TupleQueryResult result = conn.prepareTupleQuery(sparql).evaluate()) {
 while (result.hasNext()) {
-varbs= result.next();
+BindingSet bs = result.next();
 String agentUri  = bs.getValue("agent").stringValue();
 String actorName = safeStr(bs, "actorName");
 String intent= safeStr(bs, "intent");
