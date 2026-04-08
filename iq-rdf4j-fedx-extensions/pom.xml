@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>systems.symbol</groupId>
+    <artifactId>iq-parent</artifactId>
+    <version>0.94.3</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>iq-rdf4j-fedx-extensions</artifactId>
+  <version>0.94.3</version>
+  <name>IQ RDF4J FedX Extensions: Strategy-based Remote SPARQL Client Router</name>
+  <description>
+    Strategy pattern implementation for routing SPARQL queries to different remote endpoint
+    types (JDBC, OpenAPI, GraphQL, HTTP). Clean separation of concerns with independent
+    executor strategies and a zero-logic dispatcher.
+  </description>
+
+  <dependencies>
+    <!-- FedX Core (for FedXEndpoint) -->
+    <dependency>
+      <groupId>systems.symbol</groupId>
+      <artifactId>iq-rdf4j-fedx</artifactId>
+      <version>0.94.3</version>
+    </dependency>
+
+    <!-- Core RDF4J -->
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-repository-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-query</artifactId>
+    </dependency>
+
+    <!-- JSON Processing (for OpenAPI response parsing) -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

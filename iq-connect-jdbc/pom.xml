@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>systems.symbol</groupId>
+    <artifactId>iq-parent</artifactId>
+    <version>0.94.3</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>iq-connect-jdbc</artifactId>
+  <version>0.94.3</version>
+  <packaging>jar</packaging>
+  <name>IQ JDBC Connector: Dynamic Schema Introspection &amp; R2RML Generation</name>
+  <description>
+    Auto-discovers SQL database schemas via JDBC metadata API and generates
+    W3C R2RML mappings as RDF triples. Registers discovered tables as virtual graphs
+    for federated SPARQL querying without external tools.
+  </description>
+
+  <dependencies>
+    <!-- Core Connector Framework -->
+    <dependency>
+      <groupId>systems.symbol</groupId>
+      <artifactId>iq-connect-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- RDF & SPARQL -->
+    <dependency>
+      <groupId>systems.symbol</groupId>
+      <artifactId>iq-platform</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-repository-api</artifactId>
+    </dependency>
+
+    <!-- W3C R2RML Standard -->
+    <dependency>
+      <groupId>org.eclipse.rdf4j</groupId>
+      <artifactId>rdf4j-shacl</artifactId>
+    </dependency>
+
+    <!-- JDBC API -->
+    <dependency>
+      <groupId>java.base</groupId>
+      <artifactId>java.sql</artifactId>
+      <version>${java.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-logging-json</artifactId>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Test Database: H2 (in-memory SQL for unit tests) -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.quarkus.platform</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,296 @@
+@prefix vg:     <urn:iq:virtual:> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix dcat:   <http://www.w3.org/ns/dcat#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+####
+# Virtual Graph Ontology
+#
+# Defines metadata for virtual graphs: named graphs that represent
+# remote data sources (JDBC tables, OpenAPI entities, GraphQL types) as
+# queryable SPARQL endpoints.
+#
+# Key concepts:
+# - VirtualGraph: a federated graph for a remote data source
+# - sourceType: JDBC, OpenAPI, GraphQL, etc.
+# - sparqlEndpoint: pseudo-URI for federation (urn:iq:sparql:jdbc:*, urn:iq:sparql:openapi:*)
+# - mappingGraph: reference to R2RML or JSON-LD mapping metadata
+# - capability: what optimizations the endpoint supports (filter pushdown, joins, etc.)
+####
+
+# Main Class: VirtualGraph
+# Represents a queryable view of a remote data source
+vg:VirtualGraph
+  a owl:Class ;
+  rdfs:label "Virtual Graph" ;
+  rdfs:comment "A named graph representing a remote JDBC table, API entity, or GraphQL type" ;
+  .
+
+# Property: sourceType
+# What kind of remote source this virtual graph represents
+vg:sourceType
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:string ;
+  rdfs:label "Source Type" ;
+  rdfs:comment "Type of source: JDBC, OpenAPI, GraphQL, etc." ;
+  .
+
+# Vocabulary for sourceType values
+vg:JDBC
+  a rdf:Constant ;
+  rdf:value "JDBC" ;
+  rdfs:comment "JDBC database table" ;
+  .
+
+vg:OpenAPI
+  a rdf:Constant ;
+  rdf:value "OpenAPI" ;
+  rdfs:comment "OpenAPI/Swagger REST API entity" ;
+  .
+
+vg:GraphQL
+  a rdf:Constant ;
+  rdf:value "GraphQL" ;
+  rdfs:comment "GraphQL type" ;
+  .
+
+# Property: sparqlEndpoint
+# Pseudo-URI used by federation engine to identify and route queries
+# Format: urn:iq:sparql:{type}:{hash} or http://host/sparql for standard endpoints
+vg:sparqlEndpoint
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "SPARQL Endpoint" ;
+  rdfs:comment "Pseudo-URI for federation routing (e.g., urn:iq:sparql:jdbc:..., http://...)" ;
+  .
+
+# Property: r2rmlGraph
+# Reference to the named graph containing R2RML mappings (JDBC only)
+vg:r2rmlGraph
+  a owl:ObjectProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range rdf:Graph ;
+  rdfs:label "R2RML Graph" ;
+  rdfs:comment "Named graph URI containing W3C R2RML mapping triples (for JDBC)" ;
+  .
+
+# Property: jsonLdGraph
+# Reference to the named graph containing JSON-LD mappings (OpenAPI only)
+vg:jsonLdGraph
+  a owl:ObjectProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range rdf:Graph ;
+  rdfs:label "JSON-LD Graph" ;
+  rdfs:comment "Named graph URI containing JSON-LD semantic mapping triples (for OpenAPI)" ;
+  .
+
+# Property: capability
+# Describes query optimization capabilities of this endpoint
+vg:capability
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:string ;
+  rdfs:label "Capability" ;
+  rdfs:comment "Query optimization supported: FilterPushdown, JoinPushdown, OrderBy, Limit, etc." ;
+  .
+
+# Vocabulary for capability values
+vg:FilterPushdown
+  a rdf:Constant ;
+  rdf:value "FilterPushdown" ;
+  rdfs:comment "Endpoint can push down FILTER conditions (WHERE clauses)" ;
+  .
+
+vg:JoinPushdown
+  a rdf:Constant ;
+  rdf:value "JoinPushdown" ;
+  rdfs:comment "Endpoint can push down JOINs between tables/entities" ;
+  .
+
+vg:OrderBy
+  a rdf:Constant ;
+  rdf:value "OrderBy" ;
+  rdfs:comment "Endpoint supports ORDER BY (sorting)" ;
+  .
+
+vg:Limit
+  a rdf:Constant ;
+  rdf:value "Limit" ;
+  rdfs:comment "Endpoint supports LIMIT (row limiting)" ;
+  .
+
+vg:Offset
+  a rdf:Constant ;
+  rdf:value "Offset" ;
+  rdfs:comment "Endpoint supports OFFSET (result pagination)" ;
+  .
+
+vg:Distinct
+  a rdf:Constant ;
+  rdf:value "Distinct" ;
+  rdfs:comment "Endpoint supports DISTINCT (deduplication)" ;
+  .
+
+# Property: triples
+# Estimated number of triples this virtual graph would produce
+vg:triples
+  a owl:DatatypeProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:long ;
+  rdfs:label "Triples" ;
+  rdfs:comment "Estimated number of triples in this virtual graph" ;
+  .
+
+# Property: distinctSubjects
+# Estimated number of distinct subject URIs
+vg:distinctSubjects
+  a owl:DatatypeProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:long ;
+  rdfs:label "Distinct Subjects" ;
+  rdfs:comment "Estimated number of distinct subject URIs" ;
+  .
+
+# Property: distinctPredicates
+# Estimated number of distinct predicates
+vg:distinctPredicates
+  a owl:DatatypeProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:long ;
+  rdfs:label "Distinct Predicates" ;
+  rdfs:comment "Estimated number of distinct predicates" ;
+  .
+
+# Property: queryable
+# Whether this virtual graph can be queried (vs. only written to)
+vg:queryable
+  a owl:DatatypeProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:boolean ;
+  rdfs:label "Queryable" ;
+  rdfs:comment "Whether this virtual graph can be queried" ;
+  .
+
+# Property: updateable
+# Whether this virtual graph supports INSERT/UPDATE/DELETE
+vg:updateable
+  a owl:DatatypeProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:boolean ;
+  rdfs:label "Updateable" ;
+  rdfs:comment "Whether this virtual graph supports updates" ;
+  .
+
+# Property: apiEndpoint
+# For API sources (OpenAPI, GraphQL), the API base URL
+vg:apiEndpoint
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:anyURI ;
+  rdfs:label "API Endpoint" ;
+  rdfs:comment "For API sources, the base URL of the API" ;
+  .
+
+# Property: jdbcUrl
+# For JDBC sources, the database connection URL
+vg:jdbcUrl
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:string ;
+  rdfs:label "JDBC URL" ;
+  rdfs:comment "For JDBC sources, the database connection URL" ;
+  .
+
+# Property: createdAt
+# When this virtual graph was registered
+vg:createdAt
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:dateTime ;
+  rdfs:label "Created At" ;
+  rdfs:comment "When this virtual graph was registered" ;
+  .
+
+# Property: lastQueried
+# When this virtual graph was last successfully queried
+vg:lastQueried
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:dateTime ;
+  rdfs:label "Last Queried" ;
+  rdfs:comment "When this virtual graph was last successfully queried" ;
+  .
+
+# Property: health
+# Current health status of the endpoint
+vg:health
+  a owl:DataProperty ;
+  rdfs:domain vg:VirtualGraph ;
+  rdfs:range xsd:string ;
+  rdfs:label "Health" ;
+  rdfs:comment "Health status: Healthy, Degraded, Offline" ;
+  .
+
+# Vocabulary for health values
+vg:Healthy
+  a rdf:Constant ;
+  rdf:value "Healthy" ;
+  rdfs:comment "Endpoint is responding normally" ;
+  .
+
+vg:Degraded
+  a rdf:Constant ;
+  rdf:value "Degraded" ;
+  rdfs:comment "Endpoint is responding but slowly or with errors" ;
+  .
+
+vg:Offline
+  a rdf:Constant ;
+  rdf:value "Offline" ;
+  rdfs:comment "Endpoint is not responding" ;
+  .
+
+####
+# Example Usage
+#
+# Virtual graph for a JDBC table:
+#
+# ex:customers-vg a vg:VirtualGraph ;
+#   vg:sourceType vg:JDBC ;
+#   vg:sparqlEndpoint "urn:iq:sparql:jdbc:3f9e2c8d" ;
+#   vg:r2rmlGraph ex:crm-db-schemas-1a2b3c ;
+#   vg:capability vg:FilterPushdown, vg:JoinPushdown, vg:Limit ;
+#   vg:triples 45000 ;
+#   vg:distinctSubjects 8000 ;
+#   vg:queryable true ;
+#   vg:updateable true ;
+#   vg:jdbcUrl "jdbc:postgresql://db.example.com:5432/crm" ;
+#   vg:createdAt "2026-04-08T14:32:45Z"^^xsd:dateTime ;
+#   vg:health vg:Healthy ;
+#   skos:prefLabel "PostgreSQL CRM: customers" ;
+#   rdfs:comment "Customers table from production CRM database" ;
+#   .
+#
+# Virtual graph for an OpenAPI entity:
+#
+# ex:stripe-customers-vg a vg:VirtualGraph ;
+#   vg:sourceType vg:OpenAPI ;
+#   vg:sparqlEndpoint "urn:iq:sparql:openapi:5d4e3f2a" ;
+#   vg:jsonLdGraph ex:stripe-api-schemas-5d4e3f ;
+#   vg:capability vg:FilterPushdown, vg:Limit ;
+#   vg:triples 50000 ;
+#   vg:distinctSubjects 10000 ;
+#   vg:queryable true ;
+#   vg:updateable false ;
+#   vg:apiEndpoint "https://api.stripe.com/v1" ;
+#   vg:createdAt "2026-04-07T10:15:30Z"^^xsd:dateTime ;
+#   vg:lastQueried "2026-04-08T09:30:00Z"^^xsd:dateTime ;
+#   vg:health vg:Healthy ;
+#   skos:prefLabel "Stripe API: customers" ;
+#   rdfs:comment "Customer records from Stripe API" ;
+#   .
