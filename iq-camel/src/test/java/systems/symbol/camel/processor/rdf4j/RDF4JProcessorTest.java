@@ -48,7 +48,7 @@ if (repo != null) repo.shutDown();
 public void testSelectJsonResults() throws Exception {
 var ctx = new DefaultCamelContext();
 Exchange ex = new DefaultExchange(ctx);
-ex.getIn().setBody("SELECT ?s ?p ?o WHERE { ?s ?p ?o }");
+ex.getIn().setBody("SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o }");
 ex.getIn().setHeader("Accept", "application/sparql-results+json");
 
 var processor = new systems.symbol.camel.processor.rdf4j.RDF4JProcessor(repo(), "select", true, 0, null);

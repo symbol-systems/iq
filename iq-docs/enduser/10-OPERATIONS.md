@@ -192,7 +192,7 @@ time ./bin/iq-cli import prod-repo --file data.nq --progress
 ```bash
 # 1. Find old triples (example: >1 year old)
 ./bin/iq-cli sparql "
-  SELECT ?s ?p ?o WHERE {
+  SELECT DISTINCT ?s ?p ?o WHERE {
 ?s ?p ?o .
 ?s dcterms:modified ?modified .
 FILTER (?modified < '2023-01-15'^^xsd:dateTime)
@@ -390,7 +390,7 @@ iq:tokens_per_hour 5000000
 
 # Explain query plan
 ./bin/iq-cli sparql --explain \
-  "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 1000"
+  "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 1000"
 
 # The plan shows cost estimate before execution
 ```

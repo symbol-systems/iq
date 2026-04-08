@@ -117,7 +117,7 @@ display("-".repeat(80));
 String sparql = loadQuery(QUERY_LIST_AGENTS_IRI);
 if (sparql == null) {
 // Fallback: simple query without explicit SPARQL resource
-sparql = "SELECT ?actor ?name ?state WHERE {\n" +
+sparql = "SELECT DISTINCT ?actor ?name ?state WHERE {\n" +
 "  ?actor rdf:type <urn:iq:Actor> .\n" +
 "  OPTIONAL { ?actor <http://www.w3.org/2000/01/rdf-schema#label> ?name } .\n" +
 "  OPTIONAL { ?actor <urn:iq:state> ?state } .\n" +
@@ -205,7 +205,7 @@ display("-".repeat(60));
 String sparql = loadQuery(QUERY_AGENT_STATUS_IRI);
 if (sparql == null) {
 // Fallback query
-sparql = "SELECT ?property ?value WHERE {\n" +
+sparql = "SELECT DISTINCT ?property ?value WHERE {\n" +
 "  <" + actorIRI + "> ?property ?value .\n" +
 "} LIMIT 50";
 }
@@ -353,7 +353,7 @@ display("-".repeat(80));
 String sparql = loadQuery(QUERY_AUDIT_LOGS_IRI);
 if (sparql == null) {
 // Fallback query
-sparql = "SELECT ?timestamp ?action ?result WHERE {\n" +
+sparql = "SELECT DISTINCT ?timestamp ?action ?result WHERE {\n" +
 "  ?event <urn:mcp:audit:actor> <" + actorIRI + "> .\n" +
 "  ?event <urn:mcp:audit:timestamp> ?timestamp .\n" +
 "  ?event <urn:mcp:audit:action> ?action .\n" +

@@ -23,7 +23,7 @@ import java.util.Map;
  * &lt;iq:script/my-tool&gt; a iq:Script ;
  *   iq:name "my-tool" ;
  *   iq:description "My custom MCP tool" ;
- *   iq:sparql "SELECT ?item WHERE { ... }" ;
+ *   iq:sparql "SELECT DISTINCT ?item WHERE { ... }" ;
  *   iq:inputSchema "{\"type\":\"object\"}" .
  *   }
  * }

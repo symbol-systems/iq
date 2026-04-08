@@ -405,7 +405,7 @@ done
 ./bin/iq-cli sparql "SELECT (COUNT(*) AS ?triples) WHERE { ?s ?p ?o }"
 
 # Query latency
-./bin/iq-cli sparql --timing "SELECT ?s WHERE { ?s ?p ?o } LIMIT 1000"
+./bin/iq-cli sparql --timing "SELECT DISTINCT ?s WHERE { ?s ?p ?o } LIMIT 1000"
 
 # Connection pool status
 ./bin/iq-cli repositories status
@@ -419,7 +419,7 @@ done
 ```bash
 # Benchmark read performance
 time ./bin/iq-cli sparql \
-  "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 100000"
+  "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 100000"
 
 # Benchmark write performance
 time ./bin/iq-cli sparql --update \

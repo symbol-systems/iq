@@ -14,7 +14,7 @@ public class SPARQLQueryValidatorTest {
 @Test
 @DisplayName("Valid SELECT query passes validation")
 void testValidSelectQuery() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, null);
 
 assertTrue(result.isValid());
@@ -71,7 +71,7 @@ assertTrue(result.getMessage().contains("too small"));
 @DisplayName("Query exceeding size limit fails validation")
 void testQueryTooLarge() {
 // Create a query larger than 1MB
-StringBuilder sb = new StringBuilder("SELECT ?s ?p ?o WHERE { ");
+StringBuilder sb = new StringBuilder("SELECT DISTINCT ?s ?p ?o WHERE { ");
 while (sb.length() < SPARQLQueryValidator.MAX_QUERY_SIZE + 1000) {
 sb.append("OPTIONAL { ?s ?p ?o } ");
 }
@@ -137,7 +137,7 @@ assertTrue(result.getMessage().contains("write or data manipulation"));
 @Test
 @DisplayName("Query without WHERE clause fails validation")
 void testQueryWithoutWhereClause() {
-String query = "SELECT ?s ?p ?o";
+String query = "SELECT DISTINCT ?s ?p ?o";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, null);
 
 // May fail due to basic syntax validation
@@ -148,7 +148,7 @@ assertNotNull(result);
 @Test
 @DisplayName("Null timeout uses default")
 void testNullTimeoutUsesDefault() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o }";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, null);
 
 assertTrue(result.isValid());
@@ -158,7 +158,7 @@ assertEquals(SPARQLQueryValidator.DEFAULT_TIMEOUT_SECONDS, result.getRecommended
 @Test
 @DisplayName("Valid timeout is returned")
 void testValidTimeout() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o }";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, 60);
 
 assertTrue(result.isValid());
@@ -168,7 +168,7 @@ assertEquals(60, result.getRecommendedTimeout());
 @Test
 @DisplayName("Timeout below minimum fails validation")
 void testTimeoutBelowMinimum() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o }";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, 0);
 
 assertFalse(result.isValid());
@@ -178,7 +178,7 @@ assertTrue(result.getMessage().contains("at least"));
 @Test
 @DisplayName("Timeout above maximum fails validation")
 void testTimeoutAboveMaximum() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o }";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, 600);
 
 assertFalse(result.isValid());
@@ -188,7 +188,7 @@ assertTrue(result.getMessage().contains("exceeds maximum"));
 @Test
 @DisplayName("getQueryType returns correct type for SELECT")
 void testGetQueryTypeSelect() {
-String type = SPARQLQueryValidator.getQueryType("SELECT ?s WHERE { ?s ?p ?o }");
+String type = SPARQLQueryValidator.getQueryType("SELECT DISTINCT ?s WHERE { ?s ?p ?o }");
 assertEquals("SELECT", type);
 }
 
@@ -223,7 +223,7 @@ assertEquals("UNKNOWN", type);
 @Test
 @DisplayName("Query with leading whitespace is valid")
 void testQueryWithLeadingWhitespace() {
-String query = "  \n  SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "  \n  SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 SPARQLQueryValidator.ValidationResult result = SPARQLQueryValidator.validate(query, null);
 
 assertTrue(result.isValid());

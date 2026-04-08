@@ -126,7 +126,7 @@ try (RepositoryConnection conn = repository.getConnection()) {
 String sparql = """
 PREFIX connector: <urn:connector:>
 
-SELECT ?status ?lastId ?offset ?total ?timestamp
+SELECT DISTINCT ?status ?lastId ?offset ?total ?timestamp
 WHERE {
 GRAPH <urn:connector:checkpoints> {
 ?checkpoint a connector:Checkpoint ;

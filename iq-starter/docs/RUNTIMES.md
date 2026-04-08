@@ -137,7 +137,7 @@ Direct access to the knowledge graph (for power users).
 ```bash
 curl -X POST http://localhost:8080/sparql \
   -H "Content-Type: application/sparql-query" \
-  -d 'SELECT ?customer ?revenue WHERE {
+  -d 'SELECT DISTINCT ?customer ?revenue WHERE {
 ?customer a :Customer ;
   :revenue ?revenue .
 FILTER (?revenue > 1000000)

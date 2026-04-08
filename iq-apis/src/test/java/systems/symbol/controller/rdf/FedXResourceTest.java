@@ -39,7 +39,7 @@ given()
 @Test
 @DisplayName("FedX: GET /sparql/federated/query with SELECT query")
 void testFedXQueryGET() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 
 given()
 .queryParam("query", query)
@@ -68,7 +68,7 @@ given()
 @Test
 @DisplayName("FedX: GET /sparql/federated/query with timeout parameter")
 void testFedXQueryWithTimeout() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 
 given()
 .queryParam("query", query)
@@ -95,7 +95,7 @@ given()
 @Test
 @DisplayName("FedX: POST /sparql/federated/query with form-encoded query")
 void testFedXQueryPOST() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 
 given()
 .contentType(ContentType.URLENC)
@@ -110,7 +110,7 @@ given()
 @Test
 @DisplayName("FedX: POST /sparql/federated/query with timeout")
 void testFedXQueryPOSTWithTimeout() {
-String query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
+String query = "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10";
 
 given()
 .contentType(ContentType.URLENC)

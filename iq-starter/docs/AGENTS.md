@@ -64,7 +64,7 @@ To **add a new MCP tool**, write a SPARQL query or workflow and it auto-exposes:
 tool:list-high-value-customers a iq:SPARQLTool ;
 iq:label "List High-Value Customers" ;
 iq:query """
-SELECT ?id ?name ?ltv 
+SELECT DISTINCT ?id ?name ?ltv 
 WHERE {
 ?entity a crm:Customer ;
 id:id ?id ;
@@ -134,7 +134,7 @@ a rdf:Seq ;
 rdf:_1 [
 iq:action iq:ComputeRiskScore ;
 iq:query """
-SELECT ?risk_score {
+SELECT DISTINCT ?risk_score {
 ?account crm:days_to_payment ?dtp ;
  crm:invoice_total ?total ;
  crm:churn_probability ?churn .
@@ -267,7 +267,7 @@ iq:duration "PT4H"^^xsd:duration
 ] ;
 rdf:_2 [
 iq:action iq:QueryUnresolved ;
-iq:query "SELECT ?ticket WHERE { ?ticket support:status 'OPEN' ; support:age ?age . FILTER (?age > PT4H) }" ;
+iq:query "SELECT DISTINCT ?ticket WHERE { ?ticket support:status 'OPEN' ; support:age ?age . FILTER (?age > PT4H) }" ;
 iq:storeAs "old_tickets"
 ] ;
 rdf:_3 [

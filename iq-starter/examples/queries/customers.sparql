@@ -4,7 +4,7 @@
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?name ?email ?revenue
+SELECT DISTINCT ?name ?email ?revenue
 WHERE {
   ?customer rdf:type foaf:Organization ;
 foaf:name ?name ;

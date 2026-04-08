@@ -458,7 +458,7 @@ return errorResponse(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
  * {
  *   "name": "my-tool",
  *   "description": "My custom tool",
- *   "sparql": "SELECT ?item WHERE { ... }",
+ *   "sparql": "SELECT DISTINCT ?item WHERE { ... }",
  *   "inputSchema": "{\"type\": \"object\", ...}"
  * }
  * </pre>

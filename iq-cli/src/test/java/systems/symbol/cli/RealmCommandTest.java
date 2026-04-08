@@ -36,7 +36,7 @@ assertNotNull(result.stdout);
 @Test
 void testRealmQueryWithValidSparqlSucceeds() {
 // Query for all things using SPARQL command - must be a tuple query (SELECT)
-TestCLIExecutor.CLITestResult result = executor.run("sparql", "SELECT ?x WHERE { ?x a ?y } LIMIT 1");
+TestCLIExecutor.CLITestResult result = executor.run("sparql", "SELECT DISTINCT ?x WHERE { ?x a ?y } LIMIT 1");
 assertEquals(0, result.exitCode, "valid SPARQL query should succeed. stderr: " + result.stderr);
 }
 

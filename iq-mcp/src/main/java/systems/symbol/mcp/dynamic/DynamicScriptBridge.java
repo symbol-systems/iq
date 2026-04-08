@@ -38,7 +38,7 @@ import java.util.Map;
  * <h2>Catalog SPARQL</h2>
  * <pre>
  *   PREFIX iq: &lt;iq:&gt;
- *   SELECT ?script ?name ?description WHERE {
+ *   SELECT DISTINCT ?script ?name ?description WHERE {
  * GRAPH &lt;iq:catalog&gt; {
  *   ?script a iq:Script ;
  *   iq:name?name ;
@@ -79,7 +79,7 @@ List<I_MCPTool> tools = new java.util.ArrayList<>();
 try (RepositoryConnection conn = repository.getConnection()) {
 String sparql = """
 PREFIX iq: <iq:>
-SELECT ?script ?name ?description WHERE {
+SELECT DISTINCT ?script ?name ?description WHERE {
 GRAPH <iq:catalog> {
 ?script a iq:Script ;
 iq:name?name ;
@@ -111,7 +111,7 @@ try {
 String sparql = """
 PREFIX iq:  <iq:>
 PREFIX sh:  <http://www.w3.org/ns/shacl#>
-SELECT ?param ?desc ?required WHERE {
+SELECT DISTINCT ?param ?desc ?required WHERE {
 GRAPH <iq:catalog> {
 <%s> iq:binding ?param .
 OPTIONAL { ?param sh:description ?desc }

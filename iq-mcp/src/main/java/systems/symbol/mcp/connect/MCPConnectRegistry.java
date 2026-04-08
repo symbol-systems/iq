@@ -45,7 +45,7 @@ List<I_MCPPipeline> result = new ArrayList<>();
 try (RepositoryConnection conn = repository.getConnection()) {
 String sparql = """
 PREFIX mcp: <urn:mcp:>
-SELECT ?m ?class ?order ?jwtSecret ?jwtIssuer ?jwtAudience ?jwksUri WHERE {
+SELECT DISTINCT ?m ?class ?order ?jwtSecret ?jwtIssuer ?jwtAudience ?jwksUri WHERE {
 GRAPH <urn:mcp:pipeline> {
 ?m a mcp:Middleware ;
    mcp:middlewareClass ?class ;

@@ -57,7 +57,7 @@ return """
    Use SELECT for tabular data retrieval.
    Use CONSTRUCT or DESCRIBE to retrieve subgraphs (returns Turtle).
    
-   For schema exploration: SELECT ?class WHERE { ?class a owl:Class } LIMIT 50
+   For schema exploration: SELECT DISTINCT ?class WHERE { ?class a owl:Class } LIMIT 50
    For entity lookup:  DESCRIBE <https://example.org/entity/123>
    For counts: SELECT (COUNT(?s) AS ?count) WHERE { ?s a :MyType }
    

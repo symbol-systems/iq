@@ -235,7 +235,7 @@ No MCP SDK required—just HTTP.
 
 ### Q: How do I prevent Claude from hallucinating?
 **A:** 
-- Make queries specific: "SELECT ?name WHERE { ?x type Customer }" (not open-ended)
+- Make queries specific: "SELECT DISTINCT ?name WHERE { ?x type Customer }" (not open-ended)
 - Provide good context in tool descriptions
 - Use tool input schema to constrain inputs
 - Test queries manually first

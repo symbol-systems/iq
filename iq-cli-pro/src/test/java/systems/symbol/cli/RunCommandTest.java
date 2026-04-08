@@ -104,7 +104,7 @@ assertNotNull(run);
 public void testRunLanguageDetectionSparql() throws Exception {
 // Create a temporary SPARQL file
 File sparqlFile = new File(tempScript, "query.sparql");
-String sparqlQuery = "SELECT ?s WHERE { ?s ?p ?o } LIMIT 1";
+String sparqlQuery = "SELECT DISTINCT ?s WHERE { ?s ?p ?o } LIMIT 1";
 Files.write(sparqlFile.toPath(), sparqlQuery.getBytes(StandardCharsets.UTF_8));
 
 RunCommand run = new RunCommand(context, null);
@@ -221,14 +221,14 @@ assertEquals(content, readContent);
 @Test
 @DisplayName("RunCommand SPARQL query detection with SELECT")
 public void testRunSparqlSelectDetection() throws Exception {
-String sparql = "SELECT ?s WHERE { ?s ?p ?o }";
+String sparql = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }";
 assertTrue(sparql.trim().toUpperCase().startsWith("SELECT"));
 }
 
 @Test
 @DisplayName("RunCommand SPARQL query detection with PREFIX")
 public void testRunSparqlPrefixDetection() throws Exception {
-String sparql = "PREFIX dbo: <http://dbpedia.org/ontology/> SELECT ?x WHERE { ?x rdf:type dbo:Person }";
+String sparql = "PREFIX dbo: <http://dbpedia.org/ontology/> SELECT DISTINCT ?x WHERE { ?x rdf:type dbo:Person }";
 assertTrue(sparql.trim().toUpperCase().startsWith("PREFIX"));
 }
 }

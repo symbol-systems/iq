@@ -100,7 +100,7 @@ Available with all commands:
 ### SPARQL SELECT Query
 
 ```bash
-./bin/iq-cli sparql "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
+./bin/iq-cli sparql "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
 
 # With realm
 ./bin/iq-cli sparql --realm prod "SELECT ..."
@@ -142,7 +142,7 @@ iq:status \"open\" .
 ### Query Timing
 
 ```bash
-./bin/iq-cli sparql --timing "SELECT ?s WHERE { ?s ?p ?o } LIMIT 100000"
+./bin/iq-cli sparql --timing "SELECT DISTINCT ?s WHERE { ?s ?p ?o } LIMIT 100000"
 
 # Output:
 # ┌──────────────────┬─────────────┐

@@ -73,7 +73,7 @@ ai:rdfPattern "rule:ComplianceRule rdf:type iq:ComplianceRule ; iq:validates age
 PREFIX ai: <https://symbol.systems/v0/ai#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?story ?title
+SELECT DISTINCT ?story ?title
 WHERE {
   ?story a skos:Concept ;
 skos:prefLabel ?title ;
@@ -87,7 +87,7 @@ ORDER BY ?story
 PREFIX ai: <https://symbol.systems/v0/ai#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?story ?title ?role
+SELECT DISTINCT ?story ?title ?role
 WHERE {
   ?role a skos:Concept ;
 skos:narrower ?story .
@@ -102,7 +102,7 @@ ORDER BY ?story
 PREFIX ai: <https://symbol.systems/v0/ai#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?story ?title ?priority
+SELECT DISTINCT ?story ?title ?priority
 WHERE {
   ai:RoleEnterpriseArchitect skos:narrower ?story .
   ?story skos:prefLabel ?title ;
@@ -116,7 +116,7 @@ ORDER BY ?story
 PREFIX ai: <https://symbol.systems/v0/ai#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?phase ?story ?title
+SELECT DISTINCT ?phase ?story ?title
 WHERE {
   ?phase a skos:Concept ;
 skos:narrower ?story .
@@ -169,7 +169,7 @@ PREFIX ai: <https://symbol.systems/v0/ai#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dct: <http://purl.org/dc/terms/>
 
-SELECT ?role ?story ?title ?priority ?theme
+SELECT DISTINCT ?role ?story ?title ?priority ?theme
 WHERE {
   ?role a skos:Concept ;
 skos:narrower ?story .

@@ -52,7 +52,7 @@ curl http://localhost:8080/mcp/tools | jq .
 # 4. Call a tool (example: query your knowledge graph)
 curl -X POST http://localhost:8080/mcp/tools/query_knowledge_graph/execute \\
   -H "Content-Type: application/json" \\
-  -d '{"sparql": "SELECT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}'
+  -d '{"sparql": "SELECT DISTINCT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}'
 ```
 
 That's it. Your enterprise knowledge is now accessible via MCP.

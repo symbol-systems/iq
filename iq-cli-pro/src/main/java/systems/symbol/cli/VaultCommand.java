@@ -70,7 +70,7 @@ String sparql = """
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX iq: <urn:iq:>
 
-SELECT ?backend ?label ?type ?secretCount WHERE {
+SELECT DISTINCT ?backend ?label ?type ?secretCount WHERE {
 ?backend a iq:SecretBackend .
 OPTIONAL { ?backend rdfs:label ?label }
 OPTIONAL { ?backend iq:type ?type }

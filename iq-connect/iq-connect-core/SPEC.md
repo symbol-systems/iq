@@ -107,7 +107,7 @@ new AWSConnector(), // Implementation
 Discovery is then possible via SPARQL:
 
 ```sparql
-SELECT ?connector WHERE {
+SELECT DISTINCT ?connector WHERE {
   ?connector a :ConnectorInstance ;
  :id "aws" .
 }

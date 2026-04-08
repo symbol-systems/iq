@@ -1,4 +1,4 @@
-SELECT ?type (COUNT(?s) as ?count)
+SELECT DISTINCT ?type (COUNT(?s) as ?count)
 WHERE {
   ?s a ?type .
 }

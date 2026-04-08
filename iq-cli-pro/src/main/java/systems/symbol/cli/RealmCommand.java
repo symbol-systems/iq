@@ -80,7 +80,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX iq: <urn:iq:>
 
-SELECT ?realm ?label ?created ?status WHERE {
+SELECT DISTINCT ?realm ?label ?created ?status WHERE {
 ?realm a iq:Realm .
 OPTIONAL { ?realm rdfs:label ?label }
 OPTIONAL { ?realm iq:createdAt ?created }
@@ -138,7 +138,7 @@ String sparql = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
 "PREFIX iq: <urn:iq:>\n" +
 "\n" +
-"SELECT ?realm ?label ?owner ?created ?configPath WHERE {\n" +
+"SELECT DISTINCT ?realm ?label ?owner ?created ?configPath WHERE {\n" +
 "  VALUES ?realm { <" + param + "> }\n" +
 "  ?realm a iq:Realm .\n" +
 "  OPTIONAL { ?realm rdfs:label ?label }\n" +

@@ -248,7 +248,7 @@ Severity.WARNING,
  */
 private void checkTypeConsistency() {
 try {
-String query = "SELECT ?type (COUNT(?s) as ?count) WHERE { " +
+String query = "SELECT DISTINCT ?type (COUNT(?s) as ?count) WHERE { " +
 "  ?s a ?type " +
 "} GROUP BY ?type";
 var tupleQuery = connection.prepareTupleQuery(query);
@@ -282,7 +282,7 @@ log.debug("Type consistency check failed", e);
 private void checkOrphanedTriples() {
 try {
 // Sample check: query for objects that aren't subjects (up to limit)
-String query = "SELECT ?o WHERE { " +
+String query = "SELECT DISTINCT ?o WHERE { " +
 "  ?s ?p ?o . " +
 "  FILTER NOT EXISTS { ?o ?any ?anything } " +
 "} LIMIT 10";

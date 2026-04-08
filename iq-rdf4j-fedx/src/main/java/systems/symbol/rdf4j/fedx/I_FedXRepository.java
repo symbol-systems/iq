@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
  *
  * Usage:
  *   I_FedXRepository fedx = new FedXRepository(topology, client, optimizer);
- *   TupleQueryResult result = fedx.prepareTupleQuery("SELECT ?s WHERE { ?s ?p ?o }").evaluate();
+ *   TupleQueryResult result = fedx.prepareTupleQuery("SELECT DISTINCT ?s WHERE { ?s ?p ?o }").evaluate();
  */
 public interface I_FedXRepository {
 

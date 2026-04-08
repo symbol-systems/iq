@@ -22,7 +22,7 @@ private static final Logger log = LoggerFactory.getLogger(SPARQLQueryValidator.c
 
 // Configuration limits
 public static final int MAX_QUERY_SIZE = 1024 * 1024;  // 1 MB
-public static final int MIN_QUERY_SIZE = 10;   // "SELECT ?a WHERE { }"
+public static final int MIN_QUERY_SIZE = 10;   // "SELECT DISTINCT ?a WHERE { }"
 public static final int DEFAULT_TIMEOUT_SECONDS = 30;
 public static final int MAX_TIMEOUT_SECONDS = 300; // 5 minutes
 public static final int MIN_TIMEOUT_SECONDS = 1;

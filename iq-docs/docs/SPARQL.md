@@ -11,7 +11,7 @@ This page collects common and useful SPARQL examples.
 2) Count instances by type
 - Purpose: quick health check / inventory.
 - Query:
-  SELECT ?type (COUNT(?s) as ?count)
+  SELECT DISTINCT ?type (COUNT(?s) as ?count)
   WHERE { ?s a ?type . } GROUP BY ?type
 
 3) Hydrate labels & definitions (given a set of IRIs)
@@ -43,7 +43,7 @@ OPTIONAL { ?conceptScheme <http://www.w3.org/2004/02/skos/core#prefLabel> ?label
 - Purpose: enumerate agents and current states used by runtime.
 - Example Query (instantiate with actual prefixes):
   PREFIX iq: <iq:>
-  SELECT ?agent ?workflow ?state
+  SELECT DISTINCT ?agent ?workflow ?state
   WHERE {
 ?agent a iq:Agent ; iq:workflow ?workflow .
 ?workflow iq:initial ?state .
@@ -52,7 +52,7 @@ OPTIONAL { ?conceptScheme <http://www.w3.org/2004/02/skos/core#prefLabel> ?label
 7) Discover LLM named maps and secrets
 - Purpose: enumerate configured LLM named maps and their model names.
 - Example (TTL layout is often `llm:*`):
-  SELECT ?map ?prop ?value
+  SELECT DISTINCT ?map ?prop ?value
   WHERE {
 ?map a ?type .
 FILTER(REGEX(STR(?map), "llm", "i"))
@@ -62,7 +62,7 @@ OPTIONAL { ?map ?prop ?value }
 
 8) Trust/Identity checks (realm-based)
 - Purpose: find trust relationships or authorizations.
-- Example: `SELECT ?p ?o WHERE { BIND(<{{my.self}}> AS ?s) }` (used as a template in `identify.sparql`)
+- Example: `SELECT DISTINCT ?p ?o WHERE { BIND(<{{my.self}}> AS ?s) }` (used as a template in `identify.sparql`)
 
 9) Useful authoring tips
 - Keep template substitution small and tidy (runtime commonly passes `VALUES` blocks).

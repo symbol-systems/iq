@@ -547,7 +547,7 @@ if (repo == null) continue;
 
 // Query for all agents in this realm
 String sparql = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-"SELECT ?actor WHERE {\n" +
+"SELECT DISTINCT ?actor WHERE {\n" +
 "  ?actor rdf:type <urn:iq:Actor> .\n" +
 "}";
 
@@ -635,7 +635,7 @@ if (repo == null) continue;
 
 // Query for all connectors in this realm
 String sparql = "PREFIX iq: <urn:iq:>\n" +
-"SELECT ?connector ?lastSync ?recordCount WHERE {\n" +
+"SELECT DISTINCT ?connector ?lastSync ?recordCount WHERE {\n" +
 "  ?connector a iq:ConnectorInstance .\n" +
 "  OPTIONAL { ?connector iq:lastSync ?lastSync } .\n" +
 "  OPTIONAL { ?connector iq:recordCount ?recordCount } .\n" +

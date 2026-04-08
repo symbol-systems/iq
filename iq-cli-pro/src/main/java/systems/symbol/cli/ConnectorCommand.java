@@ -82,7 +82,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX connect: <urn:connect:>
 PREFIX iq: <urn:iq:>
 
-SELECT ?connector ?name ?type ?status ?lastSync WHERE {
+SELECT DISTINCT ?connector ?name ?type ?status ?lastSync WHERE {
 ?connector a connect:Connector .
 OPTIONAL { ?connector rdfs:label ?name }
 OPTIONAL { ?connector connect:type ?type }
@@ -141,7 +141,7 @@ String sparql = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
 "PREFIX connect: <urn:connect:>\n" +
 "PREFIX iq: <urn:iq:>\n" +
 "\n" +
-"SELECT ?connector ?status ?lastSync ?recordCount WHERE {\n" +
+"SELECT DISTINCT ?connector ?status ?lastSync ?recordCount WHERE {\n" +
 "  ?connector a connect:Connector ;\n" +
 "rdfs:label ?name .\n" +
 "  OPTIONAL { ?connector iq:status ?status }\n" +
@@ -222,7 +222,7 @@ try (var conn = store.getConnection()) {
 String sparql = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
 "PREFIX connect: <urn:connect:>\n" +
 "\n" +
-"SELECT ?connector ?type ?mode WHERE {\n" +
+"SELECT DISTINCT ?connector ?type ?mode WHERE {\n" +
 "  ?connector a connect:Connector ;\n" +
 "rdfs:label ?name .\n" +
 "  OPTIONAL { ?connector connect:type ?type }\n" +

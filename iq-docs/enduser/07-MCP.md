@@ -57,7 +57,7 @@ Claude (with MCP):
 I'll check your AWS infrastructure through IQ.
 
 [Uses MCP tool: sparql-query]
-[Query: SELECT ?instance ?type ?state WHERE { ?instance a aws:EC2Instance ... }]
+[Query: SELECT DISTINCT ?instance ?type ?state WHERE { ?instance a aws:EC2Instance ... }]
 
 Response: Based on IQ's current data, you have:
 - 12 t3.medium instances (9 running, 3 stopped)
@@ -101,7 +101,7 @@ Execute SELECT/ASK queries on knowledge graph.
 **Example:**
 
 ```sparql
-SELECT ?service ?cpu ?memory WHERE {
+SELECT DISTINCT ?service ?cpu ?memory WHERE {
   ?instance a aws:EC2Instance ;
 aws:instanceType ?type ;
 aws:state "running" .
@@ -392,7 +392,7 @@ export IQ_MCP_PORT=3001
 curl -X POST http://localhost:3001/tools/sparql-query \
   -H "Authorization: Bearer $IQ_API_TOKEN" \
   -d '{
-"query": "SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
+"query": "SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
   }'
 ```
 
@@ -528,7 +528,7 @@ return json.loads(response)
 client = IQMCPClient("wss://iq.example.com/mcp", "token_...")
 result = asyncio.run(
 client.call_tool("sparql-query", {
-"query": "SELECT ?s WHERE { ?s a aws:EC2Instance }",
+"query": "SELECT DISTINCT ?s WHERE { ?s a aws:EC2Instance }",
 "realm": "prod"
 })
 )

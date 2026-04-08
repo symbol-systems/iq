@@ -327,7 +327,7 @@ Execute semantic queries directly.
 ```bash
 curl -G "http://localhost:8080/api/v1/realms/prod/sparql" \
   -H "Authorization: Bearer $IQ_API_TOKEN" \
-  --data-urlencode 'query=SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10'
+  --data-urlencode 'query=SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10'
 
 # Response
 {
@@ -364,7 +364,7 @@ curl -X POST "http://localhost:8080/api/v1/realms/prod/sparql" \
 ```sparql
 # Find all running EC2 instances in AWS
 PREFIX aws: <urn:aws:>
-SELECT ?instanceId ?type ?launchTime WHERE {
+SELECT DISTINCT ?instanceId ?type ?launchTime WHERE {
   ?instance a aws:EC2Instance ;
 aws:instanceId ?instanceId ;
 aws:instanceType ?type ;
@@ -374,7 +374,7 @@ aws:state "running" .
 
 # Find Kubernetes pods in error state
 PREFIX k8s: <urn:k8s:>
-SELECT ?podName ?namespace ?reason WHERE {
+SELECT DISTINCT ?podName ?namespace ?reason WHERE {
   ?pod a k8s:Pod ;
 k8s:name ?podName ;
 k8s:namespace ?namespace ;
@@ -402,7 +402,7 @@ POST /api/v1/realms/{realm}/sparql/federated
 Content-Type: application/x-www-form-urlencoded
 Authorization: Bearer {token}
 
-query=SELECT ?service ?status WHERE {
+query=SELECT DISTINCT ?service ?status WHERE {
   ?service a <urn:Service> ;
 <urn:status> ?status .
 }

@@ -23,7 +23,7 @@ import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
  * Test the function using:
  * PREFIX fn: <https://myiq.cloud/iq/fn#>
  * 
- * SELECT ?this ?that WHERE {
+ * SELECT DISTINCT ?this ?that WHERE {
  * ?this a rdfs:Class.
  * BIND(fn:bakeiri("urn:example:contrived:",?this) AS ?that)
  * }

@@ -174,7 +174,7 @@ void testSimulatedClientCallSparqlQuery() throws MCPException {
 String sparqlQueryStr = """
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX ex: <http://example.org/>
-SELECT ?person ?name
+SELECT DISTINCT ?person ?name
 WHERE {
   ?person a foaf:Person ;
   foaf:name ?name .
@@ -246,7 +246,7 @@ assertTrue(json.contains("http://xmlns.com/foaf/0.1/"),
 @Test
 void testSimulatedClientToolError() {
 // Arrange: Simulate client calling tool with bad query (unbalanced braces)
-String malformedQuery = "SELECT ?x WHERE { ?x a ?type ";
+String malformedQuery = "SELECT DISTINCT ?x WHERE { ?x a ?type ";
 MCPCallContext ctx = new MCPCallContext("sparql.query", Map.of());
 Map<String, Object> input = Map.of("query", malformedQuery);
 

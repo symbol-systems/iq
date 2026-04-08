@@ -105,7 +105,7 @@ iq:persistent true ;
 iq:indexed true ;
 iq:indexedQueries [
 iq:queries (
-"SELECT ?s ?p ?o WHERE { ?s ?p ?o . FILTER(STRLEN(STR(?o)) < 255) }"
+"SELECT DISTINCT ?s ?p ?o WHERE { ?s ?p ?o . FILTER(STRLEN(STR(?o)) < 255) }"
 )
 ] .
 ```

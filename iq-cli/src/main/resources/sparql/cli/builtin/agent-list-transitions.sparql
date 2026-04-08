@@ -1,5 +1,5 @@
 PREFIX iq: <urn:iq:>
-SELECT ?agent ?actorName ?intent WHERE {
+SELECT DISTINCT ?agent ?actorName ?intent WHERE {
   GRAPH <iq:agents> {
 ?agent a iq:Agent ;
    iq:name ?actorName ;

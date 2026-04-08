@@ -155,10 +155,10 @@ Malformed SPARQL query: syntax error at line 2
 # - Incorrect property URIs (typos in namespace)
 
 # 3. Test with simple query first
-./bin/iq-cli sparql "SELECT ?s WHERE { ?s ?p ?o } LIMIT 1"
+./bin/iq-cli sparql "SELECT DISTINCT ?s WHERE { ?s ?p ?o } LIMIT 1"
 
 # 4. Build up complexity gradually
-./bin/iq-cli sparql "SELECT ?s WHERE { ?s a rdf:type } LIMIT 1"
+./bin/iq-cli sparql "SELECT DISTINCT ?s WHERE { ?s a rdf:type } LIMIT 1"
 ```
 
 ### No Results Returned
@@ -174,11 +174,11 @@ Malformed SPARQL query: syntax error at line 2
 
 ```bash
 # 1. Check data exists
-./bin/iq-cli sparql "SELECT ?p WHERE { ?s ?p ?o } LIMIT 10"
+./bin/iq-cli sparql "SELECT DISTINCT ?p WHERE { ?s ?p ?o } LIMIT 10"
 # Review the predicates
 
 # 2. Verify namespace URI
-./bin/iq-cli sparql "SELECT ?p WHERE { ?s ?p ?o FILTER(CONTAINS(STR(?p), 'my')) }"
+./bin/iq-cli sparql "SELECT DISTINCT ?p WHERE { ?s ?p ?o FILTER(CONTAINS(STR(?p), 'my')) }"
 
 # 3. Check case sensitivity
 # RDF URIs are case-sensitive!

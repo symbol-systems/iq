@@ -59,7 +59,7 @@ String sparql = """
 PREFIX mcp: <urn:mcp:>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?toolUri ?name ?description ?enabled ?readOnly ?rateLimit ?order WHERE {
+SELECT DISTINCT ?toolUri ?name ?description ?enabled ?readOnly ?rateLimit ?order WHERE {
 GRAPH <urn:mcp:tools> {
 ?toolUri a mcp:Tool ;
  mcp:name ?name .

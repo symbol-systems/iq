@@ -35,12 +35,12 @@ assertTrue(props.containsKey("query"));
 void testAdapterRejectsNullRepository() {
 SparqlQueryAdapter adapter = new SparqlQueryAdapter(null);
 MCPCallContext ctx = new MCPCallContext("sparql.query", java.util.Map.of(
-"query", "SELECT ?x WHERE { ?x a ?type }"
+"query", "SELECT DISTINCT ?x WHERE { ?x a ?type }"
 ));
 
 MCPException ex = assertThrows(MCPException.class, () -> {
 adapter.execute(ctx, java.util.Map.of(
-"query", "SELECT ?x WHERE { ?x a ?type }"
+"query", "SELECT DISTINCT ?x WHERE { ?x a ?type }"
 ));
 });
 

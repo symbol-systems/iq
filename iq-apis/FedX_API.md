@@ -27,7 +27,7 @@ Execute SPARQL SELECT or ASK queries via HTTP GET.
 **Example:**
 ```bash
 curl -G "http://localhost:8080/sparql/federated/query" \
-  --data-urlencode 'query=SELECT ?subject WHERE { ?subject ?p ?object } LIMIT 10'
+  --data-urlencode 'query=SELECT DISTINCT ?subject WHERE { ?subject ?p ?object } LIMIT 10'
 ```
 
 **Response (200 OK):**
@@ -78,7 +78,7 @@ Execute SPARQL queries via HTTP POST with form-encoded body.
 **Example:**
 ```bash
 curl -X POST "http://localhost:8080/sparql/federated/query" \
-  -d "query=SELECT ?s WHERE { ?s rdf:type ?type } LIMIT 20" \
+  -d "query=SELECT DISTINCT ?s WHERE { ?s rdf:type ?type } LIMIT 20" \
   -d "timeout=60"
 ```
 
@@ -148,7 +148,7 @@ All queries are validated before execution with the following rules:
 
 ### Simple Pattern Matching
 ```sparql
-SELECT ?s ?p ?o
+SELECT DISTINCT ?s ?p ?o
 WHERE {
   ?s ?p ?o
 }
@@ -157,7 +157,7 @@ LIMIT 10
 
 ### With FILTER
 ```sparql
-SELECT ?subject ?name
+SELECT DISTINCT ?subject ?name
 WHERE {
   ?subject foaf:name ?name .
   ?subject rdf:type foaf:Person .
@@ -167,7 +167,7 @@ WHERE {
 
 ### UNION (Parallelized)
 ```sparql
-SELECT ?entity
+SELECT DISTINCT ?entity
 WHERE {
   {
 ?entity rdf:type ex:Class1
@@ -181,7 +181,7 @@ WHERE {
 
 ### OPTIONAL (Parallelized)
 ```sparql
-SELECT ?s ?label
+SELECT DISTINCT ?s ?label
 WHERE {
   ?s rdf:type rdf:Resource .
   OPTIONAL {
@@ -201,7 +201,7 @@ The FedX API automatically analyzes queries and selects optimal execution strate
 
 1. **BROADCAST** - Simple queries sent to all healthy nodes
    - Best for: Low complexity, high parallelism
-   - Example: `SELECT ?s WHERE { ?s ?p ?o }`
+   - Example: `SELECT DISTINCT ?s WHERE { ?s ?p ?o }`
 
 2. **UNION_DISTRIBUTE** - UNION branches executed in parallel
    - Best for: Queries with multiple independent branches
@@ -225,7 +225,7 @@ The FedX API automatically analyzes queries and selects optimal execution strate
 ### 1. Use LIMIT Clauses
 Reduce network overhead by limiting result sizes:
 ```sparql
-SELECT ?s ?p ?o
+SELECT DISTINCT ?s ?p ?o
 WHERE { ?s ?p ?o }
 LIMIT 10000  -- Better than unlimited
 ```
@@ -233,7 +233,7 @@ LIMIT 10000  -- Better than unlimited
 ### 2. Add FILTER Conditions Early
 Push filtering down to remote endpoints:
 ```sparql
-SELECT ?s
+SELECT DISTINCT ?s
 WHERE {
   ?s rdf:type ex:Person .
   FILTER (?s > "2000-01-01"^^xsd:date)  -- Early filtering
@@ -244,7 +244,7 @@ WHERE {
 Simple star or tree patterns are more efficient:
 ```sparql
 -- Good: simple joins
-SELECT ?s ?p ?o
+SELECT DISTINCT ?s ?p ?o
 WHERE {
   ?s rdf:type ex:Resource .
   ?s ex:hasName ?name .
@@ -252,7 +252,7 @@ WHERE {
 }
 
 -- Avoid: complex nested joins
-SELECT ?a ?b ?c
+SELECT DISTINCT ?a ?b ?c
 WHERE {
   ?a ex:p1 ?x .
   ?x ex:p2 ?y .
@@ -318,7 +318,7 @@ Common causes:
 
 ```javascript
 const query = `
-  SELECT ?s ?p ?o
+  SELECT DISTINCT ?s ?p ?o
   WHERE { ?s ?p ?o }
   LIMIT 10
 `;
@@ -340,7 +340,7 @@ import requests
 import json
 
 query = """
-  SELECT ?s ?p ?o
+  SELECT DISTINCT ?s ?p ?o
   WHERE { ?s ?p ?o }
   LIMIT 10
 """
@@ -357,7 +357,7 @@ print(json.dumps(results, indent=2))
 ### Java
 
 ```java
-String query = "SELECT ?s WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }";
 String baseUrl = "http://localhost:8080/sparql/federated/query";
 
 CloseableHttpClient client = HttpClients.createDefault();

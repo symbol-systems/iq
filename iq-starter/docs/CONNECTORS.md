@@ -113,7 +113,7 @@ iq:query "SELECT * FROM Account WHERE LastModifiedDate > {{last_sync}}"
 ### Request-Response (Pull on Demand)
 Fetch data when explicitly queried:
 ```sparql
-SELECT ?customer_id ?name ?email {
+SELECT DISTINCT ?customer_id ?name ?email {
   ?c a crm:Customer ;
  id:external-id ?customer_id ;
  connector:pull-from connector:salesforce .

@@ -1,6 +1,6 @@
 # VoidResourceProvider: Count triples per graph for VOID dataset description
 # Orders by triple count descending
-SELECT ?g (COUNT(*) AS ?count) WHERE {
+SELECT DISTINCT ?g (COUNT(*) AS ?count) WHERE {
 GRAPH ?g { ?s ?p ?o }
 }
 GROUP BY ?g

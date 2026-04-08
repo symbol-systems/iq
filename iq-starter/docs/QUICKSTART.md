@@ -58,7 +58,7 @@ Execute the knowledge graph query tool:
 ```bash
 curl -X POST http://localhost:8080/mcp/tools/query_knowledge_graph/execute \
   -H "Content-Type: application/json" \
-  -d '{"sparql": "SELECT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}' \
+  -d '{"sparql": "SELECT DISTINCT ?name WHERE { ?x foaf:name ?name } LIMIT 5"}' \
   2>/dev/null | jq .
 ```
 

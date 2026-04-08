@@ -42,7 +42,7 @@ optimizer = new DistributedQueryOptimizer(nodeRegistry);
 @Test
 @DisplayName("Simple SELECT query gets validated complexity")
 void testSimpleSelectComplexity() {
-String query = "SELECT ?s WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }";
 DistributedQueryOptimizer.QueryOptimizationPlan plan = optimizer.analyze(query);
 
 // Complexity depends on counting logic - just verify it's one of the valid complexities
@@ -52,7 +52,7 @@ assertTrue(plan.complexity.equals("LOW") || plan.complexity.equals("MEDIUM"));
 @Test
 @DisplayName("Simple SELECT query with filter is analyzed")
 void testSelectWithFilterComplexity() {
-String query = "SELECT ?s WHERE { ?s ?p ?o . FILTER (?o > 10) }";
+String query = "SELECT DISTINCT ?s WHERE { ?s ?p ?o . FILTER (?o > 10) }";
 DistributedQueryOptimizer.QueryOptimizationPlan plan = optimizer.analyze(query);
 
 // Should be at least MEDIUM due to filter
@@ -62,7 +62,7 @@ assertTrue(plan.complexity.equals("MEDIUM") || plan.complexity.equals("HIGH"));
 @Test
 @DisplayName("Complex SELECT with multiple FILTERs gets HIGH complexity")
 void testComplexSelectComplexity() {
-String query = "SELECT ?s WHERE { " +
+String query = "SELECT DISTINCT ?s WHERE { " +
   "?s ?p1 ?o1 . " +
   "?o1 ?p2 ?o2 . " +
   "?o2 ?p3 ?o3 . " +
@@ -78,7 +78,7 @@ assertEquals("HIGH", plan.complexity);
 @Test
 @DisplayName("UNION query is detected as parallelizable")
 void testUnionQueryParallelizable() {
-String query = "SELECT ?s WHERE { " +
+String query = "SELECT DISTINCT ?s WHERE { " +
   "{ ?s rdf:type ex:ClassA } " +
   "UNION " +
   "{ ?s rdf:type ex:ClassB } " +
@@ -92,7 +92,7 @@ assertEquals("UNION_DISTRIBUTE", plan.executionStrategy);
 @Test
 @DisplayName("OPTIONAL query is detected as parallelizable")
 void testOptionalQueryParallelizable() {
-String query = "SELECT ?s ?p WHERE { " +
+String query = "SELECT DISTINCT ?s ?p WHERE { " +
   "?s <http://example.org/prop> ?o . " +
   "OPTIONAL { ?o <http://example.org/name> ?p } " +
   "}";
@@ -105,7 +105,7 @@ assertEquals("OPTIONAL_DISTRIBUTE", plan.executionStrategy);
 @Test
 @DisplayName("Simple query with low complexity uses multiple nodes")
 void testSimpleQueryMultipleNodes() {
-String query = "SELECT ?s WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }";
 DistributedQueryOptimizer.QueryOptimizationPlan plan = optimizer.analyze(query);
 
 // Should target multiple nodes for parallelism
@@ -116,7 +116,7 @@ assertTrue(plan.targetNodes.size() > 1);
 @Test
 @DisplayName("Plan estimates parallel gain based on node count")
 void testParallelGainEstimate() {
-String query = "SELECT ?s WHERE { " +
+String query = "SELECT DISTINCT ?s WHERE { " +
   "{ ?s rdf:type ex:ClassA } " +
   "UNION " +
   "{ ?s rdf:type ex:ClassB } " +
@@ -134,7 +134,7 @@ void testNoHealthyNodesEmpty() {
 I_NodeRegistry emptyRegistry = new InMemoryNodeRegistry();
 DistributedQueryOptimizer emptyOptimizer = new DistributedQueryOptimizer(emptyRegistry);
 
-String query = "SELECT ?s WHERE { ?s ?p ?o }";
+String query = "SELECT DISTINCT ?s WHERE { ?s ?p ?o }";
 DistributedQueryOptimizer.QueryOptimizationPlan plan = emptyOptimizer.analyze(query);
 
 assertTrue(plan.targetNodes.isEmpty());
@@ -144,7 +144,7 @@ assertTrue(plan.targetNodes.isEmpty());
 @DisplayName("Sequential strategy uses only first node")
 void testSequentialStrategyOneNode() {
 // Create a complex query that won't parallelize
-String query = "SELECT ?s ?o WHERE { ?s ?p ?o }";  // Simple, but won't force sequential
+String query = "SELECT DISTINCT ?s ?o WHERE { ?s ?p ?o }";  // Simple, but won't force sequential
 DistributedQueryOptimizer.QueryOptimizationPlan plan = optimizer.analyze(query);
 
 // Can have multiple nodes for simple queries (BROADCAST strategy)
@@ -154,7 +154,7 @@ assertFalse(plan.targetNodes.isEmpty());
 @Test
 @DisplayName("Plan should parallelize when appropriate conditions met")
 void testShouldParallelizeConditions() {
-String query = "SELECT ?s WHERE { " +
+String query = "SELECT DISTINCT ?s WHERE { " +
   "{ ?s rdf:type ex:ClassA } " +
   "UNION " +
   "{ ?s rdf:type ex:ClassB } " +

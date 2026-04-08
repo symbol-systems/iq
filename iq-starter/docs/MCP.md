@@ -62,7 +62,7 @@ Output (example):
 curl -X POST http://localhost:8080/mcp/tools/query_knowledge_graph/execute \
   -H "Content-Type: application/json" \
   -d '{
-"sparql": "SELECT ?name ?email WHERE { ?x foaf:name ?name ; foaf:mbox ?email } LIMIT 5"
+"sparql": "SELECT DISTINCT ?name ?email WHERE { ?x foaf:name ?name ; foaf:mbox ?email } LIMIT 5"
   }' | jq .
 ```
 
@@ -118,7 +118,7 @@ Run SPARQL queries without an LLM. Gets real data from your RDF store.
 **Input:**
 ```json
 {
-  "sparql": "SELECT ?x WHERE { ?x rdf:type foaf:Person }"
+  "sparql": "SELECT DISTINCT ?x WHERE { ?x rdf:type foaf:Person }"
 }
 ```
 
@@ -188,7 +188,7 @@ Your LLM asks IQ for facts, then answers based on real data.
 ```
 User: "Who are our top customers?"
 ↓
-LLM → MCP → IQ: query_knowledge_graph("SELECT ?customer ?revenue ...")
+LLM → MCP → IQ: query_knowledge_graph("SELECT DISTINCT ?customer ?revenue ...")
 ↓
 IQ returns: [{ customer: "Acme Inc", revenue: "2.1M" }, ...]
 ↓
@@ -232,7 +232,7 @@ Your LLM: "Slack and GitHub are connected. AWS connector has an authentication e
 # examples/queries/customers-by-revenue.sparql
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-SELECT ?name ?revenue
+SELECT DISTINCT ?name ?revenue
 WHERE {
   ?customer rdf:type foaf:Organization ;
 foaf:name ?name ;

@@ -427,7 +427,7 @@ open /tmp/iq-analysis.html
 
 ```bash
 # Enable query plans
-./bin/iq-cli sparql --explain --analyze "SELECT ?s WHERE { ?s ?p ?o } LIMIT 1000"
+./bin/iq-cli sparql --explain --analyze "SELECT DISTINCT ?s WHERE { ?s ?p ?o } LIMIT 1000"
 
 # Output shows:
 # - Query plan (how RDF4J will execute it)

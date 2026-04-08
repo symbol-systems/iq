@@ -27,7 +27,7 @@ import java.util.Map;
  * <p>Catalog query:
  * <pre>
  *   PREFIX iq: &lt;iq:&gt;
- *   SELECT ?agent ?actorName ?intent WHERE {
+ *   SELECT DISTINCT ?agent ?actorName ?intent WHERE {
  * GRAPH &lt;iq:agents&gt; {
  *   ?agent a iq:Agent ;
  *  iq:name ?actorName ;
@@ -66,7 +66,7 @@ List<I_MCPTool> tools = new ArrayList<>();
 try (RepositoryConnection conn = repository.getConnection()) {
 String sparql = """
 PREFIX iq: <iq:>
-SELECT ?agent ?actorName ?intent WHERE {
+SELECT DISTINCT ?agent ?actorName ?intent WHERE {
 GRAPH <iq:agents> {
 ?agent a iq:Agent ;
    iq:name ?actorName ;

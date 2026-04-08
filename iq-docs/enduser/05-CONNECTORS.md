@@ -113,7 +113,7 @@ export AWS_ROLE_ARN="arn:aws:iam::123456789012:role/IQConnectorRole"
 ```sparql
 # List all EC2 instances
 PREFIX aws: <urn:aws:> 
-SELECT ?instanceId ?state ?type WHERE {
+SELECT DISTINCT ?instanceId ?state ?type WHERE {
   ?instance a aws:EC2Instance ;
 aws:instanceId ?instanceId ;
 aws:state ?state ;
@@ -121,14 +121,14 @@ aws:instanceType ?type .
 }
 
 # Find all S3 buckets
-SELECT ?bucketName ?region WHERE {
+SELECT DISTINCT ?bucketName ?region WHERE {
   ?bucket a aws:S3Bucket ;
 aws:bucketName ?bucketName ;
 aws:region ?region .
 }
 
 # List RDS databases
-SELECT ?dbName ?engine ?status WHERE {
+SELECT DISTINCT ?dbName ?engine ?status WHERE {
   ?db a aws:RDSDatabase ;
 aws:dbInstanceIdentifier ?dbName ;
 aws:engine ?engine ;
@@ -299,7 +299,7 @@ iq:schedule "*/5 * * * *"  # Every 5 minutes
 ```sparql
 # List all pods in cluster
 PREFIX k8s: <urn:k8s:>
-SELECT ?podName ?namespace ?phase WHERE {
+SELECT DISTINCT ?podName ?namespace ?phase WHERE {
   ?pod a k8s:Pod ;
 k8s:name ?podName ;
 k8s:namespace ?namespace ;
@@ -307,7 +307,7 @@ k8s:phase ?phase .
 }
 
 # Find failed deployments
-SELECT ?deploymentName ?replicas ?readyReplicas WHERE {
+SELECT DISTINCT ?deploymentName ?replicas ?readyReplicas WHERE {
   ?dep a k8s:Deployment ;
 k8s:name ?deploymentName ;
 k8s:replicas ?replicas ;
@@ -404,14 +404,14 @@ iq:schedule "*/5 * * * *"
 ```sparql
 # List channels
 PREFIX slack: <urn:slack:>
-SELECT ?channelName ?members WHERE {
+SELECT DISTINCT ?channelName ?members WHERE {
   ?ch a slack:Channel ;
 slack:name ?channelName ;
 slack:memberCount ?members .
 }
 
 # Find messages in #engineering
-SELECT ?author ?text ?timestamp WHERE {
+SELECT DISTINCT ?author ?text ?timestamp WHERE {
   ?msg a slack:Message ;
 slack:channel "engineering" ;
 slack:user ?author ;
